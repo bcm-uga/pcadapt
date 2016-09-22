@@ -18,7 +18,7 @@
 #'
 #' @export
 #'
-read.pcadapt <- function(input.filename,type,local.env=FALSE){
+read.pcadapt <- function(input.filename,type,local.env=FALSE,allele.sep="/"){
   if (local.env == FALSE){
     ## Check if input.filename is a character string ##
     if (class(input.filename) != "character"){
@@ -40,11 +40,17 @@ read.pcadapt <- function(input.filename,type,local.env=FALSE){
     if (type == "ped"){
       .C("wrapper_converter",as.character(input.filename),as.integer(0),PACKAGE = "pcadapt")
     } else if (type == "vcf"){
+      cat("If conversion fails, try 'type=vcfR' instead.\n")
       .C("wrapper_converter",as.character(input.filename),as.integer(1),PACKAGE = "pcadapt")
     } else if (type == "lfmm"){
       .C("wrapper_converter",as.character(input.filename),as.integer(2),PACKAGE = "pcadapt")
+    } else if (type == "vcfR"){
+      obj.vcf <- vcfR::read.vcfR(input.filename,nrows=1034)
+      geno <- vcfR::extract.gt(obj.vcf)
+      vcf2pcadapt(geno,output.file = "tmp.pcadapt",allele.sep = allele.sep,blocksize = 1000,console.count = 10000)
     }
     
+    ##
     split.name <- unlist(unlist(strsplit(input.filename,"[.]")))
     if ((tail(split.name, n=1) %in% c("ped","vcf","lfmm","pcadapt")) && (length(split.name) > 1)){
       aux <- NULL
@@ -58,9 +64,6 @@ read.pcadapt <- function(input.filename,type,local.env=FALSE){
       aux <- input.filename
     }
     if (type == "vcfR"){
-      obj.vcf <- vcfR::read.vcfR(input.filename,nrows=1034)
-      geno <- vcfR::extract.gt(obj.vcf)
-      vcf2pcadapt(geno,output.file = "tmp.pcadapt",blocksize = 1000,console.count = 10000)
       aux <- "tmp.pcadapt"
     }
   } else if (local.env == TRUE){
@@ -166,18 +169,20 @@ get.pop.names = function(pop){
 #' @export
 #'
 get.pc <- function(x,list){
-  v <- sapply(list,FUN=function(l){which(x$loadings[l,]^2==max(x$loadings[l,]^2,na.rm=TRUE))})
+  rem.na <- which(!is.na(x$loadings[list,1]))
+  v <- array(0,dim=length(list))
+  v[rem.na] <- sapply(list[rem.na],FUN=function(l){which(x$loadings[l,]^2==max(x$loadings[l,]^2,na.rm=TRUE))})
   df <- cbind(list,as.numeric(v))
   colnames(df) <- c("SNP","PC")
   return(df)
 }
 
-
 #' Convert genotype information obtained with vcfR
 #'
 #' \code{convert.line} converts outputs of \code{extract.gt} to the format \code{pcadapt}.
 #'
-#' @param hap.block a genotype matrix obtained with `vcfR` 
+#' @param hap.block a genotype matrix obtained with `vcfR`. 
+#' @param allele.sep a character indicating which type of delimiter is used to separate the alleles.
 #'
 #' @examples
 #' ## see also ?pcadapt for examples
@@ -186,13 +191,21 @@ get.pc <- function(x,list){
 #'
 #' @export
 #'
-convert.line <- function(hap.block){
+convert.line <- function(hap.block,allele.sep="/"){
   geno.block <- array(9,dim=dim(hap.block))
-  geno.block[which(hap.block=="0/0",arr.ind = TRUE)] <- 0
-  geno.block[which(hap.block=="0/1",arr.ind = TRUE)] <- 1
-  geno.block[which(hap.block=="1/0",arr.ind = TRUE)] <- 1
-  geno.block[which(hap.block=="1/1",arr.ind = TRUE)] <- 2
-  mask <- !as.logical(apply(hap.block,MARGIN=1,FUN=function(x){sum(!(x %in% c("0/0","0/1","1/0","1/1","./.",NA)))}))
+  if (allele.sep == "/"){
+    geno.block[which(hap.block=="0/0",arr.ind = TRUE)] <- 0
+    geno.block[which(hap.block=="0/1",arr.ind = TRUE)] <- 1
+    geno.block[which(hap.block=="1/0",arr.ind = TRUE)] <- 1
+    geno.block[which(hap.block=="1/1",arr.ind = TRUE)] <- 2
+    mask <- !as.logical(apply(hap.block,MARGIN=1,FUN=function(x){sum(!(x %in% c("0/0","0/1","1/0","1/1","./.",NA)))}))
+  } else if (allele.sep == "|"){
+    geno.block[which(hap.block=="0|0",arr.ind = TRUE)] <- 0
+    geno.block[which(hap.block=="0|1",arr.ind = TRUE)] <- 1
+    geno.block[which(hap.block=="1|0",arr.ind = TRUE)] <- 1
+    geno.block[which(hap.block=="1|1",arr.ind = TRUE)] <- 2
+    mask <- !as.logical(apply(hap.block,MARGIN=1,FUN=function(x){sum(!(x %in% c("0|0","0|1","1|0","1|1",".|.",NA)))}))      
+  }
   filtered.geno <- geno.block[mask,]
   return(filtered.geno)
 }
@@ -202,8 +215,9 @@ convert.line <- function(hap.block){
 #' \code{vcf2pcadapt} uses the package \code{vcfR} to extract the genotype information from a vcf file and exports it
 #' under the format required by \code{pcadapt}.
 #'
-#' @param geno a genotype matrix obtained with `vcfR` 
+#' @param geno a genotype matrix obtained with `vcfR`.
 #' @param output.file a character string indicating the name of the output file.
+#' @param allele.sep a character indicating which type of delimiter is used to separate the alleles.
 #' @param blocksize an integer indicating the number of SNPs to be processed in the same chunk.
 #' @param console.count an integer indicating the number of SNPs by which the progress bar should increment.
 #'
@@ -216,7 +230,7 @@ convert.line <- function(hap.block){
 #'
 #' @export
 #'
-vcf2pcadapt <- function(geno,output.file="tmp.pcadapt",blocksize=1000,console.count = 10000){
+vcf2pcadapt <- function(geno,output.file="tmp.pcadapt",allele.sep="/",blocksize=1000,console.count=10000){
   if (file.exists(output.file)){
     file.remove(output.file)
   }
@@ -227,7 +241,7 @@ vcf2pcadapt <- function(geno,output.file="tmp.pcadapt",blocksize=1000,console.co
   skipped <- 0
   while (init.block < nSNP && end.block <= nSNP){
     snp.lines <- geno[init.block:end.block,]
-    hap2geno <- t(convert.line(snp.lines))
+    hap2geno <- t(convert.line(snp.lines,allele.sep = allele.sep))
     skipped <- skipped + blocksize - ncol(hap2geno)
     write(hap2geno,file = output.file,append = TRUE,ncolumns = nIND)  
     if (end.block%%console.count == 0){

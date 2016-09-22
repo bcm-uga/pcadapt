@@ -20,6 +20,8 @@
 #' @importFrom stats median pchisq na.omit qchisq
 #' @importFrom utils read.table
 #' 
+#' @keywords internal
+#' 
 #' @export
 #'
 create.pcadapt = function(output.filename,K,method,data.type,min.maf){
@@ -30,7 +32,6 @@ create.pcadapt = function(output.filename,K,method,data.type,min.maf){
   nSNP <- length(res$maf)
   res$loadings <- as.matrix(read.table(paste0(output.filename,".loadings")))*sqrt(nSNP)
   res$singular.values <- as.numeric(read.table(paste0(output.filename,".sigma")))
-  #res$loadings <- as.matrix(read.table(paste0(output.filename,".loadings")))*nSNP*res$singular.values
   res$scores <- t(read.table(paste0(output.filename,".scores")))
   nIND <- nrow(res$scores)
   res$loadings[res$maf<min.maf,] <- NA

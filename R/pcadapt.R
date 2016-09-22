@@ -9,7 +9,7 @@
 #' data, the correlation matrix between individuals is computed using only the markers available for each
 #' pair of individuals. Depending on the specified \code{method}, different test statistics can be used.
 #'
-#' \code{mahalanobis} (default): the Mahalanobis distance is computed for each genetic marker using a robust
+#' \code{mahalanobis} (default): the robust Mahalanobis distance is computed for each genetic marker using a robust
 #' estimate of both mean and covariance matrix between the \code{K} vectors of z-scores.
 #'
 #' \code{communality}: the communality statistic measures the proportion of variance explained by the first \code{K} PCs.
@@ -101,6 +101,10 @@ pcadapt <- function(input,
       output.filename <- "pcadapt_output"
     }
     
+    #############################################
+    ######### use the wrapped functions #########
+    #############################################
+    
     if (ploidy == 2){
       .C("wrapper_pcadapt",
          as.character(input.filename),
@@ -142,34 +146,11 @@ pcadapt <- function(input,
     } else {
       stop("Invalid input argument.")
     }
-    nPOP <- nrow(data)
-    nSNP <- ncol(data)
     if (missing(K)){
-      K <- nPOP-1
+      K <- nrow(data)-1
     }
-    res <- corpca(data,K)
-    freq <- apply(data,2,FUN=function(x){mean(x,na.rm=TRUE)})
-    res$maf <- as.vector(pmin(freq,1-freq))
-    res$loadings[res$maf<min.maf] <- NA 
-    res$stat <- array(NA,dim=nSNP)
-    finite.list <- which(!is.na(apply(abs(res$loadings),1,sum)))
-    if (K>1){
-      res$stat[finite.list] <- as.vector(robust::covRob(res$loadings,na.action=na.omit,estim="pairwiseGK")$dist)
-      res$gif <- median(res$stat,na.rm=TRUE)/qchisq(0.5,df=K)
-    } else {
-      onedcov <- as.vector(MASS::cov.rob(res$loadings[finite.list,1]))
-      res$gif <- onedcov$cov[1]
-      res$stat <- (res$zscores[,1]-onedcov$center)^2
-    }
-    res$chi2.stat <- res$stat/res$gif
-    # Compute p-values
-    res$pvalues <- compute.pval(res$chi2.stat,K,method="mahalanobis")
-    class(res) <- 'pcadapt'
-    attr(res,"K") <- K
-    attr(res,"method") <- method
-    attr(res,"data.type") <- data.type
-    attr(res,"min.maf") <- min.maf
-  }
+    res <- create.pcadapt.pool(data,K=K,min.maf=min.maf)
+   }
   return(res)
 }
 
