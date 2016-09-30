@@ -10,6 +10,7 @@ vignette: >
 <center> <h3> `r Sys.Date()` </h3> </center>
 
 ## TEST COMPARE
+## My comment vaut le tien
 
 **pcadapt** has been developed to detect genetic markers involved in biological adaptation. **pcadapt** provides statistical tools for outlier detection based on Principal Component Analysis (PCA).
 
