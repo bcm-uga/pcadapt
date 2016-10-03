@@ -1,16 +1,20 @@
 ---
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
 vignette: >
   %\VignetteIndexEntry{pcadapt}
   %\VignetteEngine{knitr::rmarkdown}
   %\usepackage[utf8]{inputenc}
 ---
+
 <center> <h1> pcadapt </h1> </center>
 <center> <h3> Keurcien Luu, Michael G.B. Blum </h3> </center>
 <center> <h3> `r Sys.Date()` </h3> </center>
 
-<!-- ## TEST COMPARE -->
-<!-- ## My comment vaut le tien -->
+# Presentation
 
 **pcadapt** has been developed to detect genetic markers involved in biological adaptation. **pcadapt** provides statistical tools for outlier detection based on Principal Component Analysis (PCA).
 
@@ -36,7 +40,7 @@ library(pcadapt)
 ## A.1. The `read.pcadapt` function
 
 You should use the `read.pcadapt` function to convert your genotype file to the `pcadapt` format. `pcadapt` files should have individuals in columns, SNPs in lines, and missing values should be encoded with `9`. `read.pcadapt` converts different types of files to the `pcadapt` format and returns a character string containing the name of the converted file, which should be used as input for the `pcadapt` function.
-The current version of `read.pcadapt` supports three formats: "vcf", "ped", "lfmm" and "pcadapt". For example, assume your genotype file is called "foo.lfmm" and is located in the directory "path_to_directory", use the following command lines:
+The current version of `read.pcadapt` supports four formats: "vcf", "ped", "lfmm" and "pcadapt". For example, assume your genotype file is called "foo.lfmm" and is located in the directory "path_to_directory", use the following command lines:
 
 ```
 path_to_file <- "path_to_directory/foo.lfmm" 
@@ -52,7 +56,15 @@ To run the provided example, the file location can be retrieved by typing the fo
 path_to_file <- system.file("extdata","geno3pops",package="pcadapt")
 ```
 
-## A.2. How to handle missing values
+## A.2. `local.env`
+
+A new argument has been added to `read.pcadapt`, in order to specify whether the genotype matrix has to be read from a file or from the local environment. By default, `local.env=TRUE`, meaning that `read.pcadapt` will read the genotype matrix from the file accordingly. If the genotype matrix is already loaded in the global environment, in the `lfmm` format or in the `pcadapt` format, running `read.pcadapt` will write an output file and returns the name of the output file. For example, if your genotype matrix is stored under the variable name `geno.matrix` and its format is `lfmm`, you should use the following command line:
+
+```
+filename <- read.pcadapt(geno.matrix,type="lfmm",local.env=TRUE)
+```
+
+## A.3. How to handle missing values
 
 As stated above, to proceed with the `pcadapt` function, files should be in the right format. Any missing value should be encoded with a `9`. This is automatically done with `read.pcadapt` if it has been used to convert "ped", "vcf" or "lfmm" files.
 
@@ -63,7 +75,7 @@ The `pcadapt` function performs two successive tasks. First, PCA is performed on
 To choose `K`, principal component analysis should first be performed with a large enough number of principal components (e.g. `K=20`).
 
 ```
-x <- pcadapt(filename,K=20,transpose=TRUE)
+x <- pcadapt(filename,K=20)
 ```
 
 ```{r,echo=FALSE}
@@ -246,7 +258,7 @@ The package also handles Pool-seq data. A Pool-seq example is provided in the pa
 pooldata <- system.file("extdata","pool3pops",package="pcadapt")
 ```
 
-The frequency matrix should have `n` rows and `L` columns by default (where `n` is the number of populations and `L` is the number of genetic markers). If the input data is a `(L,n)` matrix, set `transpose` to `TRUE` in the `pcadapt` function. When calling the `pcadapt` function, make sure to specify `data.type ="pool"`. 
+The frequency matrix should have `n` rows and `L` columns by default (where `n` is the number of populations and `L` is the number of genetic markers). When calling the `pcadapt` function, make sure to specify `data.type ="pool"`.
 
 ```{r}
 xpool <- pcadapt(pooldata,data.type="pool")
@@ -258,29 +270,11 @@ Plotting options mentioned in section D such as `"manhattan"`, `"qqplot"`, `"sco
 
 # G. Advanced Usage
 
-## G.1 Reading data already loaded
-
-If your `L x n` genotype matrix `data` is already stored in the environment and is in the right format (`pcadapt` files should have individuals in columns, SNPs in lines, and missing values should be encoded with `9`), you can run `pcadapt` directly using the following command line:
-
-```
-data <- read.table(path_to_file)
-x <- pcadapt(data,K=2)
-```
-
-If your genotype matrix is `n x L`, it is necessary to tranpose the matrix via the option `transpose`, a logical value indicating whether the matrix has to be transposed or not:
-
-```
-data <- read.table(path_to_file)
-x <- pcadapt(data,K=2,transpose=TRUE)
-```
-
-We recommend to check that `pcadapt` has been run correctly by verifying that the number of detected loci displayed in the console when running `pcadapt`, is correct.
-
-## G.2 Computing other test statistics
+## G.1. Computing other test statistics
 
 The default option uses the Mahalanobis distance as a test statistic to seek for outlier SNPs, but other statistics can be computed based on the correlations between SNPs and principal components. However except for power users, we recommend to use the Mahalanobis distance that provides the best rankings of SNPs in most cases we have investigated.
 
-### G.2.1 Communality
+### G.1.1. Communality
 
 The communality statistic measures the proportion of variance explained by the first `K` PCs. When there are `K+1` populations, the communality statistic provides a ranking similar to the widely used Fst statistic. P-values are computed using a chi-square approximation (Duforet-Frebourg et al. 2015).
 The test based on the communality statistic can be performed by setting `method` to `communality` in the `pcadapt` function.
@@ -304,7 +298,7 @@ The communality can be approximated by a constant times a chi-square distributio
 plot(x_com,option="stat.distribution")
 ```
 
-### G.2.2 Component-wise
+### G.1.2 Component-wise
 
 Another possibility (component-wise p-values) is to perform one genome scan for each principal component. The test statistics are the loadings, which correspond to the correlations between each PC and each SNP. P-values are computed by making a Gaussian approximation for each PC and by estimating the standard deviation of the null distribution.
 
