@@ -45,7 +45,7 @@ read.pcadapt <- function(input.filename,type,local.env=FALSE,allele.sep="/"){
     } else if (type == "lfmm"){
       .C("wrapper_converter",as.character(input.filename),as.integer(2),PACKAGE = "pcadapt")
     } else if (type == "vcfR"){
-      obj.vcf <- vcfR::read.vcfR(input.filename,nrows=1034)
+      obj.vcf <- vcfR::read.vcfR(input.filename)
       geno <- vcfR::extract.gt(obj.vcf)
       vcf2pcadapt(geno,output.file = "tmp.pcadapt",allele.sep = allele.sep,blocksize = 1000,console.count = 10000)
     }
@@ -231,19 +231,27 @@ convert.line <- function(hap.block,allele.sep="/"){
 #'
 #' @export
 #'
-vcf2pcadapt <- function(geno,output.file="tmp.pcadapt",allele.sep="/",blocksize=100,console.count=10000){
+vcf2pcadapt <- function(geno,output.file="tmp.pcadapt",allele.sep="/",blocksize=1000,console.count=10000){
   if (file.exists(output.file)){
     file.remove(output.file)
   }
   nIND <- ncol(geno)
   nSNP <- nrow(geno)
   init.block <- 1
-  end.block <- blocksize
+  if (nSNP > blocksize){
+    end.block <- blocksize
+  } else {
+    end.block <- nSNP
+  }
   skipped <- 0
   while (init.block < nSNP && end.block <= nSNP){
     snp.lines <- geno[init.block:end.block,]
     hap2geno <- t(convert.line(snp.lines,allele.sep = allele.sep))
-    skipped <- skipped + blocksize - ncol(hap2geno)
+    if (nSNP > blocksize){
+      skipped <- skipped + blocksize - ncol(hap2geno)
+    } else {
+      skipped <- nSNP - ncol(hap2geno)
+    }
     write(hap2geno,file = output.file,append = TRUE,ncolumns = nIND)  
     if (end.block%%console.count == 0){
       cat('\r',end.block,"SNPs have been processed.")
