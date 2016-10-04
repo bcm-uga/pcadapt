@@ -122,11 +122,12 @@ score.plotting = function(x,i=1,j=2,pop){
       res.plot <- ggplot2::ggplot(ggdf,aes_string("PC_i","PC_j")) +
         geom_point() 
     } else {
-      ggdf <- as.data.frame(cbind(x$scores[,i],x$scores[,j],pop)) 
-      colnames(ggdf) <- c("PC_i","PC_j","Pop")
+      pop.to.int <- get.score.color(pop)
       popnames <- get.pop.names(pop)
-      res.plot <- ggplot2::ggplot(ggdf,aes_string("PC_i","PC_j")) +
-        ggplot2::geom_point(ggplot2::aes(colour=factor(ggdf$Pop)))  +
+      ggdf <- as.data.frame(cbind(x$scores[,i],x$scores[,j],pop.to.int)) 
+      colnames(ggdf) <- c("PC_i","PC_j","Pop")
+      res.plot <- ggplot2::ggplot(ggdf,aes(PC_i,PC_j)) +
+        ggplot2::geom_point(aes(colour=factor(Pop))) +
         ggplot2::scale_color_hue(name=" ",labels=popnames)
     }
     res.plot <- res.plot + ggplot2::ggtitle(paste0("Projection onto PC",i," and PC",j)) +

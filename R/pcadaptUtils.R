@@ -117,10 +117,11 @@ get.score.color = function(pop){
     idx <- idx+1
     list.ref <- list.ref[list.ref != col]
   }
-  color.list <- rainbow(length(pop.split))
+  #color.list <- rainbow(length(pop.split))
   color.individuals <- array(dim=nIND)
   for (k in 1:length(pop.split)){
-    color.individuals[unlist(pop.split[k])] <- color.list[k]
+    #color.individuals[unlist(pop.split[k])] <- color.list[k]
+    color.individuals[unlist(pop.split[k])] <- k
   }
   return(color.individuals)
 }
@@ -143,12 +144,12 @@ get.score.color = function(pop){
 #'
 get.pop.names = function(pop){
   aux <- pop[1]
-  idx <- aux
+  res <- aux
   for (i in 1:(length(pop))){
-    if (pop[i] != idx){
+    if (!(pop[i] %in% res)){
       aux <- c(aux,pop[i])
+      res <- c(pop[i],res)
     }
-    idx <- pop[i]
   }
   return(aux)
 }

@@ -36,18 +36,18 @@ create.pcadapt = function(output.filename,K,method,data.type,min.maf){
   nIND <- nrow(res$scores)
   res$loadings[res$maf<min.maf,] <- NA
   res$zscores <- as.matrix(read.table(paste0(output.filename,".zscores")))
-  Kbis <- ncol(res$zscores)
+  K.bis <- ncol(res$zscores)
   finite.list <- which(!is.na(apply(abs(res$zscores),1,sum)))
   res$stat <- array(NA,dim=nSNP)
   
   if (method == "mahalanobis"){
     # Use covRob (robust) for K>1 and cov.rob (MASS) for K=1
-    if (Kbis>1){
-      if (K != Kbis){
+    if (K.bis>1){
+      if (K != K.bis){
         warning("Number of principal components inconsistent.")
       }
       res$stat[finite.list] <- as.vector(robust::covRob(res$zscores,na.action=na.omit,estim="pairwiseGK")$dist)
-    } else if (Kbis==1){
+    } else if (K.bis==1){
       onedcov <- as.vector(MASS::cov.rob(res$zscores[finite.list,1]))
       res$stat <- (res$zscores[,1]-onedcov$center)^2/onedcov$cov[1]
     }
