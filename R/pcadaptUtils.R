@@ -172,7 +172,7 @@ get.pc <- function(x,list){
   rem.na <- which(!is.na(x$loadings[list,1]))
   v <- array(0,dim=length(list))
   v[rem.na] <- sapply(list[rem.na],FUN=function(l){which(x$loadings[l,]^2==max(x$loadings[l,]^2,na.rm=TRUE))})
-  df <- cbind(list,as.numeric(v))
+  df <- cbind(list,lapply(v,as.numeric))
   colnames(df) <- c("SNP","PC")
   return(df)
 }
