@@ -110,20 +110,28 @@ Another option to choose the number of PCs is based on the 'score plot' that dis
 When population labels are known, individuals of the same populations can be displayed with the same color using the `pop` argument, which should contain the list of indices of the populations of origin. In the **geno3pops** example, the first population is composed of the first 50 individuals, the second population of the next 50 individuals, and so on. Thus, a vector of indices or characters (population names) that can be provided to the argument `pop` should look like this:
 
 ```{r}
-poplist <- c(rep(1,50),rep(2,50),rep(3,50))
-print(poplist)
+# With integers
+poplist.int <- c(rep(1,50),rep(2,50),rep(3,50))
+# With names
+poplist.names <- c(rep("POP1",50),rep("POP2",50),rep("POP3",50))
+print(poplist.int)
+print(poplist.names)
 ```
 
 If this field is left empty, the points will be displayed in black. By default, if the values of `i` and `j` are not specified, the projection is done onto the first two principal components. 
 
 ```{r,fig.width=7,fig.height=5,fig.align='center'}
-plot(x,option="scores",pop=poplist)
+plot(x,option="scores",pop=poplist.int)
+```
+
+```{r,fig.width=7,fig.height=5,fig.align='center'}
+plot(x,option="scores",pop=poplist.names)
 ```
 
 Looking at population structure beyond `K=2` confirms the results of the scree plot. The third and the fourth principal components do not ascertain population structure anymore.
 
 ```{r,fig.width=7,fig.height=5,fig.align='center'}
-plot(x,option="scores",i=3,j=4,pop=poplist)
+plot(x,option="scores",i=3,j=4,pop=poplist.names)
 ```
 
 **NB**: for .ped files, the `plot` function adds colors to the 'score plot' automatically provided that the data have been loaded with `read.pcadapt`.

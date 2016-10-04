@@ -231,7 +231,7 @@ convert.line <- function(hap.block,allele.sep="/"){
 #'
 #' @export
 #'
-vcf2pcadapt <- function(geno,output.file="tmp.pcadapt",allele.sep="/",blocksize=1000,console.count=10000){
+vcf2pcadapt <- function(geno,output.file="tmp.pcadapt",allele.sep="/",blocksize=100,console.count=10000){
   if (file.exists(output.file)){
     file.remove(output.file)
   }
