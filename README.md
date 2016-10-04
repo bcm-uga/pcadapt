@@ -14,6 +14,14 @@ A tutorial for **pcadapt** is available. To access to the vignette, type the fol
 browseVignettes("pcadapt")
 ```
 
+If you desire to install from GitHub, run the following commands:
+
+```
+install.packages("devtools")
+devtools::install_github("BioShock38/pcadapt")
+```
+
+
 ## Reference
 
 Luu, Keurcien, Eric Bazin, and Michael GB Blum. "[pcadapt: an R package to perform genome scans for selection based on principal component analysis.](http://biorxiv.org/content/early/2016/05/30/056135.abstract)" bioRxiv (2016): 056135.
