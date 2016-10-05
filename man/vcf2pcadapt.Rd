@@ -4,13 +4,15 @@
 \alias{vcf2pcadapt}
 \title{vcfR-based converter}
 \usage{
-vcf2pcadapt(geno, output.file = "tmp.pcadapt", blocksize = 1000,
-  console.count = 10000)
+vcf2pcadapt(geno, output.file = "tmp.pcadapt", allele.sep = "/",
+  blocksize = 1000, console.count = 10000)
 }
 \arguments{
-\item{geno}{a genotype matrix obtained with `vcfR`}
+\item{geno}{a genotype matrix obtained with `vcfR`.}
 
 \item{output.file}{a character string indicating the name of the output file.}
+
+\item{allele.sep}{a character indicating which type of delimiter is used to separate the alleles.}
 
 \item{blocksize}{an integer indicating the number of SNPs to be processed in the same chunk.}
 

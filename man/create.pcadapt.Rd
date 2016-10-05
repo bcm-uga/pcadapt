@@ -27,4 +27,5 @@ of minor allele frequencies above which p-values are computed.}
 \code{create.pcadapt} loads the numerical quantities needed to compute the test
 statistics, and stores them in an object of class \code{pcadapt}.
 }
+\keyword{internal}
 

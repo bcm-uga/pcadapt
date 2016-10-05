@@ -4,7 +4,7 @@
 \alias{read.pcadapt}
 \title{File Converter}
 \usage{
-read.pcadapt(input.filename, type, local.env = FALSE)
+read.pcadapt(input.filename, type, local.env = FALSE, allele.sep = "/")
 }
 \arguments{
 \item{input.filename}{a character string specifying the name of the file to be
@@ -16,6 +16,9 @@ to the genotype matrix in the local environment.}
 
 \item{local.env}{a logical value stating whether the input has to be read from the local
 environment or from the working directory.}
+
+\item{allele.sep}{a character string specifying the type of allele separator used in VCF files. Set to "/" by default, but can
+be switched to "|" otherwise.}
 }
 \description{
 \code{read.pcadapt} converts \code{.vcf} and \code{.ped} files to an appropriate

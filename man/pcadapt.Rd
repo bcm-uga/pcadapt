@@ -44,7 +44,7 @@ First, a principal component analysis is performed on the scaled and centered ge
 data, the correlation matrix between individuals is computed using only the markers available for each
 pair of individuals. Depending on the specified \code{method}, different test statistics can be used.
 
-\code{mahalanobis} (default): the Mahalanobis distance is computed for each genetic marker using a robust
+\code{mahalanobis} (default): the robust Mahalanobis distance is computed for each genetic marker using a robust
 estimate of both mean and covariance matrix between the \code{K} vectors of z-scores.
 
 \code{communality}: the communality statistic measures the proportion of variance explained by the first \code{K} PCs.

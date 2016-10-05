@@ -4,10 +4,12 @@
 \alias{convert.line}
 \title{Convert genotype information obtained with vcfR}
 \usage{
-convert.line(hap.block)
+convert.line(hap.block, allele.sep = "/")
 }
 \arguments{
-\item{hap.block}{a genotype matrix obtained with `vcfR`}
+\item{hap.block}{a genotype matrix obtained with `vcfR`.}
+
+\item{allele.sep}{a character indicating which type of delimiter is used to separate the alleles.}
 }
 \description{
 \code{convert.line} converts outputs of \code{extract.gt} to the format \code{pcadapt}.

@@ -126,8 +126,8 @@ score.plotting = function(x,i=1,j=2,pop){
       popnames <- get.pop.names(pop)
       ggdf <- as.data.frame(cbind(x$scores[,i],x$scores[,j],pop.to.int)) 
       colnames(ggdf) <- c("PC_i","PC_j","Pop")
-      res.plot <- ggplot2::ggplot(ggdf,aes(PC_i,PC_j)) +
-        ggplot2::geom_point(aes(colour=factor(Pop))) +
+      res.plot <- ggplot2::ggplot(ggdf,aes_string("PC_i","PC_j")) +
+        ggplot2::geom_point(aes(colour=factor(ggdf$Pop))) +
         ggplot2::scale_color_hue(name=" ",labels=popnames)
     }
     res.plot <- res.plot + ggplot2::ggtitle(paste0("Projection onto PC",i," and PC",j)) +

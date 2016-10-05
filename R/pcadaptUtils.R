@@ -11,6 +11,8 @@
 #' \code{pcadapt} format. Supported formats are: \code{ped}, \code{vcf}, \code{lfmm}.
 #' @param local.env a logical value stating whether the input has to be read from the local
 #' environment or from the working directory.
+#' @param allele.sep a character string specifying the type of allele separator used in VCF files. Set to "/" by default, but can
+#' be switched to "|" otherwise.
 #'
 #' @useDynLib pcadapt wrapper_converter
 #' @importFrom utils tail
