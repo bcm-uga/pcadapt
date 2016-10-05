@@ -42,7 +42,7 @@ read.pcadapt <- function(input.filename,type,local.env=FALSE,allele.sep="/"){
     if (type == "ped"){
       .C("wrapper_converter",as.character(input.filename),as.integer(0),PACKAGE = "pcadapt")
     } else if (type == "vcf"){
-      cat("If conversion fails, try 'type=vcfR' instead.\n")
+      cat("If conversion fails, try type='vcfR' instead.\n")
       .C("wrapper_converter",as.character(input.filename),as.integer(1),PACKAGE = "pcadapt")
     } else if (type == "lfmm"){
       .C("wrapper_converter",as.character(input.filename),as.integer(2),PACKAGE = "pcadapt")

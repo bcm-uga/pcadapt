@@ -239,15 +239,11 @@ library(qvalue)
 For a given $\alpha$ (real valued number between $0$ and $1$), SNPs with q-values less than $\alpha$ will be considered as outliers with an expected false discovery rate bounded by $\alpha$.
 The false discovery rate is defined as the percentage of false discoveries among the list of candidate SNPs. Here is an example of how to provide a list of candidate SNPs for the **geno3pops** data, for an expected false discovery rate lower than `10%`:
 
-```{r,echo=FALSE}
-library(qvalue)
 ```
-
-```{r}
+library(qvalue)
 qval <- qvalue(x$pvalues)$qvalues
 alpha <- 0.1
 outliers <- which(qval<alpha)
-print(outliers)
 ```
 
 It may be interesting to know which principal components are actually the most
