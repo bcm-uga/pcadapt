@@ -14,8 +14,6 @@ vignette: >
 <center> <h3> Keurcien Luu, Michael G.B. Blum </h3> </center>
 <center> <h3> `r Sys.Date()` </h3> </center>
 
-# Presentation
-
 **pcadapt** has been developed to detect genetic markers involved in biological adaptation. **pcadapt** provides statistical tools for outlier detection based on Principal Component Analysis (PCA).
 
 In the following, we show how the **pcadapt** package can perform genome scans for selection. The package contains two examples: **geno3pops** (genotype data) and **pool3pops** (Pool-seq data). The **geno3pops** data contain simulated genotypes for 1,500 diploid markers. A total of 150 individuals coming from three different populations were genotyped. Simulations were performed with [simuPOP](http://simupop.sourceforge.net/) using a divergence model assuming that 200 SNPs confer a selective advantage. The **pool3pops** data contain simulated allele frequencies in 3 populations for 1,500 diploid markers. Allele frequencies have been computed based on the **geno3pops** dataset.
@@ -27,28 +25,26 @@ install.packages("pcadapt")
 library(pcadapt)
 ```
 
-The main change of the 3.0 version is that all analyses are now included in the `R` package.
-Users should not use the `C` software PCAdapt fast anymore.
+Users should not use the `C` software **PCAdapt fast** anymore.
 
 
 ```{r,echo=TRUE,include=FALSE}
 library(pcadapt)
 ```
 
-# A. Reading the genotype data
+# A. Reading genotype data
 
-## A.1. The `read.pcadapt` function
+### A.1. `read.pcadapt`
 
-You should use the `read.pcadapt` function to convert your genotype file to the `pcadapt` format. `pcadapt` files should have individuals in columns, SNPs in lines, and missing values should be encoded with `9`. `read.pcadapt` converts different types of files to the `pcadapt` format and returns a character string containing the name of the converted file, which should be used as input for the `pcadapt` function.
-The current version of `read.pcadapt` supports four formats: "vcf", "ped", "lfmm" and "pcadapt". For example, assume your genotype file is called "foo.lfmm" and is located in the directory "path_to_directory", use the following command lines:
+You should use the `read.pcadapt` function to convert your genotype file to the `pcadapt` format. `pcadapt` files should have individuals in columns, SNPs in lines, and missing values should be encoded with `9`'s. `read.pcadapt` converts different types of files to the `pcadapt` format and returns a character string containing the name of the converted file, which should be used as input for the `pcadapt` function.
+The current version of `read.pcadapt` supports three formats: "vcf", "ped", and "lfmm". For example, assume your genotype file is called "foo.lfmm" and is located in the directory "path_to_directory", use the following command lines:
 
 ```
 path_to_file <- "path_to_directory/foo.lfmm" 
 filename <- read.pcadapt(path_to_file,type="lfmm")
-print(filename)
 ```
 
-**NB**: the `lfmm` format was the former format used for older versions of `pcadapt`.
+**NB**: to convert VCF files, you can use `type="vcf"` or `type="vcfR"`, the first option being substantially faster than the second option, while `type="vcfR"` works more consistantly than `type="vcf"`.
 
 To run the provided example, the file location can be retrieved by typing the following command:
 
@@ -56,21 +52,21 @@ To run the provided example, the file location can be retrieved by typing the fo
 path_to_file <- system.file("extdata","geno3pops",package="pcadapt")
 ```
 
-## A.2. `local.env`
+### A.2. `local.env`
 
-A new argument has been added to `read.pcadapt`, in order to specify whether the genotype matrix has to be read from a file or from the local environment. By default, `local.env=TRUE`, meaning that `read.pcadapt` will read the genotype matrix from the file accordingly. If the genotype matrix is already loaded in the global environment, in the `lfmm` format or in the `pcadapt` format, running `read.pcadapt` will write an output file and returns the name of the output file. For example, if your genotype matrix is stored under the variable name `geno.matrix` and its format is `lfmm`, you should use the following command line:
+A new argument has been added to `read.pcadapt`, in order to specify whether the genotype matrix has to be read from a file or from the local environment. By default, `local.env=FALSE`, meaning that `read.pcadapt` reads genotype data stored in text files by default. If the genotype matrix is already loaded in the global environment, in the `lfmm` format or in the `pcadapt` format, running `read.pcadapt` will write an output file and will return the name of the output file. For example, if your genotype matrix is stored under the variable name `geno.matrix` and is of type `lfmm`, you should use the following command line:
 
 ```
 filename <- read.pcadapt(geno.matrix,type="lfmm",local.env=TRUE)
 ```
 
-## A.3. How to handle missing values
+### A.3. How to handle missing values
 
 As stated above, to proceed with the `pcadapt` function, files should be in the right format. Any missing value should be encoded with a `9`. This is automatically done with `read.pcadapt` if it has been used to convert "ped", "vcf" or "lfmm" files.
 
 # B. Choosing the number `K` of Principal Components
 
-The `pcadapt` function performs two successive tasks. First, PCA is performed on the centered and scaled genotype matrix. The second stage consists of computing test statistics and p-values based on the correlations between SNPs and the first `K` principal components (PCs). To run the function `pcadapt`, the user should specify the `pcadapt` file location `filename` or use the output returned by the function `read.pcadapt`, along with the number `K` of principal components to work with.
+The `pcadapt` function performs two successive tasks. First, PCA is performed on the centered and scaled genotype matrix. The second stage consists in computing test statistics and p-values based on the correlations between SNPs and the first `K` principal components (PCs). To run the function `pcadapt`, the user should specify the `pcadapt` file location `filename` or use the output returned by the function `read.pcadapt`, along with the number `K` of principal components to work with.
 
 To choose `K`, principal component analysis should first be performed with a large enough number of principal components (e.g. `K=20`).
 
@@ -89,7 +85,7 @@ x <- create.pcadapt(output.filename,K,method,data.type,min.maf)
 
 **NB** : by default, data are assumed to be diploid. To specify the ploidy, use the argument `ploidy` (`ploidy=2` for diploid species and `ploidy=1` for haploid species) in the `pcadapt` function. 
 
-## B.1. Scree plot
+### B.1. Scree plot
 
 The 'scree plot' displays in decreasing order the percentage of variance explained by each PC. Up to a constant, it corresponds to the eigenvalues in decreasing order. The ideal pattern in a scree plot is a steep curve followed by a bend and a straight line. The eigenvalues that correspond to random variation lie on a straight line whereas the ones that correspond to population structure lie on a steep curve. We recommend to keep PCs that correspond to eigenvalues to the left of the straight line. In the provided example, `K=2` is the optimal choice for `K`. The plot function displays a scree plot:
 
@@ -103,7 +99,7 @@ By default, the number of principal components taken into account in the scree p
 plot(x,option="screeplot",K=10)
 ```
 
-## B.2. Score plot
+### B.2. Score plot
 
 Another option to choose the number of PCs is based on the 'score plot' that displays population structure. The score plot displays the projections of the individuals onto the specified principal components. Using the score plot, the choice of  `K` can be limited to the values of `K` that correspond to a relevant level of population structure.
 
@@ -134,8 +130,6 @@ Looking at population structure beyond `K=2` confirms the results of the scree p
 plot(x,option="scores",i=3,j=4,pop=poplist.names)
 ```
 
-**NB**: for .ped files, the `plot` function adds colors to the 'score plot' automatically provided that the data have been loaded with `read.pcadapt`.
- 
 # C. Computing the test statistic based on PCA
 
 For a given SNP, the test statistic is based on the $z$-scores obtained when regressing SNPs with the `K` principal components. The test statistic for detecting outlier SNPs is the Mahalanobis distance, which is a multi-dimensional approach that measures how distant is a point from the mean. Denoting by $z^j = (z_1^j, \dots, z_K^j)$ the vector of `K` $z$-scores between the $j$-th SNP and the first `K` PCs, the sqaured Mahalanobis distance is defined as 
@@ -191,7 +185,7 @@ All of these elements are accessible using the `$` symbol. For example, the p-va
 
 # D. Graphical tools 
 
-## D.1. Manhattan Plot
+### D.1. Manhattan Plot
 
 A Manhattan plot displays $-\text{log}_{10}$ of the p-values.
 
@@ -199,7 +193,7 @@ A Manhattan plot displays $-\text{log}_{10}$ of the p-values.
 plot(x,option="manhattan")
 ```
 
-## D.2. Q-Q Plot
+### D.2. Q-Q Plot
 
 The user is also given the possibility to check the distribution of the p-values using a Q-Q plot 
 
@@ -249,9 +243,8 @@ outliers <- which(qval<alpha)
 It may be interesting to know which principal components are actually the most
 correlated with the oulier SNPs. The function `get.pc` allows to achieve that:
 
-```{r}
+```
 snp_pc <- get.pc(x,outliers)
-head(snp_pc)
 ```
 
 # F. Pool-seq Data
@@ -274,7 +267,7 @@ Plotting options mentioned in section D such as `"manhattan"`, `"qqplot"`, `"sco
 
 # G. Advanced Usage
 
-## G.1. Computing other test statistics
+### G.1. Computing other test statistics
 
 The default option uses the Mahalanobis distance as a test statistic to seek for outlier SNPs, but other statistics can be computed based on the correlations between SNPs and principal components. However except for power users, we recommend to use the Mahalanobis distance that provides the best rankings of SNPs in most cases we have investigated.
 
@@ -330,6 +323,11 @@ To display the neutral distribution for the component-wise case, the value of `K
 ```{r,fig.width=7,fig.height=5,fig.align='center'}
 plot(x_cw,option="stat.distribution",K=2)
 ```
+
+## Changelog `pcadapt 3.0.3` (10-06-2016)
+
+- Option `type="vcfR"` has been added to `read.pcadapt` to overcome some conversion issues occuring with VCF files.
+- Argument `transpose` is now deprecated. Read section A for more details.
 
 ## Changelog `pcadapt 3.0.2` (06-13-2016)
 
