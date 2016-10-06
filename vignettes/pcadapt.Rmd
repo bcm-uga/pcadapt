@@ -29,7 +29,7 @@ Users should not use the `C` software **PCAdapt fast** anymore.
 
 
 ```{r,echo=TRUE,include=FALSE}
-library(pcadapt)
+library(pcadapt)#Comment
 ```
 
 # A. Reading genotype data
