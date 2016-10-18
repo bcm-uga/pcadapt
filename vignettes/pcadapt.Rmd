@@ -247,31 +247,13 @@ correlated with the oulier SNPs. The function `get.pc` allows to achieve that:
 snp_pc <- get.pc(x,outliers)
 ```
 
-# F. Pool-seq Data
+# F. Advanced Usage
 
-The package also handles Pool-seq data. A Pool-seq example is provided in the package and can be loaded as follows:
-
-```{r}
-pooldata <- system.file("extdata","pool3pops",package="pcadapt")
-```
-
-The frequency matrix should have `n` rows and `L` columns by default (where `n` is the number of populations and `L` is the number of genetic markers). When calling the `pcadapt` function, make sure to specify `data.type ="pool"`.
-
-```{r}
-xpool <- pcadapt(pooldata,data.type="pool")
-```
-
-As for genotype data, the `pcadapt` function performs two successive tasks. First PCA is performed on the centered matrix of allele frequencies (not scaled). And the second stage consists of computing test statistics (Mahalanobis distances by default) and p-values based on the covariances between allele frequencies and the first `K` PCs. By default, the function assumes that the number `K` of PCs is equal to the number of populations minus one (`K=n-1`). The user can use a smaller number of PCs (`K` < `n-1`) by determining the optimal number of PCs using the scree plot.
-
-Plotting options mentioned in section D such as `"manhattan"`, `"qqplot"`, `"scores"`, `"screeplot"`, or `"stat.distribution"` are still valid for Pool-seq data.
-
-# G. Advanced Usage
-
-### G.1. Computing other test statistics
+### F.1. Computing other test statistics
 
 The default option uses the Mahalanobis distance as a test statistic to seek for outlier SNPs, but other statistics can be computed based on the correlations between SNPs and principal components. However except for power users, we recommend to use the Mahalanobis distance that provides the best rankings of SNPs in most cases we have investigated.
 
-### G.1.1. Communality
+### F.1.1. Communality
 
 The communality statistic measures the proportion of variance explained by the first `K` PCs. When there are `K+1` populations, the communality statistic provides a ranking similar to the widely used Fst statistic. P-values are computed using a chi-square approximation (Duforet-Frebourg et al. 2015).
 The test based on the communality statistic can be performed by setting `method` to `communality` in the `pcadapt` function.
@@ -295,7 +277,7 @@ The communality can be approximated by a constant times a chi-square distributio
 plot(x_com,option="stat.distribution")
 ```
 
-### G.1.2 Component-wise
+### F.1.2 Component-wise
 
 Another possibility (component-wise p-values) is to perform one genome scan for each principal component. The test statistics are the loadings, which correspond to the correlations between each PC and each SNP. P-values are computed by making a Gaussian approximation for each PC and by estimating the standard deviation of the null distribution.
 

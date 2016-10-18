@@ -1,0 +1,37 @@
+---
+output: 
+  rmarkdown::html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+vignette: >
+  %\VignetteIndexEntry{pcadapt}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\usepackage[utf8]{inputenc}
+---
+
+<center> <h1> pcadapt </h1> </center>
+<center> <h3> Keurcien Luu, Michael G.B. Blum </h3> </center>
+<center> <h3> `r Sys.Date()` </h3> </center>
+
+# Pool-seq Data
+
+The package also handles Pool-seq data. A Pool-seq example is provided in the package and can be loaded as follows:
+
+```{r,echo=FALSE,include=FALSE}
+library(pcadapt)
+```
+
+```{r}
+pooldata <- system.file("extdata","pool3pops",package="pcadapt")
+```
+
+The frequency matrix should have `n` rows and `L` columns by default (where `n` is the number of populations and `L` is the number of genetic markers). When calling the `pcadapt` function, make sure to specify `data.type ="pool"`.
+
+```{r}
+xpool <- pcadapt(pooldata,data.type="pool")
+```
+
+As for genotype data, the `pcadapt` function performs two successive tasks. First PCA is performed on the centered matrix of allele frequencies (not scaled). And the second stage consists of computing test statistics (Mahalanobis distances by default) and p-values based on the covariances between allele frequencies and the first `K` PCs. By default, the function assumes that the number `K` of PCs is equal to the number of populations minus one (`K=n-1`). The user can use a smaller number of PCs (`K` < `n-1`) by determining the optimal number of PCs using the scree plot.
+
+Plotting options mentioned in section D such as `"manhattan"`, `"qqplot"`, `"scores"`, `"screeplot"`, or `"stat.distribution"` are still valid for Pool-seq data.
