@@ -1,0 +1,26 @@
+title: pcadapt
+
+template:
+  bootswatch: cerulean
+
+reference:
+  - title: Principal functions
+    contents:
+    - pcadapt
+    - plot.pcadapt
+    - read.pcadapt
+
+
+navbar:
+  title: tess3r
+  type: default
+  left:
+  - text: Home
+    href: index.html
+  - text: Overview
+    href: articles/pcadapt.html
+  - text: Documentation
+    href: reference/index.html
+  right:
+  - icon: fa-github fa-lg
+    href: https://github.com/BioShock38/pcadapt

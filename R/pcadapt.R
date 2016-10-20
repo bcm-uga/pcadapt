@@ -34,7 +34,7 @@
 #' @param output.filename a character string specifying the names of the files created by \code{pcadapt}.
 #' @param clean.files a logical value indicating whether the auxiliary files should be deleted or not.
 #' @param transpose deprecated argument.
-#'
+#' @param cover.matrix a matrix specifying the average coverage per genetic marker and per population.
 #' @return  The returned value \code{x} is an object of class \code{pcadapt}.
 #' 
 #' @importFrom robust covRob
@@ -53,8 +53,9 @@ pcadapt <- function(input,
                         min.maf=0.05,
                         ploidy=2,
                         output.filename="pcadapt_output",
-                        clean.files = TRUE,
-                        transpose){
+                        clean.files=TRUE,
+                        transpose,
+                        cover.matrix=NULL){
 
   #############################################
   ########## test arguments and init ##########
@@ -149,7 +150,13 @@ pcadapt <- function(input,
     if (missing(K)){
       K <- nrow(data)-1
     }
-    res <- create.pcadapt.pool(data,K=K,min.maf=min.maf)
+    if (missing(cover.matrix)){
+      cov.mat <- array(1,dim=dim(data))
+      res <- create.pcadapt.pool(data,K=K,min.maf=min.maf,cover.matrix=cov.mat)
+    } else {
+      res <- create.pcadapt.pool(data,K=K,min.maf=min.maf,cover.matrix=cover.matrix)
+    }
+    
    }
   return(res)
 }

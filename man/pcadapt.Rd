@@ -6,7 +6,7 @@
 \usage{
 pcadapt(input, K = 5, method = "mahalanobis", data.type = "genotype",
   min.maf = 0.05, ploidy = 2, output.filename = "pcadapt_output",
-  clean.files = TRUE, transpose)
+  clean.files = TRUE, transpose, cover.matrix = NULL)
 }
 \arguments{
 \item{input}{a character string specifying the name of the file to be processed with \code{pcadapt}.}
@@ -29,6 +29,8 @@ or a matrix of allele frequencies (\code{data.type="pool"}).}
 \item{clean.files}{a logical value indicating whether the auxiliary files should be deleted or not.}
 
 \item{transpose}{deprecated argument.}
+
+\item{cover.matrix}{a matrix specifying the average coverage per genetic marker and per population.}
 }
 \value{
 The returned value \code{x} is an object of class \code{pcadapt}.

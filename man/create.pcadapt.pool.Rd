@@ -4,7 +4,7 @@
 \alias{create.pcadapt.pool}
 \title{pcadapt objects}
 \usage{
-create.pcadapt.pool(data, K, min.maf)
+create.pcadapt.pool(data, K, min.maf, cover.matrix = NULL)
 }
 \arguments{
 \item{data}{a data matrix or a data frame containing the allele frequencies per SNP and per population.}
@@ -13,6 +13,8 @@ create.pcadapt.pool(data, K, min.maf)
 
 \item{min.maf}{a value between \code{0} and \code{0.45} specifying the threshold
 of minor allele frequencies above which p-values are computed.}
+
+\item{cover.matrix}{a matrix specifying the average coverage per genetic marker and per population.}
 }
 \description{
 \code{create.pcadapt.pool} creates an object of class \code{pcadapt} for Pool-Seq data.
