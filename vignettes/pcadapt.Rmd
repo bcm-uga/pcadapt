@@ -10,23 +10,20 @@ vignette: >
   %\usepackage[utf8]{inputenc}
 ---
 
-<center> <h1> pcadapt </h1> </center>
+<center> <h1> How to use pcadapt to detect local adaption with individual genotype data. </h1> </center>
 <center> <h3> Keurcien Luu, Michael G.B. Blum </h3> </center>
 <center> <h3> `r Sys.Date()` </h3> </center>
 
 **pcadapt** has been developed to detect genetic markers involved in biological adaptation. **pcadapt** provides statistical tools for outlier detection based on Principal Component Analysis (PCA).
 
-In the following, we show how the **pcadapt** package can perform genome scans for selection. The package contains two examples: **geno3pops** (genotype data) and **pool3pops** (Pool-seq data). The **geno3pops** data contain simulated genotypes for 1,500 diploid markers. A total of 150 individuals coming from three different populations were genotyped. Simulations were performed with [simuPOP](http://simupop.sourceforge.net/) using a divergence model assuming that 200 SNPs confer a selective advantage. The **pool3pops** data contain simulated allele frequencies in 3 populations for 1,500 diploid markers. Allele frequencies have been computed based on the **geno3pops** dataset.
+In the following, we show how the **pcadapt** package can perform genome scans for selection based on individual genotype data. We show how to run the package using the example **geno3pops** that contains genotype data. A total of 150 individuals coming from three different populations were genotyped at 1,500 diploid markers. Simulations were performed with [simuPOP](http://simupop.sourceforge.net/) using a divergence model assuming that 200 SNPs confer a selective advantage. To run the package on the provided example, just copy and paste all shaded `R` chunks.
 
 To run the package, you need to install it and to load it using the following command lines:
 
-```
+```{r ,eval=FALSE}
 install.packages("pcadapt")
 library(pcadapt)
 ```
-
-Users should not use the `C` software **PCAdapt fast** anymore.
-
 
 ```{r,echo=TRUE,include=FALSE}
 library(pcadapt)#Comment
@@ -44,13 +41,16 @@ path_to_file <- "path_to_directory/foo.lfmm"
 filename <- read.pcadapt(path_to_file,type="lfmm")
 ```
 
-**NB**: to convert VCF files, you can use `type="vcf"` or `type="vcfR"`, the first option being substantially faster than the second option, while `type="vcfR"` works more consistantly than `type="vcf"`.
+**NB**: to convert VCF files, you can use `type="vcf"` or `type="vcfR"`. The first option is substantially faster than the second option but it can fail to convert the data. If it fails, you should use the `type="vcfR"` argument.
 
-To run the provided example, the file location can be retrieved by typing the following command:
+To run the provided example, the file location of the example should be retrieved and then the `read.pcadapt` function will convert the "lfmm" example file to the "pcadapt" format.
 
 ```{r}
 path_to_file <- system.file("extdata","geno3pops",package="pcadapt")
+filename <- read.pcadapt(path_to_file,type="lfmm")
 ```
+
+
 
 ### A.2. `local.env`
 
