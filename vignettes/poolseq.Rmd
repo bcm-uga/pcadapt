@@ -15,6 +15,9 @@ vignette: >
 <center> <h3> `r Sys.Date()` </h3> </center>
 
 # Pool-seq Data
+The **pool3pops** data contain simulated allele frequencies in 3 populations for 1,500 diploid markers. Allele frequencies have been computed based on the **geno3pops** dataset.
+
+
 
 The package also handles Pool-seq data. A Pool-seq example is provided in the package and can be loaded as follows:
 

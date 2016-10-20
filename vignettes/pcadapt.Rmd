@@ -10,7 +10,7 @@ vignette: >
   %\usepackage[utf8]{inputenc}
 ---
 
-<center> <h1> How to use pcadapt to detect local adaption with individual genotype data. </h1> </center>
+<center> <h1> Using pcadapt to detect local adaption with individual genotype data. </h1> </center>
 <center> <h3> Keurcien Luu, Michael G.B. Blum </h3> </center>
 <center> <h3> `r Sys.Date()` </h3> </center>
 
@@ -18,7 +18,7 @@ vignette: >
 
 In the following, we show how the **pcadapt** package can perform genome scans for selection based on individual genotype data. We show how to run the package using the example **geno3pops** that contains genotype data. A total of 150 individuals coming from three different populations were genotyped at 1,500 diploid markers. Simulations were performed with [simuPOP](http://simupop.sourceforge.net/) using a divergence model assuming that 200 SNPs confer a selective advantage. To run the package on the provided example, just copy and paste all shaded `R` chunks.
 
-To run the package, you need to install it and to load it using the following command lines:
+To run the package, you need to install and load it using the following command lines:
 
 ```{r ,eval=FALSE}
 install.packages("pcadapt")
@@ -45,24 +45,12 @@ filename <- read.pcadapt(path_to_file,type="lfmm")
 
 To run the provided example, the file location of the example should be retrieved and then the `read.pcadapt` function will convert the "lfmm" example file to the "pcadapt" format.
 
-```{r}
+```{r, results="hide"}
 path_to_file <- system.file("extdata","geno3pops",package="pcadapt")
 filename <- read.pcadapt(path_to_file,type="lfmm")
 ```
 
 
-
-### A.2. `local.env`
-
-A new argument has been added to `read.pcadapt`, in order to specify whether the genotype matrix has to be read from a file or from the local environment. By default, `local.env=FALSE`, meaning that `read.pcadapt` reads genotype data stored in text files by default. If the genotype matrix is already loaded in the global environment, in the `lfmm` format or in the `pcadapt` format, running `read.pcadapt` will write an output file and will return the name of the output file. For example, if your genotype matrix is stored under the variable name `geno.matrix` and is of type `lfmm`, you should use the following command line:
-
-```
-filename <- read.pcadapt(geno.matrix,type="lfmm",local.env=TRUE)
-```
-
-### A.3. How to handle missing values
-
-As stated above, to proceed with the `pcadapt` function, files should be in the right format. Any missing value should be encoded with a `9`. This is automatically done with `read.pcadapt` if it has been used to convert "ped", "vcf" or "lfmm" files.
 
 # B. Choosing the number `K` of Principal Components
 
@@ -70,7 +58,7 @@ The `pcadapt` function performs two successive tasks. First, PCA is performed on
 
 To choose `K`, principal component analysis should first be performed with a large enough number of principal components (e.g. `K=20`).
 
-```
+```{r ,eval=FALSE}
 x <- pcadapt(filename,K=20)
 ```
 
@@ -248,6 +236,20 @@ snp_pc <- get.pc(x,outliers)
 ```
 
 # F. Advanced Usage
+
+
+### A.2. `local.env`
+
+A new argument has been added to `read.pcadapt`, in order to specify whether the genotype matrix has to be read from a file or from the local environment. By default, `local.env=FALSE`, meaning that `read.pcadapt` reads genotype data stored in text files by default. If the genotype matrix is already loaded in the global environment, in the `lfmm` format or in the `pcadapt` format, running `read.pcadapt` will write an output file and will return the name of the output file. For example, if your genotype matrix is stored under the variable name `geno.matrix` and is of type `lfmm`, you should use the following command line:
+
+```
+filename <- read.pcadapt(geno.matrix,type="lfmm",local.env=TRUE)
+```
+
+### A.3. How to handle missing values
+
+As stated above, to proceed with the `pcadapt` function, files should be in the right format. Any missing value should be encoded with a `9`. This is automatically done with `read.pcadapt` if it has been used to convert "ped", "vcf" or "lfmm" files.
+
 
 ### F.1. Computing other test statistics
 
