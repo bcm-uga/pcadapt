@@ -128,7 +128,7 @@ where $\bar{z}$ and $\Sigma$ are robust estimates of the mean and of the covaria
 
 For the **geno3pops** data, it was found in section B that `K=2` corresponds to the optimal choice of the number of PCs.
 
-```
+```{r ,eval=FALSE}
 x <- pcadapt(filename,K=2)
 ```
 
@@ -145,7 +145,7 @@ In addition to the number `K` of principal components to work with, the user can
 
 The object `x` returned by the function `pcadapt` contains numerical quantities obtained after performing a PCA on the genotype matrix.
 
-```
+```{r ,eval=FALSE}
 summary(x)
 ```
 
@@ -177,7 +177,7 @@ All of these elements are accessible using the `$` symbol. For example, the p-va
 
 A Manhattan plot displays $-\text{log}_{10}$ of the p-values.
 
-```
+```{r,fig.width=7,fig.height=5,fig.align='center'}
 plot(x,option="manhattan")
 ```
 
@@ -238,24 +238,24 @@ snp_pc <- get.pc(x,outliers)
 # F. Advanced Usage
 
 
-### A.2. `local.env`
+### F.1. `local.env`
 
-A new argument has been added to `read.pcadapt`, in order to specify whether the genotype matrix has to be read from a file or from the local environment. By default, `local.env=FALSE`, meaning that `read.pcadapt` reads genotype data stored in text files by default. If the genotype matrix is already loaded in the global environment, in the `lfmm` format or in the `pcadapt` format, running `read.pcadapt` will write an output file and will return the name of the output file. For example, if your genotype matrix is stored under the variable name `geno.matrix` and is of type `lfmm`, you should use the following command line:
+This argument has been added to `read.pcadapt` to specify that the genotype matrix should be read from the `R` environment. By default, `local.env=FALSE`, meaning that `read.pcadapt` reads genotype data stored in text files. If the genotype matrix is already loaded in the `R` environment in the `lfmm` format or in the `pcadapt` format, running `read.pcadapt` will write an output file and will return the name of the output file. For example, if your genotype matrix is stored under the variable name `geno.matrix` and is of type `lfmm`, you should use the following command line:
 
 ```
 filename <- read.pcadapt(geno.matrix,type="lfmm",local.env=TRUE)
 ```
 
-### A.3. How to handle missing values
+### F.2. How to handle missing values
+ 
+Any missing value is encoded with a `9` in the `pcadapt` format. This encoding is automatically done with `read.pcadapt` if it has been used to convert "ped", "vcf" or "lfmm" files.
 
-As stated above, to proceed with the `pcadapt` function, files should be in the right format. Any missing value should be encoded with a `9`. This is automatically done with `read.pcadapt` if it has been used to convert "ped", "vcf" or "lfmm" files.
 
-
-### F.1. Computing other test statistics
+### F.3. Computing other test statistics
 
 The default option uses the Mahalanobis distance as a test statistic to seek for outlier SNPs, but other statistics can be computed based on the correlations between SNPs and principal components. However except for power users, we recommend to use the Mahalanobis distance that provides the best rankings of SNPs in most cases we have investigated.
 
-### F.1.1. Communality
+### F.3.1. Communality
 
 The communality statistic measures the proportion of variance explained by the first `K` PCs. When there are `K+1` populations, the communality statistic provides a ranking similar to the widely used Fst statistic. P-values are computed using a chi-square approximation (Duforet-Frebourg et al. 2015).
 The test based on the communality statistic can be performed by setting `method` to `communality` in the `pcadapt` function.
@@ -279,7 +279,7 @@ The communality can be approximated by a constant times a chi-square distributio
 plot(x_com,option="stat.distribution")
 ```
 
-### F.1.2 Component-wise
+### F.3.2 Component-wise
 
 Another possibility (component-wise p-values) is to perform one genome scan for each principal component. The test statistics are the loadings, which correspond to the correlations between each PC and each SNP. P-values are computed by making a Gaussian approximation for each PC and by estimating the standard deviation of the null distribution.
 
@@ -344,4 +344,4 @@ plot(x_cw,option="stat.distribution",K=2)
 
 # Reference
 
-Luu, K., Bazin, E., & Blum, M. G. (2016). [pcadapt: an R package to perform genome scans for selection based on principal component analysis](http://biorxiv.org/content/early/2016/05/30/056135).
+Luu, K., Bazin, E., & Blum, M. G. B. (2016). [pcadapt: an R package to perform genome scans for selection based on principal component analysis. Molecular Ecology Resources](http://biorxiv.org/content/early/2016/07/25/056135).
