@@ -15,7 +15,7 @@ pcadapt(input, K = 5, method = "mahalanobis", data.type = "genotype",
 
 \item{method}{a character string specifying the method to be used to compute
 the p-values. Three statistics are currently available, \code{"mahalanobis"},
-\code{"communality"}, and \code{"componentwise"}.}
+\code{"communality"} and \code{"componentwise"}.}
 
 \item{data.type}{a character string specifying the type of data being read, either a \code{genotype} matrix (\code{data.type="genotype"}),
 or a matrix of allele frequencies (\code{data.type="pool"}).}
@@ -55,7 +55,7 @@ estimate of both mean and covariance matrix between the \code{K} vectors of z-sc
 
 To compute p-values, test statistics (\code{stat}) are divided by a genomic inflation factor (\code{gif}) when \code{method="mahalanobis"}.
 When \code{method="communality"}, the test statistic is first multiplied by \code{K} and divided by the percentage of variance explained by the first \code{K} PCs
-before accounting for genomic inflation factor. When using \code{method="mahalanobis","communality"}, the scaled statistics (\code{chi2_stat}) should follow
+before accounting for genomic inflation factor. When using \code{method="mahalanobis"} or \code{"communality"}, the scaled statistics (\code{chi2_stat}) should follow
 a chi-squared distribution with \code{K} degrees of freedom. When using \code{method="componentwise"}, the z-scores should follow a chi-squared distribution with \code{1}
 degree of freedom. For Pool-seq data, \code{pcadapt} provides p-values based on the Mahalanobis distance for each SNP.
 }

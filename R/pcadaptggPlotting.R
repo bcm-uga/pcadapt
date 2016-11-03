@@ -5,7 +5,7 @@
 #' Different options are currently available : \code{"screeplot"}, \code{"scores"}, \code{"stat.distribution"},
 #' \code{"manhattan"} and \code{"qqplot"}.
 #' \code{"screeplot"} shows the decay of the genotype matrix singular values and provides
-#' a figure to guide in the choice of \code{K}.
+#' a figure to help with the choice of \code{K}.
 #' \code{"scores"} plots the projection of the individuals onto the first two principal components.
 #' \code{"stat.distribution"} displays the histogram of the selected test statistics, as well as
 #' the estimated distribution for the neutral SNPs.
@@ -21,7 +21,8 @@
 #' @param j an integer indicating onto which principal component the individuals are projected when the "scores" option is chosen.
 #' Default value is set to \code{2}.
 #' @param pop a list of integers or strings specifying which subpopulation the individuals belong to.
-#' @param threshold for the \code{"qqplot"} option, it displays an additional bar which shows the \code{threshold} percent of SNPs with smallest p-valuesseparates the SNPs with the highest p-values.
+#' @param threshold for the \code{"qqplot"} option, it displays an additional bar which shows the \code{threshold} percent of SNPs with smallest p-values
+#' and separates them from SNPs with higher p-values.
 #'
 #' @examples
 #' ## see ?pcadapt for examples

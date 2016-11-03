@@ -39,7 +39,7 @@
 #' 
 #' @importFrom utils read.table write.table
 #'
-#' @useDynLib pcadapt wrapper_pcadapt wrapper_converter
+#' @useDynLib pcadapt wrapper_pcadapt
 #'
 #' @export
 #'

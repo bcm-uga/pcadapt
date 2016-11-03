@@ -5,7 +5,7 @@
 \title{vcfR-based converter}
 \usage{
 vcf2pcadapt(geno, output.file = "tmp.pcadapt", allele.sep = "/",
-  blocksize = 1000, console.count = 10000)
+  blocksize = 10000, console.count = 10000)
 }
 \arguments{
 \item{geno}{a genotype matrix obtained with `vcfR`.}

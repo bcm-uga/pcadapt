@@ -4,21 +4,24 @@
 \alias{read.pcadapt}
 \title{File Converter}
 \usage{
-read.pcadapt(input.filename, type, local.env = FALSE, allele.sep = "/")
+read.pcadapt(input.filename, type, local.env = FALSE, allele.sep = "/",
+  blocksize = 10000)
 }
 \arguments{
 \item{input.filename}{a character string specifying the name of the file to be
-converted if \code{local.env = FALSE}. If \code{local.env = TRUE}, input.filename refers
+converted if \code{local.env = FALSE}. If \code{local.env = TRUE}, \code{input.filename} refers
 to the genotype matrix in the local environment.}
 
 \item{type}{a character string specifying the type of data to be converted to the
 \code{pcadapt} format. Supported formats are: \code{ped}, \code{vcf}, \code{lfmm}.}
 
-\item{local.env}{a logical value stating whether the input has to be read from the local
+\item{local.env}{a logical value indicating whether the input has to be read from the local
 environment or from the working directory.}
 
 \item{allele.sep}{a character string specifying the type of allele separator used in VCF files. Set to "/" by default, but can
 be switched to "|" otherwise.}
+
+\item{blocksize}{an integer specifying the number of markers to be processed in the mean time.}
 }
 \description{
 \code{read.pcadapt} converts \code{.vcf} and \code{.ped} files to an appropriate

@@ -5,14 +5,15 @@
 #' current directory.
 #'
 #' @param input.filename a character string specifying the name of the file to be
-#' converted if \code{local.env = FALSE}. If \code{local.env = TRUE}, input.filename refers
+#' converted if \code{local.env = FALSE}. If \code{local.env = TRUE}, \code{input.filename} refers
 #' to the genotype matrix in the local environment.
 #' @param type a character string specifying the type of data to be converted to the
 #' \code{pcadapt} format. Supported formats are: \code{ped}, \code{vcf}, \code{lfmm}.
-#' @param local.env a logical value stating whether the input has to be read from the local
+#' @param local.env a logical value indicating whether the input has to be read from the local
 #' environment or from the working directory.
 #' @param allele.sep a character string specifying the type of allele separator used in VCF files. Set to "/" by default, but can
 #' be switched to "|" otherwise.
+#' @param blocksize an integer specifying the number of markers to be processed in the mean time.
 #'
 #' @useDynLib pcadapt wrapper_converter
 #' @importFrom utils tail
@@ -20,7 +21,7 @@
 #'
 #' @export
 #'
-read.pcadapt <- function(input.filename,type,local.env=FALSE,allele.sep="/"){
+read.pcadapt <- function(input.filename,type,local.env=FALSE,allele.sep="/",blocksize=10000){
   if (local.env == FALSE){
     ## Check if input.filename is a character string ##
     if (class(input.filename) != "character"){
@@ -42,14 +43,18 @@ read.pcadapt <- function(input.filename,type,local.env=FALSE,allele.sep="/"){
     if (type == "ped"){
       .C("wrapper_converter",as.character(input.filename),as.integer(0),PACKAGE = "pcadapt")
     } else if (type == "vcf"){
-      cat("If conversion fails, try type='vcfR' instead.\n")
-      .C("wrapper_converter",as.character(input.filename),as.integer(1),PACKAGE = "pcadapt")
+      ## The former vcf converter has been replaced ##
+      #cat("If conversion fails, try type='vcfR' instead.\n")
+      #.C("wrapper_converter",as.character(input.filename),as.integer(1),PACKAGE = "pcadapt")
+      obj.vcf <- vcfR::read.vcfR(input.filename)
+      geno <- vcfR::extract.gt(obj.vcf)
+      vcf2pcadapt(geno,output.file = "tmp.pcadapt",allele.sep = allele.sep,blocksize = blocksize,console.count = blocksize)
     } else if (type == "lfmm"){
       .C("wrapper_converter",as.character(input.filename),as.integer(2),PACKAGE = "pcadapt")
     } else if (type == "vcfR"){
       obj.vcf <- vcfR::read.vcfR(input.filename)
       geno <- vcfR::extract.gt(obj.vcf)
-      vcf2pcadapt(geno,output.file = "tmp.pcadapt",allele.sep = allele.sep,blocksize = 1000,console.count = 10000)
+      vcf2pcadapt(geno,output.file = "tmp.pcadapt",allele.sep = allele.sep,blocksize = blocksize,console.count = blocksize)
     }
     
     ##
@@ -119,10 +124,8 @@ get.score.color = function(pop){
     idx <- idx+1
     list.ref <- list.ref[list.ref != col]
   }
-  #color.list <- rainbow(length(pop.split))
   color.individuals <- array(dim=nIND)
   for (k in 1:length(pop.split)){
-    #color.individuals[unlist(pop.split[k])] <- color.list[k]
     color.individuals[unlist(pop.split[k])] <- k
   }
   return(color.individuals)
@@ -161,13 +164,11 @@ get.pop.names = function(pop){
 #' \code{get.pc} returns a data frame such that each row contains the index of
 #' the genetic marker and the principal component the most correlated with it.
 #'
-#' @param x an object of class `pcadapt` 
+#' @param x an object of class `pcadapt`. 
 #' @param list a list of integers corresponding to the indices of the markers of interest.
 #'
 #' @examples
 #' ## see also ?pcadapt for examples
-#'
-#' @keywords internal
 #'
 #' @export
 #'
@@ -233,7 +234,7 @@ convert.line <- function(hap.block,allele.sep="/"){
 #'
 #' @export
 #'
-vcf2pcadapt <- function(geno,output.file="tmp.pcadapt",allele.sep="/",blocksize=1000,console.count=10000){
+vcf2pcadapt <- function(geno,output.file="tmp.pcadapt",allele.sep="/",blocksize=10000,console.count=10000){
   if (file.exists(output.file)){
     file.remove(output.file)
   }

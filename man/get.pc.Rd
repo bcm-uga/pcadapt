@@ -7,7 +7,7 @@
 get.pc(x, list)
 }
 \arguments{
-\item{x}{an object of class `pcadapt`}
+\item{x}{an object of class `pcadapt`.}
 
 \item{list}{a list of integers corresponding to the indices of the markers of interest.}
 }
@@ -19,5 +19,4 @@ the genetic marker and the principal component the most correlated with it.
 ## see also ?pcadapt for examples
 
 }
-\keyword{internal}
 

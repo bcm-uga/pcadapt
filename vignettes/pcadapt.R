@@ -1,8 +1,16 @@
-## ----echo=TRUE,include=FALSE---------------------------------------------
-library(pcadapt)
+## ----eval=FALSE----------------------------------------------------------
+#  install.packages("pcadapt")
+#  library(pcadapt)
 
-## ------------------------------------------------------------------------
+## ----echo=TRUE,include=FALSE---------------------------------------------
+library(pcadapt)#Comment
+
+## ---- results="hide"-----------------------------------------------------
 path_to_file <- system.file("extdata","geno3pops",package="pcadapt")
+filename <- read.pcadapt(path_to_file,type="lfmm")
+
+## ----eval=FALSE----------------------------------------------------------
+#  x <- pcadapt(filename,K=20)
 
 ## ----echo=FALSE----------------------------------------------------------
 output.filename <- paste0(path_to_file,20)
@@ -19,14 +27,24 @@ plot(x,option="screeplot")
 plot(x,option="screeplot",K=10)
 
 ## ------------------------------------------------------------------------
-poplist <- c(rep(1,50),rep(2,50),rep(3,50))
-print(poplist)
+# With integers
+poplist.int <- c(rep(1,50),rep(2,50),rep(3,50))
+# With names
+poplist.names <- c(rep("POP1",50),rep("POP2",50),rep("POP3",50))
+print(poplist.int)
+print(poplist.names)
 
 ## ----fig.width=7,fig.height=5,fig.align='center'-------------------------
-plot(x,option="scores",pop=poplist)
+plot(x,option="scores",pop=poplist.int)
 
 ## ----fig.width=7,fig.height=5,fig.align='center'-------------------------
-plot(x,option="scores",i=3,j=4,pop=poplist)
+plot(x,option="scores",pop=poplist.names)
+
+## ----fig.width=7,fig.height=5,fig.align='center'-------------------------
+plot(x,option="scores",i=3,j=4,pop=poplist.names)
+
+## ----eval=FALSE----------------------------------------------------------
+#  x <- pcadapt(filename,K=2)
 
 ## ----echo=FALSE----------------------------------------------------------
 output.filename <- path_to_file
@@ -36,6 +54,12 @@ data.type <- "genotype"
 min.maf <- 0.05
 x <- create.pcadapt(output.filename,K,method,data.type,min.maf)
 
+## ----eval=FALSE----------------------------------------------------------
+#  summary(x)
+
+## ----fig.width=7,fig.height=5,fig.align='center'-------------------------
+plot(x,option="manhattan")
+
 ## ----fig.width=7,fig.height=5,fig.align='center'-------------------------
 plot(x,option="qqplot",threshold=0.1)
 
@@ -44,25 +68,6 @@ hist(x$pvalues,xlab="p-values",main=NULL,breaks=50)
 
 ## ----fig.width=7,fig.height=5,fig.align='center'-------------------------
 plot(x,option="stat.distribution")
-
-## ----echo=FALSE----------------------------------------------------------
-library(qvalue)
-
-## ------------------------------------------------------------------------
-qval <- qvalue(x$pvalues)$qvalues
-alpha <- 0.1
-outliers <- which(qval<alpha)
-print(outliers)
-
-## ------------------------------------------------------------------------
-snp_pc <- get.pc(x,outliers)
-head(snp_pc)
-
-## ------------------------------------------------------------------------
-pooldata <- system.file("extdata","pool3pops",package="pcadapt")
-
-## ------------------------------------------------------------------------
-xpool <- pcadapt(pooldata,data.type="pool")
 
 ## ----echo=FALSE----------------------------------------------------------
 output.filename <- path_to_file
