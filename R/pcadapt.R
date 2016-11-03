@@ -18,7 +18,7 @@
 #'
 #' To compute p-values, test statistics (\code{stat}) are divided by a genomic inflation factor (\code{gif}) when \code{method="mahalanobis"}.
 #' When \code{method="communality"}, the test statistic is first multiplied by \code{K} and divided by the percentage of variance explained by the first \code{K} PCs
-#' before accounting for genomic inflation factor. When using \code{method="mahalanobis","communality"}, the scaled statistics (\code{chi2_stat}) should follow
+#' before accounting for genomic inflation factor. When using \code{method="mahalanobis"} or \code{"communality"}, the scaled statistics (\code{chi2_stat}) should follow
 #' a chi-squared distribution with \code{K} degrees of freedom. When using \code{method="componentwise"}, the z-scores should follow a chi-squared distribution with \code{1}
 #' degree of freedom. For Pool-seq data, \code{pcadapt} provides p-values based on the Mahalanobis distance for each SNP.
 #'
@@ -26,7 +26,7 @@
 #' @param K an integer specifying the number of principal components to retain.
 #' @param method a character string specifying the method to be used to compute
 #' the p-values. Three statistics are currently available, \code{"mahalanobis"},
-#' \code{"communality"}, and \code{"componentwise"}.
+#' \code{"communality"} and \code{"componentwise"}.
 #' @param data.type a character string specifying the type of data being read, either a \code{genotype} matrix (\code{data.type="genotype"}),
 #' or a matrix of allele frequencies (\code{data.type="pool"}).
 #' @param min.maf a value between \code{0} and \code{0.45} specifying the threshold of minor allele frequencies above which p-values are computed.
@@ -37,9 +37,6 @@
 #' @param cover.matrix a matrix specifying the average coverage per genetic marker and per population.
 #' @return  The returned value \code{x} is an object of class \code{pcadapt}.
 #' 
-#' @importFrom robust covRob
-#' @importFrom MASS cov.rob
-#' @importFrom stats median pchisq na.omit qchisq
 #' @importFrom utils read.table write.table
 #'
 #' @useDynLib pcadapt wrapper_pcadapt wrapper_converter
