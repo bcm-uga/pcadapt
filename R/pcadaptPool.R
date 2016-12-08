@@ -58,19 +58,29 @@ create.pcadapt.pool = function(data,K,min.maf,cover.matrix=NULL){
   nSNP <- ncol(data)
   nPOP <- nrow(data)
   # New procedure
-  z.matrix <- array(0,dim=c(nPOP,nSNP))
-  for (k in 1:nSNP){
-    for (n in 1:nPOP){
-      n_i <- cover.matrix[n,k]
-      f_i <- data[n,k]
-      se <- sqrt(abs(f_i*(1-f_i))/n_i)
-      if ((!is.na(se)) && (se > 0)){
-        z.matrix[n,k] <- f_i/se 
-      } else {
-        z.matrix[n,k] <- f_i/0.01
-      }
-    }
+  z.matrix <- as.matrix(array(NA,dim=c(nPOP,nSNP)))
+  for (n in 1:nPOP){
+    n_i <- cover.matrix[n,]
+    nnan <- which(!is.na(n_i) & (n_i != 0))
+    n_i[!nnan] <- 1
+    f_i <- as.numeric(data[n,])
+    f_i[!nnan] <- NA
+    se <- as.vector(array(NA,dim=length(n_i)))
+    se[nnan] <- sqrt(abs(f_i[nnan]*(1-f_i[nnan]))/n_i[nnan])
+    z.matrix[n,nnan] <- f_i[nnan]/se[nnan] 
   }
+#   for (k in 1:nSNP){
+#     for (n in 1:nPOP){
+#       n_i <- cover.matrix[n,k]
+#       f_i <- data[n,k]
+#       se <- sqrt(abs(f_i*(1-f_i))/n_i)
+#       if ((!is.na(se)) && (se > 0)){
+#         z.matrix[n,k] <- f_i/se 
+#       } else {
+#         z.matrix[n,k] <- f_i/0.01
+#       }
+#     }
+#   }
   # End new procedure
   res <- corpca(data=data,K=K)
   freq <- apply(data,2,FUN=function(x){mean(x,na.rm=TRUE)})
@@ -89,7 +99,9 @@ create.pcadapt.pool = function(data,K,min.maf,cover.matrix=NULL){
 #   }
 #   res$chi2.stat <- res$stat/res$gif
   res$stat <- as.vector(robust::covRob(t(z.matrix),na.action=na.omit,estim = "pairwiseGK")$dist)
-  res$chi2.stat <- res$stat
+  res$gif <- median(res$stat,na.rm=TRUE)/qchisq(0.5,df=K)
+  res$chi2.stat <- res$stat/res$gif
+  res$z.mat <- apply(z.matrix,MARGIN=2,FUN=function(x){sum(x^2,na.rm = TRUE)})
   # Compute p-values
   res$pvalues <- compute.pval(res$chi2.stat,K,method="mahalanobis")
   class(res) <- 'pcadapt'

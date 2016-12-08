@@ -1,9 +1,6 @@
 ---
 output: 
-  rmarkdown::html_document:
-    toc: true
-    toc_depth: 2
-    toc_float: true
+  rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{pcadapt}
   %\VignetteEngine{knitr::rmarkdown}

@@ -35,7 +35,7 @@
 #' @param clean.files a logical value indicating whether the auxiliary files should be deleted or not.
 #' @param transpose deprecated argument.
 #' @param cover.matrix a matrix specifying the average coverage per genetic marker and per population.
-#' @return  The returned value \code{x} is an object of class \code{pcadapt}.
+#' @return The returned value \code{x} is an object of class \code{pcadapt}.
 #' 
 #' @importFrom utils read.table write.table
 #'
