@@ -137,6 +137,10 @@ pcadapt <- function(input,
       file.remove(paste0(output.filename,".sigma"))
     }
   } else if (data.type == "pool"){
+    stop('Option data.type="pool" is deprecated. Use the read.pcadapt function instead. Usage:\n 
+    filename <- read.pcadapt(input,type="pool",local.env=TRUE)\n
+    x <- pcadapt(filename,K=...)')
+    stop('')
     if (class(input) %in% c("array","matrix","data.frame")){
       data <- input  
     } else if (class(input) == "character"){
@@ -147,13 +151,12 @@ pcadapt <- function(input,
     if (missing(K)){
       K <- nrow(data)-1
     }
-    if (missing(cover.matrix)){
-      cov.mat <- array(1,dim=dim(data))
-      res <- create.pcadapt.pool(data,K=K,min.maf=min.maf,cover.matrix=cov.mat)
-    } else {
-      res <- create.pcadapt.pool(data,K=K,min.maf=min.maf,cover.matrix=cover.matrix)
-    }
-    
+#     if (missing(cover.matrix)){
+#       cov.mat <- array(1,dim=dim(data))
+#       res <- create.pcadapt.pool(data,K=K,min.maf=min.maf,cover.matrix=cov.mat)
+#     } else {
+#       res <- create.pcadapt.pool(data,K=K,min.maf=min.maf,cover.matrix=cover.matrix)
+#     }
    }
   return(res)
 }

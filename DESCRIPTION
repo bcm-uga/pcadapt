@@ -1,8 +1,8 @@
 Package: pcadapt
 Type: Package
 Title: Fast Principal Component Analysis for Outlier Detection
-Version: 3.0.3
-Date: 2016-11-03
+Version: 3.0.4
+Date: 2016-12-20
 Author: Keurcien Luu, Michael G.B. Blum, Nicolas Duforet-Frebourg
 Maintainer: Keurcien Luu <keurcien.luu@imag.fr>
 Description: Methods to detect genetic markers involved in biological
@@ -14,5 +14,5 @@ Suggests: knitr, qvalue, rmarkdown
 LazyData: TRUE
 RoxygenNote: 5.0.1
 NeedsCompilation: yes
-Packaged: 2016-11-03 08:29:33 UTC; Keurcien
+Packaged: 2016-12-20 08:30:00 UTC; Keurcien
 VignetteBuilder: knitr

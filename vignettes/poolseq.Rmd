@@ -10,10 +10,6 @@ vignette: >
 <center> <h1> Using pcadapt to detect local adaption with pooled sequencing data. </h1> </center>
 <center> <h3> Keurcien Luu, Michael G.B. Blum </h3> </center>
 
-```{r,echo=FALSE,include=FALSE}
-library(pcadapt)
-```
-
 The package also handles pooled sequencing data. In the following, we show how the **pcadapt** package can perform scans for selection based on pooled sequencing data. We show how to run the package using the example **pool3pops** that contains pooled sequencing data. The **pool3pops** data contain simulated allele frequencies in 3 populations for 1,500 diploid markers. Allele frequencies have been computed based on the **geno3pops** dataset. 
 
 To run the package, you need to install and load it using the following command lines:
@@ -24,36 +20,232 @@ library(pcadapt)
 ```
 
 ```{r,echo=TRUE,include=FALSE}
+library(pcadapt)
+```
+
+```{r ,eval=FALSE}
+install.packages("pcadapt")
+library(pcadapt)
+```
+
+```{r,echo=TRUE,include=FALSE}
 library(pcadapt)#Comment
 ```
 
-# A. Reading the file
+# A. Reading pooled data
+
+### A.1. `read.pcadapt`
+
+For pooled samples, we now use the `read.pcadapt` function to sample genotypes from the frequency matrix, creating a genotype file in the pcadapt format.
+The frequency matrix should have `n` rows and `L` columns by default (where `n` is the number of populations and `L` is the number of genetic markers). For example, assume your genotype file is called "foo" and is located in the directory "path_to_directory", use the following command lines:
+
+```{r,eval=FALSE}
+pool.data <- read.table("path_to_directory/foo")
+filename <- read.pcadapt(pool.data,type="pool",local.env = TRUE)
+```
 
 A Pool-seq example is provided in the package, and can be loaded as follows:
 
-```{r}
-pooldata <- system.file("extdata","pool3pops",package="pcadapt")
+```{r, eval=FALSE}
+pool.data <- read.table(system.file("extdata","pool3pops",package="pcadapt"))
+filename <- read.pcadapt(pool.data,type="pool",local.env = TRUE)
 ```
 
-The frequency matrix should have `n` rows and `L` columns by default (where `n` is the number of populations and `L` is the number of genetic markers). 
-
-# B. Running the analysis
-
-When calling the `pcadapt` function, make sure to specify `data.type ="pool"`.
-
-```{r}
-x.pool <- pcadapt(pooldata,data.type="pool")
+```{r, include=FALSE}
+pool.data <- read.table(system.file("extdata","pool3pops",package="pcadapt"))
+path_to_file <- system.file("extdata","pool3pops",package="pcadapt")
+filename <- read.pcadapt(pool.data,type="pool",local.env = TRUE,pop.sizes = c(200,200,200))
 ```
 
-As for genotype data, the `pcadapt` function performs two successive tasks. First PCA is performed on the centered matrix of allele frequencies (not scaled). And the second stage consists of computing test statistics (Mahalanobis distances by default) and p-values based on the covariances between allele frequencies and the first `K` PCs. By default, the function assumes that the number `K` of PCs is equal to the number of populations minus one (`K=n-1`). The user can use a smaller number of PCs (`K` < `n-1`) by determining the optimal number of PCs using the scree plot.
+You may also specify the ploidy in the `read.pcadapt` function, for non diploid individuals.
 
-Plotting options mentioned in section D such as `"manhattan"`, `"qqplot"`, `"scores"`, `"screeplot"`, or `"stat.distribution"` are still valid for Pool-seq data. For example, to display the Manhattan plot, type the following command line:
+# B. Choosing the number `K` of Principal Components
 
-```{r}
-plot(x.pool,option="manhattan")
+The procedure is now the same as the one described in the vignette designed for genotype data, for which the first step consists in choosing the right value of `K`.
+
+The `pcadapt` function performs two successive tasks. First, PCA is performed on the centered and scaled genotype matrix. The second stage consists in computing test statistics and p-values based on the correlations between SNPs and the first `K` principal components (PCs). To run the function `pcadapt`, the user should use the output returned by the function `read.pcadapt`, along with the number `K` of principal components to work with.
+
+To choose `K`, principal component analysis should first be performed with a large enough number of principal components (e.g. `K=20`). 
+
+```{r ,eval=FALSE}
+x <- pcadapt(filename,K=20)
 ```
 
-# C. Specifying the coverage matrix
+```{r,echo=FALSE}
+output.filename <- paste0(path_to_file,20)
+K <- 20
+method = "mahalanobis"
+data.type <- "genotype"
+min.maf <- 0.05
+x <- create.pcadapt(output.filename,K,method,data.type,min.maf)
+```
 
-However, if the mean coverage per population for each SNP is known, it is possible to take it into consideration to increase power in the selection scans, by taking into account low coverage SNPs in the test statistics. 
-Hence, the coverage matrix has same dimensions as your pooled sequencing data. To do so, you need to provide the coverage matrix to the `pcadapt` function thanks to the argument `cover.matrix`.
+**NB** : by default, data are assumed to be diploid. To specify the ploidy, use the argument `ploidy` (`ploidy=2` for diploid species and `ploidy=1` for haploid species) in the `pcadapt` function.
+
+The 'scree plot' displays in decreasing order the percentage of variance explained by each PC. Up to a constant, it corresponds to the eigenvalues in decreasing order. The ideal pattern in a scree plot is a steep curve followed by a bend and a straight line. The eigenvalues that correspond to random variation lie on a straight line whereas the ones that correspond to population structure lie on a steep curve. We recommend to keep PCs that correspond to eigenvalues to the left of the straight line. In the provided example, `K=2` is the optimal choice for `K`. The plot function displays a scree plot:
+
+```{r,fig.width=7,fig.height=5,fig.align='center'}
+plot(x,option="screeplot")
+```
+
+By default, the number of principal components taken into account in the scree plot is set to `K`, but it can be reduced via the argument `K`.
+
+```{r,fig.width=7,fig.height=5,fig.align='center'}
+plot(x,option="screeplot",K=10)
+```
+
+# C. Computing the test statistic based on PCA
+
+For a given SNP, the test statistic is based on the $z$-scores obtained when regressing SNPs with the `K` principal components. The test statistic for detecting outlier SNPs is the Mahalanobis distance, which is a multi-dimensional approach that measures how distant is a point from the mean. Denoting by $z^j = (z_1^j, \dots, z_K^j)$ the vector of `K` $z$-scores between the $j$-th SNP and the first `K` PCs, the sqaured Mahalanobis distance is defined as
+
+$$D_j^2 = (z^j - \bar{z})\Sigma^{-1}(z^j - \bar{z})$$
+
+where $\bar{z}$ and $\Sigma$ are robust estimates of the mean and of the covariance matrix. Once divided by a constant $\lambda$ called the genomic inflation factor, the scaled squared distances $D_j^2/\lambda$ should have a chi-square distribution with `K` degrees of freedom under the assumption that there are no outlier.
+
+For the **geno3pops** data, it was found in section B that `K=2` corresponds to the optimal choice of the number of PCs.
+
+```{r ,eval=FALSE}
+x <- pcadapt(filename,K=2)
+```
+
+```{r,echo=FALSE}
+output.filename <- path_to_file
+K <- 2
+method = "mahalanobis"
+data.type <- "genotype"
+min.maf <- 0.05
+x <- create.pcadapt(output.filename,K,method,data.type,min.maf)
+```
+
+In addition to the number `K` of principal components to work with, the user can also set the parameter `min.maf` that corresponds to a threshold of minor allele frequency. By default, the parameter `min.maf` is set to `5%`. P-values of SNPs with a minor allele frequency smaller than the threshold are not computed (`NA` is returned).
+
+The object `x` returned by the function `pcadapt` contains numerical quantities obtained after performing a PCA on the genotype matrix.
+
+```{r ,eval=FALSE}
+summary(x)
+```
+
+We assume in the following that there are `n` individuals and `L` markers.
+
+- `stat` is a vector of size `L` containing squared Mahalanobis distances by default.
+
+- `pvalues` is a vector containing `L` p-values.
+
+- `maf` is a vector of size `L` containing minor allele frequencies.
+
+- `gif` is a numerical value corresponding to the genomic inflation factor estimated from `stat`.
+
+- `chi2.stat` is a vector of size `L` containing the rescaled statistics `stat/gif` that follow a chi-squared distribution with `K` degrees of freedom.
+
+- `scores` is a `(n,K)` matrix corresponding to the projections of the individuals onto each PC.
+
+- `loadings` is a `(L,K)` matrix containing the correlations between each genetic marker and each PC.
+
+- `singular.values` is a vector containing the `K` ordered squared root of the proportion of variance explained by each PC.
+
+- `zscores` is a `(L,K)` matrix containing the $z$-scores.
+
+All of these elements are accessible using the `$` symbol. For example, the p-values are contained in `x$pvalues`.
+
+# D. Graphical tools
+
+### D.1. Manhattan Plot
+
+A Manhattan plot displays $-\text{log}_{10}$ of the p-values.
+
+```{r,fig.width=7,fig.height=5,fig.align='center'}
+plot(x,option="manhattan")
+```
+
+### D.2. Q-Q Plot
+
+The user is also given the possibility to check the distribution of the p-values using a Q-Q plot
+
+```{r,fig.width=7,fig.height=5,fig.align='center'}
+plot(x,option="qqplot",threshold=0.1)
+```
+
+On the right side of the grey dotted line are the top 10% lowest p-values.
+This plot confirms that most of the p-values follow the expected uniform distribution. However, the smallest p-values are smaller than expected confirming the presence of outliers.
+
+### D.3. Histograms of the test statistic and of the p-values
+
+
+A histogram of p-values confirms that most of the p-values follow the uniform distribution, and that the excess of small p-values indicates the presence of outliers.
+
+```{r,fig.width=7,fig.height=5,fig.align='center'}
+hist(x$pvalues,xlab="p-values",main=NULL,breaks=50)
+```
+
+The presence of outliers is also visible when plotting a histogram of the test statistic $D_j$.
+
+```{r,fig.width=7,fig.height=5,fig.align='center'}
+plot(x,option="stat.distribution")
+```
+
+# E. Choosing a cutoff for outlier detection
+
+To provide a list of outliers, we recommend using the `R` package [qvalue](http://www.bioconductor.org/packages/release/bioc/html/qvalue.html), transforming the p-values into q-values. To install and load the package, type the following command lines:
+
+```
+## try http if https is not available
+source("https://bioconductor.org/biocLite.R")
+biocLite("qvalue")
+library(qvalue)
+```
+
+For a given $\alpha$ (real valued number between $0$ and $1$), SNPs with q-values less than $\alpha$ will be considered as outliers with an expected false discovery rate bounded by $\alpha$.
+The false discovery rate is defined as the percentage of false discoveries among the list of candidate SNPs. Here is an example of how to provide a list of candidate SNPs for the **geno3pops** data, for an expected false discovery rate lower than `10%`:
+
+```
+library(qvalue)
+qval <- qvalue(x$pvalues)$qvalues
+alpha <- 0.1
+outliers <- which(qval<alpha)
+```
+
+It may be interesting to know which principal components are actually the most
+correlated with the oulier SNPs. The function `get.pc` allows to achieve that:
+
+```
+snp_pc <- get.pc(x,outliers)
+```
+
+# Changelog
+
+|Date       | Version          | Changes|
+|--------   | ----   | -------------------------------------------------------|
+|12-20-2016 | 3.0.4            | - Method based on genotype sampling added to handle pooled-DNA.|
+|10-06-2016 | 3.0.3            | - Option `type="vcfR"` has been added to `read.pcadapt` to overcome some conversion issues occuring with VCF files.|
+|           |                   | - Argument `transpose` is now deprecated. Read section A for more details.|
+| | |
+|06-13-2016 | 3.0.2             | - The function `get.pc` has been added. For each SNP, it returns the most correlated principal component.|
+| | |
+|06-01-2016 | 3.0.1             | - The `read4pcadapt` is now deprecated, it is now called `read.pcadapt`.|
+|           |                   | - Using the `pop` option when plotting scores now provides the color legend.|
+| | |
+|04-04-2016 | 3.0               | - All analyses are now included in the `R` package. Users should not use the `C` software PCAdapt fast anymore.|
+|           |                   | - Big datasets can be handled directly within the `R` session.|
+|           |                   | - `read4pcadapt` now converts files to the `pcadapt` format.|
+|           |                   | - The first argument of `pcadapt` can be either a small genotype matrix or the output of `read4pcadapt`.|
+| | |
+|02-12-2016 | 2.2               | - The Mahalanobis distance is now estimated from the z-scores rather than the loadings.|
+|           |                   | - Make sure you have downloaded the latest version of the C software PCAdapt (last updated on February, 11th, 2016).|
+| | |
+|01-05-2016 | 2.1.1             | - Bug fix: vignette header added.|
+| | |
+|12-18-2015 | 2.1               | - The scaling of the SNP before computing PCA has been changed. Instead of using standard deviation, we now use the squareroot of $p(1-p)$ (haploid data) or of $2p(1-p)$ (diploid data) where $p$ is the minimum allele frequency.|
+|           |                   | - Bug fix: the genomic inflation factor has been corrected when `K=1`.|
+|           |                   | - Bug fix: a problem due to high proportion of missing data slowing the program has been fixed.|
+|           |                   | - Argument `"minmaf"` has been replaced with `"min.maf"`.|
+| | |
+|           | 2.0.1             | - Vignette corrected: when reading output from the software PCAdapt, we do not mention the deprecated argument `PCAdapt` in the function `pcadapt`.|
+|           |                   | - Bug fix: an issue occurring when reading outputs from PCAdapt has been fixed.|
+|           |                   | - We mention in the vignette how to use Pool-seq data with the C software PCAdapt fast.|
+| | |
+|           | 2.0               | - The default test statistic is not the communality statistic anymore but the Mahalanobis distance.|
+|           |                   | - Test statistic for Pool-seq data.|
+
+# Reference
+
+Luu, K., Bazin, E., & Blum, M. G. B. (2016). [pcadapt: an R package to perform genome scans for selection based on principal component analysis. Molecular Ecology Resources](http://biorxiv.org/content/early/2016/07/25/056135).

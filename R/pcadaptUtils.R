@@ -11,6 +11,8 @@
 #' \code{pcadapt} format. Supported formats are: \code{ped}, \code{vcf}, \code{lfmm}.
 #' @param local.env a logical value indicating whether the input has to be read from the local
 #' environment or from the working directory.
+#' @param ploidy an integer specifying the ploidy of the individuals.
+#' @param pop.sizes a list specifying the number of individuals for each pool.
 #' @param allele.sep a character string specifying the type of allele separator used in VCF files. Set to "/" by default, but can
 #' be switched to "|" otherwise.
 #' @param blocksize an integer specifying the number of markers to be processed in the mean time.
@@ -21,7 +23,7 @@
 #'
 #' @export
 #'
-read.pcadapt <- function(input.filename,type,local.env=FALSE,allele.sep="/",blocksize=10000){
+read.pcadapt <- function(input.filename,type,local.env=FALSE,ploidy=2,pop.sizes=NULL,allele.sep="/",blocksize=10000){
   if (local.env == FALSE){
     ## Check if input.filename is a character string ##
     if (class(input.filename) != "character"){
@@ -82,14 +84,22 @@ read.pcadapt <- function(input.filename,type,local.env=FALSE,allele.sep="/",bloc
       stop("Invalid input genotype matrix.")
     }
     if (type == "lfmm"){
-      write.table(t(input.filename),"tmp.pcadapt",col.names = FALSE,row.names = FALSE)
+      tmp <- input.filename
+      tmp[which(is.na(tmp))] <- 9
+      write.table(t(tmp),"tmp.pcadapt",col.names = FALSE,row.names = FALSE)
     } else if (type == "pcadapt"){
-      write.table(input.filename,"tmp.pcadapt",col.names = FALSE,row.names = FALSE)
+      tmp <- input.filename
+      tmp[which(is.na(tmp))] <- 9
+      write.table(tmp,"tmp.pcadapt",col.names = FALSE,row.names = FALSE)
     } else if (type == "vcf"){
       stop("Set argument local.env to FALSE.")
     } else if (type == "ped"){
       stop("Set argument local.env to FALSE.")
-    }
+    } else if (type == "pool"){
+      tmp <- sample.geno(pool.matrix=input.filename,pop.sizes=pop.sizes)
+      tmp[which(is.na(tmp))] <- 9
+      write.table(t(tmp),"tmp.pcadapt",col.names = FALSE,row.names = FALSE)
+    } 
     aux <- "tmp.pcadapt"
   }
   return(aux)

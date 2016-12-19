@@ -4,8 +4,8 @@
 \alias{read.pcadapt}
 \title{File Converter}
 \usage{
-read.pcadapt(input.filename, type, local.env = FALSE, allele.sep = "/",
-  blocksize = 10000)
+read.pcadapt(input.filename, type, local.env = FALSE, ploidy = 2,
+  pop.sizes = NULL, allele.sep = "/", blocksize = 10000)
 }
 \arguments{
 \item{input.filename}{a character string specifying the name of the file to be
@@ -17,6 +17,10 @@ to the genotype matrix in the local environment.}
 
 \item{local.env}{a logical value indicating whether the input has to be read from the local
 environment or from the working directory.}
+
+\item{ploidy}{an integer specifying the ploidy of the individuals.}
+
+\item{pop.sizes}{a list specifying the number of individuals for each pool.}
 
 \item{allele.sep}{a character string specifying the type of allele separator used in VCF files. Set to "/" by default, but can
 be switched to "|" otherwise.}

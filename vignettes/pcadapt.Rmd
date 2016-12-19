@@ -47,7 +47,6 @@ filename <- read.pcadapt(path_to_file,type="lfmm")
 ```
 
 
-
 # B. Choosing the number `K` of Principal Components
 
 The `pcadapt` function performs two successive tasks. First, PCA is performed on the centered and scaled genotype matrix. The second stage consists in computing test statistics and p-values based on the correlations between SNPs and the first `K` principal components (PCs). To run the function `pcadapt`, the user should specify the `pcadapt` file location `filename` or use the output returned by the function `read.pcadapt`, along with the number `K` of principal components to work with.
@@ -308,6 +307,7 @@ plot(x_cw,option="stat.distribution",K=2)
 
 |Date       | Version          | Changes|
 |--------   | ----   | -------------------------------------------------------|
+|12-20-2016 | 3.0.4            | - Method based on genotype sampling added to handle pooled-DNA.|
 |10-06-2016 | 3.0.3            | - Option `type="vcfR"` has been added to `read.pcadapt` to overcome some conversion issues occuring with VCF files.|
 |           |                   | - Argument `transpose` is now deprecated. Read section A for more details.|
 | | |
