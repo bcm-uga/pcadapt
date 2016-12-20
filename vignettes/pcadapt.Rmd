@@ -7,12 +7,12 @@ vignette: >
   %\usepackage[utf8]{inputenc}
 ---
 
-<center> <h1> Using pcadapt to detect local adaption with individual genotype data. </h1> </center>
+<center> <h1> Using pcadapt to detect local adaption. </h1> </center>
 <center> <h3> Keurcien Luu, Michael G.B. Blum </h3> </center>
 
 **pcadapt** has been developed to detect genetic markers involved in biological adaptation. **pcadapt** provides statistical tools for outlier detection based on Principal Component Analysis (PCA).
 
-In the following, we show how the **pcadapt** package can perform genome scans for selection based on individual genotype data. We show how to run the package using the example **geno3pops** that contains genotype data. A total of 150 individuals coming from three different populations were genotyped at 1,500 diploid markers. Simulations were performed with [simuPOP](http://simupop.sourceforge.net/) using a divergence model assuming that 200 SNPs confer a selective advantage. To run the package on the provided example, just copy and paste all shaded `R` chunks.
+In the following, we show how the **pcadapt** package can perform genome scans for selection based on individual genotype data. We show how to run the package using the example **geno3pops** that contains genotype data. A total of 150 individuals coming from three different populations were genotyped at 1,500 diploid markers. Simulations were performed with [simuPOP](http://simupop.sourceforge.net/) using a divergence model assuming that 200 SNPs confer a selective advantage. To run the package on the provided example, just copy and paste shaded `R` chunks.
 
 To run the package, you need to install and load it using the following command lines:
 
@@ -27,7 +27,7 @@ library(pcadapt)#Comment
 
 # A. Reading genotype data
 
-### A.1. `read.pcadapt`
+### A.1. `read.pcadapt` with individual genotype data
 
 You should use the `read.pcadapt` function to convert your genotype file to the `pcadapt` format. `pcadapt` files should have individuals in columns, SNPs in lines, and missing values should be encoded with `9`'s. `read.pcadapt` converts different types of files to the `pcadapt` format and returns a character string containing the name of the converted file, which should be used as input for the `pcadapt` function.
 The current version of `read.pcadapt` supports three formats: "vcf", "ped", and "lfmm". For example, assume your genotype file is called "foo.lfmm" and is located in the directory "path_to_directory", use the following command lines:
@@ -46,6 +46,32 @@ path_to_file <- system.file("extdata","geno3pops",package="pcadapt")
 filename <- read.pcadapt(path_to_file,type="lfmm")
 ```
 
+### A.2. `read.pcadapt` with pooled sequencing data
+
+For pooled samples, the package also uses the `read.pcadapt` function. The function samples genotypes in each pool using binomial random draws with the provided frequencies. The function creates a file containing the samples genotypes. 
+
+We assume that that the user provides a frequency matrix with `n` rows and `L` columns (where `n` is the number of populations and `L` is the number of genetic markers). Assume your frequency file is called "foo" and is located in the directory "path_to_directory", use the following command lines:
+
+```
+pool.data <- read.table("path_to_directory/foo")
+filename <- read.pcadapt(pool.data,type="pool",local.env = TRUE)
+```
+
+A Pool-seq example is provided in the package, and can be loaded as follows:
+
+```{r,  results="hide"}
+pool.data <- read.table(system.file("extdata","pool3pops",package="pcadapt"))
+filename <- read.pcadapt(pool.data,type="pool",local.env = TRUE)
+```
+
+By default, the function samples 1000 individuals in each population and this number can be changed using the `pop.sizes` argument. Here is an example with 200 individuals in each population. In practice, users should prefer to consider 1000 sampled individuals in each population or more.
+
+```
+pool.data <- read.table(system.file("extdata","pool3pops",package="pcadapt"))
+filename <- read.pcadapt(pool.data,type="pool",local.env = TRUE,pop.sizes = c(200,200,200))
+```
+
+You may also specify ploidy in the `read.pcadapt` function using the `ploidy` argument (by default, it is equal to 2). Because individual genotype data have been sampled from pooled sequencing data, the rest of the tutorial is the same for both situations.
 
 # B. Choosing the number `K` of Principal Components
 
@@ -307,7 +333,7 @@ plot(x_cw,option="stat.distribution",K=2)
 
 |Date       | Version          | Changes|
 |--------   | ----   | -------------------------------------------------------|
-|12-20-2016 | 3.0.4            | - Method based on genotype sampling added to handle pooled-DNA.|
+|12-20-2016 | 3.0.4            | - Method based on sampling genotypes added to handle pooled-sequencing.|
 |10-06-2016 | 3.0.3            | - Option `type="vcfR"` has been added to `read.pcadapt` to overcome some conversion issues occuring with VCF files.|
 |           |                   | - Argument `transpose` is now deprecated. Read section A for more details.|
 | | |
@@ -340,4 +366,4 @@ plot(x_cw,option="stat.distribution",K=2)
 
 # Reference
 
-Luu, K., Bazin, E., & Blum, M. G. B. (2016). [pcadapt: an R package to perform genome scans for selection based on principal component analysis. Molecular Ecology Resources](http://biorxiv.org/content/early/2016/07/25/056135).
+Luu, K., Bazin, E., & Blum, M. G. B. (2017). [pcadapt: an R package to perform genome scans for selection based on principal component analysis. Molecular Ecology Resources 17:67-77](http://biorxiv.org/content/early/2016/07/25/056135).

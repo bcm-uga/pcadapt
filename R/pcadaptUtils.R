@@ -12,7 +12,7 @@
 #' @param local.env a logical value indicating whether the input has to be read from the local
 #' environment or from the working directory.
 #' @param ploidy an integer specifying the ploidy of the individuals.
-#' @param pop.sizes a list specifying the number of individuals for each pool.
+#' @param pop.sizes a vector specifying the number of individuals for each pool.
 #' @param allele.sep a character string specifying the type of allele separator used in VCF files. Set to "/" by default, but can
 #' be switched to "|" otherwise.
 #' @param blocksize an integer specifying the number of markers to be processed in the mean time.
