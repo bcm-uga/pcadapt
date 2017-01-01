@@ -20,7 +20,7 @@ environment or from the working directory.}
 
 \item{ploidy}{an integer specifying the ploidy of the individuals.}
 
-\item{pop.sizes}{a list specifying the number of individuals for each pool.}
+\item{pop.sizes}{a vector specifying the number of individuals for each pool.}
 
 \item{allele.sep}{a character string specifying the type of allele separator used in VCF files. Set to "/" by default, but can
 be switched to "|" otherwise.}
