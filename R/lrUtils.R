@@ -13,5 +13,6 @@
 #' @export
 #'
 lrfunc <- function(matrix, filename, nind, nloci, K, ploidy, min.maf){
-  .C("lrfunc_", as.double(matrix), as.character(filename), as.integer(nind), as.integer(nloci), as.integer(K), as.integer(ploidy), as.double(min.maf));
+  res <- .C("lrfunc_", as.double(matrix), as.character(filename), as.integer(nind), as.integer(nloci), as.integer(K), as.integer(ploidy), as.double(min.maf), zscores = as.double(array(0,dim=K*nloci)));
+  return(res$zscores)
 }

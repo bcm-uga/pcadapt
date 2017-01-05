@@ -10,7 +10,7 @@
 compute.covariance <- function(input.filename){
   input.size <- getsize(input.filename)
   nIND <- input.size[1]
-  res <- .C("compute_covariance",as.character(input.filename),2,0.05,0,"tmp.pcadapt",PACKAGE = "pcadapt",result=as.double(array(0,dim=nIND*nIND)));
+  res <- .C("compute_covariance",as.character(input.filename),0.05,0,"tmp.pcadapt",PACKAGE = "pcadapt",result=as.double(array(0,dim=nIND*nIND)));
   return(matrix(res$result,nrow = nIND,ncol=nIND));
 }
 

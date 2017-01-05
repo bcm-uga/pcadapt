@@ -252,23 +252,20 @@ void FastPCAdapt(char *filename, int K, double min_AF, int haploid, char *OUTFIL
 }
 
 
-void compute_covariance(char **inputfilename,int *npc, double *minmaf, int *ploidy, char **outputfilename, double *result){
+void compute_covariance(char **inputfilename, double *minmaf, int *ploidy, char **outputfilename, double *result){
     
-    int K = *npc;
     char *filename = *inputfilename;
     double min_AF = *minmaf;
     int haploid = *ploidy;
-    char *OUTFILE = *outputfilename;
     FILE *GenoFile;
-    char *OutputFileName = malloc(sizeof(char)*256);
-    int nSNP, nIND, nF = K;
-    int sc = 1, snp;
-    double *U, *V, *Sigma, *SNPSd, *Cov, *mAF, *miss;
+    int nSNP = 0; 
+    int nIND = 0;
+    int sc = 1;
+    
     Rprintf("Reading file %s...\n",filename);
     FILE *INPUTFile;
     int nbbn = 0;
     int nbsp = 0;
-    int res;
     if((INPUTFile = fopen(filename, "r")) == NULL){
         Rprintf("Error, invalid input file.\n");
     }
@@ -287,20 +284,19 @@ void compute_covariance(char **inputfilename,int *npc, double *minmaf, int *ploi
         currentchar = fgetc(INPUTFile);
     }
     fclose(INPUTFile);
-    snp = (int) nbbn;
-    res = nbsp/nbbn;
-    nIND = res;
-    nSNP = snp;
-    Rprintf("Number of SNPs: %i\n",snp);
-    Rprintf("Number of individuals: %i\n",nIND);
-    
-    /* Allocate memory */
-    initializeVariables__f(&U, &Sigma, &V, &SNPSd, &Cov, &miss, &mAF, nF, nSNP, nIND);
-    OutputFileName = OUTFILE;
+    nIND = nbsp/nbbn;
+    nSNP = (int) nbbn;
+    Rprintf("Number of SNPs: %i\n", nSNP);
+    Rprintf("Number of individuals: %i\n", nIND);
     
     /* Compute nxn covariance matrix */
+    double *Cov, *SNPSd, *mAF, *miss;
+    Cov = calloc(nIND*nIND, sizeof(double));
+    SNPSd = malloc(sizeof(double)*nSNP);
+    miss = calloc(nSNP, sizeof(double));
+    mAF = calloc(nSNP, sizeof(double));
     double mean;
-    int i1, na1, na_tot = 0, low_AF_tot = 0;
+    int i, na, na_tot = 0, low_AF_tot = 0;
     int blocksize = 120;
     double *Geno = calloc(nIND*blocksize, sizeof(double));
     double *scratchCov = calloc(nIND*nIND, sizeof(double));
@@ -309,32 +305,26 @@ void compute_covariance(char **inputfilename,int *npc, double *minmaf, int *ploi
         Rprintf("Error, invalid input file.\n");
     }
     GenoFile = fopen(filename,"r");
-    for (i1=0; i1<nSNP; i1 += blocksize){
-        if (nSNP - i1 < blocksize) blocksize = nSNP - i1;
-        na1 = get_row(Geno, GenoFile, nIND, &mean, SNPSd + i1, sc, blocksize, haploid, min_AF, &low_AF_tot);
+    for (i = 0; i < nSNP; i += blocksize){
+        if (nSNP - i < blocksize){
+          blocksize = nSNP - i;
+        }
+        na = get_row(Geno, GenoFile, nIND, &mean, SNPSd + i, sc, blocksize, haploid, min_AF, &low_AF_tot);
         add_to_cov(Cov, scratchCov, nIND, Geno, blocksize);
-        na_tot += na1;
+        na_tot += na;
     }
-    // CHECK BLOCSIZE AND GENO
-    Rprintf("Number of SNPs with minor allele frequency lower than %g ignored: %i\n", min_AF,low_AF_tot);
-    if (na_tot) Rprintf("%i out of %i missing data ignored.\n", na_tot, nSNP*nIND);
-    /* END of Cov_line*/
     
-    FILE *covFile;
-    char *fileCov = malloc(sizeof(char)*256);
-    strcpy(fileCov, OutputFileName);
-    strcat(fileCov, ".cov");
-    if((covFile = fopen(fileCov, "w")) == NULL) Rprintf("Error, unable to open %s.\n", fileCov);
-    int ii;
-    for (ii=0; ii<(nIND*nIND); ii++){
-        fprintf(covFile,"%f",Cov[ii]);
-        fprintf(covFile,"\n");
+    Rprintf("Number of SNPs with minor allele frequency lower than %g ignored: %i\n", min_AF,low_AF_tot);
+    if (na_tot){
+      Rprintf("%i out of %i missing data ignored.\n", na_tot, nSNP*nIND);
     }
-    int jj;
-    for (jj=0; jj<(nIND*nIND); jj++){
-        result[jj] = Cov[jj];
+    
+    int fill;
+    for (fill = 0; fill < (nIND*nIND); fill++){
+        result[fill] = Cov[fill];
     }
-    fclose(covFile);
+    
+    fclose(GenoFile);
     free(Geno);
     free(miss);
     free(mAF);
@@ -369,7 +359,7 @@ void get_size(char **inputfilename, int *size){
 }
 
 
-int lrfunc_(double *scores, char **inputfilename, int *num_ind, int *num_snp, int *num_pc, int *ploidy, double *minmaf){
+void lrfunc_(double *scores, char **inputfilename, int *num_ind, int *num_snp, int *num_pc, int *ploidy, double *minmaf, double *result){
     char *filename = *inputfilename;
     int nIND = *num_ind;
     int nSNP = *num_snp;  
@@ -378,46 +368,110 @@ int lrfunc_(double *scores, char **inputfilename, int *num_ind, int *num_snp, in
     double min_AF = *minmaf;
     
     FILE *GenoFile;
-    Rprintf("Reading file %s...\n",filename);
-    if((GenoFile = fopen(filename, "r")) == NULL){
-        Rprintf("Error, invalid input file.\n");
-    }
-    double *U, *t_U, *residuals;
-    double *Z;
+    GenoFile = fopen(filename, "r");
+    double *U, *t_U;
+    double *Z, *Y, *residuals;
     double *Genotype = calloc(nIND, sizeof(double));
-    residuals = malloc(sizeof(double)*nSNP);
+    U = calloc(K*nIND, sizeof(double));
+    t_U = calloc(K*nIND, sizeof(double));
     Z = malloc(sizeof(double)*nSNP*K);
+    Y = malloc(sizeof(double)*nIND);
+    residuals = malloc(sizeof(double)*nSNP);
     int sc = 1; //has to be removed since we always scale
     int i = 0;
+    int j = 0;
     int na = 0;
-    double mean;
-    double var;
+    double mean = 0;
+    double var = 0;
     int low_AF_tot = 0;
     double *mAF;
     double *miss;
+    miss = calloc(nSNP, sizeof(double));
+    mAF = calloc(nSNP, sizeof(double));
     
     int p = 0;
-    U = calloc(K*nIND, sizeof(double));
-    t_U = calloc(K*nIND, sizeof(double));
-    //for (p = 0; p<(K*nIND); p++){
-      //U[p] = scores[p];
-      //t_U[p] = scores[p];
-    //}
-    //tr(t_U, nIND, K);
+    for (p = 0; p<(K*nIND); p++){
+      U[p] = scores[p];
+      t_U[p] = scores[p];
+    }
+    tr(t_U, nIND, K);
     
-    for (i=0; i<nSNP; i++){
+    for (i = 0; i < nSNP; i++){
       residuals[i] = 0;
-      //na = get_row(Genotype, GenoFile, nIND, &mean, &var, sc, 1, haploid, min_AF, &low_AF_tot);
+      na = get_row(Genotype, GenoFile, nIND, &mean, &var, sc, 1, haploid, min_AF, &low_AF_tot);
       mAF[i] = mean;
       miss[i] = na;
-      //Rprintf("geno = %f and scores = %f\n",Genotype[i],U[i]);
-//prodMatrix(Genotype, U, (Z + K*(i)), 1, nIND, nIND, K);
+      prodMatrix(Genotype, U, (Z + (K * i)), 1, nIND, nIND, K);
+      prodMatrix((Z + (K * i)), t_U, Y, 1, K, K, nIND);
+      for (j = 0; j < nIND; j++){
+        residuals[i] += (Genotype[j] - Y[j])*(Genotype[j] - Y[j]);
+      }
+      if (nIND - K - na <= 0){
+        residuals[i] = 0.0;
+      } else {
+        residuals[i] /= (double) nIND - K - na;
+      }
     }
+    fclose(GenoFile);
     
+    i = 0;
+    j = 0;
+    int k = 0;
+    int l = 0;
+    GenoFile = fopen(filename, "r");
+    
+    /* Correcting for missing values */
+    double *xx = calloc(K, sizeof(double));
+    float value;
+    double *info_na = calloc(nIND, sizeof(double));
+    
+    for (i = 0; i < nSNP; i++){
+      for (l = 0; l < K; l++){
+        xx[l] = 0;
+      }
+      for (k = 0; k < K; k++){
+        for (j = 0; j < nIND; j++){
+          if (k == 0){
+            if (fscanf(GenoFile, "%g", &value) != EOF){
+              xx[k] +=  (double) U[k + K * j]*U[k + K * j];
+              info_na[j] = 1;
+            } else {
+              info_na[j] = 0;
+            }
+          } else {
+            if (info_na[j] == 1){
+              xx[k] += (double) U[k + (K*j)]*U[k + (K*j)];
+            }
+          }
+        }
+        if (residuals[i] == 0.0){
+          Z[k + (i * K)] = NAN;
+        } else {
+          Z[k + (i * K)] /= sqrt(residuals[i]);
+        }
+        if (xx[k] > 0){
+          Z[k + (i*K)] /= sqrt(xx[k]);
+        }
+      }
+      Rprintf("aux1 = %f, aux2 = %f.\n",xx[0],xx[1]);
+    }
+    tr(Z,nSNP,K);
+    
+    int fill;
+    for (fill = 0; fill < (nSNP*K); fill++){
+      result[fill] = Z[fill];
+    }
+
+    fclose(GenoFile);
+    free(xx);
+    free(info_na);
+    free(Z);
+    free(residuals);
+    free(Y);
     free(miss);
     free(mAF);
-    Rprintf("%f \n",scores[0]);
-    return 0;
+    free(U);
+    free(t_U);
 }
 
 

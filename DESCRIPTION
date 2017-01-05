@@ -16,7 +16,7 @@ Description: Methods to detect genetic markers involved in biological
     <DOI:10.1111/1755-0998.12592>.
 License: GPL (>= 2)
 Depends: robust, MASS, ggplot2, vcfR
-Suggests: knitr, qvalue, rmarkdown
+Suggests: knitr, qvalue, rmarkdown, testthat
 LazyData: TRUE
 RoxygenNote: 5.0.1
 NeedsCompilation: yes
