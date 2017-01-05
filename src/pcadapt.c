@@ -372,11 +372,15 @@ void lrfunc_(double *scores, char **inputfilename, int *num_ind, int *num_snp, i
     double *U, *t_U;
     double *Z, *Y, *residuals;
     double *Genotype = calloc(nIND, sizeof(double));
+    double *mAF, *miss;
     U = calloc(K*nIND, sizeof(double));
     t_U = calloc(K*nIND, sizeof(double));
     Z = malloc(sizeof(double)*nSNP*K);
     Y = malloc(sizeof(double)*nIND);
     residuals = malloc(sizeof(double)*nSNP);
+    mAF = calloc(nSNP, sizeof(double));
+    miss = calloc(nSNP, sizeof(double));
+    
     int sc = 1; //has to be removed since we always scale
     int i = 0;
     int j = 0;
@@ -384,11 +388,7 @@ void lrfunc_(double *scores, char **inputfilename, int *num_ind, int *num_snp, i
     double mean = 0;
     double var = 0;
     int low_AF_tot = 0;
-    double *mAF;
-    double *miss;
-    miss = calloc(nSNP, sizeof(double));
-    mAF = calloc(nSNP, sizeof(double));
-    
+
     int p = 0;
     for (p = 0; p<(K*nIND); p++){
       U[p] = scores[p];
