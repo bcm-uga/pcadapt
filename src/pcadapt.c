@@ -453,7 +453,6 @@ void lrfunc_(double *scores, char **inputfilename, int *num_ind, int *num_snp, i
           Z[k + (i*K)] /= sqrt(xx[k]);
         }
       }
-      Rprintf("aux1 = %f, aux2 = %f.\n",xx[0],xx[1]);
     }
     tr(Z,nSNP,K);
     

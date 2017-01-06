@@ -17,6 +17,8 @@ Description: Methods to detect genetic markers involved in biological
 License: GPL (>= 2)
 Depends: robust, MASS, ggplot2, vcfR
 Suggests: knitr, qvalue, rmarkdown, testthat
+Imports: Rcpp (>= 0.12.8)
+LinkingTo: Rcpp
 LazyData: TRUE
 RoxygenNote: 5.0.1
 NeedsCompilation: yes

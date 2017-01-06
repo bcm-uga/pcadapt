@@ -14,6 +14,23 @@ compute.covariance <- function(input.filename){
   return(matrix(res$result,nrow = nIND,ncol=nIND));
 }
 
+#' Compute covariance matrix for loaded genotype data
+#'
+#' @param x a genotype matrix.
+#' @param ploidy an integer.
+#' @return The returned value is a square symmetric matrix.
+#'
+#' @export
+#'
+cov.std <- function(x,ploidy=2){
+  n <- ncol(x)
+  p <- nrow(x)
+  af <- apply(x, FUN = function(x){mean(x, na.rm = TRUE)}, MARGIN = 1) / ploidy
+  dts <- scale(t(x), scale = sqrt(ploidy * (af * (1 - af))))*sqrt(p / (n-1))
+  res <- cov(t(dts), use = "pairwise.complete.obs") * (n - 1)
+  return(res)
+}
+
 #' Return the number of rows and the the number of columns of large genotype matrices
 #'
 #' @param input.filename a character string specifying the name of the file to be processed with \code{pcadapt}.
