@@ -42,7 +42,7 @@ sample.geno = function(pool.matrix=NULL,ploidy=2,cover.matrix=NULL,pop.sizes=NUL
   nPOOL <- nrow(pool.matrix)  
   nSNP <- ncol(pool.matrix)
   if (missing(pop.sizes) || is.null(pop.sizes)){
-    sample.size <- rep(1000,nPOOL)
+    sample.size <- rep(100,nPOOL)
   } else {
     sample.size <- pop.sizes
   }
@@ -117,4 +117,71 @@ cover.to.pool = function(data,cover.matrix,pop,ploidy=2){
   }
   return(pool.matrix)
 }
+
+#' Sample genotype matrix from pooled samples
+#'
+#' \code{sample.geno} samples a genotype matrix from pooled samples.
+#' 
+#' @param pool.matrix a matrix with n rows and p columns where n is the number of pools and is the number of markers.
+#' @param ploidy an integer specifying the ploidy.
+#' @param cover.matrix a matrix with n rows and p columns where n is the number of pools and is the number of markers.
+#' @param pop.sizes a list specifying the number of individuals for each pool.
+#' @param method a character string indicating the method used for sampling.
+#'
+#' @examples
+#' ## see also ?pcadapt for examples
+#'
+#' @importFrom stats rbinom rbeta
+#'
+#' @export
+#'
+sample.geno.2 = function(pool.matrix=NULL,ploidy=2,cover.matrix=NULL,pop.sizes=NULL,method="per.pop"){
+  nPOOL <- nrow(pool.matrix)  
+  nSNP <- ncol(pool.matrix)
+  if (missing(pop.sizes) || is.null(pop.sizes)){
+    sample.size <- rep(100,nPOOL)
+  } else {
+    sample.size <- pop.sizes
+  }
+  if (missing(cover.matrix) || is.null(cover.matrix)){
+    #print("Coverage matrix missing. Drawing genotypes from a binomial distribution.")
+    geno <- array(0, dim = c(sum(sample.size),nSNP))
+    for (k in 1:nPOOL){
+      G <- rbinom(n=(sample.size[k]*nSNP),size=ploidy,prob=as.numeric(pool.matrix[k,]))
+      G[which(is.na(G))] <- 9
+      cumul.sample <- cumsum(sample.size) 
+      beg.idx <- c(1, 1 + head(cumul.sample,-1))
+      end.idx <- cumul.sample
+      geno[beg.idx[k]:end.idx[k],] <- t(matrix(G,nrow=nSNP,sample.size[k]))
+    }
+  } else {
+    #print("Coverage matrix not missing. Drawing genotypes from a beta-binomial distribution.")
+    geno <- NULL
+    for (k in 1:nPOOL){
+      cover.1 <- cover.matrix[k,]
+      n.reads <- array(NA,dim=c(1,nSNP))
+      nna <- which(pool.matrix[k,]>0)
+      na <- which(pool.matrix[k,]==0)
+      epsilon <- 0.0001
+      n.reads[nna] <- cover.1[nna]/pool.matrix[k,nna]
+      n.reads[na] <- cover.1[na]/epsilon
+      cover.2 <- n.reads - cover.1
+      if (method=="per.pop"){
+        p <- matrix(rbeta(sample.size[k]*nSNP,cover.1+1,cover.2+1),nrow=sample.size[k],ncol=nSNP)
+        p.aux <- matrix(p,nrow=1)
+        G <- t(matrix(rbinom(sample.size[k]*nSNP,size=ploidy,prob=p.aux),ncol=sample.size[k],nrow=nSNP))
+        geno <- rbind(geno,G)
+      } else if (method=="per.ind"){
+        for (ind in 1:sample.size[k]){
+          p <- rbeta(nSNP,cover.1+1,cover.2+1)
+          G <- matrix(rbinom(nSNP,size=ploidy,prob=p),nrow=1,ncol=nSNP)
+          geno <- rbind(geno,G)
+        }
+      }
+    }
+  }
+  return(geno)
+}
+
+
 

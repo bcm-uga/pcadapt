@@ -5,11 +5,10 @@
 \title{Principal Component Analysis for outlier detection}
 \usage{
 pcadapt(input, K = 5, method = "mahalanobis", data.type = "genotype",
-  min.maf = 0.05, ploidy = 2, output.filename = "pcadapt_output",
-  clean.files = TRUE, transpose, cover.matrix = NULL)
+  min.maf = 0.05, ploidy = 2, output.filename, clean.files, transpose)
 }
 \arguments{
-\item{input}{a character string specifying the name of the file to be processed with \code{pcadapt}.}
+\item{input}{a genotype matrix or a character string specifying the name of the file to be processed with \code{pcadapt}.}
 
 \item{K}{an integer specifying the number of principal components to retain.}
 
@@ -24,13 +23,13 @@ or a matrix of allele frequencies (\code{data.type="pool"}).}
 
 \item{ploidy}{an integer specifying the ploidy of the individuals.}
 
-\item{output.filename}{a character string specifying the names of the files created by \code{pcadapt}.}
+\item{output.filename}{deprecated argument.}
 
-\item{clean.files}{a logical value indicating whether the auxiliary files should be deleted or not.}
+\item{clean.files}{deprecated argument.}
 
 \item{transpose}{deprecated argument.}
 
-\item{cover.matrix}{a matrix specifying the average coverage per genetic marker and per population.}
+\item{data.type}{deprecated argument.}
 }
 \value{
 The returned value \code{x} is an object of class \code{pcadapt}.

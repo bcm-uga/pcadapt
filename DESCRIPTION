@@ -1,11 +1,11 @@
 Package: pcadapt
 Type: Package
 Title: Fast Principal Component Analysis for Outlier Detection
-Version: 3.0.4
-Date: 2016-12-20
-Authors@R: c(person("Keurcien","Luu", role = c("aut","cre"), email = "keurcien.luu@imag.fr"), 
-          person("Michael","Blum", role = c("aut"), email = "michael.blum@imag.fr"),
-          person("Nicolas","Duforet-Frebourg", role = c("ctb")))
+Version: 3.1.0
+Date: 2017-01-08
+Authors@R: c(person("Keurcien", "Luu", role = c("aut", "cre"), email = "keurcien.luu@imag.fr"), 
+          person("Michael", "Blum", role = c("aut"), email = "michael.blum@imag.fr"),
+          person("Nicolas", "Duforet-Frebourg", role = c("ctb")))
 Author: Keurcien Luu [aut, cre],
         Michael Blum [aut],
         Nicolas Duforet-Frebourg [ctb]
@@ -15,12 +15,18 @@ Description: Methods to detect genetic markers involved in biological
     Principal Component Analysis. Implements the method described in (Luu, 2016)
     <DOI:10.1111/1755-0998.12592>.
 License: GPL (>= 2)
-Depends: robust, MASS, ggplot2, vcfR
-Suggests: knitr, qvalue, rmarkdown, testthat
-Imports: Rcpp (>= 0.12.8)
-LinkingTo: Rcpp
+Imports:
+    Rcpp (>= 0.12.8)
+LinkingTo: Rcpp, RcppArmadillo
 LazyData: TRUE
+Depends:
+    Rcpp,
+    RcppArmadillo, 
+    robust, 
+    MASS, 
+    ggplot2, 
+    vcfR
+Suggests: knitr, qvalue, rmarkdown, testthat
+SystemRequirements: C++11
 RoxygenNote: 5.0.1
-NeedsCompilation: yes
-Packaged: 2016-12-20 08:30:00 UTC; Keurcien
 VignetteBuilder: knitr

@@ -17,7 +17,6 @@
 #' be switched to "|" otherwise.
 #' @param blocksize an integer specifying the number of markers to be processed in the mean time.
 #'
-#' @useDynLib pcadapt wrapper_converter
 #' @importFrom utils tail
 #' @importFrom vcfR read.vcfR extract.gt
 #'
@@ -41,22 +40,16 @@ read.pcadapt <- function(input.filename,type,local.env=FALSE,ploidy=2,pop.sizes=
     if (class(type) != "character" || (!(type %in% c("vcf","ped","lfmm","pcadapt","vcfR")))){
       stop("Incorrect type.")
     }
-    ## wrapper_converter ##
+    ## File converter ##
     if (type == "ped"){
-      .C("wrapper_converter",as.character(input.filename),as.integer(0),PACKAGE = "pcadapt")
+      ped2pcadapt(input.filename)
     } else if (type == "vcf"){
-      ## The former vcf converter has been replaced ##
-      #cat("If conversion fails, try type='vcfR' instead.\n")
-      #.C("wrapper_converter",as.character(input.filename),as.integer(1),PACKAGE = "pcadapt")
       obj.vcf <- vcfR::read.vcfR(input.filename)
       geno <- vcfR::extract.gt(obj.vcf)
       vcf2pcadapt(geno,output.file = "tmp.pcadapt",allele.sep = allele.sep,blocksize = blocksize,console.count = blocksize)
     } else if (type == "lfmm"){
-      .C("wrapper_converter",as.character(input.filename),as.integer(2),PACKAGE = "pcadapt")
-    } else if (type == "vcfR"){
-      obj.vcf <- vcfR::read.vcfR(input.filename)
-      geno <- vcfR::extract.gt(obj.vcf)
-      vcf2pcadapt(geno,output.file = "tmp.pcadapt",allele.sep = allele.sep,blocksize = blocksize,console.count = blocksize)
+      stop("Not done yet.")
+      #.C("wrapper_converter",as.character(input.filename),as.integer(2),PACKAGE = "pcadapt")
     }
     
     ##
@@ -189,94 +182,4 @@ get.pc <- function(x,list){
   df <- cbind(list,lapply(v,as.numeric))
   colnames(df) <- c("SNP","PC")
   return(df)
-}
-
-#' Convert genotype information obtained with vcfR
-#'
-#' \code{convert.line} converts outputs of \code{extract.gt} to the format \code{pcadapt}.
-#'
-#' @param hap.block a genotype matrix obtained with `vcfR`. 
-#' @param allele.sep a character indicating which type of delimiter is used to separate the alleles.
-#'
-#' @examples
-#' ## see also ?pcadapt for examples
-#'
-#' @keywords internal
-#'
-#' @export
-#'
-convert.line <- function(hap.block,allele.sep="/"){
-  geno.block <- array(9,dim=dim(hap.block))
-  if (allele.sep == "/"){
-    geno.block[which(hap.block=="0/0",arr.ind = TRUE)] <- 0
-    geno.block[which(hap.block=="0/1",arr.ind = TRUE)] <- 1
-    geno.block[which(hap.block=="1/0",arr.ind = TRUE)] <- 1
-    geno.block[which(hap.block=="1/1",arr.ind = TRUE)] <- 2
-    mask <- !as.logical(apply(hap.block,MARGIN=1,FUN=function(x){sum(!(x %in% c("0/0","0/1","1/0","1/1","./.",NA)))}))
-  } else if (allele.sep == "|"){
-    geno.block[which(hap.block=="0|0",arr.ind = TRUE)] <- 0
-    geno.block[which(hap.block=="0|1",arr.ind = TRUE)] <- 1
-    geno.block[which(hap.block=="1|0",arr.ind = TRUE)] <- 1
-    geno.block[which(hap.block=="1|1",arr.ind = TRUE)] <- 2
-    mask <- !as.logical(apply(hap.block,MARGIN=1,FUN=function(x){sum(!(x %in% c("0|0","0|1","1|0","1|1",".|.",NA)))}))      
-  }
-  filtered.geno <- geno.block[mask,]
-  return(filtered.geno)
-}
-
-#' vcfR-based converter
-#'
-#' \code{vcf2pcadapt} uses the package \code{vcfR} to extract the genotype information from a vcf file and exports it
-#' under the format required by \code{pcadapt}.
-#'
-#' @param geno a genotype matrix obtained with `vcfR`.
-#' @param output.file a character string indicating the name of the output file.
-#' @param allele.sep a character indicating which type of delimiter is used to separate the alleles.
-#' @param blocksize an integer indicating the number of SNPs to be processed in the same chunk.
-#' @param console.count an integer indicating the number of SNPs by which the progress bar should increment.
-#'
-#' @examples
-#' ## see also ?pcadapt for examples
-#'
-#' @importFrom utils flush.console
-#'
-#' @keywords internal
-#'
-#' @export
-#'
-vcf2pcadapt <- function(geno,output.file="tmp.pcadapt",allele.sep="/",blocksize=10000,console.count=10000){
-  if (file.exists(output.file)){
-    file.remove(output.file)
-  }
-  nIND <- ncol(geno)
-  nSNP <- nrow(geno)
-  init.block <- 1
-  if (nSNP > blocksize){
-    end.block <- blocksize
-  } else {
-    end.block <- nSNP
-  }
-  skipped <- 0
-  while (init.block < nSNP && end.block <= nSNP){
-    snp.lines <- geno[init.block:end.block,]
-    hap2geno <- t(convert.line(snp.lines,allele.sep = allele.sep))
-    if (nSNP > blocksize){
-      skipped <- skipped + blocksize - ncol(hap2geno)
-    } else {
-      skipped <- nSNP - ncol(hap2geno)
-    }
-    write(hap2geno,file = output.file,append = TRUE,ncolumns = nIND)  
-    if (end.block%%console.count == 0){
-      cat('\r',end.block,"SNPs have been processed.")
-      flush.console() 
-    }
-    if (end.block+blocksize <= nSNP){
-      init.block <- end.block + 1
-      end.block <- end.block + blocksize
-    } else {
-      init.block <- end.block + 1
-      end.block <- nSNP
-    }
-  }
-  cat('\r',end.block,"variants have been processed.\n",skipped,"variants have been discarded as they are not SNPs.")
 }
