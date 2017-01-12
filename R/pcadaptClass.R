@@ -68,10 +68,11 @@ create.pcadapt.file = function(input, K, method, min.maf, ploidy){
 #' @export
 #'
 create.pcadapt.matrix = function(input, K, method, min.maf, ploidy){
-  xcov <- cmpt.cov.matrix(as.matrix(input), ploidy = ploidy)
-  nIND <- ncol(input)
-  nSNP <- nrow(input)
-  xsvd <- RSpectra::eigs_sym(xcov, k = K)   
+  aux <- cmpt_cov_matrix(as.matrix(input), min_maf = min.maf, ploidy = ploidy)
+  nIND <- aux$nIND
+  nSNP <- aux$nSNP
+  xcov <- aux$xcov
+  xsvd <- RSpectra::eigs_sym(xcov, k = K)
   lr <- lrfunc_matrix(Geno = input, 
                       scores = xsvd$vectors,
                       nIND = nIND,

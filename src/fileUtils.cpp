@@ -60,6 +60,17 @@ void tr(double *x, int nrow, int ncol){
   delete[] tmp;
 }
 
+void tAA_ptr(double *A, double *tAA, int nrow, int ncol){
+  for (int i = 0; i < ncol; i++){
+    for (int j = i; j < ncol; j++){
+      for (int k = 0; k < nrow; k++){
+        tAA[j + i * ncol] += A[i + k * ncol] * A[j + k * ncol];
+      }
+      tAA[i + j * ncol] = tAA[j + i * ncol];
+    }
+  } 
+}
+
 void tAA_arma(double *A, double *tAA, int nrow, int ncol){
   double *tA = new double[nrow * ncol];
   for (int i = 0; i < nrow * ncol; i++){
@@ -76,6 +87,7 @@ void tAA_arma(double *A, double *tAA, int nrow, int ncol){
 
 void add_to_cov(double *xcov, double *scratchcov, int nIND, double *geno, int blocksize){
   tAA_arma(geno, scratchcov, blocksize, nIND);
+  //tAA_ptr(geno, scratchcov, blocksize, nIND);
   for (int i = 0; i < nIND*nIND; i++){
     xcov[i] += scratchcov[i];
   }
@@ -173,9 +185,9 @@ Rcpp::List cmpt_cov_file(std::string path, double min_maf, int ploidy){
   double unused_maf = 0;
   int blocksize = 100;
   
-  double *scratchcov = new double[nIND * nIND];
-  double *xcov_ptr = new double[nIND * nIND];
-  double *geno_ptr = new double[blocksize * nIND];
+  double *scratchcov = new double[nIND * nIND]();
+  double *xcov_ptr = new double[nIND * nIND]();
+  double *geno_ptr = new double[blocksize * nIND]();
   for (int i = 0; i < nSNP; i += blocksize){
     if (nSNP - i < blocksize){
       blocksize = nSNP - i;
@@ -183,7 +195,6 @@ Rcpp::List cmpt_cov_file(std::string path, double min_maf, int ploidy){
     unused_na = get_rows_file(geno_ptr, input, nIND, ploidy, min_maf, blocksize, &unused_maf);
     add_to_cov(xcov_ptr, scratchcov, nIND, geno_ptr, blocksize);
   }
-  
   NumericMatrix xcov(nIND, nIND);
   for (int k = 0; k < nIND; k++){
     for (int l = 0; l < nIND; l++){
@@ -221,19 +232,18 @@ Rcpp::List cmpt_cov_file(std::string path, double min_maf, int ploidy){
 Rcpp::List lrfunc_file(std::string filename, NumericMatrix scores, int nIND, int nSNP, int K, int ploidy, double min_maf){
   FILE *input;
   input = fopen(filename.c_str(), "r");
-  double *GenoRowScale = new double[nIND];
-  double *miss = new double[nSNP];
+  double *GenoRowScale = new double[nIND]();
+  double *miss = new double[nSNP]();
   NumericMatrix Z(nSNP, K);
-  NumericVector residuals = no_init(nSNP);
+  NumericVector residuals(nSNP);
   NumericVector Y(nIND);
   NumericVector maf(nSNP);
   NumericVector missing(nSNP);
   double maf_i;
   
   for (int i = 0; i < nSNP; i++){
-    missing = get_rows_file(GenoRowScale, input, nIND, ploidy, min_maf, 1, &maf_i);
+    missing[i] = get_rows_file(GenoRowScale, input, nIND, ploidy, min_maf, 1, &maf_i);
     maf[i] = maf_i;
-    residuals[i] = 0;
     for (int k = 0; k < K; k++){
       for (int j = 0; j < nIND; j++){
         Z(i, k) += GenoRowScale[j] * scores(j, k);
@@ -248,19 +258,19 @@ Rcpp::List lrfunc_file(std::string filename, NumericMatrix scores, int nIND, int
       residuals[i] += (GenoRowScale[j] - Y[j])*(GenoRowScale[j] - Y[j]);
       Y[j] = 0;
     }
-    if (nIND - K <= 0){
+    if ((nIND - K - missing[i]) <= 0){
       residuals[i] = 0.0;
     } else {
-      residuals[i] /= nIND - K;
+      residuals[i] /= nIND - K - missing[i];
     }
   }
   fclose(input);
   
   /* Correcting for missing values */
   input = fopen(filename.c_str(), "r");
-  double *xx = new double[K];
+  double *xx = new double[K]();
   float value;
-  double *info_na = new double[nIND];
+  double *info_na = new double[nIND]();
   
   for (int i = 0; i < nSNP; i++){
     for (int l = 0; l < K; l++){
@@ -270,11 +280,13 @@ Rcpp::List lrfunc_file(std::string filename, NumericMatrix scores, int nIND, int
       for (int j = 0; j < nIND; j++){
         if (k == 0){
           if (fscanf(input, "%g", &value) != EOF){
-            xx[k] +=  (double) scores(j ,k) * scores(j, k);
-            info_na[j] = 1;
-          } else {
-            info_na[j] = 0;
-          }
+            if (value != NA){
+              xx[k] +=  (double) scores(j ,k) * scores(j, k);
+              info_na[j] = 1;
+            } else {
+              info_na[j] = 0;
+            }
+          } 
         } else {
           if (info_na[j] == 1){
             xx[k] += (double) scores(j, k) * scores(j, k);

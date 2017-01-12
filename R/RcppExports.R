@@ -71,6 +71,22 @@ tAA_cpp <- function(x, nrow, ncol) {
     .Call('pcadapt_tAA_cpp', PACKAGE = 'pcadapt', x, nrow, ncol)
 }
 
+#' Covariance for loaded genotype data
+#' 
+#' \code{cmpt_cov_file} computes the covariance matrix of a genotype matrix when the genotype matrix is stored in an external file.
+#' 
+#' @param path a character string specifying the name of the file to be processed with \code{pcadapt}.
+#' @param min_maf a value between \code{0} and \code{0.45} specifying the threshold of minor allele frequencies above which p-values are computed.
+#' @param ploidy an integer specifying the ploidy of the individuals.
+#' 
+#' @return The returned value is a Rcpp::List containing the covariance matrix, the number of individuals and the number of genetic markers present in the data.
+#' 
+#' @export
+#' 
+cmpt_cov_matrix <- function(input, min_maf, ploidy) {
+    .Call('pcadapt_cmpt_cov_matrix', PACKAGE = 'pcadapt', input, min_maf, ploidy)
+}
+
 #' Linear regression
 #' 
 #' \code{lrfunc_matrix} performs the multiple linear regression of the genotype matrix on the scores.

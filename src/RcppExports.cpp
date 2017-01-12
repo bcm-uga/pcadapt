@@ -74,6 +74,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cmpt_cov_matrix
+Rcpp::List cmpt_cov_matrix(NumericMatrix input, double min_maf, int ploidy);
+RcppExport SEXP pcadapt_cmpt_cov_matrix(SEXP inputSEXP, SEXP min_mafSEXP, SEXP ploidySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type input(inputSEXP);
+    Rcpp::traits::input_parameter< double >::type min_maf(min_mafSEXP);
+    Rcpp::traits::input_parameter< int >::type ploidy(ploidySEXP);
+    rcpp_result_gen = Rcpp::wrap(cmpt_cov_matrix(input, min_maf, ploidy));
+    return rcpp_result_gen;
+END_RCPP
+}
 // lrfunc_matrix
 Rcpp::List lrfunc_matrix(NumericMatrix Geno, NumericMatrix scores, int nIND, int nSNP, int K, int ploidy, double min_maf);
 RcppExport SEXP pcadapt_lrfunc_matrix(SEXP GenoSEXP, SEXP scoresSEXP, SEXP nINDSEXP, SEXP nSNPSEXP, SEXP KSEXP, SEXP ploidySEXP, SEXP min_mafSEXP) {
