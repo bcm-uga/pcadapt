@@ -73,9 +73,9 @@ tAA_cpp <- function(x, nrow, ncol) {
 
 #' Covariance for loaded genotype data
 #' 
-#' \code{cmpt_cov_file} computes the covariance matrix of a genotype matrix when the genotype matrix is stored in an external file.
+#' \code{cmpt_cov_file} computes the covariance matrix of a genotype matrix.
 #' 
-#' @param path a character string specifying the name of the file to be processed with \code{pcadapt}.
+#' @param input a genotype matrix.
 #' @param min_maf a value between \code{0} and \code{0.45} specifying the threshold of minor allele frequencies above which p-values are computed.
 #' @param ploidy an integer specifying the ploidy of the individuals.
 #' 

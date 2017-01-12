@@ -60,17 +60,6 @@ void tr(double *x, int nrow, int ncol){
   delete[] tmp;
 }
 
-void tAA_ptr(double *A, double *tAA, int nrow, int ncol){
-  for (int i = 0; i < ncol; i++){
-    for (int j = i; j < ncol; j++){
-      for (int k = 0; k < nrow; k++){
-        tAA[j + i * ncol] += A[i + k * ncol] * A[j + k * ncol];
-      }
-      tAA[i + j * ncol] = tAA[j + i * ncol];
-    }
-  } 
-}
-
 void tAA_arma(double *A, double *tAA, int nrow, int ncol){
   double *tA = new double[nrow * ncol];
   for (int i = 0; i < nrow * ncol; i++){
@@ -87,7 +76,6 @@ void tAA_arma(double *A, double *tAA, int nrow, int ncol){
 
 void add_to_cov(double *xcov, double *scratchcov, int nIND, double *geno, int blocksize){
   tAA_arma(geno, scratchcov, blocksize, nIND);
-  //tAA_ptr(geno, scratchcov, blocksize, nIND);
   for (int i = 0; i < nIND*nIND; i++){
     xcov[i] += scratchcov[i];
   }
@@ -96,10 +84,10 @@ void add_to_cov(double *xcov, double *scratchcov, int nIND, double *geno, int bl
 int get_rows_file(double *xs, FILE *input, int nIND, int ploidy, double min_maf, int blocksize, double *maf_i){
   double mean = 0;
   double var = 0;
-  double maf = 0;
+  double af = 0;
   int na = 0;
-  
   float value;
+  
   for (int i = 0; i < blocksize; i++){
     var = 0;
     mean = 0;
@@ -116,24 +104,23 @@ int get_rows_file(double *xs, FILE *input, int nIND, int ploidy, double min_maf,
     }
     
     if (na >= nIND){
-      mean = NA_REAL;
-      maf = NA_REAL;
+      Rcpp::stop("Detected SNP with missing values only, please remove it before proceeding."); 
     } else {
       mean /= (nIND - na);
       if (ploidy == 2){
-        maf = mean / 2.0;
-        var = 2.0 * maf * (1 - maf);
+        af = mean / 2.0;
+        var = 2.0 * af * (1 - af);
       } else {
-        maf = mean;
-        var = maf * (1 - maf);
+        af = mean;
+        var = af * (1 - af);
       }
-      if (maf > 0.5){
-        double tmp_maf = maf;
-        maf = 1.0 - tmp_maf;
+      if (af > 0.5){
+        double tmp_af = af;
+        af = 1.0 - tmp_af;
       }
     }
     
-    if (maf >= min_maf){
+    if (af >= min_maf){
       for (int j = 0; j < nIND; j++){
         if (xs[j + i * nIND] != NA){
           if (var > 0){
@@ -150,8 +137,9 @@ int get_rows_file(double *xs, FILE *input, int nIND, int ploidy, double min_maf,
       }
     }
   }
+  
   if (blocksize == 1){
-    *maf_i = maf;
+    *maf_i = af;
   } else {
     *maf_i = 0;
   }
@@ -232,14 +220,16 @@ Rcpp::List cmpt_cov_file(std::string path, double min_maf, int ploidy){
 Rcpp::List lrfunc_file(std::string filename, NumericMatrix scores, int nIND, int nSNP, int K, int ploidy, double min_maf){
   FILE *input;
   input = fopen(filename.c_str(), "r");
-  double *GenoRowScale = new double[nIND]();
-  double *miss = new double[nSNP]();
-  NumericMatrix Z(nSNP, K);
-  NumericVector residuals(nSNP);
-  NumericVector Y(nIND);
-  NumericVector maf(nSNP);
-  NumericVector missing(nSNP);
   double maf_i;
+  double *residuals = new double[nSNP]();
+  double *Y = new double[nIND]();
+  double *GenoRowScale = new double[nIND]();
+  double *sum_scores_sq = new double[K]();
+  int *check_na = new int[nIND]();
+  NumericMatrix Z(nSNP, K);
+  NumericVector missing(nSNP);
+  NumericVector maf(nSNP);
+  float value;
   
   for (int i = 0; i < nSNP; i++){
     missing[i] = get_rows_file(GenoRowScale, input, nIND, ploidy, min_maf, 1, &maf_i);
@@ -268,28 +258,25 @@ Rcpp::List lrfunc_file(std::string filename, NumericMatrix scores, int nIND, int
   
   /* Correcting for missing values */
   input = fopen(filename.c_str(), "r");
-  double *xx = new double[K]();
-  float value;
-  double *info_na = new double[nIND]();
   
   for (int i = 0; i < nSNP; i++){
     for (int l = 0; l < K; l++){
-      xx[l] = 0;
+      sum_scores_sq[l] = 0;
     }
     for (int k = 0; k < K; k++){
       for (int j = 0; j < nIND; j++){
         if (k == 0){
           if (fscanf(input, "%g", &value) != EOF){
             if (value != NA){
-              xx[k] +=  (double) scores(j ,k) * scores(j, k);
-              info_na[j] = 1;
+              sum_scores_sq[k] +=  (double) scores(j ,k) * scores(j, k);
+              check_na[j] = 1;
             } else {
-              info_na[j] = 0;
+              check_na[j] = 0;
             }
           } 
         } else {
-          if (info_na[j] == 1){
-            xx[k] += (double) scores(j, k) * scores(j, k);
+          if (check_na[j] == 1){
+            sum_scores_sq[k] += (double) scores(j, k) * scores(j, k);
           }
         }
       }
@@ -298,16 +285,17 @@ Rcpp::List lrfunc_file(std::string filename, NumericMatrix scores, int nIND, int
       } else {
         Z(i ,k) /= sqrt(residuals[i]);
       }
-      if (xx[k] > 0){
-        Z(i ,k) /= sqrt(xx[k]);
+      if (sum_scores_sq[k] > 0){
+        Z(i ,k) /= sqrt(sum_scores_sq[k]);
       }
     }
   }
   fclose(input);
+  delete[] residuals;
+  delete[] Y;
   delete[] GenoRowScale;
-  delete[] miss;
-  delete[] xx;
-  delete[] info_na;
+  delete[] sum_scores_sq;
+  delete[] check_na;
   return Rcpp::List::create(Rcpp::Named("zscores") = Z,
                             Rcpp::Named("maf") = maf,
                             Rcpp::Named("missing") = missing);
