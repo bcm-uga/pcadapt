@@ -37,6 +37,8 @@
 #' @param transpose deprecated argument.
 #' 
 #' @return The returned value \code{x} is an object of class \code{pcadapt}.
+#' 
+#' @useDynLib pcadapt
 #'
 #' @export
 #'

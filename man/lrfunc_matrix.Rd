@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{lrfunc_matrix}
 \alias{lrfunc_matrix}
-\title{Linear regression.}
+\title{Linear regression}
 \usage{
 lrfunc_matrix(Geno, scores, nIND, nSNP, K, ploidy, min_maf)
 }

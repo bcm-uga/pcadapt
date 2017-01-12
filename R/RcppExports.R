@@ -35,7 +35,7 @@ cmpt_cov_file <- function(path, min_maf, ploidy) {
     .Call('pcadapt_cmpt_cov_file', PACKAGE = 'pcadapt', path, min_maf, ploidy)
 }
 
-#' Linear regression.
+#' Linear regression
 #' 
 #' \code{lrfunc_file} performs the multiple linear regression of the genotype matrix on the scores when the genotype matrix is stored in an external file.
 #' 
@@ -71,7 +71,7 @@ tAA_cpp <- function(x, nrow, ncol) {
     .Call('pcadapt_tAA_cpp', PACKAGE = 'pcadapt', x, nrow, ncol)
 }
 
-#' Linear regression.
+#' Linear regression
 #' 
 #' \code{lrfunc_matrix} performs the multiple linear regression of the genotype matrix on the scores.
 #' 

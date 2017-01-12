@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{lrfunc_file}
 \alias{lrfunc_file}
-\title{Linear regression.}
+\title{Linear regression}
 \usage{
 lrfunc_file(filename, scores, nIND, nSNP, K, ploidy, min_maf)
 }
