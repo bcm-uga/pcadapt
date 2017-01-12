@@ -56,12 +56,12 @@ pcadapt = function(input,
   
   ## In version 3.1.0, argument output.filename has been removed ##
   if (!missing(output.filename)){
-    stop("Argument output.filename is deprecated. Please refer to the latest vignette for further information.")
+    warning("Argument output.filename is deprecated. Please refer to the latest vignette for further information.")
   }
   
   ## In version 3.1.0, argument clean.files has been removed ##
   if (!missing(clean.files)){
-    stop("Argument clean.files is deprecated. Please refer to the latest vignette for further information.")
+    warning("Argument clean.files is deprecated. Please refer to the latest vignette for further information.")
   }
   
   ## In version 3.0.3, argument transpose has been removed ##
