@@ -97,15 +97,15 @@ pcadapt = function(input,
       local <- FALSE
     }
     
-    if ((class(input) %in% c("matrix", "data.frame"))){
+    if ((class(input) %in% c("matrix", "data.frame", "array"))){
       local <- TRUE  
     } 
     
     if (!is.null(local)){
       if (local == FALSE){
-        obj.pca <- create.pcadapt.file(input = input, K = K, method = method, min.maf = min.maf, ploidy = ploidy)
+        obj.pca <- create.pcadapt.file(input = as.matrix(input), K = K, method = method, min.maf = min.maf, ploidy = ploidy)
       } else if (local == TRUE){
-        obj.pca <- create.pcadapt.matrix(input = input, K = K, method = method, min.maf = min.maf, ploidy = ploidy)
+        obj.pca <- create.pcadapt.matrix(input = as.matrix(input), K = K, method = method, min.maf = min.maf, ploidy = ploidy)
       }
       class(obj.pca) <- 'pcadapt'
       attr(obj.pca, "K") <- K

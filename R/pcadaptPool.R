@@ -17,21 +17,20 @@
 #'
 #' @export
 #' 
-corpca = function(data,K){
+corpca = function(data, K){
   n <- dim(data)[1]
   p <- dim(data)[2]
   cat(paste0("Number of SNPs: ",p,"\n")) 
   cat(paste0("Number of populations: ",n,"\n")) 
-  data_aux <- scale(data,scale=FALSE)*sqrt(p/(n-1))
-  covmat <- cov(t(data_aux),use="pairwise.complete.obs")
+  data_aux <- scale(data, scale = FALSE) * sqrt(p / (n - 1))
+  covmat <- cov(t(data_aux), use = "pairwise.complete.obs")
   res <- NULL
-  aux <- eigen(covmat,symmetric=TRUE)
+  aux <- eigen(covmat, symmetric = TRUE)
   sdev <- aux$values[1:K]
-  print(K)
-  res$scores <- aux$vectors[,1:K]
+  res$scores <- aux$vectors[, 1:K]
   aux_ldgs <- t(aux$vectors)%*%data_aux
-  res$loadings <- array(0,dim=c(p,K))
-  res$loadings[,] <- t((1/(sqrt(sdev)))*aux_ldgs[1:K,])
+  res$loadings <- array(0, dim = c(p, K))
+  res$loadings[,] <- t((1 / (sqrt(sdev))) * aux_ldgs[1:K, ])
   res$singular.values <- sqrt(abs(sdev))
   return(res)
 }

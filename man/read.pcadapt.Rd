@@ -4,13 +4,12 @@
 \alias{read.pcadapt}
 \title{File Converter}
 \usage{
-read.pcadapt(input.filename, type, local.env = FALSE, ploidy = 2,
-  pop.sizes = NULL, allele.sep = "/", blocksize = 10000)
+read.pcadapt(input, type, local.env = FALSE, ploidy, pop.sizes = NULL,
+  allele.sep = "/", blocksize = 1000)
 }
 \arguments{
-\item{input.filename}{a character string specifying the name of the file to be
-converted if \code{local.env = FALSE}. If \code{local.env = TRUE}, \code{input.filename} refers
-to the genotype matrix in the local environment.}
+\item{input}{a character string specifying the name of the file to be
+converted if \code{local.env = FALSE}.}
 
 \item{type}{a character string specifying the type of data to be converted to the
 \code{pcadapt} format. Supported formats are: \code{ped}, \code{vcf}, \code{lfmm}.}

@@ -4,9 +4,8 @@
 #' type of file readable by \code{pcadapt}. You may find the converted file in the
 #' current directory.
 #'
-#' @param input.filename a character string specifying the name of the file to be
-#' converted if \code{local.env = FALSE}. If \code{local.env = TRUE}, \code{input.filename} refers
-#' to the genotype matrix in the local environment.
+#' @param input a character string specifying the name of the file to be
+#' converted if \code{local.env = FALSE}.
 #' @param type a character string specifying the type of data to be converted to the
 #' \code{pcadapt} format. Supported formats are: \code{ped}, \code{vcf}, \code{lfmm}.
 #' @param local.env a logical value indicating whether the input has to be read from the local
@@ -22,78 +21,87 @@
 #'
 #' @export
 #'
-read.pcadapt <- function(input.filename,type,local.env=FALSE,ploidy=2,pop.sizes=NULL,allele.sep="/",blocksize=10000){
-  if (local.env == FALSE){
-    ## Check if input.filename is a character string ##
-    if (class(input.filename) != "character"){
-      stop("Argument input.filename has to be a character string.")  
-    }
-    ## Check if input.filename exists ##    
-    if (!file.exists(input.filename)){
-      stop(paste0("File ",input.filename," does not exist."))
+read.pcadapt <- function(input, 
+                         type, 
+                         local.env = FALSE, 
+                         ploidy, 
+                         pop.sizes = NULL,
+                         allele.sep = "/",
+                         blocksize = 1000){
+  
+  ## In version 3.1.0, argument output.filename has been removed ##
+  if (!missing(local.env)){
+    warning("Argument local.env is deprecated. Please refer to the latest vignette for further information.")
+  }
+  
+  if (class(input) == "character"){
+    ## Check if input exists ##    
+    if (!file.exists(input)){
+      stop(paste0("File ", input, " does not exist."))
     } 
     ## Check if argument type is missing ##
     if (missing(type)){
       stop("Argument type is missing.")
     }
-    ## Check the file type ##
-    if (class(type) != "character" || (!(type %in% c("vcf","ped","lfmm","pcadapt","vcfR")))){
+    ## Check if file type is supported ##
+    if (class(type) != "character" || (!(type %in% c("vcf", "ped", "lfmm", "pcadapt")))){
       stop("Incorrect type.")
     }
-    ## File converter ##
-    if (type == "ped"){
-      ped2pcadapt(input.filename)
-    } else if (type == "vcf"){
-      obj.vcf <- vcfR::read.vcfR(input.filename)
-      geno <- vcfR::extract.gt(obj.vcf)
-      vcf2pcadapt(geno,output.file = "tmp.pcadapt",allele.sep = allele.sep,blocksize = blocksize,console.count = blocksize)
-    } else if (type == "lfmm"){
-      stop("Not done yet.")
-      #.C("wrapper_converter",as.character(input.filename),as.integer(2),PACKAGE = "pcadapt")
+    
+    ## x.type to x.pcadapt ##
+    split.name <- unlist(unlist(strsplit(input,"[.]")))
+    if ((tail(split.name, n = 1) %in% c("ped", "vcf", "lfmm", "pcadapt")) && (length(split.name) > 1)){
+      aux <- NULL
+      for (k in (1:(length(split.name) - 1))){
+        aux <- paste0(aux, split.name[k], ".")
+      }
+      aux <- paste0(aux, "pcadapt")
+    } else {
+      aux <- paste0(input, ".pcadapt")
     }
     
-    ##
-    split.name <- unlist(unlist(strsplit(input.filename,"[.]")))
-    if ((tail(split.name, n=1) %in% c("ped","vcf","lfmm","pcadapt")) && (length(split.name) > 1)){
-      aux <- NULL
-      for (k in (1:(length(split.name)-1))){
-        aux <- paste0(aux,split.name[k],".")
-      }
-      aux <- paste0(aux,"pcadapt")
-    } else if ((tail(split.name, n=1) != "lfmm") && type=="lfmm"){
-      aux <- paste0(input.filename,".pcadapt")
-    } else {
-      aux <- input.filename
+    ## File converter ##
+    if (type == "ped"){
+      ped2pcadapt(input)
+    } else if (type == "vcf"){
+      obj.vcf <- vcfR::read.vcfR(input)
+      geno <- vcfR::extract.gt(obj.vcf)
+      vcf2pcadapt(geno, output.file = aux, allele.sep = allele.sep, blocksize = blocksize, console.count = blocksize)
+    } else if (type == "lfmm"){
+      stop("Not done yet.")
     }
-    if (type == "vcfR"){
-      aux <- "tmp.pcadapt"
-    }
-  } else if (local.env == TRUE){
-    if (class(input.filename) %in% c("array","matrix","data.frame")){
-      if (!(ncol(input.filename)>0) || !(nrow(input.filename)>0)){
-        stop("Invalid input genotype matrix.")
-      }
-    } else {
+  } else if ((class(input) %in% c("matrix", "data.frame", "array"))){
+    if (!(ncol(input) > 0) || !(nrow(input) > 0)){
       stop("Invalid input genotype matrix.")
     }
     if (type == "lfmm"){
-      tmp <- input.filename
+      tmp <- t(as.matrix(input))
       tmp[which(is.na(tmp))] <- 9
-      write.table(t(tmp),"tmp.pcadapt",col.names = FALSE,row.names = FALSE)
     } else if (type == "pcadapt"){
-      tmp <- input.filename
+      tmp <- as.matrix(input)
       tmp[which(is.na(tmp))] <- 9
-      write.table(tmp,"tmp.pcadapt",col.names = FALSE,row.names = FALSE)
     } else if (type == "vcf"){
-      stop("Set argument local.env to FALSE.")
+      stop("Incorrect type.")
     } else if (type == "ped"){
-      stop("Set argument local.env to FALSE.")
+      stop("Incorrect type.")
     } else if (type == "pool"){
-      tmp <- sample.geno(pool.matrix=input.filename,pop.sizes=pop.sizes)
+      if (missing(ploidy)){
+        warning("Argument ploidy is missing, proceeding with 'ploidy = 2'...")
+        p <- 2
+      } else {
+        p <- ploidy
+      }
+      if (missing(pop.sizes)){
+        warning("Argument pop.sizes is missing, proceeding with 100 individuals per pool.")
+        nPOOL <- nrow(input)
+        s <- as.vector(rep(100, nPOOL))
+      } else {
+        s <- as.vector(pop.sizes)
+      }
+      tmp <- sample_geno_cpp(freq = as.matrix(input), ploidy = p, sample_size = s)
       tmp[which(is.na(tmp))] <- 9
-      write.table(t(tmp),"tmp.pcadapt",col.names = FALSE,row.names = FALSE)
     } 
-    aux <- "tmp.pcadapt"
+    aux <- tmp
   }
   return(aux)
 }
