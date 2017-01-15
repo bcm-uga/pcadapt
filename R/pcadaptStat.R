@@ -2,7 +2,7 @@
 #'
 #' \code{cmpt.stat} returns chi-squared distributed statistics. 
 #'
-#' @param zsc a real-valued matrix obtained from the multiple linear regression of the genotype on the scores.
+#' @param zscores a real-valued matrix obtained from the multiple linear regression of the genotype on the scores.
 #' @param s.v a vector containing the K larger singular values.
 #' @param K an integer specifying the number of principal components to retain.
 #' @param method a character string specifying the method to be used to compute
@@ -14,7 +14,9 @@
 #' 
 #' @export
 #'
-cmpt.stat = function(zsc, s.v, K, method, nSNP){
+cmpt.stat = function(zscores, s.v, K, method, nSNP, maf, min.maf){
+  zsc <- zscores
+  zsc[maf < min.maf] <- NA
   if (method == "mahalanobis"){
     xstat <- array(NA, nSNP)
     not.nan <- which(!is.na(apply(abs(zsc), 1, sum)))
