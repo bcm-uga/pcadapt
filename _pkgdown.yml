@@ -10,9 +10,8 @@ reference:
     - plot.pcadapt
     - read.pcadapt
 
-
 navbar:
-  title: tess3r
+  title: pcadapt
   type: default
   left:
   - text: Home

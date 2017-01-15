@@ -64,7 +64,7 @@ char* remove_ext(char* mystr, char dot, char sep){
   if (mystr == NULL){
     return NULL;
   }
-  char *retstr = new char(strlen(mystr) + 1 * 1);
+  char *retstr = new char[strlen(mystr) + 1];
   if (retstr == NULL){
     return NULL;
   }
@@ -121,13 +121,6 @@ int nb_lines(char *file, int M){
   return lines;
 }
 
-void print_options(int argc, char *argv[]){
-  for (int i = 0; i < argc; i++){
-    Rprintf("%s ", argv[i]);
-  }
-  Rprintf("\n");
-}
-
 void test_column(char *file, FILE *m_File, int i, int j, int N, char *token){
   if (i != N){
     Rprintf("Error: unable to read file %s. Inconsistent number of columns.\n", file);
@@ -175,8 +168,15 @@ void test_token_ped(char token, int j, int i, char* input_file){
   }
 }
 
+void test_token_lfmm(char token, int j, int i, char* input_file){
+  if (!(token == '0' || token == '1' || token == '2' || token == '9')){
+    Rprintf("Error: in file %s, line %d, one allele of SNP %d is '%c' and not 0, 1, 2 or 9.\n", input_file, i, j, token);
+    stop("File conversion aborted.");
+  }
+}
+
 void fill_line_ped(int *data, char* szbuff, int M, int i, char* input_file, FILE *File, char *ref){
-  char* token1, *token2;
+  char *token1, *token2;
   int tmp;
   token1 = strtok(szbuff, SEP);
   if (!token1){
@@ -230,11 +230,35 @@ void fill_line_ped(int *data, char* szbuff, int M, int i, char* input_file, FILE
   test_column(input_file, File, j, i + 1, M, token1);
 }
 
+void fill_line_lfmm(int *data, char* szbuff, int M, int i, char* input_file, FILE *File, char *ref){
+  char* token1;
+  int tmp;
+  int j = 0;
+  token1 = strtok(szbuff, SEP);
+  while (token1 && token1[0] != EOF && token1[0] != 10 && j < M){
+    test_token_lfmm(token1[0], j + 1, i + 1, input_file);
+    tmp = 0;
+    if (token1[0] == '0'){
+      tmp = 0;
+    } else if (token1[0] == '1'){
+      tmp = 1;
+    } else if (token1[0] == '2'){
+      tmp = 2;
+    } else {
+      tmp = 9;
+    }
+    data[i * M + j] = tmp;
+    token1 = strtok(NULL, SEP);
+    j++;
+  }
+  test_column(input_file, File, j, i + 1, M, token1);
+}
+
 void read_ped(char* input_file, int N, int M, int* data){
   FILE *File = NULL;
   int max_char_per_line = 5 * (M + 6) + 20;
-  char *szbuff = new char(max_char_per_line);
-  char *ref = new char(M);
+  char *szbuff = new char[max_char_per_line];
+  char *ref = new char[M];
   for (int i = 0; i < M; i++){
     ref[i] = '0';
   }
@@ -246,8 +270,28 @@ void read_ped(char* input_file, int N, int M, int* data){
   }
   test_line(input_file, File, i, N);
   fclose(File);
-  delete szbuff;
-  delete ref;
+  delete[] szbuff;
+  delete[] ref;
+}
+
+void read_lfmm(char* input_file, int N, int M, int* data){
+  FILE *File = NULL;
+  int max_char_per_line = 5 * (M) + 20;
+  char *szbuff = new char[max_char_per_line];
+  char *ref = new char[M];
+  for (int i = 0; i < M; i++){
+    ref[i] = '0';
+  }
+  File = fopen(input_file,"r");
+  int i = 0;
+  while (fgets(szbuff, max_char_per_line, File) && i < N){
+    fill_line_lfmm(data, szbuff, M, i, input_file, File, ref);
+    i++;
+  }
+  test_line(input_file, File, i, N);
+  fclose(File);
+  delete[] szbuff;
+  delete[] ref;
 }
 
 void ped2geno(char *input_file, char* output_file, int *N, int *M){
@@ -261,22 +305,25 @@ void ped2geno(char *input_file, char* output_file, int *N, int *M){
   delete[] data;
 }
 
+void lfmm2geno(char *input_file, char* output_file, int *N, int *M){
+  int nb;
+  nb = nb_cols_lfmm(input_file);
+  *M = nb;
+  *N = nb_lines(input_file, nb);
+  int *data = new int[(*N)*(*M)];
+  read_lfmm(input_file, *N, *M, data);
+  write_geno(output_file, *N, *M, data);
+  delete[] data;
+}
+
 void analyse_param_convert(int argc, char *argv[], char *input, char *output, char *type){
-  char* tmp_file;
-  if (argc == 2){
-    strcpy(input, argv[1]);
-    tmp_file = remove_ext(input, '.', '/');
-    strcpy(output, tmp_file);
-    strcat(output, ".");
-    strcat(output, type);
-    free(tmp_file);
-  } else if (argc != 3){
-    Rprintf("Error: commmand line format incorrect.\n");
-    stop("File conversion aborted.");
-  } else {
-    strcpy(input, argv[1]);
-    strcpy(output, argv[2]);
-  }
+  char *tmp_file;
+  strcpy(input, argv[1]);
+  tmp_file = remove_ext(input, '.', '/');
+  strcpy(output, tmp_file);
+  strcat(output, ".");
+  strcat(output, type);
+  free(tmp_file);
   Rprintf("Summary:\n\n"
             "        - input file      %s\n"
             "        - output file     %s\n", input, output);
@@ -298,21 +345,69 @@ void ped_convert(int argc, char *argv[]){
   print_convert(N, M);
 }
 
+void lfmm_convert(int argc, char *argv[]) {
+  int M;                  
+  int N;                  
+  char input_file[512];	
+  char output_file[512];	
+  char extension[512] = "pcadapt";
+  analyse_param_convert(argc, argv, input_file, output_file, extension);
+  lfmm2geno(input_file, output_file, &N, &M);
+  print_convert(N, M);
+}
+
+//' Convert ped files
+//'
+//' \code{ped2pcadapt} converts \code{ped} files to the format \code{pcadapt}.
+//'
+//' @param input a character string specifying the name of the file to be converted.
+//' 
+//' @examples
+//' ## see also ?pcadapt for examples
+//'
+//' @keywords internal
+//'
+//' @export
+//'
 // [[Rcpp::export]]
 int ped2pcadapt(std::string path){
-  char * writable = new char[path.size() + 1];
+  char *writable = new char[path.size() + 1];
   std::copy(path.begin(), path.end(), writable);
   writable[path.size()] = '\0';
   int argc = 2;
   char *aux[2];
-  int t = 0;
   aux[1] = writable;
-  if (t == 0){
-    ped_convert(argc,aux);
-  }
+  ped_convert(argc, aux);
   delete[] writable;
   return(0);
 }
+
+//' Convert lfmm files
+//'
+//' \code{lfmm2pcadapt} converts \code{lfmm} files to the format \code{pcadapt}.
+//'
+//' @param input a character string specifying the name of the file to be converted.
+//' 
+//' @examples
+//' ## see also ?pcadapt for examples
+//'
+//' @keywords internal
+//'
+//' @export
+//'
+// [[Rcpp::export]]
+int lfmm2pcadapt(std::string path){
+  char *writable = new char[path.size() + 1];
+  std::copy(path.begin(), path.end(), writable);
+  writable[path.size()] = '\0';
+  int argc = 2;
+  char *aux[2];
+  aux[1] = writable;
+  lfmm_convert(argc, aux);
+  delete[] writable;
+  return(0);
+}
+
 
 
 

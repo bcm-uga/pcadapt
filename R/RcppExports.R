@@ -103,7 +103,49 @@ lrfunc_matrix <- function(Geno, scores, nIND, nSNP, K, ploidy, min_maf) {
     .Call('pcadapt_lrfunc_matrix', PACKAGE = 'pcadapt', Geno, scores, nIND, nSNP, K, ploidy, min_maf)
 }
 
+#' Convert ped files
+#'
+#' \code{ped2pcadapt} converts \code{ped} files to the format \code{pcadapt}.
+#'
+#' @param input a character string specifying the name of the file to be converted.
+#' 
+#' @examples
+#' ## see also ?pcadapt for examples
+#'
+#' @keywords internal
+#'
+#' @export
+#'
+ped2pcadapt <- function(path) {
+    .Call('pcadapt_ped2pcadapt', PACKAGE = 'pcadapt', path)
+}
+
+#' Convert lfmm files
+#'
+#' \code{lfmm2pcadapt} converts \code{lfmm} files to the format \code{pcadapt}.
+#'
+#' @param input a character string specifying the name of the file to be converted.
+#' 
+#' @examples
+#' ## see also ?pcadapt for examples
+#'
+#' @keywords internal
+#'
+#' @export
+#'
+lfmm2pcadapt <- function(path) {
+    .Call('pcadapt_lfmm2pcadapt', PACKAGE = 'pcadapt', path)
+}
+
 #' Sample genotype matrix from pooled samples
+#' 
+#' \code{sample_geno_cpp} sample genotypes based on observed allelic frequencies.
+#' 
+#' @param freq a matrix containing allele frequencies.
+#' @param ploidy an integer specifying the ploidy of the sampled individuals.
+#' @param sample_size a vector specifying the number of individuals to be sampled for each pool.
+#' 
+#' @return The returned value is a numeric vector of length 2.
 #' 
 #' @export
 #' 
@@ -111,7 +153,34 @@ sample_geno_cpp <- function(freq, ploidy, sample_size) {
     .Call('pcadapt_sample_geno_cpp', PACKAGE = 'pcadapt', freq, ploidy, sample_size)
 }
 
-ped2pcadapt <- function(path) {
-    .Call('pcadapt_ped2pcadapt', PACKAGE = 'pcadapt', path)
+get_geno_char <- function(allele_sep) {
+    .Call('pcadapt_get_geno_char', PACKAGE = 'pcadapt', allele_sep)
+}
+
+get_geno_int <- function(allele_sep) {
+    .Call('pcadapt_get_geno_int', PACKAGE = 'pcadapt', allele_sep)
+}
+
+check_line_na <- function(string_geno_row, geno_char) {
+    .Call('pcadapt_check_line_na', PACKAGE = 'pcadapt', string_geno_row, geno_char)
+}
+
+#' Convert vcfR genotype matrices
+#'
+#' \code{vcf_convert} converts outputs of \code{extract.gt} to the format \code{pcadapt}.
+#'
+#' @param string_geno a genotype matrix extracted from a VCF file with `vcfR`. 
+#' @param output a character string indicating the name of the output file.
+#' @param allele.sep a vector of characters indicating what delimiters are used to separate alleles.
+#'
+#' @examples
+#' ## see also ?pcadapt for examples
+#'
+#' @keywords internal
+#'
+#' @export
+#'
+vcf_convert <- function(string_geno, output, allele_sep) {
+    .Call('pcadapt_vcf_convert', PACKAGE = 'pcadapt', string_geno, output, allele_sep)
 }
 

@@ -25,7 +25,8 @@ Depends:
     robust, 
     MASS, 
     ggplot2, 
-    vcfR
+    vcfR,
+    RSpectra
 Suggests: knitr, qvalue, rmarkdown, testthat
 SystemRequirements: C++11
 RoxygenNote: 5.0.1

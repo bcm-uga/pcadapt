@@ -4,31 +4,30 @@
 \alias{read.pcadapt}
 \title{File Converter}
 \usage{
-read.pcadapt(input, type, local.env = FALSE, ploidy, pop.sizes = NULL,
-  allele.sep = "/", blocksize = 1000)
+read.pcadapt(input, type, local.env, ploidy, pop.sizes = NULL,
+  allele.sep = c("/", "|"), blocksize)
 }
 \arguments{
-\item{input}{a character string specifying the name of the file to be
-converted if \code{local.env = FALSE}.}
+\item{input}{a genotype matrix or a character string specifying the name of the file to be
+converted.}
 
 \item{type}{a character string specifying the type of data to be converted to the
 \code{pcadapt} format. Supported formats are: \code{ped}, \code{vcf}, \code{lfmm}.}
 
-\item{local.env}{a logical value indicating whether the input has to be read from the local
-environment or from the working directory.}
+\item{local.env}{deprecated argument.}
 
 \item{ploidy}{an integer specifying the ploidy of the individuals.}
 
-\item{pop.sizes}{a vector specifying the number of individuals for each pool.}
+\item{pop.sizes}{a vector specifying the number of individuals to be sampled for each pool.}
 
-\item{allele.sep}{a character string specifying the type of allele separator used in VCF files. Set to "/" by default, but can
-be switched to "|" otherwise.}
+\item{allele.sep}{a vector of characters indicating what delimiters are used in VCF files. By default, only
+"|" and "/" are recognized.}
 
-\item{blocksize}{an integer specifying the number of markers to be processed in the mean time.}
+\item{deprecated}{argument.}
 }
 \description{
-\code{read.pcadapt} converts \code{.vcf} and \code{.ped} files to an appropriate
-type of file readable by \code{pcadapt}. You may find the converted file in the
+\code{read.pcadapt} converts genotype matrices or files to an appropriate
+format readable by \code{pcadapt}. You may find the converted file in the
 current directory.
 }
 

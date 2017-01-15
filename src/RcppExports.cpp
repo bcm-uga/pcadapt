@@ -90,6 +90,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// ped2pcadapt
+int ped2pcadapt(std::string path);
+RcppExport SEXP pcadapt_ped2pcadapt(SEXP pathSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type path(pathSEXP);
+    rcpp_result_gen = Rcpp::wrap(ped2pcadapt(path));
+    return rcpp_result_gen;
+END_RCPP
+}
+// lfmm2pcadapt
+int lfmm2pcadapt(std::string path);
+RcppExport SEXP pcadapt_lfmm2pcadapt(SEXP pathSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type path(pathSEXP);
+    rcpp_result_gen = Rcpp::wrap(lfmm2pcadapt(path));
+    return rcpp_result_gen;
+END_RCPP
+}
 // sample_geno_cpp
 NumericMatrix sample_geno_cpp(NumericMatrix freq, double ploidy, IntegerVector sample_size);
 RcppExport SEXP pcadapt_sample_geno_cpp(SEXP freqSEXP, SEXP ploidySEXP, SEXP sample_sizeSEXP) {
@@ -103,14 +125,50 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// ped2pcadapt
-int ped2pcadapt(std::string path);
-RcppExport SEXP pcadapt_ped2pcadapt(SEXP pathSEXP) {
+// get_geno_char
+CharacterVector get_geno_char(CharacterVector allele_sep);
+RcppExport SEXP pcadapt_get_geno_char(SEXP allele_sepSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type path(pathSEXP);
-    rcpp_result_gen = Rcpp::wrap(ped2pcadapt(path));
+    Rcpp::traits::input_parameter< CharacterVector >::type allele_sep(allele_sepSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_geno_char(allele_sep));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_geno_int
+IntegerVector get_geno_int(CharacterVector allele_sep);
+RcppExport SEXP pcadapt_get_geno_int(SEXP allele_sepSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type allele_sep(allele_sepSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_geno_int(allele_sep));
+    return rcpp_result_gen;
+END_RCPP
+}
+// check_line_na
+int check_line_na(CharacterVector string_geno_row, CharacterVector geno_char);
+RcppExport SEXP pcadapt_check_line_na(SEXP string_geno_rowSEXP, SEXP geno_charSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type string_geno_row(string_geno_rowSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type geno_char(geno_charSEXP);
+    rcpp_result_gen = Rcpp::wrap(check_line_na(string_geno_row, geno_char));
+    return rcpp_result_gen;
+END_RCPP
+}
+// vcf_convert
+int vcf_convert(CharacterMatrix string_geno, std::string output, CharacterVector allele_sep);
+RcppExport SEXP pcadapt_vcf_convert(SEXP string_genoSEXP, SEXP outputSEXP, SEXP allele_sepSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterMatrix >::type string_geno(string_genoSEXP);
+    Rcpp::traits::input_parameter< std::string >::type output(outputSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type allele_sep(allele_sepSEXP);
+    rcpp_result_gen = Rcpp::wrap(vcf_convert(string_geno, output, allele_sep));
     return rcpp_result_gen;
 END_RCPP
 }

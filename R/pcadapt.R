@@ -31,7 +31,6 @@
 #' or a matrix of allele frequencies (\code{data.type="pool"}).
 #' @param min.maf a value between \code{0} and \code{0.45} specifying the threshold of minor allele frequencies above which p-values are computed.
 #' @param ploidy an integer specifying the ploidy of the individuals.
-#' @param data.type deprecated argument.
 #' @param output.filename deprecated argument.
 #' @param clean.files deprecated argument.
 #' @param transpose deprecated argument.
@@ -109,6 +108,7 @@ pcadapt = function(input,
       }
       class(obj.pca) <- 'pcadapt'
       attr(obj.pca, "K") <- K
+      attr(obj.pca, "data.type") <- "genotype"
       attr(obj.pca, "method") <- method
       attr(obj.pca, "min.maf") <- min.maf
       return(obj.pca)
@@ -117,8 +117,8 @@ pcadapt = function(input,
     }
   } else if (data.type == "pool"){
     stop('Option data.type="pool" is deprecated. Use the read.pcadapt function instead. Usage:\n 
-         filename <- read.pcadapt(input,type="pool",local.env=TRUE)\n
-         x <- pcadapt(filename,K=...)')
+         geno <- read.pcadapt(input, type = "pool", local.env = TRUE)\n
+         x <- pcadapt(input = geno, K = ...)')
     stop('')
   }
 }

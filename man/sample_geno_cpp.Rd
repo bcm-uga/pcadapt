@@ -6,7 +6,17 @@
 \usage{
 sample_geno_cpp(freq, ploidy, sample_size)
 }
+\arguments{
+\item{freq}{a matrix containing allele frequencies.}
+
+\item{ploidy}{an integer specifying the ploidy of the sampled individuals.}
+
+\item{sample_size}{a vector specifying the number of individuals to be sampled for each pool.}
+}
+\value{
+The returned value is a numeric vector of length 2.
+}
 \description{
-Sample genotype matrix from pooled samples
+\code{sample_geno_cpp} sample genotypes based on observed allelic frequencies.
 }
 

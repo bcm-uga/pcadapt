@@ -28,8 +28,6 @@ or a matrix of allele frequencies (\code{data.type="pool"}).}
 \item{clean.files}{deprecated argument.}
 
 \item{transpose}{deprecated argument.}
-
-\item{data.type}{deprecated argument.}
 }
 \value{
 The returned value \code{x} is an object of class \code{pcadapt}.

@@ -4,19 +4,15 @@
 \alias{vcf2pcadapt}
 \title{vcfR-based converter}
 \usage{
-vcf2pcadapt(geno, output.file = "tmp.pcadapt", allele.sep = "/",
-  blocksize = 10000, console.count = 10000)
+vcf2pcadapt(input, output = "tmp.pcadapt", allele.sep = c("/", "|"))
 }
 \arguments{
-\item{geno}{a genotype matrix obtained with `vcfR`.}
+\item{input}{a character string specifying the name of the file to be
+converted if \code{local.env = FALSE}.}
 
-\item{output.file}{a character string indicating the name of the output file.}
+\item{output}{a character string indicating the name of the output file.}
 
-\item{allele.sep}{a character indicating which type of delimiter is used to separate the alleles.}
-
-\item{blocksize}{an integer indicating the number of SNPs to be processed in the same chunk.}
-
-\item{console.count}{an integer indicating the number of SNPs by which the progress bar should increment.}
+\item{allele.sep}{a vector of characters indicating what delimiters are used to separate alleles.}
 }
 \description{
 \code{vcf2pcadapt} uses the package \code{vcfR} to extract the genotype information from a vcf file and exports it
@@ -26,5 +22,4 @@ under the format required by \code{pcadapt}.
 ## see also ?pcadapt for examples
 
 }
-\keyword{internal}
 
