@@ -91,24 +91,26 @@ BEGIN_RCPP
 END_RCPP
 }
 // ped2pcadapt
-int ped2pcadapt(std::string path);
-RcppExport SEXP pcadapt_ped2pcadapt(SEXP pathSEXP) {
+int ped2pcadapt(std::string input, std::string output);
+RcppExport SEXP pcadapt_ped2pcadapt(SEXP inputSEXP, SEXP outputSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type path(pathSEXP);
-    rcpp_result_gen = Rcpp::wrap(ped2pcadapt(path));
+    Rcpp::traits::input_parameter< std::string >::type input(inputSEXP);
+    Rcpp::traits::input_parameter< std::string >::type output(outputSEXP);
+    rcpp_result_gen = Rcpp::wrap(ped2pcadapt(input, output));
     return rcpp_result_gen;
 END_RCPP
 }
 // lfmm2pcadapt
-int lfmm2pcadapt(std::string path);
-RcppExport SEXP pcadapt_lfmm2pcadapt(SEXP pathSEXP) {
+int lfmm2pcadapt(std::string input, std::string output);
+RcppExport SEXP pcadapt_lfmm2pcadapt(SEXP inputSEXP, SEXP outputSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type path(pathSEXP);
-    rcpp_result_gen = Rcpp::wrap(lfmm2pcadapt(path));
+    Rcpp::traits::input_parameter< std::string >::type input(inputSEXP);
+    Rcpp::traits::input_parameter< std::string >::type output(outputSEXP);
+    rcpp_result_gen = Rcpp::wrap(lfmm2pcadapt(input, output));
     return rcpp_result_gen;
 END_RCPP
 }

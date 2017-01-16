@@ -4,10 +4,10 @@
 \alias{cmpt.stat}
 \title{pcadapt statistics}
 \usage{
-cmpt.stat(zsc, s.v, K, method, nSNP)
+cmpt.stat(zscores, s.v, K, method, nSNP, maf, min.maf)
 }
 \arguments{
-\item{zsc}{a real-valued matrix obtained from the multiple linear regression of the genotype on the scores.}
+\item{zscores}{a real-valued matrix obtained from the multiple linear regression of the genotype on the scores.}
 
 \item{s.v}{a vector containing the K larger singular values.}
 

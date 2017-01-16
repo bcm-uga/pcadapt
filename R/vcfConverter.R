@@ -4,7 +4,7 @@
 #' under the format required by \code{pcadapt}.
 #'
 #' @param input a character string specifying the name of the file to be
-#' converted if \code{local.env = FALSE}.
+#' converted.
 #' @param output a character string indicating the name of the output file.
 #' @param allele.sep a vector of characters indicating what delimiters are used to separate alleles.
 #' 

@@ -59,30 +59,6 @@ void write_geno(char *output_file, int N, int M, int *data){
   fclose(file);
 }
 
-char* remove_ext(char* mystr, char dot, char sep){
-  char *lastdot, *lastsep;
-  if (mystr == NULL){
-    return NULL;
-  }
-  char *retstr = new char[strlen(mystr) + 1];
-  if (retstr == NULL){
-    return NULL;
-  }
-  strcpy(retstr, mystr);
-  lastdot = strrchr(retstr, dot);
-  lastsep = (sep == 0) ? NULL : strrchr(retstr, sep);
-  if (lastdot != NULL){
-    if (lastsep != NULL){
-      if (lastsep < lastdot){
-        *lastdot = '\0';
-      }
-    } else {
-      *lastdot = '\0';
-    }
-  }
-  return retstr;
-}
-
 int nb_cols_lfmm(char *file){
   FILE *fp = fopen_read(file);
   int cols = 0;
@@ -282,7 +258,7 @@ void read_lfmm(char* input_file, int N, int M, int* data){
   for (int i = 0; i < M; i++){
     ref[i] = '0';
   }
-  File = fopen(input_file,"r");
+  File = fopen(input_file, "r");
   int i = 0;
   while (fgets(szbuff, max_char_per_line, File) && i < N){
     fill_line_lfmm(data, szbuff, M, i, input_file, File, ref);
@@ -316,51 +292,12 @@ void lfmm2geno(char *input_file, char* output_file, int *N, int *M){
   delete[] data;
 }
 
-void analyse_param_convert(int argc, char *argv[], char *input, char *output, char *type){
-  char *tmp_file;
-  strcpy(input, argv[1]);
-  tmp_file = remove_ext(input, '.', '/');
-  strcpy(output, tmp_file);
-  strcat(output, ".");
-  strcat(output, type);
-  free(tmp_file);
-  Rprintf("Summary:\n\n"
-            "        - input file      %s\n"
-            "        - output file     %s\n", input, output);
-}
-
-void print_convert(int N, int M){
-  Rprintf("\n\t- number of individuals detected:\t%d\n", N);
-  Rprintf("\t- number of loci detected:\t\t%d\n\n", M);
-}
-
-void ped_convert(int argc, char *argv[]){
-  int M;                      
-  int N;                      
-  char input_file[512];       
-  char output_file[512];      
-  char extension[512] = "pcadapt";
-  analyse_param_convert(argc, argv, input_file, output_file, extension);
-  ped2geno(input_file, output_file, &N, &M);
-  print_convert(N, M);
-}
-
-void lfmm_convert(int argc, char *argv[]) {
-  int M;                  
-  int N;                  
-  char input_file[512];	
-  char output_file[512];	
-  char extension[512] = "pcadapt";
-  analyse_param_convert(argc, argv, input_file, output_file, extension);
-  lfmm2geno(input_file, output_file, &N, &M);
-  print_convert(N, M);
-}
-
 //' Convert ped files
 //'
 //' \code{ped2pcadapt} converts \code{ped} files to the format \code{pcadapt}.
 //'
 //' @param input a character string specifying the name of the file to be converted.
+//' @param output a character string specifying the name of the output file.
 //' 
 //' @examples
 //' ## see also ?pcadapt for examples
@@ -370,15 +307,23 @@ void lfmm_convert(int argc, char *argv[]) {
 //' @export
 //'
 // [[Rcpp::export]]
-int ped2pcadapt(std::string path){
-  char *writable = new char[path.size() + 1];
-  std::copy(path.begin(), path.end(), writable);
-  writable[path.size()] = '\0';
-  int argc = 2;
-  char *aux[2];
-  aux[1] = writable;
-  ped_convert(argc, aux);
-  delete[] writable;
+int ped2pcadapt(std::string input, std::string output){
+  int M;
+  int N;
+  char *writable_in = new char[input.size() + 1];
+  std::copy(input.begin(), input.end(), writable_in);
+  writable_in[input.size()] = '\0';
+  char *writable_out = new char[output.size() + 1];
+  std::copy(output.begin(), output.end(), writable_out);
+  writable_out[output.size()] = '\0';
+  ped2geno(writable_in, writable_out, &N, &M);
+  Rprintf("Summary:\n\n"
+            "        - input file      %s\n"
+            "        - output file     %s\n", writable_in, writable_out);
+  Rprintf("\n\t- number of individuals detected:\t%d\n", N);
+  Rprintf("\t- number of loci detected:\t\t%d\n\n", M);
+  delete[] writable_in;
+  delete[] writable_out;
   return(0);
 }
 
@@ -387,6 +332,7 @@ int ped2pcadapt(std::string path){
 //' \code{lfmm2pcadapt} converts \code{lfmm} files to the format \code{pcadapt}.
 //'
 //' @param input a character string specifying the name of the file to be converted.
+//' @param output a character string specifying the name of the output file.
 //' 
 //' @examples
 //' ## see also ?pcadapt for examples
@@ -396,15 +342,23 @@ int ped2pcadapt(std::string path){
 //' @export
 //'
 // [[Rcpp::export]]
-int lfmm2pcadapt(std::string path){
-  char *writable = new char[path.size() + 1];
-  std::copy(path.begin(), path.end(), writable);
-  writable[path.size()] = '\0';
-  int argc = 2;
-  char *aux[2];
-  aux[1] = writable;
-  lfmm_convert(argc, aux);
-  delete[] writable;
+int lfmm2pcadapt(std::string input, std::string output){
+  int M;
+  int N;
+  char *writable_in = new char[input.size() + 1];
+  std::copy(input.begin(), input.end(), writable_in);
+  writable_in[input.size()] = '\0';
+  char *writable_out = new char[output.size() + 1];
+  std::copy(output.begin(), output.end(), writable_out);
+  writable_out[output.size()] = '\0';
+  lfmm2geno(writable_in, writable_out, &N, &M);
+  Rprintf("Summary:\n\n"
+            "        - input file      %s\n"
+            "        - output file     %s\n", writable_in, writable_out);
+  Rprintf("\n\t- number of individuals detected:\t%d\n", N);
+  Rprintf("\t- number of loci detected:\t\t%d\n\n", M);
+  delete[] writable_in;
+  delete[] writable_out;
   return(0);
 }
 

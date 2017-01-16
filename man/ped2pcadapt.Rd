@@ -4,10 +4,12 @@
 \alias{ped2pcadapt}
 \title{Convert ped files}
 \usage{
-ped2pcadapt(path)
+ped2pcadapt(input, output)
 }
 \arguments{
 \item{input}{a character string specifying the name of the file to be converted.}
+
+\item{output}{a character string specifying the name of the output file.}
 }
 \description{
 \code{ped2pcadapt} converts \code{ped} files to the format \code{pcadapt}.

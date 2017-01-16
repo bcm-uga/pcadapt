@@ -162,14 +162,14 @@ filename &lt;- read.pcadapt(pool.data, type = &quot;pool&quot;, pop.sizes = c(20
 </div>
 <div id="b.-choosing-the-number-k-of-principal-components" class="section level1">
 <h1>B. Choosing the number <code>K</code> of Principal Components</h1>
-<p>UPDATE: it is now possible to run <code>pcadapt</code> on genotype matrices already loaded in the <code>R</code> session, assuming it is in the <code>pcadapt</code> format.</p>
+<p><strong>UPDATE</strong>: it is now possible to run <code>pcadapt</code> on genotype matrices already loaded in the <code>R</code> session, assuming it is in the <code>pcadapt</code> format.</p>
 <p>The <code>pcadapt</code> function performs two successive tasks. First, PCA is performed on the centered and scaled genotype matrix. The second stage consists in computing test statistics and p-values based on the correlations between SNPs and the first <code>K</code> principal components (PCs). To run the function <code>pcadapt</code>, the user should specify the <code>pcadapt</code> file location <code>filename</code> or use the output returned by the function <code>read.pcadapt</code>, along with the number <code>K</code> of principal components to work with.</p>
 <p>To choose <code>K</code>, principal component analysis should first be performed with a large enough number of principal components (e.g. <code>K=20</code>).</p>
 <pre class="r"><code>x &lt;- pcadapt(input = filename, K = 20) #or x &lt;- pcadapt(input = matrix, K = 20)</code></pre>
 <pre><code>## Reading file /Users/luuk/Documents/thesis/git/pcadapt/inst/extdata/geno3pops.pcadapt...
 ## Number of SNPs: 1500
 ## Number of individuals: 150</code></pre>
-<p><strong>NB</strong> : by default, data are assumed to be diploid. To specify the ploidy, use the argument <code>ploidy</code> (<code>ploidy=2</code> for diploid species and <code>ploidy = 1</code> for haploid species) in the <code>pcadapt</code> function.</p>
+<p><strong>NB</strong>: by default, data are assumed to be diploid. To specify the ploidy, use the argument <code>ploidy</code> (<code>ploidy=2</code> for diploid species and <code>ploidy = 1</code> for haploid species) in the <code>pcadapt</code> function.</p>
 <div id="b.1.-scree-plot" class="section level3">
 <h3>B.1. Scree plot</h3>
 <p>The ‘scree plot’ displays in decreasing order the percentage of variance explained by each PC. Up to a constant, it corresponds to the eigenvalues in decreasing order. The ideal pattern in a scree plot is a steep curve followed by a bend and a straight line. The eigenvalues that correspond to random variation lie on a straight line whereas the ones that correspond to population structure lie on a steep curve. We recommend to keep PCs that correspond to eigenvalues to the left of the straight line. In the provided example, <code>K = 2</code> is the optimal choice for <code>K</code>. The plot function displays a scree plot:</p>

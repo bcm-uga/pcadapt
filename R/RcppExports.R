@@ -108,6 +108,7 @@ lrfunc_matrix <- function(Geno, scores, nIND, nSNP, K, ploidy, min_maf) {
 #' \code{ped2pcadapt} converts \code{ped} files to the format \code{pcadapt}.
 #'
 #' @param input a character string specifying the name of the file to be converted.
+#' @param output a character string specifying the name of the output file.
 #' 
 #' @examples
 #' ## see also ?pcadapt for examples
@@ -116,8 +117,8 @@ lrfunc_matrix <- function(Geno, scores, nIND, nSNP, K, ploidy, min_maf) {
 #'
 #' @export
 #'
-ped2pcadapt <- function(path) {
-    .Call('pcadapt_ped2pcadapt', PACKAGE = 'pcadapt', path)
+ped2pcadapt <- function(input, output) {
+    .Call('pcadapt_ped2pcadapt', PACKAGE = 'pcadapt', input, output)
 }
 
 #' Convert lfmm files
@@ -125,6 +126,7 @@ ped2pcadapt <- function(path) {
 #' \code{lfmm2pcadapt} converts \code{lfmm} files to the format \code{pcadapt}.
 #'
 #' @param input a character string specifying the name of the file to be converted.
+#' @param output a character string specifying the name of the output file.
 #' 
 #' @examples
 #' ## see also ?pcadapt for examples
@@ -133,8 +135,8 @@ ped2pcadapt <- function(path) {
 #'
 #' @export
 #'
-lfmm2pcadapt <- function(path) {
-    .Call('pcadapt_lfmm2pcadapt', PACKAGE = 'pcadapt', path)
+lfmm2pcadapt <- function(input, output) {
+    .Call('pcadapt_lfmm2pcadapt', PACKAGE = 'pcadapt', input, output)
 }
 
 #' Sample genotype matrix from pooled samples

@@ -52,24 +52,15 @@ read.pcadapt <- function(input,
     }
     
     ## x.type to x.pcadapt ##
-    split.name <- unlist(unlist(strsplit(input,"[.]")))
-    if ((tail(split.name, n = 1) %in% c("ped", "vcf", "lfmm")) && (length(split.name) > 1)){
-      aux <- NULL
-      for (k in (1:(length(split.name) - 1))){
-        aux <- paste0(aux, split.name[k])
-      }
-      aux <- paste0(aux, ".pcadapt")
-    } else {
-      aux <- paste0(input, ".pcadapt")
-    }
+    aux <- get.output.name(name = input)
     
     ## File converter ##
     if (type == "ped"){
-      otpt <- ped2pcadapt(path = input)
+      otpt <- ped2pcadapt(input = input, output = aux)
     } else if (type == "vcf"){
       vcf2pcadapt(input = input, output = aux, allele.sep = allele.sep)
     } else if (type == "lfmm"){
-      otpt <- lfmm2pcadapt(path = input)
+      otpt <- lfmm2pcadapt(input = input, output = aux)
     } else if (type == "pcadapt"){
       aux <- input
     }
@@ -193,4 +184,34 @@ get.pc <- function(x, list){
   df <- cbind(list, lapply(v, as.numeric))
   colnames(df) <- c("SNP", "PC")
   return(df)
+}
+
+#' Replace the file extension with the .pcadapt extension
+#'
+#' \code{get.output.name} returns a character string specifying the name of the output file.
+#'
+#' @param name a character string specifying the name of the file to be
+#' converted.
+#'
+#' @examples
+#' ## see also ?pcadapt for examples
+#'
+#' @export
+#'
+get.output.name <- function(name){
+  split.name <- unlist(unlist(strsplit(name,"[.]")))  
+  if (length(split.name) > 1){
+    aux <- NULL
+    for (k in 1:(length(split.name) - 1)){
+      aux <- paste0(aux, split.name[k], ".")
+    }
+    if (tail(split.name, n = 1) %in% c("ped", "vcf", "lfmm")){
+      aux <- paste0(aux, "pcadapt")    
+    } else {
+      aux <- paste0(aux, tail(split.name, n = 1), ".pcadapt")
+    }
+  } else {
+    aux <- paste0(split.name[1], ".pcadapt") 
+  }
+  return(aux)
 }

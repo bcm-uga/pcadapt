@@ -78,7 +78,7 @@ You may also specify ploidy in the `read.pcadapt` function using the `ploidy` ar
 
 # B. Choosing the number `K` of Principal Components
 
-UPDATE: it is now possible to run `pcadapt` on genotype matrices already loaded in the `R` session, assuming it is in the `pcadapt` format.
+**UPDATE**: it is now possible to run `pcadapt` on genotype matrices already loaded in the `R` session, assuming it is in the `pcadapt` format.
 
 The `pcadapt` function performs two successive tasks. First, PCA is performed on the centered and scaled genotype matrix. The second stage consists in computing test statistics and p-values based on the correlations between SNPs and the first `K` principal components (PCs). To run the function `pcadapt`, the user should specify the `pcadapt` file location `filename` or use the output returned by the function `read.pcadapt`, along with the number `K` of principal components to work with.
 
@@ -88,7 +88,7 @@ To choose `K`, principal component analysis should first be performed with a lar
 x <- pcadapt(input = filename, K = 20) #or x <- pcadapt(input = matrix, K = 20)
 ```
 
-**NB** : by default, data are assumed to be diploid. To specify the ploidy, use the argument `ploidy` (`ploidy=2` for diploid species and `ploidy = 1` for haploid species) in the `pcadapt` function.
+**NB**: by default, data are assumed to be diploid. To specify the ploidy, use the argument `ploidy` (`ploidy=2` for diploid species and `ploidy = 1` for haploid species) in the `pcadapt` function.
 
 ### B.1. Scree plot
 

@@ -8,7 +8,7 @@ vcf2pcadapt(input, output = "tmp.pcadapt", allele.sep = c("/", "|"))
 }
 \arguments{
 \item{input}{a character string specifying the name of the file to be
-converted if \code{local.env = FALSE}.}
+converted.}
 
 \item{output}{a character string indicating the name of the output file.}
 
