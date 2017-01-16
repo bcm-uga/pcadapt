@@ -14,7 +14,7 @@ vignette: >
 
 In the following, we show how the **pcadapt** package can perform genome scans for selection based on individual genotype data. We show how to run the package using the example **geno3pops** that contains genotype data. A total of 150 individuals coming from three different populations were genotyped at 1,500 diploid markers. Simulations were performed with [simuPOP](http://simupop.sourceforge.net/) using a divergence model assuming that 150 SNPs confer a selective advantage. To run the package on the provided example, just copy and paste shaded `R` chunks.
 
-To run the package, you need to install and load it using the following command lines:
+To run the package, you need to install the package and load it using the following command lines:
 
 ```{r ,eval=FALSE}
 install.packages("pcadapt")
@@ -78,7 +78,7 @@ You may also specify ploidy in the `read.pcadapt` function using the `ploidy` ar
 
 # B. Choosing the number `K` of Principal Components
 
-**UPDATE**: it is now possible to run `pcadapt` on genotype matrices already loaded in the `R` session, assuming it is in the `pcadapt` format.
+**UPDATE 3.1.0**: it is now possible to run `pcadapt` on genotype matrices already loaded in the `R` session, assuming it is in the `pcadapt` format.
 
 The `pcadapt` function performs two successive tasks. First, PCA is performed on the centered and scaled genotype matrix. The second stage consists in computing test statistics and p-values based on the correlations between SNPs and the first `K` principal components (PCs). To run the function `pcadapt`, the user should specify the `pcadapt` file location `filename` or use the output returned by the function `read.pcadapt`, along with the number `K` of principal components to work with.
 

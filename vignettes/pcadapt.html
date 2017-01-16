@@ -131,7 +131,7 @@ Keurcien Luu, Michael G.B. Blum
 </center>
 <p><strong>pcadapt</strong> has been developed to detect genetic markers involved in biological adaptation. <strong>pcadapt</strong> provides statistical tools for outlier detection based on Principal Component Analysis (PCA).</p>
 <p>In the following, we show how the <strong>pcadapt</strong> package can perform genome scans for selection based on individual genotype data. We show how to run the package using the example <strong>geno3pops</strong> that contains genotype data. A total of 150 individuals coming from three different populations were genotyped at 1,500 diploid markers. Simulations were performed with <a href="http://simupop.sourceforge.net/">simuPOP</a> using a divergence model assuming that 150 SNPs confer a selective advantage. To run the package on the provided example, just copy and paste shaded <code>R</code> chunks.</p>
-<p>To run the package, you need to install and load it using the following command lines:</p>
+<p>To run the package, you need to install the package and load it using the following command lines:</p>
 <pre class="r"><code>install.packages(&quot;pcadapt&quot;)
 library(pcadapt)</code></pre>
 <div id="a.-reading-genotype-data" class="section level1">
@@ -162,7 +162,7 @@ filename &lt;- read.pcadapt(pool.data, type = &quot;pool&quot;, pop.sizes = c(20
 </div>
 <div id="b.-choosing-the-number-k-of-principal-components" class="section level1">
 <h1>B. Choosing the number <code>K</code> of Principal Components</h1>
-<p><strong>UPDATE</strong>: it is now possible to run <code>pcadapt</code> on genotype matrices already loaded in the <code>R</code> session, assuming it is in the <code>pcadapt</code> format.</p>
+<p><strong>UPDATE 3.1.0</strong>: it is now possible to run <code>pcadapt</code> on genotype matrices already loaded in the <code>R</code> session, assuming it is in the <code>pcadapt</code> format.</p>
 <p>The <code>pcadapt</code> function performs two successive tasks. First, PCA is performed on the centered and scaled genotype matrix. The second stage consists in computing test statistics and p-values based on the correlations between SNPs and the first <code>K</code> principal components (PCs). To run the function <code>pcadapt</code>, the user should specify the <code>pcadapt</code> file location <code>filename</code> or use the output returned by the function <code>read.pcadapt</code>, along with the number <code>K</code> of principal components to work with.</p>
 <p>To choose <code>K</code>, principal component analysis should first be performed with a large enough number of principal components (e.g. <code>K=20</code>).</p>
 <pre class="r"><code>x &lt;- pcadapt(input = filename, K = 20) #or x &lt;- pcadapt(input = matrix, K = 20)</code></pre>

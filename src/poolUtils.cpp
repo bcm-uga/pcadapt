@@ -5,7 +5,7 @@ using namespace Rcpp;
 
 //' Sample genotype matrix from pooled samples
 //' 
-//' \code{sample_geno_cpp} sample genotypes based on observed allelic frequencies.
+//' \code{sample_geno_matrix} sample genotypes based on observed allelic frequencies.
 //' 
 //' @param freq a matrix containing allele frequencies.
 //' @param ploidy an integer specifying the ploidy of the sampled individuals.
@@ -16,7 +16,7 @@ using namespace Rcpp;
 //' @export
 //' 
 // [[Rcpp::export]]
-NumericMatrix sample_geno_cpp(NumericMatrix freq, double ploidy, IntegerVector sample_size){
+NumericMatrix sample_geno_matrix(NumericMatrix freq, double ploidy, IntegerVector sample_size){
   int nIND = Rcpp::sum(sample_size);
   int nPOOL = freq.nrow();
   int nSNP = freq.ncol();

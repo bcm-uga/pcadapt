@@ -24,15 +24,10 @@ vcf2pcadapt <- function(input, output = "tmp.pcadapt", allele.sep = c("/", "|"))
   nIND <- ncol(geno)
   nSNP <- nrow(geno)
   skipped <- vcf_convert(string_geno = geno, output = output, allele_sep = allele.sep)
-  cat("Summary:\n\n")
-  cat("\t- input file\t\t\t\t", input, "\n")
-  cat("\t- output file\t\t\t\t", output, "\n\n")
-  cat("\t- number of individuals detected:\t", nIND, "\n")
-  cat("\t- number of loci detected:\t\t", nSNP, "\n\n")
-  cat(nSNP, "variants have been processed. \n") 
   if (skipped > 0){
     cat(skipped, "variant(s) have been discarded as they are not SNPs.\n")
   } else {
     cat("No variant got discarded.\n")
   }
+  pcadapt_verbose(input, output, nIND, nSNP)
 }

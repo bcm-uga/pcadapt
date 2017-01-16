@@ -51,6 +51,23 @@ lrfunc_file <- function(filename, scores, nIND, nSNP, K, ploidy, min_maf) {
     .Call('pcadapt_lrfunc_file', PACKAGE = 'pcadapt', filename, scores, nIND, nSNP, K, ploidy, min_maf)
 }
 
+#' Sample genotype matrix from pooled samples
+#' 
+#' \code{sample_geno_file} sample genotypes based on observed allelic frequencies.
+#' 
+#' @param input a character string specifying the name of the file containing the allele frequencies.
+#' @param output a character string specifying the name of the output file.
+#' @param ploidy an integer specifying the ploidy of the sampled individuals.
+#' @param sample_size a vector specifying the number of individuals to be sampled for each pool.
+#' 
+#' @return The returned value is a numeric vector of length 2.
+#' 
+#' @export
+#' 
+sample_geno_file <- function(input, output, ploidy, sample_size) {
+    .Call('pcadapt_sample_geno_file', PACKAGE = 'pcadapt', input, output, ploidy, sample_size)
+}
+
 #' Product of a matrix with its transpose
 #' 
 #' \code{tAA_cpp} computes the product of a real-valued matrix with its transpose. 
@@ -141,7 +158,7 @@ lfmm2pcadapt <- function(input, output) {
 
 #' Sample genotype matrix from pooled samples
 #' 
-#' \code{sample_geno_cpp} sample genotypes based on observed allelic frequencies.
+#' \code{sample_geno_matrix} sample genotypes based on observed allelic frequencies.
 #' 
 #' @param freq a matrix containing allele frequencies.
 #' @param ploidy an integer specifying the ploidy of the sampled individuals.
@@ -151,8 +168,8 @@ lfmm2pcadapt <- function(input, output) {
 #' 
 #' @export
 #' 
-sample_geno_cpp <- function(freq, ploidy, sample_size) {
-    .Call('pcadapt_sample_geno_cpp', PACKAGE = 'pcadapt', freq, ploidy, sample_size)
+sample_geno_matrix <- function(freq, ploidy, sample_size) {
+    .Call('pcadapt_sample_geno_matrix', PACKAGE = 'pcadapt', freq, ploidy, sample_size)
 }
 
 get_geno_char <- function(allele_sep) {

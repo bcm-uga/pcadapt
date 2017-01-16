@@ -47,6 +47,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// sample_geno_file
+NumericVector sample_geno_file(std::string input, std::string output, double ploidy, IntegerVector sample_size);
+RcppExport SEXP pcadapt_sample_geno_file(SEXP inputSEXP, SEXP outputSEXP, SEXP ploidySEXP, SEXP sample_sizeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type input(inputSEXP);
+    Rcpp::traits::input_parameter< std::string >::type output(outputSEXP);
+    Rcpp::traits::input_parameter< double >::type ploidy(ploidySEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type sample_size(sample_sizeSEXP);
+    rcpp_result_gen = Rcpp::wrap(sample_geno_file(input, output, ploidy, sample_size));
+    return rcpp_result_gen;
+END_RCPP
+}
 // tAA_cpp
 NumericMatrix tAA_cpp(NumericMatrix x, int nrow, int ncol);
 RcppExport SEXP pcadapt_tAA_cpp(SEXP xSEXP, SEXP nrowSEXP, SEXP ncolSEXP) {
@@ -114,16 +128,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// sample_geno_cpp
-NumericMatrix sample_geno_cpp(NumericMatrix freq, double ploidy, IntegerVector sample_size);
-RcppExport SEXP pcadapt_sample_geno_cpp(SEXP freqSEXP, SEXP ploidySEXP, SEXP sample_sizeSEXP) {
+// sample_geno_matrix
+NumericMatrix sample_geno_matrix(NumericMatrix freq, double ploidy, IntegerVector sample_size);
+RcppExport SEXP pcadapt_sample_geno_matrix(SEXP freqSEXP, SEXP ploidySEXP, SEXP sample_sizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix >::type freq(freqSEXP);
     Rcpp::traits::input_parameter< double >::type ploidy(ploidySEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type sample_size(sample_sizeSEXP);
-    rcpp_result_gen = Rcpp::wrap(sample_geno_cpp(freq, ploidy, sample_size));
+    rcpp_result_gen = Rcpp::wrap(sample_geno_matrix(freq, ploidy, sample_size));
     return rcpp_result_gen;
 END_RCPP
 }

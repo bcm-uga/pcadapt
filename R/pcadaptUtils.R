@@ -47,7 +47,7 @@ read.pcadapt <- function(input,
       stop("Argument type is missing.")
     }
     ## Check if file type is supported ##
-    if (class(type) != "character" || (!(type %in% c("vcf", "ped", "lfmm", "pcadapt")))){
+    if (class(type) != "character" || (!(type %in% c("vcf", "ped", "lfmm", "pcadapt", "pool")))){
       stop("Incorrect type.")
     }
     
@@ -63,6 +63,31 @@ read.pcadapt <- function(input,
       otpt <- lfmm2pcadapt(input = input, output = aux)
     } else if (type == "pcadapt"){
       aux <- input
+    } else if (type == "pool"){
+      fs <- get_size_file(input)
+      nPOOL <- fs[1]
+      if (missing(ploidy)){
+        warning("Argument ploidy is missing, proceeding with 'ploidy = 2'...")
+        p <- 2
+      } else {
+        p <- ploidy
+      }
+      if (missing(pop.sizes)){
+        warning("Argument pop.sizes is missing, proceeding with 100 individuals per pool.")
+        s <- as.vector(rep(100, nPOOL))
+      } else {
+        nPOOL <- nrow(input)
+        if (length(pop.sizes) == nPOOL){
+          s <- as.vector(pop.sizes)
+        } else {
+          warning("Argument pop.sizes must be of length n where n is the number of pools, proceeding with 100 individuals per pool.")  
+          s <- as.vector(rep(100, nPOOL))
+        }
+      }
+      tmp.aux <- get.output.name(name = input, ext = "lfmm")
+      sample_geno_file(input = input, output = tmp.aux, ploidy = p, sample_size = s)
+      aux <- get.output.name(name = tmp.aux)
+      otpt <- lfmm2pcadapt(input = tmp.aux, output = aux)
     }
   } else if ((class(input) %in% c("matrix", "data.frame", "array"))){
     if (!(ncol(input) > 0) || !(nrow(input) > 0)){
@@ -90,9 +115,15 @@ read.pcadapt <- function(input,
         nPOOL <- nrow(input)
         s <- as.vector(rep(100, nPOOL))
       } else {
-        s <- as.vector(pop.sizes)
+        nPOOL <- nrow(input)
+        if (length(pop.sizes) == nPOOL){
+          s <- as.vector(pop.sizes)
+        } else {
+          warning("Argument pop.sizes must be of length n where n is the number of pools, proceeding with 100 individuals per pool.")  
+          s <- as.vector(rep(100, nPOOL))
+        }
       }
-      tmp <- sample_geno_cpp(freq = as.matrix(input), ploidy = p, sample_size = s)
+      tmp <- sample_geno_matrix(freq = as.matrix(input), ploidy = p, sample_size = s)
       tmp[which(is.na(tmp))] <- 9
     } 
     aux <- tmp
@@ -177,7 +208,7 @@ get.pop.names = function(pop){
 #'
 #' @export
 #'
-get.pc <- function(x, list){
+get.pc = function(x, list){
   rem.na <- which(!is.na(x$zscores[list, 1]))
   v <- array(0,dim = length(list))
   v[rem.na] <- sapply(list[rem.na], FUN = function(h){which(x$zscores[h, ]^2 == max(x$zscores[h, ]^2, na.rm = TRUE))})
@@ -190,15 +221,15 @@ get.pc <- function(x, list){
 #'
 #' \code{get.output.name} returns a character string specifying the name of the output file.
 #'
-#' @param name a character string specifying the name of the file to be
-#' converted.
+#' @param name a character string specifying the name of the file to be converted.
+#' @param ext a character string specifying the extension of the output file.
 #'
 #' @examples
 #' ## see also ?pcadapt for examples
 #'
 #' @export
 #'
-get.output.name <- function(name){
+get.output.name = function(name, ext = "pcadapt"){
   split.name <- unlist(unlist(strsplit(name,"[.]")))  
   if (length(split.name) > 1){
     aux <- NULL
@@ -206,12 +237,34 @@ get.output.name <- function(name){
       aux <- paste0(aux, split.name[k], ".")
     }
     if (tail(split.name, n = 1) %in% c("ped", "vcf", "lfmm")){
-      aux <- paste0(aux, "pcadapt")    
+      aux <- paste0(aux, ext)    
     } else {
-      aux <- paste0(aux, tail(split.name, n = 1), ".pcadapt")
+      aux <- paste0(aux, tail(split.name, n = 1), ".", ext)
     }
   } else {
-    aux <- paste0(split.name[1], ".pcadapt") 
+    aux <- paste0(split.name[1], ".", ext) 
   }
   return(aux)
+}
+
+#' Summary
+#'
+#' \code{pcadapt_verbose} prints out a summary of the file conversion.
+#'
+#' @param input a genotype matrix or a character string specifying the name of the file to be converted.
+#' @param output a character string specifying the name of the output file.
+#' @param nIND an integer specifying the number of individuals present in the data.
+#' @param nSNP an integer specifying the number of genetic markers present in the data.
+#'
+#' @examples
+#' ## see also ?pcadapt for examples
+#'
+#' @export
+#'
+pcadapt_verbose = function(input, output, nIND, nSNP){
+  cat("Summary:\n\n")
+  cat("\t- input file\t\t\t\t", input, "\n")
+  cat("\t- output file\t\t\t\t", output, "\n\n")
+  cat("\t- number of individuals detected:\t", nIND, "\n")
+  cat("\t- number of loci detected:\t\t", nSNP, "\n\n")
 }
