@@ -18,7 +18,7 @@ print_convert(input, output, M, N, pool)
 \item{pool}{an integer specifying the type of data. `0` for genotype data, `1` for pooled data.}
 }
 \description{
-\code{pcadapt_verbose} prints out a summary of the file conversion.
+\code{print_convert} prints out a summary of the file conversion.
 }
 \examples{
 ## see also ?pcadapt for examples
