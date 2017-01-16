@@ -122,7 +122,7 @@ lrfunc_matrix <- function(Geno, scores, nIND, nSNP, K, ploidy, min_maf) {
 
 #' Summary
 #'
-#' \code{pcadapt_verbose} prints out a summary of the file conversion.
+#' \code{print_convert} prints out a summary of the file conversion.
 #'
 #' @param input a genotype matrix or a character string specifying the name of the file to be converted.
 #' @param output a character string specifying the name of the output file.
