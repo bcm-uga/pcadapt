@@ -120,6 +120,25 @@ lrfunc_matrix <- function(Geno, scores, nIND, nSNP, K, ploidy, min_maf) {
     .Call('pcadapt_lrfunc_matrix', PACKAGE = 'pcadapt', Geno, scores, nIND, nSNP, K, ploidy, min_maf)
 }
 
+#' Summary
+#'
+#' \code{pcadapt_verbose} prints out a summary of the file conversion.
+#'
+#' @param input a genotype matrix or a character string specifying the name of the file to be converted.
+#' @param output a character string specifying the name of the output file.
+#' @param nIND an integer specifying the number of individuals present in the data.
+#' @param nSNP an integer specifying the number of genetic markers present in the data.
+#' @param pool an integer specifying the type of data. `0` for genotype data, `1` for pooled data.
+#'
+#' @examples
+#' ## see also ?pcadapt for examples
+#'
+#' @export
+#'
+print_convert <- function(input, output, M, N, pool) {
+    invisible(.Call('pcadapt_print_convert', PACKAGE = 'pcadapt', input, output, M, N, pool))
+}
+
 #' Convert ped files
 #'
 #' \code{ped2pcadapt} converts \code{ped} files to the format \code{pcadapt}.

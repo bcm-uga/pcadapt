@@ -104,6 +104,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// print_convert
+void print_convert(std::string input, std::string output, int M, int N, int pool);
+RcppExport SEXP pcadapt_print_convert(SEXP inputSEXP, SEXP outputSEXP, SEXP MSEXP, SEXP NSEXP, SEXP poolSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type input(inputSEXP);
+    Rcpp::traits::input_parameter< std::string >::type output(outputSEXP);
+    Rcpp::traits::input_parameter< int >::type M(MSEXP);
+    Rcpp::traits::input_parameter< int >::type N(NSEXP);
+    Rcpp::traits::input_parameter< int >::type pool(poolSEXP);
+    print_convert(input, output, M, N, pool);
+    return R_NilValue;
+END_RCPP
+}
 // ped2pcadapt
 int ped2pcadapt(std::string input, std::string output);
 RcppExport SEXP pcadapt_ped2pcadapt(SEXP inputSEXP, SEXP outputSEXP) {

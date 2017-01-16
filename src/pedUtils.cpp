@@ -292,6 +292,44 @@ void lfmm2geno(char *input_file, char* output_file, int *N, int *M){
   delete[] data;
 }
 
+//' Summary
+//'
+//' \code{pcadapt_verbose} prints out a summary of the file conversion.
+//'
+//' @param input a genotype matrix or a character string specifying the name of the file to be converted.
+//' @param output a character string specifying the name of the output file.
+//' @param nIND an integer specifying the number of individuals present in the data.
+//' @param nSNP an integer specifying the number of genetic markers present in the data.
+//' @param pool an integer specifying the type of data. `0` for genotype data, `1` for pooled data.
+//'
+//' @examples
+//' ## see also ?pcadapt for examples
+//'
+//' @export
+//'
+// [[Rcpp::export]]
+void print_convert(std::string input, std::string output, int M, int N, int pool){
+  char *writable_in = new char[input.size() + 1];
+  std::copy(input.begin(), input.end(), writable_in);
+  writable_in[input.size()] = '\0';
+  char *writable_out = new char[output.size() + 1];
+  std::copy(output.begin(), output.end(), writable_out);
+  writable_out[output.size()] = '\0';
+  if (pool == 0){
+    Rprintf("Summary:\n\n");
+    Rprintf("\t- input file:\t\t\t\t%s\n", writable_in);
+    Rprintf("\t- output file:\t\t\t\t%s\n\n", writable_out);
+    Rprintf("\t- number of individuals detected:\t%d\n", N);
+    Rprintf("\t- number of loci detected:\t\t%d\n\n", M);
+  } else if (pool == 1){
+    Rprintf("Summary:\n\n");
+    Rprintf("\t- input file:\t\t\t\t%s\n", writable_in);
+    Rprintf("\t- output file:\t\t\t\t%s\n\n", writable_out);
+    Rprintf("\t- number of pools detected:\t%d\n", N);
+    Rprintf("\t- number of loci detected:\t\t%d\n\n", M);  
+  }
+}
+
 //' Convert ped files
 //'
 //' \code{ped2pcadapt} converts \code{ped} files to the format \code{pcadapt}.
@@ -317,11 +355,7 @@ int ped2pcadapt(std::string input, std::string output){
   std::copy(output.begin(), output.end(), writable_out);
   writable_out[output.size()] = '\0';
   ped2geno(writable_in, writable_out, &N, &M);
-  Rprintf("Summary:\n\n"
-            "        - input file      %s\n"
-            "        - output file     %s\n", writable_in, writable_out);
-  Rprintf("\n\t- number of individuals detected:\t%d\n", N);
-  Rprintf("\t- number of loci detected:\t\t%d\n\n", M);
+  print_convert(input, output, M, N, 0);
   delete[] writable_in;
   delete[] writable_out;
   return(0);
@@ -352,11 +386,7 @@ int lfmm2pcadapt(std::string input, std::string output){
   std::copy(output.begin(), output.end(), writable_out);
   writable_out[output.size()] = '\0';
   lfmm2geno(writable_in, writable_out, &N, &M);
-  Rprintf("Summary:\n\n"
-            "        - input file      %s\n"
-            "        - output file     %s\n", writable_in, writable_out);
-  Rprintf("\n\t- number of individuals detected:\t%d\n", N);
-  Rprintf("\t- number of loci detected:\t\t%d\n\n", M);
+  print_convert(writable_in, writable_out, M, N, 0);
   delete[] writable_in;
   delete[] writable_out;
   return(0);

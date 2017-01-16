@@ -29,5 +29,5 @@ vcf2pcadapt <- function(input, output = "tmp.pcadapt", allele.sep = c("/", "|"))
   } else {
     cat("No variant got discarded.\n")
   }
-  pcadapt_verbose(input, output, nIND, nSNP)
+  print_convert(input = input, output = output, M = nSNP, N = nIND, pool = 0)
 }

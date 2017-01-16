@@ -246,25 +246,3 @@ get.output.name = function(name, ext = "pcadapt"){
   }
   return(aux)
 }
-
-#' Summary
-#'
-#' \code{pcadapt_verbose} prints out a summary of the file conversion.
-#'
-#' @param input a genotype matrix or a character string specifying the name of the file to be converted.
-#' @param output a character string specifying the name of the output file.
-#' @param nIND an integer specifying the number of individuals present in the data.
-#' @param nSNP an integer specifying the number of genetic markers present in the data.
-#'
-#' @examples
-#' ## see also ?pcadapt for examples
-#'
-#' @export
-#'
-pcadapt_verbose = function(input, output, nIND, nSNP){
-  cat("Summary:\n\n")
-  cat("\t- input file\t\t\t\t", input, "\n")
-  cat("\t- output file\t\t\t\t", output, "\n\n")
-  cat("\t- number of individuals detected:\t", nIND, "\n")
-  cat("\t- number of loci detected:\t\t", nSNP, "\n\n")
-}
