@@ -11,11 +11,11 @@ print_convert(input, output, M, N, pool)
 
 \item{output}{a character string specifying the name of the output file.}
 
+\item{M}{an integer specifying the number of genetic markers present in the data.}
+
+\item{N}{an integer specifying the number of individuals present in the data.}
+
 \item{pool}{an integer specifying the type of data. `0` for genotype data, `1` for pooled data.}
-
-\item{nIND}{an integer specifying the number of individuals present in the data.}
-
-\item{nSNP}{an integer specifying the number of genetic markers present in the data.}
 }
 \description{
 \code{pcadapt_verbose} prints out a summary of the file conversion.

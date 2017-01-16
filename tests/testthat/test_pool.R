@@ -1,6 +1,6 @@
 # Binomial sampling test routine
 
-context("SAMPLE_GENO_CPP")
+context("SAMPLE_GENO_MATRIX")
 
 test_that("sampled frequencies match with observed frequencies", {
   nPOOL <- 2
@@ -14,7 +14,7 @@ test_that("sampled frequencies match with observed frequencies", {
   dt <- matrix(maf, nrow = nPOOL, ncol = nSNP)
   ploidy <- 2
   
-  x <- t(sample_geno_cpp(dt, ploidy, sample_size))
+  x <- t(sample_geno_matrix(dt, ploidy, sample_size))
   
   freq <- array(0, dim = c(nPOOL, nSNP))
   sd <- array(0, dim = c(nPOOL, nSNP))
@@ -32,7 +32,7 @@ test_that("sampled frequencies match with observed frequencies", {
   
 })
 
-test_that("missing frequencies raise missing genotypes endoded with 9", {
+test_that("missing frequencies raise missing genotypes encoded with 9", {
   nPOOL <- 2
   nSNP <- 2
   nINDperPOOL <- 10
@@ -47,8 +47,8 @@ test_that("missing frequencies raise missing genotypes endoded with 9", {
   dtna[1,1] <- NA
   ploidy <- 2
   
-  x <- sample_geno_cpp(dt, ploidy, sample_size)
-  y <- sample_geno_cpp(dtna, ploidy, sample_size)
+  x <- sample_geno_matrix(dt, ploidy, sample_size)
+  y <- sample_geno_matrix(dtna, ploidy, sample_size)
   
   for (ind in 1:nINDperPOOL){
     testthat::expect_equal(x[1, ind], 9)

@@ -23,7 +23,7 @@ converted.}
 \item{allele.sep}{a vector of characters indicating what delimiters are used in VCF files. By default, only
 "|" and "/" are recognized.}
 
-\item{deprecated}{argument.}
+\item{blocksize}{deprecated argument.}
 }
 \description{
 \code{read.pcadapt} converts genotype matrices or files to an appropriate

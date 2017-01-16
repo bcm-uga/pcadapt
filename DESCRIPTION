@@ -16,17 +16,15 @@ Description: Methods to detect genetic markers involved in biological
     <DOI:10.1111/1755-0998.12592>.
 License: GPL (>= 2)
 Imports:
-    Rcpp (>= 0.12.8)
-LinkingTo: Rcpp, RcppArmadillo
-LazyData: TRUE
-Depends:
-    Rcpp,
+    Rcpp (>= 0.12.8),  
     RcppArmadillo, 
-    robust, 
-    MASS, 
+    MASS,
     ggplot2, 
     vcfR,
-    RSpectra
+    RSpectra,
+    rrcov
+LinkingTo: Rcpp, RcppArmadillo
+LazyData: TRUE
 Suggests: knitr, qvalue, rmarkdown, testthat
 SystemRequirements: C++11
 RoxygenNote: 5.0.1

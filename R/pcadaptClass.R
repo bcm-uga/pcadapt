@@ -31,7 +31,7 @@ create.pcadapt.file = function(input, K, method, min.maf, ploidy){
                     K = K, 
                     ploidy = ploidy,
                     min_maf = min.maf)
-  obj.stat <- cmpt.stat(zsc = lr$zscores, 
+  obj.stat <- cmpt.stat(x = lr$zscores, 
                         s.v = sqrt(xsvd$values / (nIND - 1)),
                         K = K,
                         method = method,
@@ -82,7 +82,7 @@ create.pcadapt.matrix = function(input, K, method, min.maf, ploidy){
                       K = K,
                       ploidy = ploidy,
                       min_maf = min.maf)
-  obj.stat <- cmpt.stat(zsc = lr$zscores, 
+  obj.stat <- cmpt.stat(x = lr$zscores, 
                         sqrt(xsvd$values / (nIND - 1)),
                         K = K,
                         method = method,

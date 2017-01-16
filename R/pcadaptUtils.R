@@ -13,7 +13,7 @@
 #' @param pop.sizes a vector specifying the number of individuals to be sampled for each pool.
 #' @param allele.sep a vector of characters indicating what delimiters are used in VCF files. By default, only
 #' "|" and "/" are recognized.
-#' @param deprecated argument.
+#' @param blocksize deprecated argument.
 #'
 #' @importFrom utils tail
 #'

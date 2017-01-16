@@ -4,10 +4,10 @@
 \alias{cmpt.stat}
 \title{pcadapt statistics}
 \usage{
-cmpt.stat(zscores, s.v, K, method, nSNP, maf, min.maf)
+cmpt.stat(x, s.v, K, method, nSNP, maf, min.maf)
 }
 \arguments{
-\item{zscores}{a real-valued matrix obtained from the multiple linear regression of the genotype on the scores.}
+\item{x}{a real-valued matrix obtained from the multiple linear regression of the genotype on the scores.}
 
 \item{s.v}{a vector containing the K larger singular values.}
 
@@ -18,6 +18,10 @@ the p-values. Three statistics are currently available, \code{"mahalanobis"},
 \code{"communality"}, and \code{"componentwise"}.}
 
 \item{nSNP}{an integer specifying the number of genetic markers present in the data.}
+
+\item{maf}{a vector containing the minor allele frequencies.}
+
+\item{min.maf}{a value between \code{0} and \code{0.45} specifying the threshold of minor allele frequencies above which p-values are computed.}
 }
 \value{
 The returned value is a list containing the test statistics and the associated p-values.
