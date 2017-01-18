@@ -76,7 +76,6 @@ read.pcadapt <- function(input,
         warning("Argument pop.sizes is missing, proceeding with 100 individuals per pool.")
         s <- as.vector(rep(100, nPOOL))
       } else {
-        nPOOL <- nrow(input)
         if (length(pop.sizes) == nPOOL){
           s <- as.vector(pop.sizes)
         } else {
