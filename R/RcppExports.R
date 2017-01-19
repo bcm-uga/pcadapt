@@ -120,6 +120,54 @@ lrfunc_matrix <- function(Geno, scores, nIND, nSNP, K, ploidy, min_maf) {
     .Call('pcadapt_lrfunc_matrix', PACKAGE = 'pcadapt', Geno, scores, nIND, nSNP, K, ploidy, min_maf)
 }
 
+colMedian_cpp <- function(x) {
+    .Call('pcadapt_colMedian_cpp', PACKAGE = 'pcadapt', x)
+}
+
+Erho_cpp <- function(b) {
+    .Call('pcadapt_Erho_cpp', PACKAGE = 'pcadapt', b)
+}
+
+Es2_cpp <- function(c) {
+    .Call('pcadapt_Es2_cpp', PACKAGE = 'pcadapt', c)
+}
+
+scaleTau2_matrix <- function(x) {
+    .Call('pcadapt_scaleTau2_matrix', PACKAGE = 'pcadapt', x)
+}
+
+scaleTau2_vector <- function(x) {
+    .Call('pcadapt_scaleTau2_vector', PACKAGE = 'pcadapt', x)
+}
+
+covGK_cpp <- function(x, y) {
+    .Call('pcadapt_covGK_cpp', PACKAGE = 'pcadapt', x, y)
+}
+
+ogk_step <- function(x) {
+    .Call('pcadapt_ogk_step', PACKAGE = 'pcadapt', x)
+}
+
+getDistance_cpp <- function(x, center, cov) {
+    .Call('pcadapt_getDistance_cpp', PACKAGE = 'pcadapt', x, center, cov)
+}
+
+#' Robust estimates for location and scatter
+#'
+#' \code{covRob_cpp} implements the Orthogonalized Gnanadesikan-Kettenring estimator
+#' of Maronna and Zamar.
+#'
+#' @param x a numeric matrix.
+#' 
+#' @examples
+#' ## see also ?pcadapt for examples
+#'
+#' @export
+#'
+covRob_cpp <- function(x) {
+    .Call('pcadapt_covRob_cpp', PACKAGE = 'pcadapt', x)
+}
+
 #' Summary
 #'
 #' \code{print_convert} prints out a summary of the file conversion.

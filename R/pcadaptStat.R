@@ -16,7 +16,6 @@
 #' 
 #' @importFrom stats median na.omit pchisq qchisq
 #' @importFrom MASS cov.rob
-#' @importFrom rrcov CovOgk getDistance
 #' @importFrom utils head
 #' 
 #' @export
@@ -28,8 +27,10 @@ cmpt.stat = function(x, s.v, K, method, nSNP, maf, min.maf){
     xstat <- array(NA, nSNP)
     not.nan <- which(!is.na(apply(abs(zsc), 1, sum)))
     if (K > 1){
-      ogk <- rrcov::CovOgk(zsc)
-      xstat[not.nan] <- as.vector(getDistance(ogk))
+      #ogk <- rrcov::CovOgk(zsc)
+      #xstat[not.nan] <- as.vector(getDistance(ogk))
+      ogk <- covRob_cpp(zsc)
+      xstat[not.nan] <- as.vector(ogk$dist)
     } else if (K == 1){
       one.d.cov <- as.vector(MASS::cov.rob(zsc[not.nan, 1]))
       xstat <- (zsc[, 1] - one.d.cov$center)^2 / one.d.cov$cov[1]

@@ -25,7 +25,7 @@ Imports:
     rrcov
 LinkingTo: Rcpp, RcppArmadillo
 LazyData: TRUE
-Suggests: knitr, qvalue, rmarkdown, testthat
+Suggests: knitr, rmarkdown, testthat
 SystemRequirements: C++11
 RoxygenNote: 5.0.1
 VignetteBuilder: knitr
