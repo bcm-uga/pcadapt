@@ -29,7 +29,7 @@ cmpt.stat = function(x, s.v, K, method, nSNP, maf, min.maf){
     if (K > 1){
       #ogk <- rrcov::CovOgk(zsc)
       #xstat[not.nan] <- as.vector(getDistance(ogk))
-      ogk <- covRob_cpp(zsc)
+      ogk <- covRob_cpp(zsc[not.nan, ])
       xstat[not.nan] <- as.vector(ogk$dist)
     } else if (K == 1){
       one.d.cov <- as.vector(MASS::cov.rob(zsc[not.nan, 1]))
