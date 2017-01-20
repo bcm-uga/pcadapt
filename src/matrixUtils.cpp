@@ -236,7 +236,7 @@ Rcpp::List lrfunc_matrix(NumericMatrix Geno, NumericMatrix scores, int nIND, int
         } 
       }
       if (residuals[i] == 0.0){
-        Z(i, k) = NA_REAL;
+        Z(i, k) = 0.0;
       } else {
         Z(i, k) /= sqrt(residuals[i]); 
       }

@@ -5,10 +5,10 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-NumericVector colMedian_cpp(arma::mat &x) {
+NumericVector colMedian_cpp(arma::mat &x){
   int ncol = x.n_cols;
   NumericVector out(ncol);
-  for (int j = 0; j < ncol; j++) { 
+  for (int j = 0; j < ncol; j++){ 
     out[j] = arma::median(x.col(j));
   }
   return out;
