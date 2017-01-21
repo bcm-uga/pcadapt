@@ -1,8 +1,6 @@
 .Rproj.user
 .Rhistory
 .RData
-*.o
-*.so
 *.dll
 docs/*
 pcadapt.Rproj
