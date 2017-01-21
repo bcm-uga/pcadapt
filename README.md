@@ -28,6 +28,8 @@ devtools::install_github("BioShock38/pcadapt")
 
 ## Reference
 
+[1] Luu, K., Bazin, E., & Blum, M. G. (2017). [pcadapt: an R package to perform genome scans for selection based on principal component analysis.](http://onlinelibrary.wiley.com/doi/10.1111/1755-0998.12592/full) Molecular Ecology Resources, 17(1), 67-77.
+
 [2] Duforet-Frebourg, N., Luu, K., Laval, G., Bazin, E., & Blum, M. G. (2015). [Detecting genomic signatures of natural selection with principal component analysis: application to the 1000 Genomes data.](http://mbe.oxfordjournals.org/content/33/4/1082) Molecular biology and evolution, msv334.
 
-[1] Luu, K., Bazin, E., & Blum, M. G. (2017). [pcadapt: an R package to perform genome scans for selection based on principal component analysis.](http://onlinelibrary.wiley.com/doi/10.1111/1755-0998.12592/full) Molecular Ecology Resources, 17(1), 67-77.
+
