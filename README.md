@@ -1,7 +1,6 @@
 # pcadapt
 [![Build Status](https://travis-ci.org/BioShock38/pcadapt.svg?branch=master)](https://travis-ci.org/BioShock38/pcadapt)
 
-# pcadapt
 **pcadapt** has been developed to detect genetic markers involved in biological adaptation. **pcadapt** provides statistical tools for outlier detection based on Principal Component Analysis (PCA).
 
 To run the package, you can install it from CRAN:
