@@ -31,13 +31,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // lrfunc_file
-Rcpp::List lrfunc_file(std::string filename, NumericMatrix scores, int nIND, int nSNP, int K, int ploidy, double min_maf);
+Rcpp::List lrfunc_file(std::string filename, arma::mat& scores, int nIND, int nSNP, int K, int ploidy, double min_maf);
 RcppExport SEXP pcadapt_lrfunc_file(SEXP filenameSEXP, SEXP scoresSEXP, SEXP nINDSEXP, SEXP nSNPSEXP, SEXP KSEXP, SEXP ploidySEXP, SEXP min_mafSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type scores(scoresSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type scores(scoresSEXP);
     Rcpp::traits::input_parameter< int >::type nIND(nINDSEXP);
     Rcpp::traits::input_parameter< int >::type nSNP(nSNPSEXP);
     Rcpp::traits::input_parameter< int >::type K(KSEXP);

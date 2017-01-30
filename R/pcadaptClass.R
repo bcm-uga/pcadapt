@@ -99,8 +99,3 @@ create.pcadapt.matrix = function(input, K, method, min.maf, ploidy){
               chi2.stat = obj.stat$chi2.stat,
               pvalues = obj.stat$pvalues))
 }
-
-
-
-
-

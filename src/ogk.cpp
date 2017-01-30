@@ -58,7 +58,7 @@ Rcpp::List scaleTau2_matrix(arma::mat &x){
     mu = 0;
     w_tot = 0;
     sum_rho = 0;
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++){
       xvec[i] = std::abs(x(i, j) - medx[j]);
     }
     sigma0[j] = Rcpp::median(xvec);
@@ -164,17 +164,18 @@ Rcpp::List ogk_step(arma::mat &x){
   }
   arma::vec eigval;
   arma::mat eigvec;
-  arma::mat V;
   arma::eig_sym(eigval, eigvec, U, "std");
   arma::mat D = arma::diagmat(as<arma::vec>(ms[1]));
-  V = x * (arma::solve(D, eigvec));
-  ms = scaleTau2_matrix(V);
-  arma::mat L = arma::diagmat(as<arma::vec>(ms[1]) % as<arma::vec>(ms[1]));
+  arma::mat V = x * (arma::solve(D, eigvec));
+  //ms = scaleTau2_matrix(V);
+  //arma::mat L = arma::diagmat(as<arma::vec>(ms[1]) % as<arma::vec>(ms[1]));
   arma::mat A = D * eigvec;
-  return Rcpp::List::create(Rcpp::Named("cov") = A * L * A.t(),
-                            Rcpp::Named("center") = A * as<arma::vec>(ms[0]),
-                            Rcpp::Named("V") = V,
-                            Rcpp::Named("A") = A);
+  return Rcpp::List::create(Rcpp::Named("V") = V,
+                            Rcpp::Named("A") = D * eigvec);
+//   return Rcpp::List::create(Rcpp::Named("cov") = A * L * A.t(),
+//                             Rcpp::Named("center") = A * as<arma::vec>(ms[0]),
+//                             Rcpp::Named("V") = V,
+//                             Rcpp::Named("A") = A);
 }
 
 // [[Rcpp::export]]
@@ -209,16 +210,16 @@ Rcpp::List covRob_cpp(arma::mat& x){
   /* First iteration */
   Rcpp::List msva;   
   msva = ogk_step(x);
-  arma::mat V = as<arma::mat>(msva[2]);
-  arma::mat A = as<arma::mat>(msva[3]);
+  arma::mat V = as<arma::mat>(msva[0]);
+  arma::mat A = as<arma::mat>(msva[1]);
   
   /* Second iteration */
   msva = ogk_step(V);
-  arma::mat cov = as<arma::mat>(msva[0]);
-  arma::vec center = as<arma::mat>(msva[1]);
-  cov = A * cov * A.t();
-  center = A * center;
-  arma::mat Z = as<arma::mat>(msva[2]);
+  //arma::mat cov = as<arma::mat>(msva[0]);
+  //arma::vec center = as<arma::mat>(msva[1]);
+  //cov = A * cov * A.t();
+  //center = A * center;
+  arma::mat Z = as<arma::mat>(msva[0]);
   
   Rcpp::List musigma;
   musigma = scaleTau2_matrix(Z);
@@ -246,6 +247,8 @@ Rcpp::List covRob_cpp(arma::mat& x){
   wcenter.zeros();
   arma::mat wcov(p, p);
   wcov.zeros();
+  arma::vec wdist;
+  wdist.zeros();
   for (int i = 0; i < n; i++){
     if (d[i] < qq){
       wt[i] = 1;
@@ -255,9 +258,7 @@ Rcpp::List covRob_cpp(arma::mat& x){
       }
     } 
   }
-  for (int j = 0; j < p; j++){
-    wcenter[j] /= sum_wt;
-  }
+  wcenter /= sum_wt;
   for (int i = 0; i < p; i ++){
     for (int j = i; j < p; j++){
       for (int k = 0; k < n; k++){
@@ -268,7 +269,7 @@ Rcpp::List covRob_cpp(arma::mat& x){
       wcov.at(j, i) = wcov.at(i, j); 
     }
   }
-  arma::vec wdist;
+  
   wdist = getDistance_cpp(x, wcenter, wcov);
   return Rcpp::List::create(Rcpp::Named("cov") = wcov,
                             Rcpp::Named("center") = wcenter,

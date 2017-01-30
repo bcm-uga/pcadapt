@@ -22,13 +22,11 @@
 #'
 cmpt.stat = function(x, s.v, K, method, nSNP, maf, min.maf){
   zsc <- x
-  zsc[maf < min.maf] <- NA
+  zsc[maf < min.maf, ] <- NA
   if (method == "mahalanobis"){
     xstat <- array(NA, nSNP)
     not.nan <- which(!is.na(apply(abs(zsc), 1, sum)))
     if (K > 1){
-      #ogk <- rrcov::CovOgk(zsc)
-      #xstat[not.nan] <- as.vector(getDistance(ogk))
       ogk <- covRob_cpp(zsc[not.nan, ])
       xstat[not.nan] <- as.vector(ogk$dist)
     } else if (K == 1){

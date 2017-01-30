@@ -25,6 +25,6 @@ lrfunc_file(filename, scores, nIND, nSNP, K, ploidy, min_maf)
 The returned value is a Rcpp::List containing the multiple linear regression z-scores, the minor allele frequencies and the number of missing values for each genetic marker.
 }
 \description{
-\code{lrfunc_file} performs the multiple linear regression of the genotype matrix on the scores when the genotype matrix is stored in an external file.
+\code{lrfunc_arma} performs the multiple linear regression of the genotype matrix on the scores when the genotype matrix is stored in an external file.
 }
 

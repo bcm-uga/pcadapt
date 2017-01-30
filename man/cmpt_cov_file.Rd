@@ -17,6 +17,6 @@ cmpt_cov_file(path, min_maf, ploidy)
 The returned value is a Rcpp::List containing the covariance matrix, the number of individuals and the number of genetic markers present in the data.
 }
 \description{
-\code{cmpt_cov_file} computes the covariance matrix of a genotype matrix when the genotype matrix is stored in an external file.
+\code{cmpt_cov_arma} computes the covariance matrix of a genotype matrix when the genotype matrix is stored in an external file.
 }
 
