@@ -64,7 +64,7 @@ read.pcadapt <- function(input,
     } else if (type == "pcadapt"){
       aux <- input
     } else if (type == "pool"){
-      fs <- get_size_file(input)
+      fs <- get_size_cpp(input)
       nPOOL <- fs[1]
       if (missing(ploidy)){
         warning("Argument ploidy is missing, proceeding with 'ploidy = 2'...")

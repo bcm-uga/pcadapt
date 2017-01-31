@@ -42,14 +42,14 @@
 #' @export
 #'
 pcadapt = function(input, 
-                      K = 5, 
-                      method = "mahalanobis", 
-                      data.type = "genotype",
-                      min.maf = 0.05, 
-                      ploidy = 2,
-                      output.filename,
-                      clean.files,
-                      transpose){
+                   K = 5, 
+                   method = "mahalanobis", 
+                   data.type = "genotype",
+                   min.maf = 0.05, 
+                   ploidy = 2,
+                   output.filename,
+                   clean.files,
+                   transpose){
   
   #############################################
   ########## test arguments and init ##########
@@ -90,9 +90,9 @@ pcadapt = function(input,
     }
     
     local <- NULL
-    if ((class(input) == "character") && (!file.exists(input))){
-      stop(paste0("File ",input," does not exist."))
-    } else if ((class(input) == "character") && (file.exists(input))){
+    if (is.character(input) && !file.exists(input)){
+      stop(paste0("File ", input, " does not exist."))
+    } else if (is.character(input) && file.exists(input)){
       local <- FALSE
     }
     
@@ -102,9 +102,19 @@ pcadapt = function(input,
     
     if (!is.null(local)){
       if (local == FALSE){
-        obj.pca <- create.pcadapt.file(input = as.matrix(input), K = K, method = method, min.maf = min.maf, ploidy = ploidy)
+        obj.pca <- create.pcadapt(input = input, 
+                                  K = K,
+                                  method = method, 
+                                  min.maf = min.maf, 
+                                  ploidy = ploidy, 
+                                  type = 0)
       } else if (local == TRUE){
-        obj.pca <- create.pcadapt.matrix(input = as.matrix(input), K = K, method = method, min.maf = min.maf, ploidy = ploidy)
+        obj.pca <- create.pcadapt(input = as.matrix(input), 
+                                  K = K, 
+                                  method = method, 
+                                  min.maf = min.maf, 
+                                  ploidy = ploidy, 
+                                  type = 1)
       }
       class(obj.pca) <- 'pcadapt'
       attr(obj.pca, "K") <- K
@@ -113,10 +123,10 @@ pcadapt = function(input,
       attr(obj.pca, "min.maf") <- min.maf
       return(obj.pca)
     } else {
-      return(0)
+      stop("Input class not supported.")
     }
   } else if (data.type == "pool"){
-    stop('Option data.type="pool" is deprecated. Use the read.pcadapt function instead. Usage:\n 
+    stop('Option data.type = "pool" is deprecated. Use the read.pcadapt function instead. Usage:\n 
          geno <- read.pcadapt(input, type = "pool", local.env = TRUE)\n
          x <- pcadapt(input = geno, K = ...)')
     stop('')

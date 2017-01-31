@@ -6,104 +6,6 @@
 
 using namespace Rcpp;
 
-// get_size_file
-NumericVector get_size_file(std::string path);
-RcppExport SEXP pcadapt_get_size_file(SEXP pathSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type path(pathSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_size_file(path));
-    return rcpp_result_gen;
-END_RCPP
-}
-// cmpt_cov_file
-Rcpp::List cmpt_cov_file(std::string path, double min_maf, int ploidy);
-RcppExport SEXP pcadapt_cmpt_cov_file(SEXP pathSEXP, SEXP min_mafSEXP, SEXP ploidySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type path(pathSEXP);
-    Rcpp::traits::input_parameter< double >::type min_maf(min_mafSEXP);
-    Rcpp::traits::input_parameter< int >::type ploidy(ploidySEXP);
-    rcpp_result_gen = Rcpp::wrap(cmpt_cov_file(path, min_maf, ploidy));
-    return rcpp_result_gen;
-END_RCPP
-}
-// lrfunc_file
-Rcpp::List lrfunc_file(std::string filename, arma::mat& scores, int nIND, int nSNP, int K, int ploidy, double min_maf);
-RcppExport SEXP pcadapt_lrfunc_file(SEXP filenameSEXP, SEXP scoresSEXP, SEXP nINDSEXP, SEXP nSNPSEXP, SEXP KSEXP, SEXP ploidySEXP, SEXP min_mafSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type scores(scoresSEXP);
-    Rcpp::traits::input_parameter< int >::type nIND(nINDSEXP);
-    Rcpp::traits::input_parameter< int >::type nSNP(nSNPSEXP);
-    Rcpp::traits::input_parameter< int >::type K(KSEXP);
-    Rcpp::traits::input_parameter< int >::type ploidy(ploidySEXP);
-    Rcpp::traits::input_parameter< double >::type min_maf(min_mafSEXP);
-    rcpp_result_gen = Rcpp::wrap(lrfunc_file(filename, scores, nIND, nSNP, K, ploidy, min_maf));
-    return rcpp_result_gen;
-END_RCPP
-}
-// sample_geno_file
-NumericVector sample_geno_file(std::string input, std::string output, double ploidy, IntegerVector sample_size);
-RcppExport SEXP pcadapt_sample_geno_file(SEXP inputSEXP, SEXP outputSEXP, SEXP ploidySEXP, SEXP sample_sizeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type input(inputSEXP);
-    Rcpp::traits::input_parameter< std::string >::type output(outputSEXP);
-    Rcpp::traits::input_parameter< double >::type ploidy(ploidySEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type sample_size(sample_sizeSEXP);
-    rcpp_result_gen = Rcpp::wrap(sample_geno_file(input, output, ploidy, sample_size));
-    return rcpp_result_gen;
-END_RCPP
-}
-// tAA_cpp
-NumericMatrix tAA_cpp(NumericMatrix x, int nrow, int ncol);
-RcppExport SEXP pcadapt_tAA_cpp(SEXP xSEXP, SEXP nrowSEXP, SEXP ncolSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type nrow(nrowSEXP);
-    Rcpp::traits::input_parameter< int >::type ncol(ncolSEXP);
-    rcpp_result_gen = Rcpp::wrap(tAA_cpp(x, nrow, ncol));
-    return rcpp_result_gen;
-END_RCPP
-}
-// cmpt_cov_matrix
-Rcpp::List cmpt_cov_matrix(NumericMatrix input, double min_maf, int ploidy);
-RcppExport SEXP pcadapt_cmpt_cov_matrix(SEXP inputSEXP, SEXP min_mafSEXP, SEXP ploidySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type input(inputSEXP);
-    Rcpp::traits::input_parameter< double >::type min_maf(min_mafSEXP);
-    Rcpp::traits::input_parameter< int >::type ploidy(ploidySEXP);
-    rcpp_result_gen = Rcpp::wrap(cmpt_cov_matrix(input, min_maf, ploidy));
-    return rcpp_result_gen;
-END_RCPP
-}
-// lrfunc_matrix
-Rcpp::List lrfunc_matrix(NumericMatrix Geno, NumericMatrix scores, int nIND, int nSNP, int K, int ploidy, double min_maf);
-RcppExport SEXP pcadapt_lrfunc_matrix(SEXP GenoSEXP, SEXP scoresSEXP, SEXP nINDSEXP, SEXP nSNPSEXP, SEXP KSEXP, SEXP ploidySEXP, SEXP min_mafSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type Geno(GenoSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type scores(scoresSEXP);
-    Rcpp::traits::input_parameter< int >::type nIND(nINDSEXP);
-    Rcpp::traits::input_parameter< int >::type nSNP(nSNPSEXP);
-    Rcpp::traits::input_parameter< int >::type K(KSEXP);
-    Rcpp::traits::input_parameter< int >::type ploidy(ploidySEXP);
-    Rcpp::traits::input_parameter< double >::type min_maf(min_mafSEXP);
-    rcpp_result_gen = Rcpp::wrap(lrfunc_matrix(Geno, scores, nIND, nSNP, K, ploidy, min_maf));
-    return rcpp_result_gen;
-END_RCPP
-}
 // colMedian_cpp
 NumericVector colMedian_cpp(arma::mat& x);
 RcppExport SEXP pcadapt_colMedian_cpp(SEXP xSEXP) {
@@ -254,6 +156,66 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type ploidy(ploidySEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type sample_size(sample_sizeSEXP);
     rcpp_result_gen = Rcpp::wrap(sample_geno_matrix(freq, ploidy, sample_size));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_size_cpp
+NumericVector get_size_cpp(std::string filename);
+RcppExport SEXP pcadapt_get_size_cpp(SEXP filenameSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_size_cpp(filename));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cmpt_cov_cpp
+Rcpp::List cmpt_cov_cpp(std::string filename, arma::mat& xmatrix, double min_maf, int ploidy, int type);
+RcppExport SEXP pcadapt_cmpt_cov_cpp(SEXP filenameSEXP, SEXP xmatrixSEXP, SEXP min_mafSEXP, SEXP ploidySEXP, SEXP typeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type xmatrix(xmatrixSEXP);
+    Rcpp::traits::input_parameter< double >::type min_maf(min_mafSEXP);
+    Rcpp::traits::input_parameter< int >::type ploidy(ploidySEXP);
+    Rcpp::traits::input_parameter< int >::type type(typeSEXP);
+    rcpp_result_gen = Rcpp::wrap(cmpt_cov_cpp(filename, xmatrix, min_maf, ploidy, type));
+    return rcpp_result_gen;
+END_RCPP
+}
+// lrfunc_cpp
+Rcpp::List lrfunc_cpp(std::string filename, arma::mat& xmatrix, arma::mat& scores, int nIND, int nSNP, int K, int ploidy, double min_maf, arma::vec& sigma, int type);
+RcppExport SEXP pcadapt_lrfunc_cpp(SEXP filenameSEXP, SEXP xmatrixSEXP, SEXP scoresSEXP, SEXP nINDSEXP, SEXP nSNPSEXP, SEXP KSEXP, SEXP ploidySEXP, SEXP min_mafSEXP, SEXP sigmaSEXP, SEXP typeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type xmatrix(xmatrixSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type scores(scoresSEXP);
+    Rcpp::traits::input_parameter< int >::type nIND(nINDSEXP);
+    Rcpp::traits::input_parameter< int >::type nSNP(nSNPSEXP);
+    Rcpp::traits::input_parameter< int >::type K(KSEXP);
+    Rcpp::traits::input_parameter< int >::type ploidy(ploidySEXP);
+    Rcpp::traits::input_parameter< double >::type min_maf(min_mafSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< int >::type type(typeSEXP);
+    rcpp_result_gen = Rcpp::wrap(lrfunc_cpp(filename, xmatrix, scores, nIND, nSNP, K, ploidy, min_maf, sigma, type));
+    return rcpp_result_gen;
+END_RCPP
+}
+// sample_geno_file
+NumericVector sample_geno_file(std::string input, std::string output, double ploidy, IntegerVector sample_size);
+RcppExport SEXP pcadapt_sample_geno_file(SEXP inputSEXP, SEXP outputSEXP, SEXP ploidySEXP, SEXP sample_sizeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type input(inputSEXP);
+    Rcpp::traits::input_parameter< std::string >::type output(outputSEXP);
+    Rcpp::traits::input_parameter< double >::type ploidy(ploidySEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type sample_size(sample_sizeSEXP);
+    rcpp_result_gen = Rcpp::wrap(sample_geno_file(input, output, ploidy, sample_size));
     return rcpp_result_gen;
 END_RCPP
 }
