@@ -2,8 +2,6 @@
 
 // [[Rcpp::depends("RcppArmadillo")]]
 
-//add comment
-
 using namespace Rcpp;
 
 #define NA 9
