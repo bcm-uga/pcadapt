@@ -30,4 +30,3 @@ converted.}
 format readable by \code{pcadapt}. You may find the converted file in the
 current directory.
 }
-

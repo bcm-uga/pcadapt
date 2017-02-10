@@ -21,4 +21,3 @@ pvalqq.plotting(x, K, threshold)
 
 }
 \keyword{internal}
-

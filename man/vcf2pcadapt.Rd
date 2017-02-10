@@ -22,4 +22,3 @@ under the format required by \code{pcadapt}.
 ## see also ?pcadapt for examples
 
 }
-

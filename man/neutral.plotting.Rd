@@ -19,4 +19,3 @@ neutral.plotting(x, K)
 
 }
 \keyword{internal}
-

@@ -23,4 +23,3 @@ The returned value is a Rcpp::List containing the covariance matrix, the number 
 \description{
 \code{cmpt_cov_cpp} computes the covariance matrix of a genotype matrix.
 }
-

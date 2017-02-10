@@ -29,4 +29,3 @@ The returned value is a list containing the test statistics and the associated p
 \description{
 \code{cmpt.stat} returns chi-squared distributed statistics.
 }
-

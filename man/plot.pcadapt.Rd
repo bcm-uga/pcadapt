@@ -44,4 +44,3 @@ the estimated distribution for the neutral SNPs.
 ## see ?pcadapt for examples
 
 }
-

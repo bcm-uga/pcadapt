@@ -15,4 +15,3 @@ The returned value is a numeric vector of length 2.
 \description{
 \code{get_size_cpp} returns the number of genetic markers and the number of individuals present in the data.
 }
-

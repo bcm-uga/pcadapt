@@ -56,4 +56,3 @@ before accounting for genomic inflation factor. When using \code{method="mahalan
 a chi-squared distribution with \code{K} degrees of freedom. When using \code{method="componentwise"}, the z-scores should follow a chi-squared distribution with \code{1}
 degree of freedom. For Pool-seq data, \code{pcadapt} provides p-values based on the Mahalanobis distance for each SNP.
 }
-

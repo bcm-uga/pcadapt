@@ -17,4 +17,3 @@ manhattan.plotting(x, K)
 
 }
 \keyword{internal}
-

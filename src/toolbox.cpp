@@ -47,6 +47,77 @@ NumericVector get_size_cpp(std::string filename){
   return file_size;
 }
 
+//' @export
+//' 
+// [[Rcpp::export]]
+NumericVector cmpt_minor_af(arma::mat &xmatrix, int ploidy){
+  double mean = 0;
+  double var = 0;
+  double af = 0;
+  int na = 0;
+  int nSNP = xmatrix.n_rows;
+  int nIND = xmatrix.n_cols;
+  NumericVector maf(nSNP);
+  for (int i = 0; i < nSNP; i++){
+    var = 0;
+    mean = 0;
+    na = 0;
+    for (int j = 0; j < nIND; j++){
+      if ((xmatrix.at(i, j) != NA) && (!NumericVector::is_na(xmatrix.at(i, j)))){
+        mean += xmatrix.at(i, j); 
+      } else {
+        na += 1;
+      }
+    }
+    if (na >= nIND){
+      Rcpp::stop("Detected SNP with missing values only, please remove it before proceeding."); 
+    } else {
+      mean /= (nIND - na);
+      if (ploidy == 2){
+        af = mean / 2.0;
+        var = 2.0 * af * (1 - af);
+      } else {
+        af = mean;
+        var = af * (1 - af);
+      }
+      if (af > 0.5){
+        double tmp_af = af;
+        af = 1.0 - tmp_af;
+      }
+    }
+    maf[i] = af;
+  }
+  return(maf);
+}
+
+
+//' @export
+//' 
+// [[Rcpp::export]]
+arma::mat scale_geno(arma::mat &xmatrix, int ploidy, arma::vec maf, arma::vec keep_or_not){
+  int nSNP = xmatrix.n_rows;
+  int nIND = xmatrix.n_cols;
+  int nSNP_kept = arma::sum(keep_or_not);
+  arma::mat geno(nSNP_kept, nIND);
+  int current_position = 0;
+  double mean = 0.0;
+  double sd = 1.0;
+  for (int i = 0; i < nSNP; i++){
+    mean = 0.0;
+    sd = 1.0;
+    if (keep_or_not[i] == 1){
+      mean = arma::mean(xmatrix.row(i));
+      mean /= ploidy;
+      sd = sqrt(ploidy * maf[i] * (1 - maf[i]));
+      geno.row(current_position) = xmatrix.row(i);
+      geno.row(current_position) -= mean;
+      geno.row(current_position) /= sd;
+      current_position++;
+    }
+  }
+  return(geno);
+}
+
 int scale_rows(FILE *xfile, arma::mat &xmatrix, arma::mat &xs, int nIND, int ploidy, double min_maf, int begin, int end, double *maf_i, arma::vec &missing_i, int type){
   double mean = 0;
   double var = 0;
@@ -175,7 +246,7 @@ Rcpp::List cmpt_cov_cpp(std::string filename, arma::mat &xmatrix, double min_maf
   }
   Rprintf("Number of SNPs: %i\n", nSNP);
   Rprintf("Number of individuals: %i\n", nIND);  
-  
+  arma::mat scale_geno(nSNP, nIND);
   int unused_na = 0;
   double unused_maf = 0;
   int blocksize = 14;
@@ -193,7 +264,7 @@ Rcpp::List cmpt_cov_cpp(std::string filename, arma::mat &xmatrix, double min_maf
     if (type == 0){
       unused_na = scale_rows(xfile, xmatrix, geno, nIND, ploidy, min_maf, 0, b, &unused_maf, unused_missing, 0);
     } else if (type == 1){
-      unused_na = scale_rows(xfile, xmatrix, geno, nIND, ploidy, min_maf, i, (i + b), &unused_maf, unused_missing, 1);  
+      unused_na = scale_rows(xfile, xmatrix, geno, nIND, ploidy, min_maf, i, (i + b), &unused_maf, unused_missing, 1); 
     }
     add_to_cov_cpp(xcov, geno);
   }
@@ -207,6 +278,59 @@ Rcpp::List cmpt_cov_cpp(std::string filename, arma::mat &xmatrix, double min_maf
                             Rcpp::Named("nSNP") = nSNP);
 }
 
+//' Compute the loadings
+//' 
+//' \code{cmpt_loadings} returns the loadings.
+//' 
+//' @param filename a character string specifying the name of the file to be processed with \code{pcadapt}.
+//' @param xmatrix a genotype matrix.
+//' @param scores a matrix containing the scores.
+//' @param nIND an integer specifying the number of individuals present in the data.
+//' @param nSNP an integer specifying the number of genetic markers present in the data.
+//' @param K an integer specifying the number of principal components to retain.
+//' @param ploidy an integer specifying the ploidy of the individuals.
+//' @param min_maf a value between \code{0} and \code{0.45} specifying the threshold of minor allele frequencies above which p-values are computed.
+//' @param sigma a numeric vector.
+//' @param type an integer specifying the input type.
+//' 
+//' @return The returned value is a matrix containing the loadings.
+//' 
+//' @export
+//' 
+// [[Rcpp::export]]
+arma::mat cmpt_loadings(std::string filename, arma::mat &xmatrix, arma::mat &scores, int nIND, int nSNP, int K, int ploidy, double min_maf, arma::vec &sigma, int type){
+  FILE *xfile;
+  
+  if (type == 0){
+    xfile = fopen(filename.c_str(), "r");
+  } 
+  
+  double maf_i;
+  double unused_missing = 0.0;
+  
+  arma::mat GenoRowScale(1, nIND, arma::fill::zeros);
+  arma::mat V(nSNP, K, arma::fill::zeros);
+  arma::vec unused_check_na(nIND, arma::fill::zeros);
+  
+  for (int i = 0; i < nSNP; i++){
+    if (type == 0){
+      unused_missing = scale_rows(xfile, xmatrix, GenoRowScale, nIND, ploidy, min_maf, 0, 1, &maf_i, unused_check_na, 0);  
+    } else if (type == 1){
+      unused_missing = scale_rows(xfile, xmatrix, GenoRowScale, nIND, ploidy, min_maf, i, i + 1, &maf_i, unused_check_na, 1);  
+    }
+    
+    V.row(i) = GenoRowScale * scores;
+    for (int k = 0; k < K; k++){
+      V(i, k) *= sqrt(nSNP / sigma[k]);
+    }
+  }
+  
+  if (type == 0){
+    fclose(xfile);
+  } 
+  
+  return(V);
+}
 
 //' Linear regression
 //' 

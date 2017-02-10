@@ -19,4 +19,3 @@ the genetic marker and the principal component the most correlated with it.
 ## see also ?pcadapt for examples
 
 }
-

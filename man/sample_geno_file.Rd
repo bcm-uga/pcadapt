@@ -21,4 +21,3 @@ The returned value is a numeric vector of length 2.
 \description{
 \code{sample_geno_file} sample genotypes based on observed allelic frequencies.
 }
-
