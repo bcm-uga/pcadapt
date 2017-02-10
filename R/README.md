@@ -1,6 +1,6 @@
 # Introgression
 
-### Example with populus: (https://www.dropbox.com/sh/85cgelc1af1s7az/AABvFT5W7NrDd_cXQHTff2Pma?dl=0)
+### Example with populus: https://www.dropbox.com/sh/85cgelc1af1s7az/AABvFT5W7NrDd_cXQHTff2Pma?dl=0
 
 ```
 filename <- "populus3pops.pcadapt" 
