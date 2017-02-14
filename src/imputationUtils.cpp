@@ -6,10 +6,19 @@
 
 using namespace Rcpp;
 
+//' Median
+//' 
+//' \code{median_row_i} computes the median of a specific row.
+//' 
+//' @param x a genotype matrix.
+//' @param i an integer.
+//' 
+//' @return The returned value is a real number.
+//' 
 //' @export
 //' 
 // [[Rcpp::export]]
-double median_row_i(arma::mat &x, int i){
+double median_row_i(const arma::mat &x, int i){
   int nIND = x.n_cols;
   NumericVector row_i;
   for (int j = 0; j < nIND; j++){
@@ -20,10 +29,20 @@ double median_row_i(arma::mat &x, int i){
   return(Rcpp::median(row_i));
 }
 
+//' Median
+//' 
+//' \code{median_per_pop} computes the median of each population for a specific row.
+//' 
+//' @param x a genotype matrix.
+//' @param lab a vector of integers.
+//' @param i an integer.
+//' 
+//' @return The returned value is a real-valued vector.
+//' 
 //' @export
 //' 
 // [[Rcpp::export]]
-NumericVector median_per_pop(arma::mat &x, arma::vec &lab, arma::vec &pop, int i){
+NumericVector median_per_pop(const arma::mat &x, const arma::vec &lab, const arma::vec &pop, int i){
   int nIND = x.n_cols;
   int nPOP = pop.n_elem;
   NumericVector out(nPOP);
@@ -41,10 +60,19 @@ NumericVector median_per_pop(arma::mat &x, arma::vec &lab, arma::vec &pop, int i
   return(out);
 }
 
+//' Skip or discard 
+//' 
+//' \code{check_row} returns 0 for markers to be kept and 1 for markers to be discarded.
+//' 
+//' @param x a genotype matrix.
+//' @param i an integer.
+//' 
+//' @return The returned value is an integer.
+//' 
 //' @export
 //' 
 // [[Rcpp::export]]
-int check_row(arma::mat &x, int i){
+int check_row(const arma::mat &x, int i){
   int ncol = x.n_cols;  
   double fe = NA_REAL;
   int counter_fe = 0;
@@ -52,14 +80,14 @@ int check_row(arma::mat &x, int i){
   int skip = 0;
   while ((NumericVector::is_na(fe) || (fe == NA)) && (counter_fe < ncol)){
     fe = x(i, counter_fe);
-    counter_fe ++;
+    counter_fe++;
   } 
   if (counter_fe == ncol){
     skip = 1;
   } else {
     for (int j = 0; j < ncol; j++){
       if ((x(i, j) == fe) || (NumericVector::is_na(x(i, j))) || (x(i, j) == NA)){
-        count ++;
+        count++;
       }
     }
     if (count == ncol){
@@ -69,10 +97,19 @@ int check_row(arma::mat &x, int i){
   return(skip);
 }
 
+//' Genotype matrix imputation
+//' 
+//' \code{impute_geno} imputes values based on the median per row.
+//' 
+//' @param x a genotype matrix.
+//' 
+//' @return The returned value is a list containing the imputed genotype matrix and a vector indicating which markers 
+//' have to be discarded.
+//' 
 //' @export
 //' 
 // [[Rcpp::export]]
-Rcpp::List impute_geno(arma::mat &x){
+Rcpp::List impute_geno(const arma::mat &x){
   int nrow = x.n_rows;
   int ncol = x.n_cols;
   arma::vec skip(nrow);
@@ -89,10 +126,21 @@ Rcpp::List impute_geno(arma::mat &x){
                             Rcpp::Named("skip") = skip);
 }
 
+//' Genotype matrix imputation
+//' 
+//' \code{impute_geno_pop} imputes values based on the median per row and per population.
+//' 
+//' @param x a genotype matrix.
+//' @param lab a vector of integers.
+//' @param pop a vector of integers.
+//' 
+//' @return The returned value is a list containing the imputed genotype matrix and a vector indicating which markers 
+//' have to be discarded.
+//' 
 //' @export
 //' 
 // [[Rcpp::export]]
-Rcpp::List impute_geno_pop(arma::mat &x, arma::vec &lab, arma::vec &pop){
+Rcpp::List impute_geno_pop(const arma::mat &x, const arma::vec &lab, const arma::vec &pop){
   int nSNP = x.n_rows;
   int nIND = x.n_cols;
   int nPOP = pop.n_elem;
