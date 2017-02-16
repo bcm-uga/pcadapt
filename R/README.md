@@ -20,7 +20,7 @@ pop <- as.character(read.table(popfile)[, 1])
 ## Getting a complete dataset
 
 Our method requires complete datasets, in case your data contain missing values, the package provides a function to impute missing values in two different ways, depending on whether individual labels are known or not.
-In our example, `pop` contains the population information, i.e `pop[i]` returns the name of the population which the `i`-th individual belongs to. 
+In our example, `pop` contains the population information, i.e `pop[i]` returns the name of the population for which the `i`-th individual belongs to. 
 
 ```{r}
 head(pop)
