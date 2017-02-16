@@ -421,60 +421,6 @@ Rcpp::List lrfunc_cpp(std::string filename, arma::mat &xmatrix, arma::mat &score
                             Rcpp::Named("missing") = missing);
 }
 
-//' Loadings
-//' 
-//' \code{cmpt_loadings} computes the loadings.
-//' 
-//' @param filename a character string specifying the name of the file to be processed with \code{pcadapt}.
-//' @param xmatrix a genotype matrix.
-//' @param scores a matrix containing the scores.
-//' @param nIND an integer specifying the number of individuals present in the data.
-//' @param nSNP an integer specifying the number of genetic markers present in the data.
-//' @param K an integer specifying the number of principal components to retain.
-//' @param ploidy an integer specifying the ploidy of the individuals.
-//' @param min_maf a value between \code{0} and \code{0.45} specifying the threshold of minor allele frequencies above which p-values are computed.
-//' @param sigma a numeric vector.
-//' @param type an integer specifying the input type.
-//' 
-//' @return The returned value is a Rcpp::List containing the multiple linear regression z-scores, the minor allele frequencies and the number of missing values for each genetic marker.
-//' 
-//' @export
-//' 
-// [[Rcpp::export]]
-arma::vec cmpt_loadings(std::string filename, arma::mat &xmatrix, arma::mat &scores, int nIND, int nSNP, int K, int ploidy, double min_maf, arma::vec &sigma, int type){
-  FILE *xfile;
-  
-  if (type == 0){
-    xfile = fopen(filename.c_str(), "r");
-  } 
-  
-  arma::mat GenoRowScale(1, nIND, arma::fill::zeros);
-  arma::mat V(nSNP, K, arma::fill::zeros);
-  double maf_i;
-  
-  double unused_missing = 0;
-  arma::vec check_na(nIND, arma::fill::zeros);
-  
-  for (int i = 0; i < nSNP; i++){
-    if (type == 0){
-      unused_missing = scale_rows(xfile, xmatrix, GenoRowScale, nIND, ploidy, min_maf, 0, 1, &maf_i, check_na, 0);  
-    } else if (type == 1){
-      unused_missing = scale_rows(xfile, xmatrix, GenoRowScale, nIND, ploidy, min_maf, i, i + 1, &maf_i, check_na, 1);  
-    }
-    V.row(i) = GenoRowScale * scores;
-    for (int k = 0; k < K; k++){
-      V(i, k) *= sqrt(nSNP / sigma[k]);
-    }
-  }
-  
-  if (type == 0){
-    fclose(xfile);
-  } 
-  
-  return(V);
-}
-
-
 //' Sample genotype matrix from pooled samples
 //' 
 //' \code{sample_geno_file} sample genotypes based on observed allelic frequencies.

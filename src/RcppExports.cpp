@@ -541,26 +541,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// cmpt_loadings
-arma::vec cmpt_loadings(std::string filename, arma::mat& xmatrix, arma::mat& scores, int nIND, int nSNP, int K, int ploidy, double min_maf, arma::vec& sigma, int type);
-RcppExport SEXP pcadapt_cmpt_loadings(SEXP filenameSEXP, SEXP xmatrixSEXP, SEXP scoresSEXP, SEXP nINDSEXP, SEXP nSNPSEXP, SEXP KSEXP, SEXP ploidySEXP, SEXP min_mafSEXP, SEXP sigmaSEXP, SEXP typeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type xmatrix(xmatrixSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type scores(scoresSEXP);
-    Rcpp::traits::input_parameter< int >::type nIND(nINDSEXP);
-    Rcpp::traits::input_parameter< int >::type nSNP(nSNPSEXP);
-    Rcpp::traits::input_parameter< int >::type K(KSEXP);
-    Rcpp::traits::input_parameter< int >::type ploidy(ploidySEXP);
-    Rcpp::traits::input_parameter< double >::type min_maf(min_mafSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type sigma(sigmaSEXP);
-    Rcpp::traits::input_parameter< int >::type type(typeSEXP);
-    rcpp_result_gen = Rcpp::wrap(cmpt_loadings(filename, xmatrix, scores, nIND, nSNP, K, ploidy, min_maf, sigma, type));
-    return rcpp_result_gen;
-END_RCPP
-}
 // sample_geno_file
 NumericVector sample_geno_file(std::string input, std::string output, double ploidy, IntegerVector sample_size);
 RcppExport SEXP pcadapt_sample_geno_file(SEXP inputSEXP, SEXP outputSEXP, SEXP ploidySEXP, SEXP sample_sizeSEXP) {

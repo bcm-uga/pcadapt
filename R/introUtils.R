@@ -22,8 +22,9 @@ impute.pcadapt = function(input, pop, skip.return = FALSE){
   if (missing(pop)){
     y <- impute_geno(dt)   
   } else if (!missing(pop)){
-    pop.names <- pcadapt::get.pop.names(pop)
-    y <- impute_geno_pop(dt, pop, pop.names)   
+    pop.int <- assign.int.labels(pop)
+    pop.names <- pcadapt::get.pop.names(pop.int)
+    y <- impute_geno_pop(dt, pop.int, pop.names)   
   }
   if (skip.return == FALSE){
     return(list(x = y$x[y$skip == 0, ]))  
