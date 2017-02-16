@@ -1,10 +1,5 @@
 # Introgression
 
----
-title: "Introgression"
-output: html_document
----
-
 ```{r}
 require(pcadapt)
 require(data.table)
