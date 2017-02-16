@@ -175,6 +175,29 @@ lrfunc_cpp <- function(filename, xmatrix, scores, nIND, nSNP, K, ploidy, min_maf
     .Call('pcadapt_lrfunc_cpp', PACKAGE = 'pcadapt', filename, xmatrix, scores, nIND, nSNP, K, ploidy, min_maf, sigma, type)
 }
 
+#' Loadings
+#' 
+#' \code{cmpt_loadings} computes the loadings.
+#' 
+#' @param filename a character string specifying the name of the file to be processed with \code{pcadapt}.
+#' @param xmatrix a genotype matrix.
+#' @param scores a matrix containing the scores.
+#' @param nIND an integer specifying the number of individuals present in the data.
+#' @param nSNP an integer specifying the number of genetic markers present in the data.
+#' @param K an integer specifying the number of principal components to retain.
+#' @param ploidy an integer specifying the ploidy of the individuals.
+#' @param min_maf a value between \code{0} and \code{0.45} specifying the threshold of minor allele frequencies above which p-values are computed.
+#' @param sigma a numeric vector.
+#' @param type an integer specifying the input type.
+#' 
+#' @return The returned value is a Rcpp::List containing the multiple linear regression z-scores, the minor allele frequencies and the number of missing values for each genetic marker.
+#' 
+#' @export
+#' 
+cmpt_loadings <- function(filename, xmatrix, scores, nIND, nSNP, K, ploidy, min_maf, sigma, type) {
+    .Call('pcadapt_cmpt_loadings', PACKAGE = 'pcadapt', filename, xmatrix, scores, nIND, nSNP, K, ploidy, min_maf, sigma, type)
+}
+
 #' Sample genotype matrix from pooled samples
 #' 
 #' \code{sample_geno_file} sample genotypes based on observed allelic frequencies.
