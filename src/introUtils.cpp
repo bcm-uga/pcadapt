@@ -6,78 +6,30 @@
 
 using namespace Rcpp;
 
-//' @export
-//' 
-// [[Rcpp::export]]
-arma::mat cmpt_global_pca(arma::mat &geno, arma::mat &V, arma::vec &sigma){
-  int nIND = geno.n_rows;
-  int nSNP = V.n_rows;
-  int K = V.n_cols;
-  arma::mat u(nIND, K);
-  u.zeros();
-  for (int j = 0; j < nIND; j++){
-    for (int k = 0; k < K; k++){
-      for (int i = 0; i < nSNP; i++){
-        u(j, k) += geno(j, i) * V(i, k) / sigma[k];
-      }
-    }
-  }
-  return(u);
-}
 
+//' Number of individuals in a specific population
+//' 
+//' \code{get_nb_ind} returns the number of individuals in a specific population.
+//' 
+//' @param lab a vector of integers.
+//' @param anc an integer.
+//' 
+//' @return The returned value is an integer.
+//' 
 //' @export
 //' 
 // [[Rcpp::export]]
-arma::mat cmpt_local_pca(arma::mat &geno, arma::mat &V, arma::vec &sigma, int beg, int end){
-  int nIND = geno.n_rows;
-  int nSNP = V.n_rows;
-  int K = V.n_cols;
-  arma::mat uloc(nIND, K);
-  uloc.zeros();
-  double cst = (double) nSNP;
-  cst /=  (double) end - beg;
-  for (int j = 0; j < nIND; j++){
-    for (int k = 0; k < K; k++){
-      for (int i = beg; i < end; i++){
-        uloc(j, k) += geno(j, i) * V(i, k) * cst / sigma[k];
-      }
-    }
-  }
-  return(uloc);
-}
-
-//' @export
-//' 
-// [[Rcpp::export]]
-void updt_local_scores(arma::mat &u, arma::mat &geno, arma::mat &V, arma::vec &sigma, int window_size, int i){
-  int nIND = geno.n_rows; 
-  int nSNP = geno.n_cols;
-  int K = u.n_cols;
-  int beg = i - 1;
-  int end = i + window_size; 
-  double cst = (double) nSNP;
-  cst /=  (double) end - beg;
-  for (int j = 0; j < nIND; j++){
-    for (int k = 0; k < K; k++){
-      u(j, k) -= (geno.at(j, beg) * V(beg, k)) * cst / sigma[k];
-      u(j, k) += (geno.at(j, end) * V(end, k)) * cst / sigma[k];
-    }
-  }
-}
-
-//' @export
-//' 
-// [[Rcpp::export]]
-int get_nb_ind(arma::vec lab, int anc){
+int get_nb_ind(const arma::vec &lab, const int anc){
   int n = lab.n_elem;
   int c = 0;
   for (int i = 0; i < n; i++){
     if (lab[i] == anc){
-      c += 1;  
+      c++;  
     }
   }
   return(c);
 }
+
 
 //' @export
 //' 
@@ -107,7 +59,14 @@ Rcpp::List cmpt_centroids(arma::mat u, arma::vec lab, int anc1, int anc2){
 //' @export
 //' 
 // [[Rcpp::export]]
-void cmpt_transformation(arma::mat &uloc, arma::mat &uglob, arma::vec &lab, int ancstrl1, int ancstrl2, arma::vec &s, arma::vec &dloc, arma::vec &dglob){
+void cmpt_transformation(arma::mat &uloc, 
+                         arma::mat &uglob, 
+                         const arma::vec &lab, 
+                         const int ancstrl1, 
+                         const int ancstrl2, 
+                         arma::vec &s, 
+                         arma::vec &dloc, 
+                         arma::vec &dglob){
   Rcpp::List mglob = cmpt_centroids(uglob, lab, ancstrl1, ancstrl2);
   Rcpp::List mloc = cmpt_centroids(uloc, lab, ancstrl1, ancstrl2);
   arma::vec mglob1 = mglob[0];
@@ -122,7 +81,6 @@ void cmpt_transformation(arma::mat &uloc, arma::mat &uglob, arma::vec &lab, int 
   for (int k = 0; k < K; k++){
     s[k] = fabs(mglob1[k] - mglob2[k]) / fabs(mloc1[k] - mloc2[k]);
   }
-  
 }
 
 //' @export
@@ -141,15 +99,106 @@ arma::mat rescale_local_pca(arma::mat &u, arma::vec &s, arma::vec &dep_loc, arma
   return(usc);
 }
 
+
+//' Global Principal Component Analysis
+//' 
+//' \code{cmpt_global_pca} computes the scores using all genetic markers.
+//' 
+//' @param geno a genotype matrix.
+//' @param V a loading matrix.
+//' @param sigma a vector of singular values.
+//' 
+//' @return The returned value is a matrix of scores.
+//' 
+//' @export
+//' 
+// [[Rcpp::export]]
+arma::mat cmpt_global_pca(const arma::mat &geno, const arma::mat &V, const arma::vec &sigma){
+  int nIND = geno.n_rows;
+  int nSNP = V.n_rows;
+  int K = V.n_cols;
+  arma::mat u(nIND, K, arma::fill::zeros);
+  for (int j = 0; j < nIND; j++){
+    for (int k = 0; k < K; k++){
+      for (int i = 0; i < nSNP; i++){
+        u(j, k) += geno(j, i) * V(i, k) / sigma[k];
+      }
+    }
+  }
+  return(u);
+}
+
+//' Local Principal Component Analysis
+//' 
+//' \code{cmpt_local_pca} computes the scores using a subset of genetic markers.
+//' 
+//' @param geno a genotype matrix.
+//' @param V a loading matrix.
+//' @param sigma a vector of singular values.
+//' @param beg an integer specifying the first marker to be included.
+//' @param end an integer specifying the first marker to be excluded.
+//' 
+//' @return The returned value is a matrix of scores.
+//' 
+//' @export
+//' 
+// [[Rcpp::export]]
+arma::mat cmpt_local_pca(const arma::mat &geno, const arma::mat &V, const arma::vec &sigma, const int beg, const int end){
+  // [beg, end) 
+  int nIND = geno.n_rows;
+  int nSNP = V.n_rows;
+  int K = V.n_cols;
+  arma::mat u(nIND, K, arma::fill::zeros);
+  double cst = (double) nSNP / (end - beg);
+  for (int j = 0; j < nIND; j++){
+    for (int k = 0; k < K; k++){
+      for (int i = beg; i < end; i++){
+        u(j, k) += geno(j, i) * V(i, k) * cst / sigma[k];
+      }
+    }
+  }
+  return(u);
+}
+
+//' Update local Principal Component Analysis
+//' 
+//' \code{updt_local_scores} computes the scores using a subset of genetic markers.
+//' 
+//' @param u a score matrix.
+//' @param geno a genotype matrix.
+//' @param V a loading matrix.
+//' @param sigma a vector of singular values.
+//' @param beg an integer specifying the first marker to be included.
+//' @param end an integer specifying the first marker to be excluded.
+//' 
+//' @return The returned value is a score matrix.
+//' 
+//' @export
+//' 
+// [[Rcpp::export]]
+void updt_local_scores(arma::mat &u, const arma::mat &geno, const arma::mat &V, const arma::vec &sigma, const int beg, const int end){
+  int nIND = geno.n_rows; 
+  int nSNP = geno.n_cols;
+  int K = u.n_cols;
+  double cst = (double) nSNP / (end - beg);
+  for (int j = 0; j < nIND; j++){
+    for (int k = 0; k < K; k++){
+      u(j, k) -= (geno.at(j, beg - 1) * V(beg - 1, k)) * cst / sigma[k];
+      u(j, k) += (geno.at(j, end) * V(end, k)) * cst / sigma[k];
+    }
+  }
+}
+
+
 //' @export
 //' 
 // [[Rcpp::export]]
 double cmpt_window_stat(arma::mat &uloc,
                         arma::mat &uglob, 
-                        int direction, 
-                        arma::vec &lab, 
-                        int adm, 
-                        int axis){
+                        const int direction, 
+                        const arma::vec &lab, 
+                        const int adm, 
+                        const int axis){
   int nIND = uglob.n_rows; 
   double stat = 0;
   if (direction == 1){
@@ -196,6 +245,37 @@ arma::vec get_rank(const arma::vec &v_temp){
 //' @export
 //' 
 // [[Rcpp::export]]
+arma::vec get_axis(arma::mat &uglob, const arma::vec &lab, const int anc1, const int anc2){
+  Rcpp::List res = cmpt_centroids(uglob, lab, anc1, anc2);
+  arma::vec m1 = res[0];
+  arma::vec m2 = res[1];
+  return(m2 - m1);
+}
+
+//' @export
+//' 
+// [[Rcpp::export]]
+double cmpt_directional_stat(arma::mat &uloc,
+                             arma::mat &uglob, 
+                             int direction, 
+                             arma::vec &lab, 
+                             int adm, 
+                             int axis,
+                             arma::vec &ax){
+  int nIND = uglob.n_rows; 
+  double stat = 0;
+  for (int j = 0; j < nIND; j++){
+    if (lab[j] == adm){
+      stat += arma::dot(uloc.row(j) - uglob.row(j), ax);
+    }
+  }
+  return(stat);
+}
+
+
+//' @export
+//' 
+// [[Rcpp::export]]
 double cmpt_window_wilcoxon(arma::mat &uloc,
                             arma::mat &uglob, 
                             int direction, 
@@ -237,39 +317,36 @@ double cmpt_window_wilcoxon(arma::mat &uloc,
 //' @export
 //' 
 // [[Rcpp::export]]
-arma::vec cmpt_all_stat(arma::mat &geno, 
-                        arma::mat &V, 
-                        arma::vec &sigma, 
-                        int window_size,  
-                        int direction, 
-                        arma::vec lab, 
-                        int ancstrl1,
-                        int ancstrl2,
-                        int adm, 
-                        int axis){
+arma::vec cmpt_all_stat(const arma::mat &geno, 
+                        const arma::mat &V, 
+                        const arma::vec &sigma, 
+                        const int window_size,  
+                        const int direction, 
+                        const arma::vec lab, 
+                        const int ancstrl1,
+                        const int ancstrl2,
+                        const int adm, 
+                        const int axis){
   int nSNP = geno.n_cols;
   int nIND = geno.n_rows;
   int K = V.n_cols;
-  arma::vec s(K);
-  s.zeros();
-  arma::vec dglob(K);
-  dglob.zeros();
-  arma::vec dloc(K);
-  dloc.zeros();
-  
+  arma::vec s(K, arma::fill::zeros);
+  arma::vec dglob(K, arma::fill::zeros);
+  arma::vec dloc(K, arma::fill::zeros);
+  arma::mat usc(nIND, K, arma::fill::zeros);
   arma::vec stat(nSNP);
   
   arma::mat uglob = cmpt_global_pca(geno, V, sigma);
   arma::mat uloc = cmpt_local_pca(geno, V, sigma, 0, window_size);
-  cmpt_transformation(uloc, uglob, lab, ancstrl1, ancstrl2, s, dloc, dglob);
   
-  arma::mat usc(nIND, K);
+  cmpt_transformation(uloc, uglob, lab, ancstrl1, ancstrl2, s, dloc, dglob);
   usc = rescale_local_pca(uloc, s, dglob, dloc);
   stat[0] = cmpt_window_stat(usc, uglob, direction, lab, adm, axis);
   //stat[0] = cmpt_window_wilcoxon(usc, uglob, direction, lab, adm, axis);
   
   for (int i = 1; i < (nSNP - window_size); i++){
-    updt_local_scores(uloc, geno, V, sigma, window_size, i);
+    //uloc = cmpt_local_pca(geno, V, sigma, i, i + window_size);
+    updt_local_scores(uloc, geno, V, sigma, i, i + window_size);
     cmpt_transformation(uloc, uglob, lab, ancstrl1, ancstrl2, s, dloc, dglob);
     usc = rescale_local_pca(uloc, s, dloc, dglob);
     stat[i] = cmpt_window_stat(usc, uglob, direction, lab, adm, axis);
