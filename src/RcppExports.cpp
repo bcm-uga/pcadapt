@@ -68,57 +68,14 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// cmpt_global_pca
-arma::mat cmpt_global_pca(arma::mat& geno, arma::mat& V, arma::vec& sigma);
-RcppExport SEXP pcadapt_cmpt_global_pca(SEXP genoSEXP, SEXP VSEXP, SEXP sigmaSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat& >::type geno(genoSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type V(VSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type sigma(sigmaSEXP);
-    rcpp_result_gen = Rcpp::wrap(cmpt_global_pca(geno, V, sigma));
-    return rcpp_result_gen;
-END_RCPP
-}
-// cmpt_local_pca
-arma::mat cmpt_local_pca(arma::mat& geno, arma::mat& V, arma::vec& sigma, int beg, int end);
-RcppExport SEXP pcadapt_cmpt_local_pca(SEXP genoSEXP, SEXP VSEXP, SEXP sigmaSEXP, SEXP begSEXP, SEXP endSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat& >::type geno(genoSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type V(VSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type sigma(sigmaSEXP);
-    Rcpp::traits::input_parameter< int >::type beg(begSEXP);
-    Rcpp::traits::input_parameter< int >::type end(endSEXP);
-    rcpp_result_gen = Rcpp::wrap(cmpt_local_pca(geno, V, sigma, beg, end));
-    return rcpp_result_gen;
-END_RCPP
-}
-// updt_local_scores
-void updt_local_scores(arma::mat& u, arma::mat& geno, arma::mat& V, arma::vec& sigma, int window_size, int i);
-RcppExport SEXP pcadapt_updt_local_scores(SEXP uSEXP, SEXP genoSEXP, SEXP VSEXP, SEXP sigmaSEXP, SEXP window_sizeSEXP, SEXP iSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat& >::type u(uSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type geno(genoSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type V(VSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type sigma(sigmaSEXP);
-    Rcpp::traits::input_parameter< int >::type window_size(window_sizeSEXP);
-    Rcpp::traits::input_parameter< int >::type i(iSEXP);
-    updt_local_scores(u, geno, V, sigma, window_size, i);
-    return R_NilValue;
-END_RCPP
-}
 // get_nb_ind
-int get_nb_ind(arma::vec lab, int anc);
+int get_nb_ind(const arma::vec& lab, const int anc);
 RcppExport SEXP pcadapt_get_nb_ind(SEXP labSEXP, SEXP ancSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::vec >::type lab(labSEXP);
-    Rcpp::traits::input_parameter< int >::type anc(ancSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type lab(labSEXP);
+    Rcpp::traits::input_parameter< const int >::type anc(ancSEXP);
     rcpp_result_gen = Rcpp::wrap(get_nb_ind(lab, anc));
     return rcpp_result_gen;
 END_RCPP
@@ -138,15 +95,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // cmpt_transformation
-void cmpt_transformation(arma::mat& uloc, arma::mat& uglob, arma::vec& lab, int ancstrl1, int ancstrl2, arma::vec& s, arma::vec& dloc, arma::vec& dglob);
+void cmpt_transformation(arma::mat& uloc, arma::mat& uglob, const arma::vec& lab, const int ancstrl1, const int ancstrl2, arma::vec& s, arma::vec& dloc, arma::vec& dglob);
 RcppExport SEXP pcadapt_cmpt_transformation(SEXP ulocSEXP, SEXP uglobSEXP, SEXP labSEXP, SEXP ancstrl1SEXP, SEXP ancstrl2SEXP, SEXP sSEXP, SEXP dlocSEXP, SEXP dglobSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::mat& >::type uloc(ulocSEXP);
     Rcpp::traits::input_parameter< arma::mat& >::type uglob(uglobSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type lab(labSEXP);
-    Rcpp::traits::input_parameter< int >::type ancstrl1(ancstrl1SEXP);
-    Rcpp::traits::input_parameter< int >::type ancstrl2(ancstrl2SEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type lab(labSEXP);
+    Rcpp::traits::input_parameter< const int >::type ancstrl1(ancstrl1SEXP);
+    Rcpp::traits::input_parameter< const int >::type ancstrl2(ancstrl2SEXP);
     Rcpp::traits::input_parameter< arma::vec& >::type s(sSEXP);
     Rcpp::traits::input_parameter< arma::vec& >::type dloc(dlocSEXP);
     Rcpp::traits::input_parameter< arma::vec& >::type dglob(dglobSEXP);
@@ -168,18 +125,61 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cmpt_global_pca
+arma::mat cmpt_global_pca(const arma::mat& geno, const arma::mat& V, const arma::vec& sigma);
+RcppExport SEXP pcadapt_cmpt_global_pca(SEXP genoSEXP, SEXP VSEXP, SEXP sigmaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type geno(genoSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type V(VSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type sigma(sigmaSEXP);
+    rcpp_result_gen = Rcpp::wrap(cmpt_global_pca(geno, V, sigma));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cmpt_local_pca
+arma::mat cmpt_local_pca(const arma::mat& geno, const arma::mat& V, const arma::vec& sigma, const int beg, const int end);
+RcppExport SEXP pcadapt_cmpt_local_pca(SEXP genoSEXP, SEXP VSEXP, SEXP sigmaSEXP, SEXP begSEXP, SEXP endSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type geno(genoSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type V(VSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< const int >::type beg(begSEXP);
+    Rcpp::traits::input_parameter< const int >::type end(endSEXP);
+    rcpp_result_gen = Rcpp::wrap(cmpt_local_pca(geno, V, sigma, beg, end));
+    return rcpp_result_gen;
+END_RCPP
+}
+// updt_local_scores
+void updt_local_scores(arma::mat& u, const arma::mat& geno, const arma::mat& V, const arma::vec& sigma, const int beg, const int end);
+RcppExport SEXP pcadapt_updt_local_scores(SEXP uSEXP, SEXP genoSEXP, SEXP VSEXP, SEXP sigmaSEXP, SEXP begSEXP, SEXP endSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type u(uSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type geno(genoSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type V(VSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< const int >::type beg(begSEXP);
+    Rcpp::traits::input_parameter< const int >::type end(endSEXP);
+    updt_local_scores(u, geno, V, sigma, beg, end);
+    return R_NilValue;
+END_RCPP
+}
 // cmpt_window_stat
-double cmpt_window_stat(arma::mat& uloc, arma::mat& uglob, int direction, arma::vec& lab, int adm, int axis);
+double cmpt_window_stat(arma::mat& uloc, arma::mat& uglob, const int direction, const arma::vec& lab, const int adm, const int axis);
 RcppExport SEXP pcadapt_cmpt_window_stat(SEXP ulocSEXP, SEXP uglobSEXP, SEXP directionSEXP, SEXP labSEXP, SEXP admSEXP, SEXP axisSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::mat& >::type uloc(ulocSEXP);
     Rcpp::traits::input_parameter< arma::mat& >::type uglob(uglobSEXP);
-    Rcpp::traits::input_parameter< int >::type direction(directionSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type lab(labSEXP);
-    Rcpp::traits::input_parameter< int >::type adm(admSEXP);
-    Rcpp::traits::input_parameter< int >::type axis(axisSEXP);
+    Rcpp::traits::input_parameter< const int >::type direction(directionSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type lab(labSEXP);
+    Rcpp::traits::input_parameter< const int >::type adm(admSEXP);
+    Rcpp::traits::input_parameter< const int >::type axis(axisSEXP);
     rcpp_result_gen = Rcpp::wrap(cmpt_window_stat(uloc, uglob, direction, lab, adm, axis));
     return rcpp_result_gen;
 END_RCPP
@@ -212,21 +212,21 @@ BEGIN_RCPP
 END_RCPP
 }
 // cmpt_all_stat
-arma::vec cmpt_all_stat(arma::mat& geno, arma::mat& V, arma::vec& sigma, int window_size, int direction, arma::vec lab, int ancstrl1, int ancstrl2, int adm, int axis);
+arma::vec cmpt_all_stat(const arma::mat& geno, const arma::mat& V, const arma::vec& sigma, const int window_size, const int direction, const arma::vec lab, const int ancstrl1, const int ancstrl2, const int adm, const int axis);
 RcppExport SEXP pcadapt_cmpt_all_stat(SEXP genoSEXP, SEXP VSEXP, SEXP sigmaSEXP, SEXP window_sizeSEXP, SEXP directionSEXP, SEXP labSEXP, SEXP ancstrl1SEXP, SEXP ancstrl2SEXP, SEXP admSEXP, SEXP axisSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat& >::type geno(genoSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type V(VSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type sigma(sigmaSEXP);
-    Rcpp::traits::input_parameter< int >::type window_size(window_sizeSEXP);
-    Rcpp::traits::input_parameter< int >::type direction(directionSEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type lab(labSEXP);
-    Rcpp::traits::input_parameter< int >::type ancstrl1(ancstrl1SEXP);
-    Rcpp::traits::input_parameter< int >::type ancstrl2(ancstrl2SEXP);
-    Rcpp::traits::input_parameter< int >::type adm(admSEXP);
-    Rcpp::traits::input_parameter< int >::type axis(axisSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type geno(genoSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type V(VSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< const int >::type window_size(window_sizeSEXP);
+    Rcpp::traits::input_parameter< const int >::type direction(directionSEXP);
+    Rcpp::traits::input_parameter< const arma::vec >::type lab(labSEXP);
+    Rcpp::traits::input_parameter< const int >::type ancstrl1(ancstrl1SEXP);
+    Rcpp::traits::input_parameter< const int >::type ancstrl2(ancstrl2SEXP);
+    Rcpp::traits::input_parameter< const int >::type adm(admSEXP);
+    Rcpp::traits::input_parameter< const int >::type axis(axisSEXP);
     rcpp_result_gen = Rcpp::wrap(cmpt_all_stat(geno, V, sigma, window_size, direction, lab, ancstrl1, ancstrl2, adm, axis));
     return rcpp_result_gen;
 END_RCPP

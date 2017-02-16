@@ -5,3 +5,6 @@
 *.o
 *.dll
 docs/*
+imputed.pcadapt
+populus3pops.pcadapt
+populus3pops.pop
