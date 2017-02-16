@@ -7,7 +7,7 @@ require(data.table)
 
 # Introgression
 
-### Download the populus dataset here set the working directory to where the data have been downloaded: https://www.dropbox.com/sh/85cgelc1af1s7az/AABvFT5W7NrDd_cXQHTff2Pma?dl=0
+### Download the populus dataset here and set the working directory to where the data have been downloaded: https://www.dropbox.com/sh/85cgelc1af1s7az/AABvFT5W7NrDd_cXQHTff2Pma?dl=0
 
 
 ```{r}
