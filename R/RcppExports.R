@@ -79,6 +79,18 @@ impute_geno_pop <- function(x, lab, pop) {
     .Call('pcadapt_impute_geno_pop', PACKAGE = 'pcadapt', x, lab, pop)
 }
 
+fJ_cpp <- function(n) {
+    .Call('pcadapt_fJ_cpp', PACKAGE = 'pcadapt', n)
+}
+
+fcnt_cpp <- function(a) {
+    .Call('pcadapt_fcnt_cpp', PACKAGE = 'pcadapt', a)
+}
+
+pca_rotation <- function(a, b) {
+    .Call('pcadapt_pca_rotation', PACKAGE = 'pcadapt', a, b)
+}
+
 #' Number of individuals in a specific population
 #' 
 #' \code{get_nb_ind} returns the number of individuals in a specific population.
@@ -102,14 +114,14 @@ cmpt_centroids <- function(u, lab, anc1, anc2) {
 
 #' @export
 #' 
-cmpt_transformation <- function(uloc, uglob, lab, ancstrl1, ancstrl2, s, dloc, dglob) {
-    invisible(.Call('pcadapt_cmpt_transformation', PACKAGE = 'pcadapt', uloc, uglob, lab, ancstrl1, ancstrl2, s, dloc, dglob))
+cmpt_transformation <- function(uloc, uglob, lab, ancstrl1, ancstrl2, s, dloc, dglob, R) {
+    invisible(.Call('pcadapt_cmpt_transformation', PACKAGE = 'pcadapt', uloc, uglob, lab, ancstrl1, ancstrl2, s, dloc, dglob, R))
 }
 
 #' @export
 #' 
-rescale_local_pca <- function(u, s, dep_loc, dep_glob) {
-    .Call('pcadapt_rescale_local_pca', PACKAGE = 'pcadapt', u, s, dep_loc, dep_glob)
+rescale_local_pca <- function(u, s, dep_loc, dep_glob, R) {
+    .Call('pcadapt_rescale_local_pca', PACKAGE = 'pcadapt', u, s, dep_loc, dep_glob, R)
 }
 
 #' Global Principal Component Analysis

@@ -6,6 +6,60 @@
 
 using namespace Rcpp;
 
+// [[Rcpp::export]]
+arma::mat fJ_cpp(int n){
+  arma::mat zz(n, n);
+  zz.ones();
+  zz /= n;
+  arma::mat H(n, n);
+  H.eye();
+  H -= zz;
+  return(H);
+}
+
+// [[Rcpp::export]]
+arma::mat fcnt_cpp(arma::mat &a){
+  int nrow = a.n_rows;
+  arma::mat aa = fJ_cpp(nrow);
+  return(aa * a);
+}
+
+// [[Rcpp::export]]
+arma::mat pca_rotation(arma::mat &a, arma::mat &b){
+  arma::mat fcnt_a = fcnt_cpp(a);
+  arma::mat fcnt_b = fcnt_cpp(b);
+  arma::mat x = fcnt_a.t() * fcnt_b;
+  arma::mat u;
+  arma::vec s;
+  arma::mat v;
+  svd(u, s, v, x);
+  arma::mat R;
+  R = v * u.t();
+  arma::cx_vec eigval_v;
+  arma::cx_mat eigvec_v;
+  arma::cx_vec eigval_u;
+  arma::cx_mat eigvec_u;
+  eig_gen(eigval_v, eigvec_v, v);
+  eig_gen(eigval_u, eigvec_u, u);
+  arma::cx_double tmp_v = prod(eigval_v);
+  arma::cx_double tmp_u = prod(eigval_u);
+  double chk1 = real(tmp_v);
+  double chk2 = real(tmp_u);
+  if ((chk1 < 0) && (chk2 > 0)) {
+    for (int i = 0; i < v.n_rows; i++){
+      v(i, v.n_cols - 1) *= (-1);
+    }
+    R = v * u.t();
+  }
+  if ((chk2 < 0) && (chk1 > 0)) {
+    for (int i = 0; i < u.n_rows; i++){
+      u(i, u.n_cols - 1) *= (-1);
+    }
+    R = v * u.t();
+  }
+  return(R);
+}
+
 
 //' Number of individuals in a specific population
 //' 
@@ -66,7 +120,8 @@ void cmpt_transformation(arma::mat &uloc,
                          const int ancstrl2, 
                          arma::vec &s, 
                          arma::vec &dloc, 
-                         arma::vec &dglob){
+                         arma::vec &dglob, 
+                         arma::mat &R){
   Rcpp::List mglob = cmpt_centroids(uglob, lab, ancstrl1, ancstrl2);
   Rcpp::List mloc = cmpt_centroids(uloc, lab, ancstrl1, ancstrl2);
   arma::vec mglob1 = mglob[0];
@@ -86,7 +141,7 @@ void cmpt_transformation(arma::mat &uloc,
 //' @export
 //' 
 // [[Rcpp::export]]
-arma::mat rescale_local_pca(arma::mat &u, arma::vec &s, arma::vec &dep_loc, arma::vec &dep_glob){
+arma::mat rescale_local_pca(arma::mat &u, arma::vec &s, arma::vec &dep_loc, arma::vec &dep_glob, arma::mat &R){
   int nIND = u.n_rows;
   int K = u.n_cols;
   arma::mat usc(nIND, K);
@@ -96,6 +151,7 @@ arma::mat rescale_local_pca(arma::mat &u, arma::vec &s, arma::vec &dep_loc, arma
       usc(j, k) = usc(j, k) + dep_glob[k] - dep_loc[k];
     }
   }
+  usc *= R;
   return(usc);
 }
 
@@ -335,7 +391,9 @@ arma::vec cmpt_all_stat(const arma::mat &geno,
   arma::mat usc(nIND, K, arma::fill::zeros);
   arma::vec stat(nSNP, arma::fill::zeros);
   arma::vec ax(K, arma::fill::zeros);
-
+  
+  arma::mat R(K, K); // ROTATION CORRECTION
+  R.eye();
   
   arma::mat uglob = cmpt_global_pca(geno, V, sigma);
   arma::mat uloc = cmpt_local_pca(geno, V, sigma, 0, window_size);
@@ -345,25 +403,17 @@ arma::vec cmpt_all_stat(const arma::mat &geno,
     ax[k] *= axis[k];   
   }
   
-  Rprintf("x = %f, y = %f \n", ax[0], ax[1]);
-  //ax[0] = 1.0;
-  //ax[1] = 0.0;
-  
-  cmpt_transformation(uloc, uglob, lab, ancstrl1, ancstrl2, s, dloc, dglob);
-  usc = rescale_local_pca(uloc, s, dglob, dloc);
-  //stat[0] = cmpt_window_stat(usc, uglob, direction, lab, adm, axis);
-  stat[0] = 0.1;
-  //stat[0] = cmpt_window_wilcoxon(usc, uglob, direction, lab, adm, axis);
-  
+  cmpt_transformation(uloc, uglob, lab, ancstrl1, ancstrl2, s, dloc, dglob, R);
+  usc = rescale_local_pca(uloc, s, dglob, dloc, R);
   for (int i = 1; i < (nSNP - window_size); i++){
-    //uloc = cmpt_local_pca(geno, V, sigma, i, i + window_size);
     updt_local_scores(uloc, geno, V, sigma, i, i + window_size);
-    cmpt_transformation(uloc, uglob, lab, ancstrl1, ancstrl2, s, dloc, dglob);
-    usc = rescale_local_pca(uloc, s, dloc, dglob);
+    cmpt_transformation(uloc, uglob, lab, ancstrl1, ancstrl2, s, dloc, dglob, R);
+    usc = rescale_local_pca(uloc, s, dloc, dglob, R);
     stat[i] = cmpt_directional_stat(usc, uglob, lab, adm, ax);
     //stat[i] = cmpt_window_stat(usc, uglob, direction, lab, adm, axis);
     //stat[i] = cmpt_window_wilcoxon(usc, uglob, direction, lab, adm, axis);
   }
+  stat[0] = stat[1];
   for (int i = (nSNP - window_size); i < nSNP; i++){
     stat[i] = stat[nSNP - window_size - 1];
   }
