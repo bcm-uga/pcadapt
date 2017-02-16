@@ -1,4 +1,16 @@
-impute.pcadapt = function(input, lab, skip.return = FALSE){
+#' Genotype matrix imputation
+#'
+#' \code{impute.pcadapt} imputes values based on medians.
+#'
+#' @param input a genotype matrix or a character string specifying the name of the file to be imputed.
+#' @param pop a vector of integers or strings specifying which subpopulation the individuals belong to.
+#' @param skip.return a logical value specifying whether the list of markers to be skipped should be returned or not. 
+#' 
+#' @return The returned value is a list containing the test statistics and the associated p-values.
+#' 
+#' @export
+#'
+impute.pcadapt = function(input, pop, skip.return = FALSE){
   if (is.character(input)){
     dt <- as.matrix(data.table::fread(input))
   } else if (class(input) %in% c("array", "matrix", "data.frame")){
@@ -6,22 +18,23 @@ impute.pcadapt = function(input, lab, skip.return = FALSE){
   } else {
     stop("Wrong argument.")
   }
-  pop <- pcadapt::get.pop.names(lab)
-  if (missing(lab)){
+  
+  if (missing(pop)){
     y <- impute_geno(dt)   
-  } else if (!missing(lab)){
-    y <- impute_geno_pop(dt, lab, pop)   
+  } else if (!missing(pop)){
+    pop.names <- pcadapt::get.pop.names(pop)
+    y <- impute_geno_pop(dt, pop, pop.names)   
   }
   if (skip.return == FALSE){
     return(list(x = y$x[y$skip == 0, ]))  
   } else if (skip.return == TRUE){
-    return(list(x = y$x[y$skip == 0, ]), ix = which(y$skip == 1)) 
+    return(list(x = y$x[y$skip == 0, ], ix = which(y$skip == 1))) 
   }
 }
 
 scan.intro = function(input, 
                       K = 2, 
-                      lab, 
+                      pop, 
                       min.maf = 0.05, 
                       ploidy = 2, 
                       window.size = 1000, 
@@ -31,7 +44,7 @@ scan.intro = function(input,
                       admxd,
                       impute = FALSE){
   if (impute){
-    geno <- (impute.pcadapt(input = input, lab = lab))$x
+    geno <- (impute.pcadapt(input = input, pop = pop))$x
   } else if (!impute){
     if (is.character(input)){
       geno <- as.matrix(data.table::fread(input))
@@ -50,7 +63,6 @@ scan.intro = function(input,
   cat("DONE\n")
   cat("Performing PCA...\n")
   obj.svd <- svd.pcadapt(input = geno, K = K, min.maf = min.maf, ploidy = ploidy, type = 1)
-  flush.console()
   cat("DONE\n")
   cat("Computing the statistics...")
   stat <- cmpt_all_stat(geno = scaled.geno, 
@@ -58,7 +70,7 @@ scan.intro = function(input,
                         sigma = obj.svd$d, 
                         window_size = window.size,  
                         direction = 0, 
-                        lab = lab, 
+                        lab = pop, 
                         ancstrl1 = ancstrl.1,
                         ancstrl2 = ancstrl.2,
                         adm = admxd, 
