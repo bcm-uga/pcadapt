@@ -19,4 +19,3 @@ lfmm2pcadapt(input, output)
 
 }
 \keyword{internal}
-

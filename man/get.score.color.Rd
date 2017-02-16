@@ -20,4 +20,3 @@ pre-defined population with the same color when using the option
 
 }
 \keyword{internal}
-

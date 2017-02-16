@@ -18,4 +18,3 @@ get.output.name(name, ext = "pcadapt")
 ## see also ?pcadapt for examples
 
 }
-

@@ -17,4 +17,3 @@ of Maronna and Zamar.
 ## see also ?pcadapt for examples
 
 }
-

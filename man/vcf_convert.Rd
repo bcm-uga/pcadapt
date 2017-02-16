@@ -21,4 +21,3 @@ vcf_convert(string_geno, output, allele_sep)
 
 }
 \keyword{internal}
-

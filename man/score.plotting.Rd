@@ -25,4 +25,3 @@ Default value is set to \code{2}.}
 
 }
 \keyword{internal}
-

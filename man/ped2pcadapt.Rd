@@ -19,4 +19,3 @@ ped2pcadapt(input, output)
 
 }
 \keyword{internal}
-

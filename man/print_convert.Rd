@@ -24,4 +24,3 @@ print_convert(input, output, M, N, pool)
 ## see also ?pcadapt for examples
 
 }
-

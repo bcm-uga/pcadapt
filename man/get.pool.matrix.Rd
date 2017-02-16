@@ -17,4 +17,3 @@ get.pool.matrix(data, pop, ploidy = 2)
 \code{get.pool.matrix} creates a pooled-sequenced data out of a genotype matrix,
 given the labels of each individuals.
 }
-

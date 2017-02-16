@@ -20,4 +20,3 @@ NB : \code{pcadapt} has to be run on the dataset in order to get an output reada
 
 }
 \keyword{internal}
-
