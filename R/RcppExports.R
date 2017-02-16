@@ -24,7 +24,7 @@ median_row_i <- function(x, i) {
 #' @param lab a vector of integers.
 #' @param i an integer.
 #' 
-#' @return The returned value is a real-valued vector .
+#' @return The returned value is a real-valued vector.
 #' 
 #' @export
 #' 
@@ -32,18 +32,47 @@ median_per_pop <- function(x, lab, pop, i) {
     .Call('pcadapt_median_per_pop', PACKAGE = 'pcadapt', x, lab, pop, i)
 }
 
+#' Skip or discard 
+#' 
+#' \code{check_row} returns 0 for markers to be kept and 1 for markers to be discarded.
+#' 
+#' @param x a genotype matrix.
+#' @param i an integer.
+#' 
+#' @return The returned value is an integer.
+#' 
 #' @export
 #' 
 check_row <- function(x, i) {
     .Call('pcadapt_check_row', PACKAGE = 'pcadapt', x, i)
 }
 
+#' Genotype matrix imputation
+#' 
+#' \code{impute_geno} imputes values based on the median per row.
+#' 
+#' @param x a genotype matrix.
+#' 
+#' @return The returned value is a list containing the imputed genotype matrix and a vector indicating which markers 
+#' have to be discarded.
+#' 
 #' @export
 #' 
 impute_geno <- function(x) {
     .Call('pcadapt_impute_geno', PACKAGE = 'pcadapt', x)
 }
 
+#' Genotype matrix imputation
+#' 
+#' \code{impute_geno_pop} imputes values based on the median per row and per population.
+#' 
+#' @param x a genotype matrix.
+#' @param lab a vector of integers.
+#' @param pop a vector of integers.
+#' 
+#' @return The returned value is a list containing the imputed genotype matrix and a vector indicating which markers 
+#' have to be discarded.
+#' 
 #' @export
 #' 
 impute_geno_pop <- function(x, lab, pop) {
@@ -146,6 +175,18 @@ cmpt_window_stat <- function(uloc, uglob, direction, lab, adm, axis) {
 #' 
 get_rank <- function(v_temp) {
     .Call('pcadapt_get_rank', PACKAGE = 'pcadapt', v_temp)
+}
+
+#' @export
+#' 
+get_axis <- function(uglob, lab, anc1, anc2) {
+    .Call('pcadapt_get_axis', PACKAGE = 'pcadapt', uglob, lab, anc1, anc2)
+}
+
+#' @export
+#' 
+cmpt_directional_stat <- function(usc, uglob, lab, adm, ax) {
+    .Call('pcadapt_cmpt_directional_stat', PACKAGE = 'pcadapt', usc, uglob, lab, adm, ax)
 }
 
 #' @export

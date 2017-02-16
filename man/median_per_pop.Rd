@@ -14,7 +14,7 @@ median_per_pop(x, lab, pop, i)
 \item{i}{an integer.}
 }
 \value{
-The returned value is a real-valued vector .
+The returned value is a real-valued vector.
 }
 \description{
 \code{median_per_pop} computes the median of each population for a specific row.

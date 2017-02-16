@@ -255,18 +255,17 @@ arma::vec get_axis(arma::mat &uglob, const arma::vec &lab, const int anc1, const
 //' @export
 //' 
 // [[Rcpp::export]]
-double cmpt_directional_stat(arma::mat &uloc,
+double cmpt_directional_stat(arma::mat &usc,
                              arma::mat &uglob, 
-                             int direction, 
-                             arma::vec &lab, 
-                             int adm, 
-                             int axis,
+                             const arma::vec &lab, 
+                             const int adm, 
                              arma::vec &ax){
+  
   int nIND = uglob.n_rows; 
   double stat = 0;
   for (int j = 0; j < nIND; j++){
     if (lab[j] == adm){
-      stat += arma::dot(uloc.row(j) - uglob.row(j), ax);
+      stat += arma::dot(usc.row(j) - uglob.row(j), ax);
     }
   }
   return(stat);
@@ -326,7 +325,7 @@ arma::vec cmpt_all_stat(const arma::mat &geno,
                         const int ancstrl1,
                         const int ancstrl2,
                         const int adm, 
-                        const int axis){
+                        const arma::vec axis){
   int nSNP = geno.n_cols;
   int nIND = geno.n_rows;
   int K = V.n_cols;
@@ -334,14 +333,26 @@ arma::vec cmpt_all_stat(const arma::mat &geno,
   arma::vec dglob(K, arma::fill::zeros);
   arma::vec dloc(K, arma::fill::zeros);
   arma::mat usc(nIND, K, arma::fill::zeros);
-  arma::vec stat(nSNP);
+  arma::vec stat(nSNP, arma::fill::zeros);
+  arma::vec ax(K, arma::fill::zeros);
+
   
   arma::mat uglob = cmpt_global_pca(geno, V, sigma);
   arma::mat uloc = cmpt_local_pca(geno, V, sigma, 0, window_size);
+  ax = get_axis(uglob, lab, ancstrl1, ancstrl2);
+  
+  for (int k = 0; k < K; k++){
+    ax[k] *= axis[k];   
+  }
+  
+  Rprintf("x = %f, y = %f \n", ax[0], ax[1]);
+  //ax[0] = 1.0;
+  //ax[1] = 0.0;
   
   cmpt_transformation(uloc, uglob, lab, ancstrl1, ancstrl2, s, dloc, dglob);
   usc = rescale_local_pca(uloc, s, dglob, dloc);
-  stat[0] = cmpt_window_stat(usc, uglob, direction, lab, adm, axis);
+  //stat[0] = cmpt_window_stat(usc, uglob, direction, lab, adm, axis);
+  stat[0] = 0.1;
   //stat[0] = cmpt_window_wilcoxon(usc, uglob, direction, lab, adm, axis);
   
   for (int i = 1; i < (nSNP - window_size); i++){
@@ -349,7 +360,8 @@ arma::vec cmpt_all_stat(const arma::mat &geno,
     updt_local_scores(uloc, geno, V, sigma, i, i + window_size);
     cmpt_transformation(uloc, uglob, lab, ancstrl1, ancstrl2, s, dloc, dglob);
     usc = rescale_local_pca(uloc, s, dloc, dglob);
-    stat[i] = cmpt_window_stat(usc, uglob, direction, lab, adm, axis);
+    stat[i] = cmpt_directional_stat(usc, uglob, lab, adm, ax);
+    //stat[i] = cmpt_window_stat(usc, uglob, direction, lab, adm, axis);
     //stat[i] = cmpt_window_wilcoxon(usc, uglob, direction, lab, adm, axis);
   }
   for (int i = (nSNP - window_size); i < nSNP; i++){

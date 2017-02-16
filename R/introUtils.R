@@ -38,7 +38,6 @@ scan.intro = function(input,
                       min.maf = 0.05, 
                       ploidy = 2, 
                       window.size = 1000, 
-                      direction = 1, 
                       ancstrl.1,
                       ancstrl.2,
                       admxd,
@@ -54,6 +53,16 @@ scan.intro = function(input,
       stop("Wrong argument.")
     }
   }
+  
+  if (length(K) == 1 && K == 1){
+    k = 2
+  } else {
+    k = max(K)
+  }
+  
+  axis.vector <- vector(length = k, mode = "numeric")
+  axis.vector[K] <- 1
+  
   maf <- cmpt_minor_af(xmatrix = geno, ploidy = ploidy)
   geno <- geno[maf >= min.maf, ]
   maf <- maf[maf >= min.maf]
@@ -62,9 +71,10 @@ scan.intro = function(input,
   scaled.geno <- scale(t(geno), center = TRUE, scale = sd) 
   cat("DONE\n")
   cat("Performing PCA...\n")
-  obj.svd <- svd.pcadapt(input = geno, K = K, min.maf = min.maf, ploidy = ploidy, type = 1)
+  obj.svd <- svd.pcadapt(input = geno, K = k, min.maf = min.maf, ploidy = ploidy, type = 1)
   cat("DONE\n")
   cat("Computing the statistics...")
+  
   stat <- cmpt_all_stat(geno = scaled.geno, 
                         V = obj.svd$v, 
                         sigma = obj.svd$d, 
@@ -74,7 +84,7 @@ scan.intro = function(input,
                         ancstrl1 = ancstrl.1,
                         ancstrl2 = ancstrl.2,
                         adm = admxd, 
-                        axis = 0)
+                        axis = axis.vector)
   stat.sd <- sd(stat)
   pval <- pnorm(stat / stat.sd, lower.tail = FALSE)
   flush.console()
