@@ -40,7 +40,7 @@ If this information is lacking, leave the `pop` argument to blank.
 ## Running the scan
 
 ```{r, echo=FALSE}
-stat <- scan.intro(geno, K = 1, d, "Trichocarpa", "Balsamifera", "Hybrid")
+stat <- scan.intro(geno, K = 1, pop, "Trichocarpa", "Balsamifera", "Hybrid")
 ```
 
 ## Analyzing the output
