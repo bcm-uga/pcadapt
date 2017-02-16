@@ -46,7 +46,14 @@ Provide the function with the following arguments:
 - window.size an integer specifying the window size.
 
 ```{r, echo=FALSE}
-stat <- scan.intro(input = geno, K = 1, pop = pop, ancsrtrl.1 = "Trichocarpa", ancstr.2 = "Balsamifera", admxd = "Hybrid", ploidy = 2, window.size = 15000)
+stat <- scan.intro( input = geno, 
+                    K = 1, 
+                    pop = pop, 
+                    ancsrtrl.1 = "Trichocarpa", 
+                    ancstr.2 = "Balsamifera", 
+                    admxd = "Hybrid", 
+                    ploidy = 2, 
+                    window.size = 15000)
 ```
 
 ## Analyzing the output
