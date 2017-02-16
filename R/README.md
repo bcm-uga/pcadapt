@@ -34,11 +34,24 @@ If this information is lacking, leave the `pop` argument to blank.
 
 ## Running the scan
 
+Provide the function with the following arguments:
+
+- input a genotype matrix or a character string specifying the name of the file to be imputed.
+- K a vector of integers specifying the components along which local ancestries may vary.
+- pop a vector of integers or strings specifying which subpopulation the individuals belong to.
+- ancstrl.1 a string specifying the label of the ancestral population genetically closer to the hybrid population.
+- ancstrl.2 a string specifying the label of the ancestral population genetically further from the hybrid population.
+- admxd a string specifying the label of thehybrid population.
+- ploidy an integer specifying the ploidy of the individuals.
+- window.size an integer specifying the window size.
+
 ```{r, echo=FALSE}
-stat <- scan.intro(geno, K = 1, pop, "Trichocarpa", "Balsamifera", "Hybrid")
+stat <- scan.intro(input = geno, K = 1, pop = pop, ancsrtrl.1 = "Trichocarpa", ancstr.2 = "Balsamifera", admxd = "Hybrid", ploidy = 2, window.size = 15000)
 ```
 
 ## Analyzing the output
+
+High peaks correspond to excess of local ancestry from `ancstrl.2`.
 
 ```{r, echo=FALSE}
 subset <- seq(1, length(stat), by = 10) #to display one out of ten points, thus reducing plotting time
