@@ -121,16 +121,16 @@ scan.intro = function(input,
   obj.svd <- svd.pcadapt(input = geno, K = k, min.maf = min.maf, ploidy = ploidy, type = 1)
   cat("Computing the statistics...")
   
-  stat <- cmpt_all_stat(geno = scaled.geno, 
-                        V = obj.svd$v, 
-                        sigma = obj.svd$d, 
-                        window_size = window.size,  
-                        direction = 0, 
-                        lab = pop.int, 
-                        ancstrl1 = ancstrl.int.1,
-                        ancstrl2 = ancstrl.int.2,
-                        adm = admxd.int, 
-                        axis = axis.vector)
+  stat <- cmpt_all_stat(geno = as.matrix(scaled.geno), 
+                        V = as.matrix(obj.svd$v), 
+                        sigma = as.vector(obj.svd$d), 
+                        window_size = as.integer(window.size),  
+                        direction = as.integer(0), 
+                        lab = as.vector(pop.int), 
+                        ancstrl1 = as.integer(ancstrl.int.1),
+                        ancstrl2 = as.integer(ancstrl.int.2),
+                        adm = as.integer(admxd.int), 
+                        axis = as.vector(axis.vector))
   stat.sd <- sd(stat)
   pval <- pnorm(stat / stat.sd, lower.tail = FALSE)
   flush.console()
@@ -138,7 +138,7 @@ scan.intro = function(input,
   return(-log10(pval))
 } 
 
-draw.local.pca = function(geno, V, sigma, uglob, beg, end, pop, i = 1, j = 2, ancstrl1, ancstrl2, adm){
+draw.pca = function(geno, V, sigma, uglob, beg, end, pop, i = 1, j = 2, ancstrl1, ancstrl2, adm){
   uloc <- cmpt_local_pca(geno, V, sigma = sigma, beg = beg, end = end)
   dloc <- vector(length = ncol(V), mode = "numeric")
   dglob <- vector(length = ncol(V), mode = "numeric")

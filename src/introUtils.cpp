@@ -316,7 +316,6 @@ double cmpt_directional_stat(arma::mat &usc,
                              const arma::vec &lab, 
                              const int adm, 
                              arma::vec &ax){
-  
   int nIND = uglob.n_rows; 
   double stat = 0;
   for (int j = 0; j < nIND; j++){
@@ -391,14 +390,12 @@ arma::vec cmpt_all_stat(const arma::mat &geno,
   arma::mat usc(nIND, K, arma::fill::zeros);
   arma::vec stat(nSNP, arma::fill::zeros);
   arma::vec ax(K, arma::fill::zeros);
-  
-  arma::mat R(K, K); // ROTATION CORRECTION
+  arma::mat R(K, K, arma::fill::zeros); // ROTATION CORRECTION
   R.eye();
   
   arma::mat uglob = cmpt_global_pca(geno, V, sigma);
   arma::mat uloc = cmpt_local_pca(geno, V, sigma, 0, window_size);
   ax = get_axis(uglob, lab, ancstrl1, ancstrl2);
-  
   for (int k = 0; k < K; k++){
     ax[k] *= axis[k];   
   }

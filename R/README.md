@@ -5,8 +5,6 @@ require(pcadapt)
 require(data.table)
 ```
 
-# Introgression
-
 ### Download the populus dataset here and set the working directory to where the data have been downloaded: https://www.dropbox.com/sh/85cgelc1af1s7az/AABvFT5W7NrDd_cXQHTff2Pma?dl=0
 
 
@@ -32,6 +30,12 @@ geno <- impute.pcadapt(filename, pop = pop)$x
 
 If this information is lacking, leave the `pop` argument to blank.
 
+*N.B:* Once it is done, we recommend to save the imputed matrix in an external file so you do not need to go through the imputation step every time you open a new `R` session: 
+```{r}
+write.table(geno, "imputed.pcadapt", col.names = FALSE, row.names = FALSE)
+```
+
+
 ## Running the scan
 
 Provide the function with the following arguments:
@@ -49,11 +53,11 @@ Provide the function with the following arguments:
 stat <- scan.intro( input = geno, 
                     K = 1, 
                     pop = pop, 
-                    ancsrtrl.1 = "Trichocarpa", 
-                    ancstr.2 = "Balsamifera", 
+                    ancstrl.1 = "Trichocarpa", 
+                    ancstrl.2 = "Balsamifera", 
                     admxd = "Hybrid", 
                     ploidy = 2, 
-                    window.size = 15000)
+                    window.size = 15000 )
 ```
 
 ## Analyzing the output
