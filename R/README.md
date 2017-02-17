@@ -45,7 +45,7 @@ Provide the function with the following arguments:
 - **pop** a vector of integers or strings specifying which subpopulation the individuals belong to.
 - **ancstrl.1** a string specifying the label of the ancestral population genetically closer to the hybrid population.
 - **ancstrl.2** a string specifying the label of the ancestral population genetically further from the hybrid population.
-- **admxd** a string specifying the label of thehybrid population.
+- **admxd** a string specifying the label of the hybrid population.
 - **ploidy** an integer specifying the ploidy of the individuals.
 - **window.size** an integer specifying the window size.
 
