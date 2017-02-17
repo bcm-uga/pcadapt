@@ -30,7 +30,7 @@ geno <- impute.pcadapt(filename, pop = pop)$x
 
 If this information is lacking, leave the `pop` argument to blank.
 
-*N.B:* Once it is done, we recommend to save the imputed matrix in an external file so you do not need to go through the imputation step every time you open a new `R` session: 
+**N.B:** Once it is done, we recommend to save the imputed matrix in an external file so you do not need to go through the imputation step every time you open a new `R` session: 
 ```{r}
 write.table(geno, "imputed.pcadapt", col.names = FALSE, row.names = FALSE)
 ```
@@ -40,14 +40,14 @@ write.table(geno, "imputed.pcadapt", col.names = FALSE, row.names = FALSE)
 
 Provide the function with the following arguments:
 
-- input a genotype matrix or a character string specifying the name of the file to be imputed.
-- K a vector of integers specifying the components along which local ancestries may vary.
-- pop a vector of integers or strings specifying which subpopulation the individuals belong to.
-- ancstrl.1 a string specifying the label of the ancestral population genetically closer to the hybrid population.
-- ancstrl.2 a string specifying the label of the ancestral population genetically further from the hybrid population.
-- admxd a string specifying the label of thehybrid population.
-- ploidy an integer specifying the ploidy of the individuals.
-- window.size an integer specifying the window size.
+- **input** a genotype matrix or a character string specifying the name of the file to be imputed.
+- **K** a vector of integers specifying the components along which local ancestries may vary.
+- **pop** a vector of integers or strings specifying which subpopulation the individuals belong to.
+- **ancstrl.1** a string specifying the label of the ancestral population genetically closer to the hybrid population.
+- **ancstrl.2** a string specifying the label of the ancestral population genetically further from the hybrid population.
+- **admxd** a string specifying the label of thehybrid population.
+- **ploidy** an integer specifying the ploidy of the individuals.
+- **window.size** an integer specifying the window size.
 
 ```{r, echo=FALSE}
 stat <- scan.intro( input = geno, 
