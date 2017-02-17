@@ -62,7 +62,7 @@ assign.int.labels = function(pop){
 #' @param pop a vector of integers or strings specifying which subpopulation the individuals belong to.
 #' @param ancstrl.1 a string specifying the label of the ancestral population genetically closer to the hybrid population.
 #' @param ancstrl.2 a string specifying the label of the ancestral population genetically further from the hybrid population.
-#' @param admxd a string specifying the label of thehybrid population.
+#' @param admxd a string specifying the label of the hybrid population.
 #' @param ploidy an integer specifying the ploidy of the individuals.
 #' @param window.size an integer specifying the window size.
 
