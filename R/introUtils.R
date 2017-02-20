@@ -135,7 +135,8 @@ scan.intro = function(input,
   pval <- pnorm(stat / stat.sd, lower.tail = FALSE)
   flush.console()
   cat("DONE\n")
-  return(-log10(pval))
+  #return(-log10(pval))
+  return(stat / stat.sd)
 } 
 
 draw.pca = function(geno, V, sigma, uglob, beg, end, pop, i = 1, j = 2, ancstrl1, ancstrl2, adm){
