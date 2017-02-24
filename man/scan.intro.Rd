@@ -18,7 +18,7 @@ scan.intro(input, K = 2, pop, ancstrl.1, ancstrl.2, admxd, min.maf = 0.05,
 
 \item{ancstrl.2}{a string specifying the label of the ancestral population genetically further from the hybrid population.}
 
-\item{admxd}{a string specifying the label of thehybrid population.}
+\item{admxd}{a string specifying the label of the hybrid population.}
 
 \item{ploidy}{an integer specifying the ploidy of the individuals.}
 

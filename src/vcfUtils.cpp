@@ -5,26 +5,30 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 CharacterVector get_geno_char(CharacterVector allele_sep){
   int n_delim = allele_sep.size();  
-  CharacterVector geno_char(n_delim * 4);
+  CharacterVector geno_char(n_delim * 4 + 2);
   for (int k = 0; k < n_delim; k++){
     geno_char[k * 4] = "0" + allele_sep[k] + "0";
     geno_char[k * 4 + 1] = "0" + allele_sep[k] + "1";
     geno_char[k * 4 + 2] = "1" + allele_sep[k] + "0";
     geno_char[k * 4 + 3] = "1" + allele_sep[k] + "1";
   }
+  geno_char[n_delim * 4] = "0";
+  geno_char[n_delim * 4 + 1] = "1";
   return(geno_char);
 }
 
 // [[Rcpp::export]]
 IntegerVector get_geno_int(CharacterVector allele_sep){
   int n_delim = allele_sep.size();  
-  IntegerVector geno_int(n_delim * 4);
+  IntegerVector geno_int(n_delim * 4 + 2);
   for (int k = 0; k < n_delim; k++){
     geno_int[k * 4] = 0;
     geno_int[k * 4 + 1] = 1;
     geno_int[k * 4 + 2] = 1;
     geno_int[k * 4 + 3] = 2;
   }
+  geno_int[n_delim * 4] = 0;
+  geno_int[n_delim * 4 + 1] = 1;
   return(geno_int);
 }
 
@@ -72,8 +76,8 @@ int vcf_convert(CharacterMatrix string_geno, std::string output, CharacterVector
   int nIND = string_geno.ncol();
   int nSNP = string_geno.nrow();
   int n_delim = allele_sep.size();
-  CharacterVector geno_char(n_delim * 4);
-  IntegerVector geno_int(n_delim * 4);
+  CharacterVector geno_char(n_delim * 4 + 2);
+  IntegerVector geno_int(n_delim * 4 + 2);
   geno_char = get_geno_char(allele_sep);
   geno_int = get_geno_int(allele_sep);
   CharacterVector geno_row(nIND);
@@ -92,7 +96,7 @@ int vcf_convert(CharacterMatrix string_geno, std::string output, CharacterVector
     if (skip_bool == 0){
       for (int j = 0; j < nIND; j++){
         count_ij = 0;
-        for (int k = 0; k < (n_delim * 4); k++){
+        for (int k = 0; k < (n_delim * 4 + 2); k++){
           if (string_geno(i, j) == geno_char[k]){
             if (j < (nIND - 1)){
               fprintf(file, "%d ", geno_int[k]);
