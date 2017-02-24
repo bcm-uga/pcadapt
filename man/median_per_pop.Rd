@@ -11,6 +11,8 @@ median_per_pop(x, lab, pop, i)
 
 \item{lab}{a vector of integers.}
 
+\item{pop}{a vector of integers.}
+
 \item{i}{an integer.}
 }
 \value{

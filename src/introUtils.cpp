@@ -60,7 +60,6 @@ arma::mat pca_rotation(arma::mat &a, arma::mat &b){
   return(R);
 }
 
-
 //' Number of individuals in a specific population
 //' 
 //' \code{get_nb_ind} returns the number of individuals in a specific population.
@@ -84,17 +83,25 @@ int get_nb_ind(const arma::vec &lab, const int anc){
   return(c);
 }
 
-
+//' Ancestral populations centroids
+//' 
+//' \code{cmpt_centroids} returns the average scores for each ancestral population.
+//' 
+//' @param u a matrix of scores.
+//' @param lab a vector of integers.
+//' @param anc1 an integer.
+//' @param anc2 an integer.
+//' 
+//' @return The returned value is a list.
+//' 
 //' @export
 //' 
 // [[Rcpp::export]]
-Rcpp::List cmpt_centroids(arma::mat u, arma::vec lab, int anc1, int anc2){
+Rcpp::List cmpt_centroids(arma::mat u, const arma::vec lab, const int anc1, const int anc2){
   int nIND = u.n_rows;
   int K = u.n_cols;
-  arma::vec m1(K);
-  m1.zeros();
-  arma::vec m2(K);
-  m2.zeros();
+  arma::vec m1(K, arma::fill::zeros);
+  arma::vec m2(K, arma::fill::zeros);
   int c1 = get_nb_ind(lab, anc1);
   int c2 = get_nb_ind(lab, anc2);
   for (int j = 0; j < nIND; j++){
@@ -110,6 +117,20 @@ Rcpp::List cmpt_centroids(arma::mat u, arma::vec lab, int anc1, int anc2){
                             Rcpp::Named("m2") = m2);
 }
 
+//' Match global centroids and local centroids
+//' 
+//' \code{cmpt_transformation} computes the local centroid, the global centroid and the scaling factor.
+//' 
+//' @param uloc a matrix of local scores.
+//' @param uglob a matrix of global scores.
+//' @param lab a vector of integers.
+//' @param ancstrl1 an integer.
+//' @param ancstrl2 an integer.
+//' @param s a numeric vector.
+//' @param dloc a numeric vector.
+//' @param dglob a numeric vector.
+//' @param R a numeric matrix.
+//' 
 //' @export
 //' 
 // [[Rcpp::export]]
@@ -138,6 +159,18 @@ void cmpt_transformation(arma::mat &uloc,
   }
 }
 
+//' Rescale local scores
+//' 
+//' \code{rescale_local_pca} returns the rescaled local scores.
+//' 
+//' @param u a matrix of scores.
+//' @param s a numeric vector.
+//' @param dep_loc a numeric vector.
+//' @param dep_glob a numeric vector.
+//' @param R a numeric matrix.
+//' 
+//' @return The returned value is a list.
+//' 
 //' @export
 //' 
 // [[Rcpp::export]]
@@ -245,40 +278,14 @@ void updt_local_scores(arma::mat &u, const arma::mat &geno, const arma::mat &V, 
   }
 }
 
-
-//' @export
+//' Wilcoxon rank
 //' 
-// [[Rcpp::export]]
-double cmpt_window_stat(arma::mat &uloc,
-                        arma::mat &uglob, 
-                        const int direction, 
-                        const arma::vec &lab, 
-                        const int adm, 
-                        const int axis){
-  int nIND = uglob.n_rows; 
-  double stat = 0;
-  if (direction == 1){
-    for (int j = 0; j < nIND; j++){
-      if ((lab[j] == adm) && (uloc(j, axis) - uglob(j, axis)) > 0){
-        stat += (uloc(j, axis) - uglob(j, axis)) * (uloc(j, axis) - uglob(j, axis));
-      }
-    }
-  } else if (direction == (-1)){
-    for (int j = 0; j < nIND; j++){
-      if ((lab[j] == adm) && (uloc(j, axis) - uglob(j, axis)) < 0){
-        stat += (uloc(j, axis) - uglob(j, axis)) * (uloc(j, axis) - uglob(j, axis));
-      }
-    }
-  } else if (direction == 0){
-    for (int j = 0; j < nIND; j++){
-      if (lab[j] == adm){
-        stat += (uloc(j, axis) - uglob(j, axis));
-      }
-    }
-  }
-  return(stat);
-}
-
+//' \code{get_rank} returns the ordering index.
+//' 
+//' @param v_temp a numeric vector.
+//' 
+//' @return The returned value is a vector of integers.
+//' 
 //' @export
 //' 
 // [[Rcpp::export]]
@@ -298,6 +305,17 @@ arma::vec get_rank(const arma::vec &v_temp){
   return(rank);
 }
 
+//' Axis of projection
+//' 
+//' \code{get_axis} returns the axis onto which projection should be performed.
+//' 
+//' @param uglob a matrix of global scores.
+//' @param lab a vector of integers.
+//' @param anc1 an integer.
+//' @param anc2 an integer.
+//' 
+//' @return The returned value is a numeric vector.
+//' 
 //' @export
 //' 
 // [[Rcpp::export]]
@@ -308,6 +326,19 @@ arma::vec get_axis(arma::mat &uglob, const arma::vec &lab, const int anc1, const
   return(m2 - m1);
 }
 
+//' Directional statistics
+//' 
+//' \code{cmpt_directional_stat} computes the displacement of admixed individuals such that positive (resp. negative) 
+//' displacement corresponds to a displacement towards ancestral population 2 (resp. 1).
+//' 
+//' @param usc a matrix of rescaled local scores.
+//' @param uglob a matrix of global scores.
+//' @param lab a vector of integers.
+//' @param adm an integer.
+//' @param ax a numeric vector.
+//' 
+//' @return The returned value is a numeric value.
+//' 
 //' @export
 //' 
 // [[Rcpp::export]]
@@ -326,16 +357,28 @@ double cmpt_directional_stat(arma::mat &usc,
   return(stat);
 }
 
-
+//' Wilcoxon statistics
+//' 
+//' \code{cmpt_wilcoxon_stat} computes the Wilcoxon statistics.
+//' 
+//' @param usc a matrix of rescaled local scores.
+//' @param uglob a matrix of global scores.
+//' @param direction an integer.
+//' @param lab a vector of integers.
+//' @param adm an integer.
+//' @param axis a numeric value.
+//' 
+//' @return The returned value is a numeric value.
+//' 
 //' @export
 //' 
 // [[Rcpp::export]]
-double cmpt_window_wilcoxon(arma::mat &uloc,
-                            arma::mat &uglob, 
-                            int direction, 
-                            arma::vec &lab, 
-                            int adm, 
-                            int axis){
+double cmpt_wilcoxon_stat(arma::mat &usc,
+                          arma::mat &uglob, 
+                          int direction, 
+                          arma::vec &lab, 
+                          int adm, 
+                          int axis){
   int nIND = uglob.n_rows;
   int nAND = get_nb_ind(lab, adm);
   arma::vec tmp(nIND);
@@ -350,7 +393,7 @@ double cmpt_window_wilcoxon(arma::mat &uloc,
   }
   
   for (int j = 0; j < nIND; j++){
-    diff = uloc(j, axis) - m;
+    diff = usc(j, axis) - m;
     tmp[j] = fabs(diff);
     if ((direction == 1) && (diff > 0)){
       Z[j] = 1;
@@ -368,6 +411,23 @@ double cmpt_window_wilcoxon(arma::mat &uloc,
   return(W);
 }
 
+//' Wilcoxon statistics
+//' 
+//' \code{cmpt_all_stat} computes the statistics.
+//' 
+//' @param geno a genotype matrix.
+//' @param V a loading matrix.
+//' @param sigma a vector of singular values.
+//' @param window_size an integer.
+//' @param direction an integer.
+//' @param lab a vector of integers.
+//' @param ancstrl1 an integer.
+//' @param ancstrl2 an integer.
+//' @param adm an integer.
+//' @param axis a numeric vector.
+//' 
+//' @return The returned value is a numeric vector.
+//' 
 //' @export
 //' 
 // [[Rcpp::export]]
@@ -399,7 +459,6 @@ arma::vec cmpt_all_stat(const arma::mat &geno,
   for (int k = 0; k < K; k++){
     ax[k] *= axis[k];   
   }
-  
   cmpt_transformation(uloc, uglob, lab, ancstrl1, ancstrl2, s, dloc, dglob, R);
   usc = rescale_local_pca(uloc, s, dglob, dloc, R);
   for (int i = 1; i < (nSNP - window_size); i++){
@@ -407,8 +466,7 @@ arma::vec cmpt_all_stat(const arma::mat &geno,
     cmpt_transformation(uloc, uglob, lab, ancstrl1, ancstrl2, s, dloc, dglob, R);
     usc = rescale_local_pca(uloc, s, dloc, dglob, R);
     stat[i] = cmpt_directional_stat(usc, uglob, lab, adm, ax);
-    //stat[i] = cmpt_window_stat(usc, uglob, direction, lab, adm, axis);
-    //stat[i] = cmpt_window_wilcoxon(usc, uglob, direction, lab, adm, axis);
+    //stat[i] = cmpt_wilcoxon_stat(usc, uglob, direction, lab, adm, axis);
   }
   stat[0] = stat[1];
   for (int i = (nSNP - window_size); i < nSNP; i++){

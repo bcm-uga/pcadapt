@@ -22,7 +22,8 @@ Imports:
     ggplot2, 
     vcfR,
     RSpectra,
-    rrcov
+    rrcov,
+    data.table
 LinkingTo: Rcpp, RcppArmadillo
 LazyData: TRUE
 Suggests: knitr, rmarkdown, testthat

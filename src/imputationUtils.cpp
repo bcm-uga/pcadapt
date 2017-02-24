@@ -35,6 +35,7 @@ double median_row_i(const arma::mat &x, int i){
 //' 
 //' @param x a genotype matrix.
 //' @param lab a vector of integers.
+//' @param pop a vector of integers.
 //' @param i an integer.
 //' 
 //' @return The returned value is a real-valued vector.

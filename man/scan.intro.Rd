@@ -20,6 +20,8 @@ scan.intro(input, K = 2, pop, ancstrl.1, ancstrl.2, admxd, min.maf = 0.05,
 
 \item{admxd}{a string specifying the label of the hybrid population.}
 
+\item{min.maf}{a value between \code{0} and \code{0.45} specifying the threshold of minor allele frequencies above which p-values are computed.}
+
 \item{ploidy}{an integer specifying the ploidy of the individuals.}
 
 \item{window.size}{an integer specifying the window size.}

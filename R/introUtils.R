@@ -63,12 +63,15 @@ assign.int.labels = function(pop){
 #' @param ancstrl.1 a string specifying the label of the ancestral population genetically closer to the hybrid population.
 #' @param ancstrl.2 a string specifying the label of the ancestral population genetically further from the hybrid population.
 #' @param admxd a string specifying the label of the hybrid population.
+#' @param min.maf a value between \code{0} and \code{0.45} specifying the threshold of minor allele frequencies above which p-values are computed.
 #' @param ploidy an integer specifying the ploidy of the individuals.
 #' @param window.size an integer specifying the window size.
 
 #' @param impute a logical value indicating whether the input data has to imputed. 
 #' 
 #' @return The returned value is a list containing the test statistics and the associated p-values.
+#' 
+#' @importFrom data.table fread
 #' 
 #' @export
 #'
@@ -81,7 +84,6 @@ scan.intro = function(input,
                       min.maf = 0.05, 
                       ploidy = 2, 
                       window.size = 1000, 
-  
                       impute = FALSE){
   if (impute){
     geno <- (impute.pcadapt(input = input, pop = pop))$x
@@ -139,6 +141,33 @@ scan.intro = function(input,
   return(stat / stat.sd)
 } 
 
+#' Display local PCA
+#'
+#' \code{draw.pca} displays both local and global scores.
+#'
+#' @param geno a genotype matrix.
+#' @param V a loading matrix.
+#' @param sigma a vector of singular values.
+#' @param uglob a matrix of global scores.
+#' @param beg an integer specifying the first marker to be included.
+#' @param end an integer specifying the first marker to be excluded.
+#' @param pop a list of integers.
+#' @param i an integer indicating onto which principal component the individuals are projected when the "scores" option is chosen.
+#' Default value is set to \code{1}.
+#' @param j an integer indicating onto which principal component the individuals are projected when the "scores" option is chosen.
+#' Default value is set to \code{2}.
+#' @param ancstrl1 an integer.
+#' @param ancstrl2 an integer.
+#' @param adm an integer.
+#' 
+#' @return The returned value is a list containing the test statistics and the associated p-values.
+#' 
+#' @importFrom graphics arrows plot points
+#' @importFrom stats pnorm
+#' @importFrom utils flush.console
+#' 
+#' @export
+#'
 draw.pca = function(geno, V, sigma, uglob, beg, end, pop, i = 1, j = 2, ancstrl1, ancstrl2, adm){
   uloc <- cmpt_local_pca(geno, V, sigma = sigma, beg = beg, end = end)
   dloc <- vector(length = ncol(V), mode = "numeric")
@@ -149,14 +178,13 @@ draw.pca = function(geno, V, sigma, uglob, beg, end, pop, i = 1, j = 2, ancstrl1
   cent.loc <- cmpt_centroids(uloc, pop, ancstrl1, ancstrl2)
   axis <- cent$m2 - cent$m2
   shape.1 <- as.matrix(t(cbind(cent$m1, cent$m2)))
-  
   shape.2 <- as.matrix(t(cbind(cent.loc$m1, cent.loc$m2)))
   
   # R <- pca_rotation(shape.1, shape.2)
   # R <- matrix(0, nrow = ncol(V), ncol = ncol(V))
   # diag(R) <- 1
   
-  cmpt_transformation(uloc, uglob, lab, ancstrl1, ancstrl2, s, dloc, dglob, R);
+  cmpt_transformation(uloc, uglob, pop, ancstrl1, ancstrl2, s, dloc, dglob, R);
   usc <- rescale_local_pca(uloc, s, dloc, dglob, R);
   
   xmin <- min(min(uglob[, i]), min(usc[, i]))

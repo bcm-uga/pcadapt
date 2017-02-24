@@ -47,6 +47,15 @@ NumericVector get_size_cpp(std::string filename){
   return file_size;
 }
 
+//' Minor allele frequencies
+//' 
+//' \code{cmpt_minor_af} computes the minor allele frequencies.
+//' 
+//' @param xmatrix a genotype matrix.
+//' @param ploidy an integer specifying the ploidy of the individuals.
+//' 
+//' @return The returned value is a numeric matrix.
+//' 
 //' @export
 //' 
 // [[Rcpp::export]]
@@ -90,7 +99,17 @@ NumericVector cmpt_minor_af(arma::mat &xmatrix, int ploidy){
   return(maf);
 }
 
-
+//' Scale genotype matrices
+//' 
+//' \code{scale_geno} scales the genotype matrix.
+//' 
+//' @param xmatrix a genotype matrix.
+//' @param ploidy an integer specifying the ploidy of the individuals.
+//' @param maf a vector of minor allele frequencies.
+//' @param keep_or_not a vector of integers.
+//' 
+//' @return The returned value is a numeric matrix.
+//' 
 //' @export
 //' 
 // [[Rcpp::export]]

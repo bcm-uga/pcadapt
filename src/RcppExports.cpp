@@ -115,15 +115,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // cmpt_centroids
-Rcpp::List cmpt_centroids(arma::mat u, arma::vec lab, int anc1, int anc2);
+Rcpp::List cmpt_centroids(arma::mat u, const arma::vec lab, const int anc1, const int anc2);
 RcppExport SEXP pcadapt_cmpt_centroids(SEXP uSEXP, SEXP labSEXP, SEXP anc1SEXP, SEXP anc2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::mat >::type u(uSEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type lab(labSEXP);
-    Rcpp::traits::input_parameter< int >::type anc1(anc1SEXP);
-    Rcpp::traits::input_parameter< int >::type anc2(anc2SEXP);
+    Rcpp::traits::input_parameter< const arma::vec >::type lab(labSEXP);
+    Rcpp::traits::input_parameter< const int >::type anc1(anc1SEXP);
+    Rcpp::traits::input_parameter< const int >::type anc2(anc2SEXP);
     rcpp_result_gen = Rcpp::wrap(cmpt_centroids(u, lab, anc1, anc2));
     return rcpp_result_gen;
 END_RCPP
@@ -204,22 +204,6 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
-// cmpt_window_stat
-double cmpt_window_stat(arma::mat& uloc, arma::mat& uglob, const int direction, const arma::vec& lab, const int adm, const int axis);
-RcppExport SEXP pcadapt_cmpt_window_stat(SEXP ulocSEXP, SEXP uglobSEXP, SEXP directionSEXP, SEXP labSEXP, SEXP admSEXP, SEXP axisSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat& >::type uloc(ulocSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type uglob(uglobSEXP);
-    Rcpp::traits::input_parameter< const int >::type direction(directionSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type lab(labSEXP);
-    Rcpp::traits::input_parameter< const int >::type adm(admSEXP);
-    Rcpp::traits::input_parameter< const int >::type axis(axisSEXP);
-    rcpp_result_gen = Rcpp::wrap(cmpt_window_stat(uloc, uglob, direction, lab, adm, axis));
-    return rcpp_result_gen;
-END_RCPP
-}
 // get_rank
 arma::vec get_rank(const arma::vec& v_temp);
 RcppExport SEXP pcadapt_get_rank(SEXP v_tempSEXP) {
@@ -260,19 +244,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// cmpt_window_wilcoxon
-double cmpt_window_wilcoxon(arma::mat& uloc, arma::mat& uglob, int direction, arma::vec& lab, int adm, int axis);
-RcppExport SEXP pcadapt_cmpt_window_wilcoxon(SEXP ulocSEXP, SEXP uglobSEXP, SEXP directionSEXP, SEXP labSEXP, SEXP admSEXP, SEXP axisSEXP) {
+// cmpt_wilcoxon_stat
+double cmpt_wilcoxon_stat(arma::mat& usc, arma::mat& uglob, int direction, arma::vec& lab, int adm, int axis);
+RcppExport SEXP pcadapt_cmpt_wilcoxon_stat(SEXP uscSEXP, SEXP uglobSEXP, SEXP directionSEXP, SEXP labSEXP, SEXP admSEXP, SEXP axisSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat& >::type uloc(ulocSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type usc(uscSEXP);
     Rcpp::traits::input_parameter< arma::mat& >::type uglob(uglobSEXP);
     Rcpp::traits::input_parameter< int >::type direction(directionSEXP);
     Rcpp::traits::input_parameter< arma::vec& >::type lab(labSEXP);
     Rcpp::traits::input_parameter< int >::type adm(admSEXP);
     Rcpp::traits::input_parameter< int >::type axis(axisSEXP);
-    rcpp_result_gen = Rcpp::wrap(cmpt_window_wilcoxon(uloc, uglob, direction, lab, adm, axis));
+    rcpp_result_gen = Rcpp::wrap(cmpt_wilcoxon_stat(usc, uglob, direction, lab, adm, axis));
     return rcpp_result_gen;
 END_RCPP
 }
