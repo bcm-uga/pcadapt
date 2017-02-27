@@ -20,30 +20,25 @@ using namespace Rcpp;
 NumericVector get_size_cpp(std::string filename){
   NumericVector file_size(2);
   FILE *input;
-  int nbbn = 0;
-  int nbsp = 0;
   if ((input = fopen(filename.c_str(), "r")) == NULL){
     Rprintf("Error, invalid input file.\n");
   }
   int currentchar;
-  int prevchar;
+  int nrow = 0;
+  int ncol = 0;
   currentchar = fgetc(input);
   while(currentchar != EOF){
-    if (currentchar == 10){
-      nbbn++;
-      if (prevchar != 32 && prevchar != '\t'){
-        nbsp++;
-      }
+    if (nrow == 0 && currentchar != '\n' && currentchar != '\r' && currentchar != ' '){
+      ncol ++;
     }
-    if ((currentchar == 32 || prevchar == '\t') && (prevchar != 32 || prevchar != '\t')){
-      nbsp++;
+    if (currentchar == '\n'){
+      nrow ++;
     }
-    prevchar = currentchar;
     currentchar = fgetc(input);
   }
   fclose(input);
-  file_size[0] = nbbn;
-  file_size[1] = nbsp / nbbn;
+  file_size[0] = nrow;
+  file_size[1] = ncol;
   return file_size;
 }
 

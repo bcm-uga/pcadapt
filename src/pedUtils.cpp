@@ -286,7 +286,8 @@ void lfmm2geno(char *input_file, char* output_file, int *N, int *M){
   nb = nb_cols_lfmm(input_file);
   *M = nb;
   *N = nb_lines(input_file, nb);
-  int *data = new int[(*N)*(*M)];
+  long int size = (long int) (*N) * (long int)(*M);
+  int *data = new int[size];
   read_lfmm(input_file, *N, *M, data);
   write_geno(output_file, *N, *M, data);
   delete[] data;
