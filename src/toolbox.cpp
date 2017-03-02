@@ -75,6 +75,7 @@ NumericVector cmpt_minor_af(arma::mat &xmatrix, int ploidy){
     }
     if (na >= nIND){
       af = NA_REAL;
+      Rcpp::warning("Detected SNP with missing values only, please remove it before proceeding."); 
       //Rcpp::stop("Detected SNP with missing values only, please remove it before proceeding."); 
     } else {
       mean /= (nIND - na);
