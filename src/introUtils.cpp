@@ -188,7 +188,6 @@ arma::mat rescale_local_pca(arma::mat &u, arma::vec &s, arma::vec &dep_loc, arma
   return(usc);
 }
 
-
 //' Global Principal Component Analysis
 //' 
 //' \code{cmpt_global_pca} computes the scores using all genetic markers.

@@ -2,10 +2,10 @@
 #'
 #' \code{plot.pcadapt} is a method designed for objects of class \code{pcadapt}.
 #' It provides a plotting utile for quick visualization of \code{pcadapt} objects.
-#' Different options are currently available : \code{"screeplot"}, \code{"scores"}, \code{"stat.distribution"},
-#' \code{"manhattan"} and \code{"qqplot"}.
-#' \code{"screeplot"} shows the decay of the genotype matrix singular values and provides
-#' a figure to help with the choice of \code{K}.
+#' Different options are currently available : \code{"screeplot"}, \code{"scores"}, 
+#' \code{"stat.distribution"}, \code{"manhattan"} and \code{"qqplot"}.
+#' \code{"screeplot"} shows the decay of the genotype matrix singular values and 
+#' provides a figure to help with the choice of \code{K}.
 #' \code{"scores"} plots the projection of the individuals onto the first two principal components.
 #' \code{"stat.distribution"} displays the histogram of the selected test statistics, as well as
 #' the estimated distribution for the neutral SNPs.
@@ -30,51 +30,62 @@
 #' @method plot pcadapt
 #'
 #' @export
-plot.pcadapt = function(x,...,option="manhattan",K=NULL,i=1,j=2,pop,threshold=NULL){
-  if (!(option %in% c("screeplot","scores","manhattan","qqplot","stat.distribution"))){
-    warning(paste("Plotting option",option,"not valid, options currently available are: screeplot, scores, manhattan, qqplot, stat.distribution."))
+plot.pcadapt = function(x, 
+                        ..., 
+                        option = "manhattan", 
+                        K = NULL, 
+                        i = 1, 
+                        j = 2, 
+                        pop, 
+                        threshold = NULL){
+  if (!(option %in% c("screeplot", 
+                      "scores", 
+                      "manhattan", 
+                      "qqplot", 
+                      "stat.distribution"))){
+    warning(paste("Plotting option", option, "not valid, options currently available are: screeplot, scores, manhattan, qqplot, stat.distribution."))
   } else {
     if (option == "screeplot"){
-      scree.plotting(x,K)
+      scree.plotting(x, K)
     } else if (option == "scores"){
-      if (attr(x,"data.type")!="pool"){
+      if (attr(x, "data.type") != "pool"){
         if (missing(pop)){
-          score.plotting(x,i,j)
+          score.plotting(x, i, j)
         } else {
-          score.plotting(x,i,j,pop)
+          score.plotting(x, i, j, pop)
         }
       } else {
-        score.plotting(x,i,j,pop=1:dim(x$scores)[1])
+        score.plotting(x, i, j, pop =1:dim(x$scores)[1])
       }
     } else if (option == "stat.distribution"){
-      if ((attr(x,"method") %in% c("mahalanobis","communality")) == FALSE){
+      if ((attr(x, "method") %in% c("mahalanobis", "communality")) == FALSE){
         if (is.null(K)){
           warning("K has to be specified.")
         } else {
-          neutral.plotting(x,K)
+          neutral.plotting(x, K)
         }
       } else {
-        neutral.plotting(x,1)
+        neutral.plotting(x, 1)
       }
     } else if (option == "manhattan"){
-      if ((attr(x,"method") %in% c("mahalanobis","communality")) == FALSE){
+      if ((attr(x,"method") %in% c("mahalanobis", "communality")) == FALSE){
         if (is.null(K)){
           warning("K has to be specified.")
         } else {
-          manhattan.plotting(x,K)
+          manhattan.plotting(x, K)
         }
       } else {
-        manhattan.plotting(x,K=1)
+        manhattan.plotting(x, K = 1)
       }
     } else if (option == "qqplot"){
-      if ((attr(x,"method") %in% c("mahalanobis","communality")) == FALSE){
+      if ((attr(x, "method") %in% c("mahalanobis", "communality")) == FALSE){
         if (is.null(K)){
           warning("K has to be specified")
         } else{
-          pvalqq.plotting(x,K,threshold=threshold)
+          pvalqq.plotting(x, K, threshold = threshold)
         }
       } else {
-        pvalqq.plotting(x,K=1,threshold=threshold)
+        pvalqq.plotting(x, K = 1,threshold = threshold)
       }
     }
   }
@@ -100,39 +111,38 @@ plot.pcadapt = function(x,...,option="manhattan",K=NULL,i=1,j=2,pop,threshold=NU
 #'
 #' @export
 #'
-score.plotting = function(x,i=1,j=2,pop){
+score.plotting = function(x, i = 1, j = 2, pop){
   
-  if (attr(x,"K")==1){
-    warning("K=1, option not available since two principal components have to be computed at least.")
+  if (attr(x,"K") == 1){
+    warning("K = 1, option not available since two principal components have to be computed at least.")
   } else {
     
     if (i == j){
       stop("j has to be different from i.")
     }
     
-    if (i>attr(x,"K")){
-      stop(paste0("i can't exceed ",attr(x,"K"),"."))
+    if (i > attr(x, "K")){
+      stop(paste0("i can't exceed ", attr(x, "K"), "."))
     }
     
-    if (j>attr(x,"K")){
-      stop(paste0("j can't exceed ",attr(x,"K"),"."))
+    if (j > attr(x, "K")){
+      stop(paste0("j can't exceed ", attr(x, "K"), "."))
     }
     if (missing(pop)){
-      ggdf <- as.data.frame(cbind(x$scores[,i],x$scores[,j]))  
-      colnames(ggdf) <- c("PC_i","PC_j")
-      res.plot <- ggplot2::ggplot(ggdf,aes_string("PC_i","PC_j")) +
-        geom_point() 
+      ggdf <- as.data.frame(cbind(x$scores[, i], x$scores[, j]))  
+      colnames(ggdf) <- c("PC_i", "PC_j")
+      res.plot <- ggplot2::ggplot(ggdf, aes_string("PC_i", "PC_j")) + geom_point() 
     } else {
       pop.to.int <- get.score.color(pop)
       popnames <- get.pop.names(pop)
-      ggdf <- as.data.frame(cbind(x$scores[,i],x$scores[,j],pop.to.int)) 
+      ggdf <- as.data.frame(cbind(x$scores[, i], x$scores[, j], pop.to.int)) 
       colnames(ggdf) <- c("PC_i","PC_j","Pop")
       res.plot <- ggplot2::ggplot(ggdf,aes_string("PC_i","PC_j")) +
-        ggplot2::geom_point(aes(colour=factor(ggdf$Pop))) +
-        ggplot2::scale_color_hue(name=" ",labels=popnames)
+        ggplot2::geom_point(aes(colour = factor(ggdf$Pop))) +
+        ggplot2::scale_color_hue(name = " ", labels = popnames)
     }
-    res.plot <- res.plot + ggplot2::ggtitle(paste0("Projection onto PC",i," and PC",j)) +
-      ggplot2::labs(x=paste0("PC",i),y=paste0("PC",j))
+    res.plot <- res.plot + ggplot2::ggtitle(paste0("Projection onto PC", i, " and PC", j)) +
+      ggplot2::labs(x = paste0("PC", i), y = paste0("PC", j))
     print(res.plot)
   }
 }
@@ -152,16 +162,16 @@ score.plotting = function(x,i=1,j=2,pop){
 #'
 #' @export
 #'
-manhattan.plotting = function(x,K){
-  if (K > attr(x,"K")){
-    stop(paste0("K can't exceed ",attr(x,"K")),".")
+manhattan.plotting = function(x, K){
+  if (K > attr(x, "K")){
+    stop(paste0("K can't exceed ", attr(x, "K")), ".")
   }
-  if (attr(x,"method")=="componentwise"){
-    pval.K <- x$pvalues[!is.na(x$pvalues[,K]),K]
+  if (attr(x, "method") == "componentwise"){
+    pval.K <- x$pvalues[!is.na(x$pvalues[, K]), K]
   } else {
     pval.K <- x$pvalues[!is.na(x$pvalues)]
   }
-  p0 <- ggplot2::qplot(1:length(pval.K),-log10(pval.K),col="red",xlab=paste0("SNP (with mAF>",attr(x,"min.maf"),")"),ylab="-log10(p-values)") +
+  p0 <- ggplot2::qplot(1:length(pval.K), -log10(pval.K), col = "red", xlab = paste0("SNP (with mAF>", attr(x, "min.maf"), ")"), ylab = "-log10(p-values)") +
     ggplot2::guides(colour=FALSE) + 
     ggplot2::ggtitle("Manhattan Plot")
   print(p0)
@@ -184,14 +194,14 @@ manhattan.plotting = function(x,K){
 #'
 #' @export
 #'
-scree.plotting = function(x,K){
-  if (is.null(K)){m <- attr(x,"K")}
+scree.plotting = function(x, K){
+  if (is.null(K)){m <- attr(x, "K")}
   else {m <- K}
-  if (m<2){warning("K = 1, the scree plot is thus composed of a unique point.")}
+  if (m < 2){warning("K = 1, the scree plot is thus composed of a unique point.")}
   nSNP <- length(x$maf)
-  p0 <- ggplot2::qplot(x=1:m,y=(x$singular.values[1:m])^2/nSNP,col="red",xlab="PC",ylab="Proportion of explained variance") + 
-    ggplot2::geom_line() + ggplot2::guides(colour=FALSE) +
-    ggplot2::ggtitle(paste("Scree Plot - K =",m))
+  p0 <- ggplot2::qplot(x = 1:m, y = (x$singular.values[1:m]) ^ 2 / nSNP, col = "red", xlab = "PC", ylab = "Proportion of explained variance") + 
+    ggplot2::geom_line() + ggplot2::guides(colour = FALSE) +
+    ggplot2::ggtitle(paste("Scree Plot - K =", m))
   print(p0)
 }
 
@@ -212,22 +222,22 @@ scree.plotting = function(x,K){
 #'
 #' @export
 #'
-pvalqq.plotting = function(x,K,threshold){
-  if (attr(x,"method")=="componentwise"){
-    sorted.pval <- sort(x$pvalues[x$maf>=attr(x,"min.maf"),K])
+pvalqq.plotting = function(x, K, threshold){
+  if (attr(x, "method") == "componentwise"){
+    sorted.pval <- sort(x$pvalues[x$maf >= attr(x, "min.maf"), K])
   } else {
-    sorted.pval <- sort(x$pvalues[x$maf>=attr(x,"min.maf")])
+    sorted.pval <- sort(x$pvalues[x$maf >= attr(x, "min.maf")])
   }
   p <- length(sorted.pval)
-  expected.p <- 1:p/p
-  p0 <- ggplot2::qplot(-log10(expected.p),-log10(sorted.pval),col="red",xlab="Expected -log10(p-values)",ylab="Observed -log10(p-values)") + 
+  expected.p <- 1:p / p
+  p0 <- ggplot2::qplot(-log10(expected.p), -log10(sorted.pval), col = "red", xlab = "Expected -log10(p-values)", ylab = "Observed -log10(p-values)") + 
     ggplot2::geom_abline()
   if (!missing(threshold)){
-    q <- floor(threshold*p)
+    q <- floor(threshold * p)
     pval.thresh <- expected.p[q]
-    p0 <- p0 + ggplot2::geom_vline(aes(xintercept = -log10(pval.thresh)),colour="blue")
+    p0 <- p0 + ggplot2::geom_vline(aes(xintercept = -log10(pval.thresh)), colour = "blue")
   }
-  p0 <- p0 + ggplot2::ggtitle("Q-Q plot") + ggplot2::guides(colour=FALSE)
+  p0 <- p0 + ggplot2::ggtitle("Q-Q plot") + ggplot2::guides(colour = FALSE)
   print(p0)
 }
 
@@ -247,26 +257,26 @@ pvalqq.plotting = function(x,K,threshold){
 #' @importFrom ggplot2 ggplot geom_histogram geom_line theme aes_string element_rect ggtitle
 #'
 #' @export
-neutral.plotting = function(x,K){
-  idxmaf <- x$maf>=attr(x,"min.maf")
-  if (attr(x,"method")=="componentwise"){
+neutral.plotting = function(x, K){
+  idxmaf <- x$maf >= attr(x, "min.maf")
+  if (attr(x, "method") == "componentwise"){
     df <- 1
-    z <- x$chi2.stat[idxmaf,df]
-  } else if (attr(x,"method") != "componentwise" && attr(x,"data.type") != "pool"){
-    df <- attr(x,"K")
+    z <- x$chi2.stat[idxmaf, df]
+  } else if (attr(x, "method") != "componentwise" && attr(x, "data.type") != "pool"){
+    df <- attr(x, "K")
     z <- x$chi2.stat[idxmaf]
   }
   min.z <- floor(min(z[which(!is.na(z))]))
-  max.z <- floor(max(z[which(!is.na(z))])+1)
+  max.z <- floor(max(z[which(!is.na(z))]) + 1)
   if (max.z > 1e5){
     stop("Can't display the histogram as the values are too high.")
   }
-  xx <- seq(min.z,max.z,length=length(z))
-  ggdf <- as.data.frame(cbind(xx,dchisq(xx,df=df),z))
-  colnames(ggdf) <- c("abs","ord","chi2")
+  xx <- seq(min.z,max.z,length = length(z))
+  ggdf <- as.data.frame(cbind(xx, dchisq(xx, df = df), z))
+  colnames(ggdf) <- c("abs", "ord", "chi2")
   p0 <- ggplot() + 
-    geom_histogram(data=ggdf,aes_string(x="chi2",y="..density.."),binwidth=0.5,fill="#B0E2FF",alpha=0.6,colour="black") + 
-    geom_line(data=ggdf,aes_string(x="abs",y="ord"),col="#4F94CD",size=1) + 
+    geom_histogram(data = ggdf, aes_string(x = "chi2", y = "..density.."), binwidth = 0.5, fill = "#B0E2FF", alpha = 0.6, colour = "black") + 
+    geom_line(data = ggdf, aes_string(x = "abs", y = "ord"), col = "#4F94CD", size = 1) + 
     ggplot2::ggtitle("Statistics distribution")
   print(p0)
 }
