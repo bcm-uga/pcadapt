@@ -39,7 +39,7 @@ read.pcadapt <- function(input,
   
   if (class(input) == "character"){
     ## Check if input exists ##    
-    if (!file.exists(input)){
+    if (!file.exists(input) &&  (type != "example")){
       stop(paste0("File ", input, " does not exist."))
     } 
     ## Check if argument type is missing ##
@@ -47,7 +47,7 @@ read.pcadapt <- function(input,
       stop("Argument type is missing.")
     }
     ## Check if file type is supported ##
-    if (class(type) != "character" || (!(type %in% c("vcf", "ped", "lfmm", "pcadapt", "pool")))){
+    if (class(type) != "character" || (!(type %in% c("vcf", "ped", "lfmm", "pcadapt", "pool", "example")))){
       stop("Incorrect type.")
     }
     
@@ -63,6 +63,10 @@ read.pcadapt <- function(input,
       otpt <- lfmm2pcadapt(input = input, output = aux)
     } else if (type == "pcadapt"){
       aux <- input
+    } else if (type == "example"){
+      if (input == "geno3pops"){
+        aux <- system.file("extdata", "geno3pops.pcadapt", package = "pcadapt")  
+      }
     } else if (type == "pool"){
       fs <- get_size_cpp(input)
       nPOOL <- fs[1]

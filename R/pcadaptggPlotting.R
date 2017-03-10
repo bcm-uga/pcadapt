@@ -21,6 +21,7 @@
 #' @param j an integer indicating onto which principal component the individuals are projected when the "scores" option is chosen.
 #' Default value is set to \code{2}.
 #' @param pop a list of integers or strings specifying which subpopulation the individuals belong to.
+#' @param gg.col a list of colors to be used in the score plot.
 #' @param threshold for the \code{"qqplot"} option, it displays an additional bar which shows the \code{threshold} percent of SNPs with smallest p-values
 #' and separates them from SNPs with higher p-values.
 #'
@@ -37,6 +38,7 @@ plot.pcadapt = function(x,
                         i = 1, 
                         j = 2, 
                         pop, 
+                        gg.col,
                         threshold = NULL){
   if (!(option %in% c("screeplot", 
                       "scores", 
@@ -52,10 +54,14 @@ plot.pcadapt = function(x,
         if (missing(pop)){
           score.plotting(x, i, j)
         } else {
-          score.plotting(x, i, j, pop)
+          if (missing(gg.col)){
+            score.plotting(x, i, j, pop)
+          } else {
+            score.plotting(x, i, j, pop, gg.col)
+          }
         }
       } else {
-        score.plotting(x, i, j, pop =1:dim(x$scores)[1])
+        score.plotting(x, i, j, pop = 1:dim(x$scores)[1])
       }
     } else if (option == "stat.distribution"){
       if ((attr(x, "method") %in% c("mahalanobis", "communality")) == FALSE){
@@ -111,9 +117,9 @@ plot.pcadapt = function(x,
 #'
 #' @export
 #'
-score.plotting = function(x, i = 1, j = 2, pop){
+score.plotting = function(x, i = 1, j = 2, pop, gg.col){
   
-  if (attr(x,"K") == 1){
+  if (attr(x, "K") == 1){
     warning("K = 1, option not available since two principal components have to be computed at least.")
   } else {
     
@@ -128,21 +134,34 @@ score.plotting = function(x, i = 1, j = 2, pop){
     if (j > attr(x, "K")){
       stop(paste0("j can't exceed ", attr(x, "K"), "."))
     }
-    if (missing(pop)){
-      ggdf <- as.data.frame(cbind(x$scores[, i], x$scores[, j]))  
-      colnames(ggdf) <- c("PC_i", "PC_j")
-      res.plot <- ggplot2::ggplot(ggdf, aes_string("PC_i", "PC_j")) + geom_point() 
-    } else {
+    
+    ggdf <- data.frame(PC_i = x$scores[, i], PC_j = x$scores[, j])  
+    res.plot <- ggplot2::ggplot(ggdf, aes_string("PC_i", "PC_j")) + 
+      ggplot2::geom_point() + 
+      ggplot2::ggtitle(paste0("Projection onto PC", i, " and PC", j)) +
+      ggplot2::labs(x = paste0("PC", i), y = paste0("PC", j))
+    
+    if (!missing(pop)){
       pop.to.int <- get.score.color(pop)
       popnames <- get.pop.names(pop)
-      ggdf <- as.data.frame(cbind(x$scores[, i], x$scores[, j], pop.to.int)) 
-      colnames(ggdf) <- c("PC_i","PC_j","Pop")
-      res.plot <- ggplot2::ggplot(ggdf,aes_string("PC_i","PC_j")) +
-        ggplot2::geom_point(aes(colour = factor(ggdf$Pop))) +
-        ggplot2::scale_color_hue(name = " ", labels = popnames)
+      ggdf$Pop <- pop.to.int
+      res.plot <- res.plot + 
+        ggplot2::geom_point(aes(colour = factor(ggdf$Pop)))
     }
-    res.plot <- res.plot + ggplot2::ggtitle(paste0("Projection onto PC", i, " and PC", j)) +
-      ggplot2::labs(x = paste0("PC", i), y = paste0("PC", j))
+    
+    if (missing(gg.col)){
+      res.plot <- res.plot + ggplot2::scale_color_hue(name = " ", labels = popnames)
+    } else {
+      if (length(gg.col) < length(popnames)){
+        pers.col <- c(gg.col, rainbow(length(popnames) - length(gg.col)))
+      } else if (length(gg.col) == length(popnames)){
+        pers.col <- gg.col
+      } else if (length(gg.col) > length(popnames)){
+        pers.col <- gg.col[1:length(popnames)]
+      }
+      res.plot <- res.plot + ggplot2::scale_color_manual(name = " ", labels = popnames, values = pers.col)
+    }
+    
     print(res.plot)
   }
 }

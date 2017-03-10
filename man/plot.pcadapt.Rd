@@ -5,7 +5,7 @@
 \title{pcadapt visualization tool}
 \usage{
 \method{plot}{pcadapt}(x, ..., option = "manhattan", K = NULL, i = 1,
-  j = 2, pop, threshold = NULL)
+  j = 2, pop, gg.col, threshold = NULL)
 }
 \arguments{
 \item{x}{an object of class "pcadapt" generated with \code{pcadapt}.}
@@ -24,16 +24,18 @@ Default value is set to \code{2}.}
 
 \item{pop}{a list of integers or strings specifying which subpopulation the individuals belong to.}
 
+\item{gg.col}{a list of colors to be used in the score plot.}
+
 \item{threshold}{for the \code{"qqplot"} option, it displays an additional bar which shows the \code{threshold} percent of SNPs with smallest p-values
 and separates them from SNPs with higher p-values.}
 }
 \description{
 \code{plot.pcadapt} is a method designed for objects of class \code{pcadapt}.
 It provides a plotting utile for quick visualization of \code{pcadapt} objects.
-Different options are currently available : \code{"screeplot"}, \code{"scores"}, \code{"stat.distribution"},
-\code{"manhattan"} and \code{"qqplot"}.
-\code{"screeplot"} shows the decay of the genotype matrix singular values and provides
-a figure to help with the choice of \code{K}.
+Different options are currently available : \code{"screeplot"}, \code{"scores"}, 
+\code{"stat.distribution"}, \code{"manhattan"} and \code{"qqplot"}.
+\code{"screeplot"} shows the decay of the genotype matrix singular values and 
+provides a figure to help with the choice of \code{K}.
 \code{"scores"} plots the projection of the individuals onto the first two principal components.
 \code{"stat.distribution"} displays the histogram of the selected test statistics, as well as
 the estimated distribution for the neutral SNPs.

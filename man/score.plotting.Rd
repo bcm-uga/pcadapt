@@ -4,7 +4,7 @@
 \alias{score.plotting}
 \title{Principal Components Analysis Scores Plot}
 \usage{
-score.plotting(x, i = 1, j = 2, pop)
+score.plotting(x, i = 1, j = 2, pop, gg.col)
 }
 \arguments{
 \item{x}{an output from \code{pcadapt} containing the scores.}
