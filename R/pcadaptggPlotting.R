@@ -172,7 +172,7 @@ manhattan.plotting = function(x, K){
     pval.K <- x$pvalues[!is.na(x$pvalues)]
   }
   p0 <- ggplot2::qplot(1:length(pval.K), -log10(pval.K), col = "red", xlab = paste0("SNP (with mAF>", attr(x, "min.maf"), ")"), ylab = "-log10(p-values)") +
-    ggplot2::guides(colour=FALSE) + 
+    ggplot2::guides(colour = FALSE) + 
     ggplot2::ggtitle("Manhattan Plot")
   print(p0)
 }
