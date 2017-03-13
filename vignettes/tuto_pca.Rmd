@@ -1,0 +1,32 @@
+---
+title: <center><span style="color:SteelBlue">Display PCA with pcadapt</span></center>
+output: html_document
+---
+
+
+```{r}
+library(pcadapt)
+file <- read.pcadapt("geno3pops", type = "example")
+x <- pcadapt(file, K = 5)
+```
+
+### <span style="color:SteelBlue">Basic display</span>
+
+```{r}
+plot(x, option = "scores")
+```
+
+### <span style="color:SteelBlue">Add colors</span>
+
+```{r}
+ind.label <- c(rep("AFR", 50), rep("EUR", 50), rep("ASN", 50))
+plot(x, option = "scores", pop = ind.label)
+```
+
+### <span style="color:SteelBlue">Custom colors</span>
+
+```{r}
+ind.label <- c(rep("AFR", 50), rep("EUR", 50), rep("ASN", 50))
+custom.colors <- c("#999999", "#E69F00", "#56B4E9")
+plot(x, option = "scores", pop = ind.label, gg.col = custom.colors)
+```

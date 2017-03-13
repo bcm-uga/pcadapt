@@ -1,7 +1,8 @@
 title: pcadapt
 
-template:
-  bootswatch: cerulean
+templates:
+  params:
+    bootswatch: cerulean
 
 reference:
   - title: Principal functions
@@ -9,6 +10,7 @@ reference:
     - pcadapt
     - plot.pcadapt
     - read.pcadapt
+    - scan.intro
 
 navbar:
   title: pcadapt

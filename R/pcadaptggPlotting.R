@@ -145,23 +145,20 @@ score.plotting = function(x, i = 1, j = 2, pop, gg.col){
       pop.to.int <- get.score.color(pop)
       popnames <- get.pop.names(pop)
       ggdf$Pop <- pop.to.int
-      res.plot <- res.plot + 
-        ggplot2::geom_point(aes(colour = factor(ggdf$Pop)))
-    }
-    
-    if (missing(gg.col)){
-      res.plot <- res.plot + ggplot2::scale_color_hue(name = " ", labels = popnames)
-    } else {
-      if (length(gg.col) < length(popnames)){
-        pers.col <- c(gg.col, rainbow(length(popnames) - length(gg.col)))
-      } else if (length(gg.col) == length(popnames)){
-        pers.col <- gg.col
-      } else if (length(gg.col) > length(popnames)){
-        pers.col <- gg.col[1:length(popnames)]
+      res.plot <- res.plot + ggplot2::geom_point(aes(colour = factor(ggdf$Pop)))
+      if (missing(gg.col)){
+        res.plot <- res.plot + ggplot2::scale_color_hue(name = " ", labels = popnames)
+      } else {
+        if (length(gg.col) < length(popnames)){
+          pers.col <- c(gg.col, rainbow(length(popnames) - length(gg.col)))
+        } else if (length(gg.col) == length(popnames)){
+          pers.col <- gg.col
+        } else if (length(gg.col) > length(popnames)){
+          pers.col <- gg.col[1:length(popnames)]
+        }
+        res.plot <- res.plot + ggplot2::scale_color_manual(name = " ", labels = popnames, values = pers.col)
       }
-      res.plot <- res.plot + ggplot2::scale_color_manual(name = " ", labels = popnames, values = pers.col)
     }
-    
     print(res.plot)
   }
 }
