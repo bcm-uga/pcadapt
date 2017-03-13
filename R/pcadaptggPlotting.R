@@ -24,7 +24,9 @@
 #' @param gg.col a list of colors to be used in the score plot.
 #' @param threshold for the \code{"qqplot"} option, it displays an additional bar which shows the \code{threshold} percent of SNPs with smallest p-values
 #' and separates them from SNPs with higher p-values.
-#'
+#' @param by.step an integer.
+#' @param hline a numeric value specifying the number of standard deviations above which the z-scores are considered extreme.
+#' 
 #' @examples
 #' ## see ?pcadapt for examples
 #'
@@ -39,13 +41,18 @@ plot.pcadapt = function(x,
                         j = 2, 
                         pop, 
                         gg.col,
-                        threshold = NULL){
+                        threshold = NULL,
+                        by.step = 10,
+                        hline = 3.0
+){
   if (!(option %in% c("screeplot", 
                       "scores", 
                       "manhattan", 
                       "qqplot", 
                       "stat.distribution"))){
     warning(paste("Plotting option", option, "not valid, options currently available are: screeplot, scores, manhattan, qqplot, stat.distribution."))
+  } else if (attr(x, "method") == "introgression"){
+    loc.anc.plotting(x, by.step = by.step, hline = hline)
   } else {
     if (option == "screeplot"){
       scree.plotting(x, K)
@@ -295,5 +302,36 @@ neutral.plotting = function(x, K){
     geom_line(data = ggdf, aes_string(x = "abs", y = "ord"), col = "#4F94CD", size = 1) + 
     ggplot2::ggtitle("Statistics distribution")
   print(p0)
+}
+
+#' Local Ancestry
+#'
+#' \code{loc.anc.plotting} plots the z-scores derived from the statistics computed with `scan.intro`.
+#'
+#' @param x an output from \code{outlier} containing the chi-squared statistics.
+#' @param by.step an integer specifying the density
+#'
+#' @examples
+#' ## see ?pcadapt for examples
+#'
+#' @keywords internal
+#'
+#' @importFrom ggplot2 ggplot aes_string geom_area ggtitle labs geom_hline
+#'
+#' @export
+loc.anc.plotting = function(x, by.step = by.step, hline = hline){
+  subset <- seq(1, length(x), by = by.step) #to display one out of ten points, thus reducing plotting time
+  xaxis <- (by.step * 1:length(subset))
+  sign.Y <- (x[subset] > 0)
+  anc.lab <- character(length = length(subset))
+  anc.lab[!sign.Y] <- attr(x, "ancstrl.1")
+  anc.lab[sign.Y] <- attr(x, "ancstrl.2")
+  df <- data.frame(X = xaxis, Y = x[subset], Ancestral = anc.lab)
+  plt.1 <- ggplot2::ggplot(df, aes_string("X", "Y", fill = "Ancestral")) + 
+    ggplot2::geom_area() +
+    ggplot2::ggtitle(paste0("Excess of local ancestry")) +
+    ggplot2::labs(x = "Position", y = "z-scores") + 
+    ggplot2::geom_hline(yintercept = hline)
+  print(plt.1)
 }
 

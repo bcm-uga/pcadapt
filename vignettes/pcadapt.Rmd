@@ -1,5 +1,7 @@
 ---
-output:
+title: <center>Using pcadapt to detect local adaption</center>
+author: <center>Keurcien Luu, Michael G.B. Blum</center>
+output: 
   rmarkdown::html_document
 vignette: >
   %\VignetteIndexEntry{pcadapt}
@@ -7,21 +9,18 @@ vignette: >
   %\usepackage[utf8]{inputenc}
 ---
 
-<center> <h1> Using pcadapt to detect local adaption. </h1> </center>
-<center> <h3> Keurcien Luu, Michael G.B. Blum </h3> </center>
-
 **pcadapt** has been developed to detect genetic markers involved in biological adaptation. **pcadapt** provides statistical tools for outlier detection based on Principal Component Analysis (PCA).
 
 In the following, we show how the **pcadapt** package can perform genome scans for selection based on individual genotype data. We show how to run the package using the example **geno3pops** that contains genotype data. A total of 150 individuals coming from three different populations were genotyped at 1,500 diploid markers. Simulations were performed with [simuPOP](http://simupop.sourceforge.net/) using a divergence model assuming that 150 SNPs confer a selective advantage. To run the package on the provided example, just copy and paste shaded `R` chunks.
 
 To run the package, you need to install the package and load it using the following command lines:
 
-```{r ,eval=FALSE}
+```{r, eval = FALSE}
 install.packages("pcadapt")
 library(pcadapt)
 ```
 
-```{r,echo=TRUE,include=FALSE}
+```{r, echo = TRUE, include = FALSE}
 library(pcadapt)#Comment
 ```
 

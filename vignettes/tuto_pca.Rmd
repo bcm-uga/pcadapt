@@ -1,6 +1,7 @@
 ---
-title: <center><span style="color:SteelBlue">Display PCA with pcadapt</span></center>
-output: html_document
+title: Display PCA with pcadapt
+output: 
+  html_document
 ---
 
 

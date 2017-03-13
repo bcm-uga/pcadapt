@@ -16,8 +16,6 @@ navbar:
   title: pcadapt
   type: default
   left:
-  - text: Home
-    href: index.html
   - text: Overview
     href: articles/pcadapt.html
   - text: Documentation

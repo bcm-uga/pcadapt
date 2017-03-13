@@ -72,6 +72,7 @@ assign.int.labels = function(pop){
 #' @return The returned value is a list containing the test statistics and the associated p-values.
 #' 
 #' @importFrom data.table fread
+#' @importFrom MASS cov.rob
 #' 
 #' @export
 #'
@@ -133,12 +134,19 @@ scan.intro = function(input,
                         ancstrl2 = as.integer(ancstrl.int.2),
                         adm = as.integer(admxd.int), 
                         axis = as.vector(axis.vector))
-  stat.sd <- sd(stat)
-  pval <- pnorm(stat / stat.sd, lower.tail = FALSE)
+  
+  aux <- MASS::cov.rob(stat)
+  obj.stat <- (stat - aux$center[1]) / sqrt(aux$cov[1, 1])
   flush.console()
   cat("DONE\n")
-  #return(-log10(pval))
-  return(stat / stat.sd)
+  class(obj.stat) <- "pcadapt"
+  attr(obj.stat, "K") <- K
+  attr(obj.stat, "method") <- "introgression"
+  attr(obj.stat, "min.maf") <- min.maf
+  attr(obj.stat, "ancstrl.1") <- ancstrl.1
+  attr(obj.stat, "ancstrl.2") <- ancstrl.2
+  attr(obj.stat, "window.size") <- window.size
+  return(obj.stat)
 } 
 
 #' Display local PCA

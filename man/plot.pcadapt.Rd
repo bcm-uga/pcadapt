@@ -5,7 +5,7 @@
 \title{pcadapt visualization tool}
 \usage{
 \method{plot}{pcadapt}(x, ..., option = "manhattan", K = NULL, i = 1,
-  j = 2, pop, gg.col, threshold = NULL)
+  j = 2, pop, gg.col, threshold = NULL, by.step = 10, hline = 3)
 }
 \arguments{
 \item{x}{an object of class "pcadapt" generated with \code{pcadapt}.}
@@ -28,6 +28,10 @@ Default value is set to \code{2}.}
 
 \item{threshold}{for the \code{"qqplot"} option, it displays an additional bar which shows the \code{threshold} percent of SNPs with smallest p-values
 and separates them from SNPs with higher p-values.}
+
+\item{by.step}{an integer.}
+
+\item{hline}{a numeric value specifying the number of standard deviations above which the z-scores are considered extreme.}
 }
 \description{
 \code{plot.pcadapt} is a method designed for objects of class \code{pcadapt}.

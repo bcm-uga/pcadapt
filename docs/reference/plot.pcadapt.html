@@ -49,9 +49,6 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">Home</a>
-</li>
-<li>
   <a href="../articles/pcadapt.html">Overview</a>
 </li>
 <li>
@@ -99,7 +96,7 @@ the estimated distribution for the neutral SNPs.
 
     <pre><span class='co'># S3 method for pcadapt</span>
 <span class='fu'>plot</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"manhattan"</span>, <span class='kw'>K</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>i</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>j</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='no'>pop</span>, <span class='no'>gg.col</span>, <span class='kw'>threshold</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+  <span class='kw'>j</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='no'>pop</span>, <span class='no'>gg.col</span>, <span class='kw'>threshold</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>by.step</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>hline</span> <span class='kw'>=</span> <span class='fl'>3</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
@@ -124,6 +121,10 @@ Default value is set to <code>2</code>.</p></dd>
       <dt>threshold</dt>
       <dd><p>for the <code>"qqplot"</code> option, it displays an additional bar which shows the <code>threshold</code> percent of SNPs with smallest p-values
 and separates them from SNPs with higher p-values.</p></dd>
+      <dt>by.step</dt>
+      <dd><p>an integer.</p></dd>
+      <dt>hline</dt>
+      <dd><p>a numeric value specifying the number of standard deviations above which the z-scores are considered extreme.</p></dd>
     </dl>
     
 
