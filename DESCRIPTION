@@ -28,5 +28,5 @@ LinkingTo: Rcpp, RcppArmadillo
 LazyData: TRUE
 Suggests: knitr, rmarkdown, testthat
 SystemRequirements: C++11
-RoxygenNote: 6.0.0
+RoxygenNote: 6.0.1
 VignetteBuilder: knitr
