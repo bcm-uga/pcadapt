@@ -473,3 +473,24 @@ arma::vec cmpt_all_stat(const arma::mat &geno,
   }
   return(stat);
 }
+
+
+//' @export
+//' 
+// [[Rcpp::export]]
+arma::vec cmpt_new_win(int i, const arma::vec &map, int window_size){
+  int n = map.n_elem;
+  int half_window = window_size / 2;
+  int idx_left = i;
+  int idx_right = i;
+  while ((map[i] - map[idx_left] < half_window) && (idx_left > 0)){
+    idx_left -= 1;
+  }
+  while ((map[idx_right] - map[i] < half_window) && (idx_right < n - 1)){
+    idx_right += 1;
+  }
+  arma::vec lr(2, arma::fill::zeros);
+  lr[0] = idx_left;
+  lr[1] = idx_right;
+  return(lr);
+}
