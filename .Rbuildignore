@@ -3,4 +3,3 @@
 .travis.yml
 _pkgdown.yml
 docs/*
-vignettes/tuto_ingrogression.Rmd
