@@ -215,20 +215,6 @@ updt_local_scores <- function(u, geno, V, sigma, beg, end) {
     invisible(.Call('pcadapt_updt_local_scores', PACKAGE = 'pcadapt', u, geno, V, sigma, beg, end))
 }
 
-#' Wilcoxon rank
-#' 
-#' \code{get_rank} returns the ordering index.
-#' 
-#' @param v_temp a numeric vector.
-#' 
-#' @return The returned value is a vector of integers.
-#' 
-#' @export
-#' 
-get_rank <- function(v_temp) {
-    .Call('pcadapt_get_rank', PACKAGE = 'pcadapt', v_temp)
-}
-
 #' Axis of projection
 #' 
 #' \code{get_axis} returns the axis onto which projection should be performed.
@@ -263,6 +249,20 @@ get_axis <- function(uglob, lab, anc1, anc2) {
 #' 
 cmpt_directional_stat <- function(usc, uglob, lab, adm, ax) {
     .Call('pcadapt_cmpt_directional_stat', PACKAGE = 'pcadapt', usc, uglob, lab, adm, ax)
+}
+
+#' Wilcoxon rank
+#' 
+#' \code{get_rank} returns the ordering index.
+#' 
+#' @param v_temp a numeric vector.
+#' 
+#' @return The returned value is a vector of integers.
+#' 
+#' @export
+#' 
+get_rank <- function(v_temp) {
+    .Call('pcadapt_get_rank', PACKAGE = 'pcadapt', v_temp)
 }
 
 #' Wilcoxon statistics
@@ -305,6 +305,12 @@ cmpt_wilcoxon_stat <- function(usc, uglob, direction, lab, adm, axis) {
 #' 
 cmpt_all_stat <- function(geno, V, sigma, window_size, direction, lab, ancstrl1, ancstrl2, adm, axis) {
     .Call('pcadapt_cmpt_all_stat', PACKAGE = 'pcadapt', geno, V, sigma, window_size, direction, lab, ancstrl1, ancstrl2, adm, axis)
+}
+
+#' @export
+#' 
+cmpt_new_win <- function(i, map, window_size) {
+    .Call('pcadapt_cmpt_new_win', PACKAGE = 'pcadapt', i, map, window_size)
 }
 
 colMedian_cpp <- function(x) {

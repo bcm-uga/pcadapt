@@ -121,7 +121,8 @@ scan.intro = function(input,
   scaled.geno <- scale(t(geno), center = TRUE, scale = sd) 
   cat("DONE\n")
   cat("Performing PCA...\n")
-  obj.svd <- svd.pcadapt(input = geno, K = k, min.maf = min.maf, ploidy = ploidy, type = 1)
+  obj.svd <- svd.pcadapt(input = geno, K = k, min.maf = min.maf, 
+                         ploidy = ploidy, type = 1)
   cat("Computing the statistics...")
   
   stat <- cmpt_all_stat(geno = as.matrix(scaled.geno), 
