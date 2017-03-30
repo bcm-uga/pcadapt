@@ -277,33 +277,6 @@ void updt_local_scores(arma::mat &u, const arma::mat &geno, const arma::mat &V, 
   }
 }
 
-//' Wilcoxon rank
-//' 
-//' \code{get_rank} returns the ordering index.
-//' 
-//' @param v_temp a numeric vector.
-//' 
-//' @return The returned value is a vector of integers.
-//' 
-//' @export
-//' 
-// [[Rcpp::export]]
-arma::vec get_rank(const arma::vec &v_temp){
-  int n = v_temp.n_elem;
-  arma::vec v_sort(n);
-  for (int i = 0; i < n; i++){
-    v_sort[i] = v_temp[i];
-  }
-  arma::uvec idx = sort_index(v_sort);
-  arma::vec rank(n);
-  rank.zeros();
-  for (int i = 0; i < n; i++){
-    int tmp = idx[i];
-    rank[tmp] = i + 1;
-  }
-  return(rank);
-}
-
 //' Axis of projection
 //' 
 //' \code{get_axis} returns the axis onto which projection should be performed.
@@ -355,6 +328,35 @@ double cmpt_directional_stat(arma::mat &usc,
   }
   return(stat);
 }
+
+
+//' Wilcoxon rank
+//' 
+//' \code{get_rank} returns the ordering index.
+//' 
+//' @param v_temp a numeric vector.
+//' 
+//' @return The returned value is a vector of integers.
+//' 
+//' @export
+//' 
+// [[Rcpp::export]]
+arma::vec get_rank(const arma::vec &v_temp){
+  int n = v_temp.n_elem;
+  arma::vec v_sort(n);
+  for (int i = 0; i < n; i++){
+    v_sort[i] = v_temp[i];
+  }
+  arma::uvec idx = sort_index(v_sort);
+  arma::vec rank(n);
+  rank.zeros();
+  for (int i = 0; i < n; i++){
+    int tmp = idx[i];
+    rank[tmp] = i + 1;
+  }
+  return(rank);
+}
+
 
 //' Wilcoxon statistics
 //' 
@@ -478,9 +480,9 @@ arma::vec cmpt_all_stat(const arma::mat &geno,
 //' @export
 //' 
 // [[Rcpp::export]]
-arma::vec cmpt_new_win(int i, const arma::vec &map, int window_size){
+arma::vec cmpt_new_win(int i, const arma::vec &map, const double window_size){
   int n = map.n_elem;
-  int half_window = window_size / 2;
+  double half_window = window_size / 2.0;
   int idx_left = i;
   int idx_right = i;
   while ((map[i] - map[idx_left] < half_window) && (idx_left > 0)){

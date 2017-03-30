@@ -204,17 +204,6 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
-// get_rank
-arma::vec get_rank(const arma::vec& v_temp);
-RcppExport SEXP pcadapt_get_rank(SEXP v_tempSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::vec& >::type v_temp(v_tempSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_rank(v_temp));
-    return rcpp_result_gen;
-END_RCPP
-}
 // get_axis
 arma::vec get_axis(arma::mat& uglob, const arma::vec& lab, const int anc1, const int anc2);
 RcppExport SEXP pcadapt_get_axis(SEXP uglobSEXP, SEXP labSEXP, SEXP anc1SEXP, SEXP anc2SEXP) {
@@ -241,6 +230,17 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const int >::type adm(admSEXP);
     Rcpp::traits::input_parameter< arma::vec& >::type ax(axSEXP);
     rcpp_result_gen = Rcpp::wrap(cmpt_directional_stat(usc, uglob, lab, adm, ax));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_rank
+arma::vec get_rank(const arma::vec& v_temp);
+RcppExport SEXP pcadapt_get_rank(SEXP v_tempSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec& >::type v_temp(v_tempSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_rank(v_temp));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -277,6 +277,19 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const int >::type adm(admSEXP);
     Rcpp::traits::input_parameter< const arma::vec >::type axis(axisSEXP);
     rcpp_result_gen = Rcpp::wrap(cmpt_all_stat(geno, V, sigma, window_size, direction, lab, ancstrl1, ancstrl2, adm, axis));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cmpt_new_win
+arma::vec cmpt_new_win(int i, const arma::vec& map, const double window_size);
+RcppExport SEXP pcadapt_cmpt_new_win(SEXP iSEXP, SEXP mapSEXP, SEXP window_sizeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type i(iSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type map(mapSEXP);
+    Rcpp::traits::input_parameter< const double >::type window_size(window_sizeSEXP);
+    rcpp_result_gen = Rcpp::wrap(cmpt_new_win(i, map, window_size));
     return rcpp_result_gen;
 END_RCPP
 }
