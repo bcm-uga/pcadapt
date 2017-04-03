@@ -205,7 +205,7 @@ This plot confirms that most of the p-values follow the expected uniform distrib
 A histogram of p-values confirms that most of the p-values follow the uniform distribution, and that the excess of small p-values indicates the presence of outliers.
 
 ```{r, fig.width = 7, fig.height = 5, fig.align = 'center'}
-hist(x$pvalues, xlab = "p-values", main = NULL, breaks = 50)
+hist(x$pvalues, xlab = "p-values", main = NULL, breaks = 50, col = "orange")
 ```
 
 The presence of outliers is also visible when plotting a histogram of the test statistic $D_j$.

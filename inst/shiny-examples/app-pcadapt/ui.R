@@ -1,13 +1,19 @@
 library(shiny)
 library(plotly)
 library(rjson)
+suppressPackageStartupMessages(library(shinyjs))
+library(shinyAce)
+library(shinyBS)
+
 
 shiny::shinyUI(fluidPage(
+  useShinyjs(),
+  theme = "bootstrap.css",
+  tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),
   
   # Application title
   titlePanel("pcadapt"),
   
-  # Sidebar with a slider input for number of bins 
   sidebarLayout(
     sidebarPanel(
       fileInput("file1", "Choose pcadapt file",
@@ -24,15 +30,18 @@ shiny::shinyUI(fluidPage(
                   "text/comma-separated-values,text/plain",
                   ".csv",
                   ".pop",
-                  ".txt")
+                  ".txt",
+                  ".fam")
       ),
       
       selectInput("opt", label = "Option", 
-                  choices = c("PCA", "Manhattan")),
+                  choices = c("PCA", "Manhattan", "Histogram")),
       
-      numericInput("K", label = "K", value = 2),
-      numericInput("i", label = "i", value = 1),
-      numericInput("j", label = "j", value = 2)
+      numericInput("K", label = "K", value = 2, min = 1),
+      numericInput("ploidy", label = "ploidy", value = 2, min = 1, max = 2),
+      numericInput("min.maf", label = "min.maf", value = 0.05, min = 0.0, max = 0.45),
+      numericInput("i", label = "i", value = 1, min = 1),
+      numericInput("j", label = "j", value = 2, min = 1)
 
     ),
     
