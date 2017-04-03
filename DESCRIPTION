@@ -3,11 +3,13 @@ Type: Package
 Title: Fast Principal Component Analysis for Outlier Detection
 Version: 3.1.0
 Date: 2017-01-08
-Authors@R: c(person("Keurcien", "Luu", role = c("aut", "cre"), email = "keurcien.luu@imag.fr"), 
-          person("Michael", "Blum", role = c("aut"), email = "michael.blum@imag.fr"),
+Authors@R: c(person("Keurcien", "Luu", role = c("aut", "cre"), email = "keurcien.luu@univ-grenoble-alpes.fr"), 
+          person("Michael", "Blum", role = c("aut"), email = "michael.blum@univ-grenoble-alpes.fr"),
+          person("Eric", "Bazin", role = c("ctb"), email = "eric.bazin@univ-grenoble.alpes.fr"),
           person("Nicolas", "Duforet-Frebourg", role = c("ctb")))
 Author: Keurcien Luu [aut, cre],
         Michael Blum [aut],
+        Eric Bazin [ctb],
         Nicolas Duforet-Frebourg [ctb]
 Maintainer: Keurcien Luu <keurcien.luu@imag.fr>
 Description: Methods to detect genetic markers involved in biological

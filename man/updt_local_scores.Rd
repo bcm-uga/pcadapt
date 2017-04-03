@@ -23,5 +23,6 @@ updt_local_scores(u, geno, V, sigma, beg, end)
 The returned value is a score matrix.
 }
 \description{
-\code{updt_local_scores} computes the scores using a subset of genetic markers.
+\code{updt_local_scores} computes the scores using a subset of genetic 
+markers.
 }
