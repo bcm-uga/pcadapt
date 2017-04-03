@@ -353,6 +353,7 @@ loc.anc.plotting = function(x, by.step = by.step, hline = hline){
 #' Default value is set to \code{2}.
 #' @param pop a list of integers or strings specifying which subpopulation the 
 #' individuals belong to.
+#' @param gg.col a list of colors to be used in the score plot.
 #' @param ind a list of integers or strings specifying the names of the 
 #' individuals.
 #'

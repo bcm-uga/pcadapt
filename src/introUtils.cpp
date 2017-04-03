@@ -477,6 +477,14 @@ arma::vec cmpt_all_stat(const arma::mat &geno,
 }
 
 
+//' \code{cmpt_new_win} computes the statistics.
+//' 
+//' @param i an integer.
+//' @param map a vector containing the genetic positions in Morgans.
+//' @param window_size a numeric value specifying the window size en Morgans.
+//' 
+//' @return The returned value is a numeric vector.
+//' 
 //' @export
 //' 
 // [[Rcpp::export]]

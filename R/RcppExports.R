@@ -307,6 +307,14 @@ cmpt_all_stat <- function(geno, V, sigma, window_size, direction, lab, ancstrl1,
     .Call('pcadapt_cmpt_all_stat', PACKAGE = 'pcadapt', geno, V, sigma, window_size, direction, lab, ancstrl1, ancstrl2, adm, axis)
 }
 
+#' \code{cmpt_new_win} computes the statistics.
+#' 
+#' @param i an integer.
+#' @param map a vector containing the genetic positions in Morgans.
+#' @param window_size a numeric value specifying the window size en Morgans.
+#' 
+#' @return The returned value is a numeric vector.
+#' 
 #' @export
 #' 
 cmpt_new_win <- function(i, map, window_size) {
