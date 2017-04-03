@@ -7,21 +7,24 @@
 svd.pcadapt(input, K, min.maf, ploidy, type)
 }
 \arguments{
-\item{input}{a genotype matrix or a character string specifying the name of the file to be processed with \code{pcadapt}.}
+\item{input}{a genotype matrix or a character string specifying the name of 
+the file to be processed with \code{pcadapt}.}
 
 \item{K}{an integer specifying the number of principal components to retain.}
 
-\item{min.maf}{a value between \code{0} and \code{0.45} specifying the threshold
-of minor allele frequencies above which p-values are computed.}
+\item{min.maf}{a value between \code{0} and \code{0.45} specifying the 
+threshold of minor allele frequencies above which p-values are computed.}
 
 \item{ploidy}{an integer specifying the ploidy of the individuals.}
 
-\item{type}{an integer specifying the input type.}
+\item{type}{an integer specifying the input type: \code{0} for genotype 
+matrices or \code{1} for genotype files.}
 }
 \value{
-The returned value is a list containing the Singular Value Decomposition of the centered and scaled genotype matrix.
+The returned value is a list containing the Singular Value 
+Decomposition of the centered and scaled genotype matrix.
 }
 \description{
-\code{svd.pcadapt} computes the numerical quantities needed to compute the test
-statistics, and stores them in an object of class \code{pcadapt}.
+\code{svd.pcadapt} computes the numerical quantities needed to compute the 
+test statistics, and stores them in an object of class \code{pcadapt}.
 }

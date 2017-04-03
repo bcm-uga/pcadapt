@@ -7,18 +7,22 @@
 cmpt_cov_cpp(filename, xmatrix, min_maf, ploidy, type)
 }
 \arguments{
-\item{filename}{a character string specifying the name of the file to be processed with \code{pcadapt}.}
+\item{filename}{a character string specifying the name of the file to be 
+processed with \code{pcadapt}.}
 
 \item{xmatrix}{a genotype matrix.}
 
-\item{min_maf}{a value between \code{0} and \code{0.45} specifying the threshold of minor allele frequencies above which p-values are computed.}
+\item{min_maf}{a value between \code{0} and \code{0.45} specifying the 
+threshold of minor allele frequencies above which p-values are computed.}
 
 \item{ploidy}{an integer specifying the ploidy of the individuals.}
 
 \item{type}{an integer specifying the input type.}
 }
 \value{
-The returned value is a Rcpp::List containing the covariance matrix, the number of individuals and the number of genetic markers present in the data.
+The returned value is a Rcpp::List containing the covariance matrix, 
+the number of individuals and the number of genetic markers present in the 
+data.
 }
 \description{
 \code{cmpt_cov_cpp} computes the covariance matrix of a genotype matrix.

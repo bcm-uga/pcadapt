@@ -21,6 +21,7 @@ cmpt_directional_stat(usc, uglob, lab, adm, ax)
 The returned value is a numeric value.
 }
 \description{
-\code{cmpt_directional_stat} computes the displacement of admixed individuals such that positive (resp. negative) 
-displacement corresponds to a displacement towards ancestral population 2 (resp. 1).
+\code{cmpt_directional_stat} computes the displacement of admixed 
+individuals such that positive (resp. negative) displacement corresponds to 
+a displacement towards ancestral population 2 (resp. 1).
 }

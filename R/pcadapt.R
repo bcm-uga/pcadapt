@@ -55,80 +55,89 @@ pcadapt = function(input,
   ########## test arguments and init ##########
   #############################################
   
-  ## In version 3.1.0, argument output.filename has been removed ##
-  if (!missing(output.filename)){
-    warning("Argument output.filename is deprecated. Please refer to the latest vignette for further information.")
-  }
-  
-  ## In version 3.1.0, argument clean.files has been removed ##
-  if (!missing(clean.files)){
-    warning("Argument clean.files is deprecated. Please refer to the latest vignette for further information.")
-  }
-  
-  ## In version 3.0.3, argument transpose has been removed ##
-  if (!missing(transpose)){
-    stop("Argument transpose is deprecated. Please refer to the latest vignette for further information.")
-  }
-  
-  if (data.type == "genotype"){
-    if (!(class(K) %in% c("numeric", "integer")) || K <= 0){
-      stop("K has to be a positive integer.")
+  if (missing(input)){
+    appDir = system.file("shiny-examples/app-pcadapt", package = "pcadapt")
+    if (appDir == "") {
+      stop("Could not find Shiny app in pcadapt.", call. = FALSE)
+    }
+    shiny::runApp(appDir, display.mode = "normal")  
+  } else {
+    
+    ## In version 3.1.0, argument output.filename has been removed ##
+    if (!missing(output.filename)){
+      warning("Argument output.filename is deprecated. Please refer to the latest vignette for further information.")
     }
     
-    if (!(method %in% c("mahalanobis", "communality", "componentwise"))){
-      warning("Unknown method. 'mahalanobis' will be used hence.")
-      method <- "mahalanobis"
+    ## In version 3.1.0, argument clean.files has been removed ##
+    if (!missing(clean.files)){
+      warning("Argument clean.files is deprecated. Please refer to the latest vignette for further information.")
     }
     
-    if (class(min.maf) != "numeric" || min.maf < 0 || min.maf > 0.45){
-      warning("min.maf has to be a real number between 0 and 0.45. Default value will be used hence.")
-      min.maf <- 0.05
+    ## In version 3.0.3, argument transpose has been removed ##
+    if (!missing(transpose)){
+      stop("Argument transpose is deprecated. Please refer to the latest vignette for further information.")
     }
     
-    if (!(ploidy %in% c(1,2))){
-      stop("pcadapt only supports haploid and diploid data.")
-    }
-    
-    local <- NULL
-    if (is.character(input) && !file.exists(input)){
-      stop(paste0("File ", input, " does not exist."))
-    } else if (is.character(input) && file.exists(input)){
-      local <- FALSE
-    }
-    
-    if ((class(input) %in% c("matrix", "data.frame", "array"))){
-      local <- TRUE  
-    } 
-    
-    if (!is.null(local)){
-      if (local == FALSE){
-        obj.pca <- create.pcadapt(input = input, 
-                                  K = K,
-                                  method = method, 
-                                  min.maf = min.maf, 
-                                  ploidy = ploidy, 
-                                  type = 0)
-      } else if (local == TRUE){
-        obj.pca <- create.pcadapt(input = as.matrix(input), 
-                                  K = K, 
-                                  method = method, 
-                                  min.maf = min.maf, 
-                                  ploidy = ploidy, 
-                                  type = 1)
+    if (data.type == "genotype"){
+      if (!(class(K) %in% c("numeric", "integer")) || K <= 0){
+        stop("K has to be a positive integer.")
       }
-      class(obj.pca) <- 'pcadapt'
-      attr(obj.pca, "K") <- K
-      attr(obj.pca, "data.type") <- "genotype"
-      attr(obj.pca, "method") <- method
-      attr(obj.pca, "min.maf") <- min.maf
-      return(obj.pca)
-    } else {
-      stop("Input class not supported.")
-    }
-  } else if (data.type == "pool"){
-    stop('Option data.type = "pool" is deprecated. Use the read.pcadapt function instead. Usage:\n 
+      
+      if (!(method %in% c("mahalanobis", "communality", "componentwise"))){
+        warning("Unknown method. 'mahalanobis' will be used hence.")
+        method <- "mahalanobis"
+      }
+      
+      if (class(min.maf) != "numeric" || min.maf < 0 || min.maf > 0.45){
+        warning("min.maf has to be a real number between 0 and 0.45. Default value will be used hence.")
+        min.maf <- 0.05
+      }
+      
+      if (!(ploidy %in% c(1,2))){
+        stop("pcadapt only supports haploid and diploid data.")
+      }
+      
+      local <- NULL
+      if (is.character(input) && !file.exists(input)){
+        stop(paste0("File ", input, " does not exist."))
+      } else if (is.character(input) && file.exists(input)){
+        local <- FALSE
+      }
+      
+      if ((class(input) %in% c("matrix", "data.frame", "array"))){
+        local <- TRUE  
+      } 
+      
+      if (!is.null(local)){
+        if (local == FALSE){
+          obj.pca <- create.pcadapt(input = input, 
+                                    K = K,
+                                    method = method, 
+                                    min.maf = min.maf, 
+                                    ploidy = ploidy, 
+                                    type = 0)
+        } else if (local == TRUE){
+          obj.pca <- create.pcadapt(input = as.matrix(input), 
+                                    K = K, 
+                                    method = method, 
+                                    min.maf = min.maf, 
+                                    ploidy = ploidy, 
+                                    type = 1)
+        }
+        class(obj.pca) <- 'pcadapt'
+        attr(obj.pca, "K") <- K
+        attr(obj.pca, "data.type") <- "genotype"
+        attr(obj.pca, "method") <- method
+        attr(obj.pca, "min.maf") <- min.maf
+        return(obj.pca)
+      } else {
+        stop("Input class not supported.")
+      }
+    } else if (data.type == "pool"){
+      stop('Option data.type = "pool" is deprecated. Use the read.pcadapt function instead. Usage:\n 
          geno <- read.pcadapt(input, type = "pool", local.env = TRUE)\n
          x <- pcadapt(input = geno, K = ...)')
-    stop('')
+      stop('')
+    }
   }
 }

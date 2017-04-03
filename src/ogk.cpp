@@ -167,15 +167,9 @@ Rcpp::List ogk_step(arma::mat &x){
   arma::eig_sym(eigval, eigvec, U, "std");
   arma::mat D = arma::diagmat(as<arma::vec>(ms[1]));
   arma::mat V = x * (arma::solve(D, eigvec));
-  //ms = scaleTau2_matrix(V);
-  //arma::mat L = arma::diagmat(as<arma::vec>(ms[1]) % as<arma::vec>(ms[1]));
   arma::mat A = D * eigvec;
   return Rcpp::List::create(Rcpp::Named("V") = V,
                             Rcpp::Named("A") = D * eigvec);
-//   return Rcpp::List::create(Rcpp::Named("cov") = A * L * A.t(),
-//                             Rcpp::Named("center") = A * as<arma::vec>(ms[0]),
-//                             Rcpp::Named("V") = V,
-//                             Rcpp::Named("A") = A);
 }
 
 // [[Rcpp::export]]
@@ -215,10 +209,6 @@ Rcpp::List covRob_cpp(arma::mat& x){
   
   /* Second iteration */
   msva = ogk_step(V);
-  //arma::mat cov = as<arma::mat>(msva[0]);
-  //arma::vec center = as<arma::mat>(msva[1]);
-  //cov = A * cov * A.t();
-  //center = A * center;
   arma::mat Z = as<arma::mat>(msva[0]);
   
   Rcpp::List musigma;

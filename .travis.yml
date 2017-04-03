@@ -2,4 +2,3 @@ language: r
 
 os:
   - linux
-  - osx

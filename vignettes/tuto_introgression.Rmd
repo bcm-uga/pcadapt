@@ -4,7 +4,7 @@ output:
   html_document
 ---
 
-```{r, echo = TRUE, include = FALSE}
+```{r, echo = TRUE, include = FALSE, eval=FALSE}
 require(pcadapt)
 require(data.table)
 require(knitr)
@@ -24,7 +24,7 @@ popfile <- "populus3pops.pop"
 pop <- as.character(read.table(popfile)[, 1]) 
 ```
 
-```{r, include=FALSE}
+```{r, include=FALSE, eval=FALSE}
 filename <- "populus3pops.pcadapt" 
 popfile <- "populus3pops.pop" 
 pop <- as.character(read.table(popfile)[, 1]) 
@@ -35,7 +35,7 @@ pop <- as.character(read.table(popfile)[, 1])
 Our method requires complete datasets, in case your data contain missing values, the package provides a function to impute missing values in two different ways, depending on whether individual labels are known or not.
 In our example, `pop` contains the population information, i.e `pop[i]` returns the name of the population for which the `i`-th individual belongs to. 
 
-```{r}
+```{r, eval=FALSE}
 head(pop)
 ```
 
@@ -50,7 +50,7 @@ If this information is lacking, leave the `pop` argument to blank.
 write.table(geno, "imputed.pcadapt", col.names = FALSE, row.names = FALSE)
 ```
 
-```{r, include=FALSE}
+```{r, include=FALSE, eval=FALSE}
 geno <- as.matrix(fread("imputed.pcadapt"))
 ```
 
@@ -68,7 +68,7 @@ Provide the function `scan.intro` with the following arguments:
 - **window.size** an integer specifying the window size.
 - **impute** a logical value indicating whether the genotype matrix has missing values or not. 
 
-```{r}
+```{r, eval=FALSE}
 stat <- scan.intro( input = geno, 
                     K = 1, 
                     pop = pop, 
@@ -85,6 +85,6 @@ stat <- scan.intro( input = geno,
 
 High peaks correspond to excess of local ancestry from `ancstrl.2`.
 
-```{r, fig.width = 7, fig.height = 5, fig.align = 'center'}
+```{r, fig.width = 7, fig.height = 5, fig.align = 'center', eval=FALSE}
 plot(stat, by.step = 10, hline = 3.0)
 ```
