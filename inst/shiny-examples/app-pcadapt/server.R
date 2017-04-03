@@ -2,6 +2,7 @@ library(pcadapt)
 library(plotly)
 library(ggplot2)
 library(shiny)
+library(rjson)
 
 shiny::shinyServer(function(input, output) {
   

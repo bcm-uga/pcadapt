@@ -1,5 +1,6 @@
 library(shiny)
 library(plotly)
+library(rjson)
 
 shiny::shinyUI(fluidPage(
   
