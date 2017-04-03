@@ -28,7 +28,7 @@ Imports:
     data.table
 LinkingTo: Rcpp, RcppArmadillo
 LazyData: TRUE
-Suggests: knitr, rmarkdown, testthat
+Suggests: knitr, rmarkdown, testthat, shiny
 SystemRequirements: C++11
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr
