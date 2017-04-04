@@ -195,23 +195,23 @@ score.plotting = function(x, i = 1, j = 2, pop, gg.col, plt.pkg = "ggplot"){
       print(res.plot)
     } else if (plt.pkg == "plotly"){
       if (missing(pop)){
-        plotly::plot_ly(ggdf, x = ~PC_i, y = ~PC_j, 
-                        text = ~paste('Ind: ', 1:nrow(x$scores)),
-                        mode = "markers", 
-                        type = "scatter", 
-                        hoverinfo = "text") %>%
-          layout(title = paste0("Projection onto PC", i, " and PC", j), 
-                 xaxis = list(title = paste0("PC", i), showgrid = F),      
-                 yaxis = list(title = paste0("PC", j)))
+        p0 <- plotly::plot_ly(ggdf, x = ~PC_i, y = ~PC_j, 
+                              text = ~paste('Ind: ', 1:nrow(x$scores)),
+                              mode = "markers", 
+                              type = "scatter", 
+                              hoverinfo = "text")
+        p1 <- plotly::layout(p0, title = paste0("Projection onto PC", i, " and PC", j), 
+                             xaxis = list(title = paste0("PC", i), showgrid = F),      
+                             yaxis = list(title = paste0("PC", j)))
       } else if (!missing(pop)){
-        plotly::plot_ly(ggdf, x = ~PC_i, y = ~PC_j, 
-                        color = pop, text = ~paste('Ind: ', 1:nrow(x$scores)),
-                        mode = "markers", 
-                        type = "scatter", 
-                        hoverinfo = "text") %>%
-          layout(title = paste0("Projection onto PC", i, " and PC", j), 
-                 xaxis = list(title = paste0("PC", i), showgrid = F),      
-                 yaxis = list(title = paste0("PC", j)))  
+        p0 <- plotly::plot_ly(ggdf, x = ~PC_i, y = ~PC_j, 
+                              color = pop, text = ~paste('Ind: ', 1:nrow(x$scores)),
+                              mode = "markers", 
+                              type = "scatter", 
+                              hoverinfo = "text")
+        p1 <- plotly::layout(p0, title = paste0("Projection onto PC", i, " and PC", j), 
+                             xaxis = list(title = paste0("PC", i), showgrid = F),      
+                             yaxis = list(title = paste0("PC", j)))  
       }
     }
   }
@@ -239,6 +239,7 @@ score.plotting = function(x, i = 1, j = 2, pop, gg.col, plt.pkg = "ggplot"){
 #' @keywords internal
 #'
 #' @importFrom ggplot2 qplot guides ggtitle
+#' @importFrom plotly plot_ly layout
 #'
 #' @export
 #'
@@ -291,11 +292,11 @@ manhattan.plotting = function(x, K, snp.info, chr.info, plt.pkg){
                             marker = list(color = "#132B43"),
                             mode = "markers", 
                             type = "scatter", 
-                            hoverinfo = "text") %>% 
-        layout(title = "Manhattan Plot", 
-               xaxis = list(title = "Index", showgrid = F),      
-               yaxis = list(title = "-log10(p-values)"),
-               showlegend = FALSE)
+                            hoverinfo = "text")
+      p1 <- plotly::layout(p0, title = "Manhattan Plot", 
+                           xaxis = list(title = "Index", showgrid = F),      
+                           yaxis = list(title = "-log10(p-values)"),
+                           showlegend = FALSE)
     } else {
       chr <- chr.info[nan.idx] %% 2
       p0 <- plotly::plot_ly(df, x = ~xx, y = ~yy,
@@ -306,13 +307,13 @@ manhattan.plotting = function(x, K, snp.info, chr.info, plt.pkg){
                             colors = c("#56B1F7", "#132B43"),
                             mode = "markers", 
                             type = "scatter", 
-                            hoverinfo = "text") %>% 
-        layout(title = "Manhattan Plot", 
-               xaxis = list(title = "Index", showgrid = F),      
-               yaxis = list(title = "-log10(p-values)"),
-               showlegend = FALSE)
+                            hoverinfo = "text")
+      p1 <- plotly::layout(p0, title = "Manhattan Plot", 
+                           xaxis = list(title = "Index", showgrid = F),      
+                           yaxis = list(title = "-log10(p-values)"),
+                           showlegend = FALSE)
     }
-    print(p0)
+    print(p1)
   }
 }
 
@@ -330,7 +331,8 @@ manhattan.plotting = function(x, K, snp.info, chr.info, plt.pkg){
 #' @keywords internal
 #'
 #' @importFrom ggplot2 qplot geom_line guides ggtitle
-#'
+#' @importFrom plotly plot_ly layout
+#' 
 #' @export
 #'
 scree.plotting = function(x, K){

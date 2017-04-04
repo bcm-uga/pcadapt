@@ -25,7 +25,8 @@ Imports:
     vcfR,
     RSpectra,
     rrcov,
-    data.table
+    data.table,
+    plotly
 LinkingTo: Rcpp, RcppArmadillo
 LazyData: TRUE
 Suggests: knitr, rmarkdown, testthat, shiny
