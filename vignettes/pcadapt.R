@@ -55,7 +55,7 @@ plot(x , option = "manhattan")
 plot(x, option = "qqplot", threshold = 0.1)
 
 ## ---- fig.width = 7, fig.height = 5, fig.align = 'center'----------------
-hist(x$pvalues, xlab = "p-values", main = NULL, breaks = 50)
+hist(x$pvalues, xlab = "p-values", main = NULL, breaks = 50, col = "orange")
 
 ## ---- fig.width = 7, fig.height = 5, fig.align = 'center'----------------
 plot(x, option = "stat.distribution")

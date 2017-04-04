@@ -12,7 +12,8 @@ loc.anc.plotting(x, by.step = by.step, hline = hline)
 \item{by.step}{an integer specifying the density}
 }
 \description{
-\code{loc.anc.plotting} plots the z-scores derived from the statistics computed with `scan.intro`.
+\code{loc.anc.plotting} plots the z-scores derived from the statistics 
+computed with `scan.intro`.
 }
 \examples{
 ## see ?pcadapt for examples

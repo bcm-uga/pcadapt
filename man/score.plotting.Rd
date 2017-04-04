@@ -4,7 +4,7 @@
 \alias{score.plotting}
 \title{Principal Components Analysis Scores Plot}
 \usage{
-score.plotting(x, i = 1, j = 2, pop, gg.col)
+score.plotting(x, i = 1, j = 2, pop, gg.col, plt.pkg = "ggplot")
 }
 \arguments{
 \item{x}{an output from \code{pcadapt} containing the scores.}
@@ -19,6 +19,10 @@ Default value is set to \code{2}.}
 
 \item{pop}{a list of integers or strings specifying which subpopulation the 
 individuals belong to.}
+
+\item{plt.pkg}{a character string specifying the package to be used to 
+display the graphical outputs. Use \code{"plotly"} for interactive plots, or 
+\code{"ggplot"} for static plots.}
 }
 \description{
 \code{"score.plotting"} plots the projection of the individuals onto the 

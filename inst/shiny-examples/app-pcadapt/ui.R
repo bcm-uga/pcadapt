@@ -34,6 +34,15 @@ shiny::shinyUI(fluidPage(
                   ".fam")
       ),
       
+      fileInput("file3", "Choose SNP file",
+                accept = c(
+                  "text/csv",
+                  "text/comma-separated-values,text/plain",
+                  ".csv",
+                  ".txt",
+                  ".snp")
+      ),
+      
       selectInput("opt", label = "Option", 
                   choices = c("PCA", "Manhattan", "Histogram")),
       
@@ -42,7 +51,6 @@ shiny::shinyUI(fluidPage(
       numericInput("min.maf", label = "min.maf", value = 0.05, min = 0.0, max = 0.45),
       numericInput("i", label = "i", value = 1, min = 1),
       numericInput("j", label = "j", value = 2, min = 1)
-
     ),
     
     mainPanel(
