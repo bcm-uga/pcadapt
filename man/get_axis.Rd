@@ -4,16 +4,16 @@
 \alias{get_axis}
 \title{Axis of projection}
 \usage{
-get_axis(uglob, lab, anc1, anc2)
+get_axis(uglob, lab, pop1, pop2)
 }
 \arguments{
 \item{uglob}{a matrix of global scores.}
 
 \item{lab}{a vector of integers.}
 
-\item{anc1}{an integer.}
+\item{pop1}{an integer.}
 
-\item{anc2}{an integer.}
+\item{pop2}{an integer.}
 }
 \value{
 The returned value is a numeric vector.

@@ -15,17 +15,17 @@ using namespace Rcpp;
 //' 
 //' @param uglob a matrix of global scores.
 //' @param lab a vector of integers.
-//' @param anc1 an integer.
-//' @param anc2 an integer.
+//' @param pop1 an integer.
+//' @param pop2 an integer.
 //' 
 //' @return The returned value is a numeric vector.
 //' 
 //' @export
 //' 
 // [[Rcpp::export]]
-arma::vec get_axis(arma::mat &uglob, const arma::vec &lab, const int anc1, 
-                   const int anc2){
-  Rcpp::List res = cmpt_centroids(uglob, lab, anc1, anc2);
+arma::vec get_axis(arma::mat &uglob, const arma::vec &lab, const int pop1, 
+                   const int pop2){
+  Rcpp::List res = cmpt_centroids(uglob, lab, pop1, pop2);
   arma::vec m1 = res[0];
   arma::vec m2 = res[1];
   return(m2 - m1);
@@ -63,7 +63,38 @@ double cmpt_directional_stat(arma::mat &usc,
   return(stat);
 }
 
-//' Wilcoxon statistics
+
+//' \code{cmpt_new_win} computes the statistics.
+//' 
+//' @param i an integer.
+//' @param map a vector containing the genetic positions in Morgans.
+//' @param window_size a numeric value specifying the window size en Morgans.
+//' 
+//' @return The returned value is a numeric vector.
+//' 
+//' @export
+//' 
+// [[Rcpp::export]]
+arma::vec cmpt_new_win(int i, const arma::vec &map, const double window_size){
+  int n = map.n_elem;
+  //double half_window = window_size / 2.0;
+  double half_window = window_size;
+  int idx_left = i;
+  int idx_right = i;
+  // while ((map[i] - map[idx_left] < half_window) && (idx_left > 0)){
+  //   idx_left -= 1;
+  // }
+  while ((map[idx_right] - map[i] < half_window) && (idx_right < n - 1)){
+    idx_right += 1;
+  }
+  arma::vec lr(2, arma::fill::zeros);
+  lr[0] = idx_left;
+  lr[1] = idx_right;
+  return(lr);
+}
+
+
+//' Introgression statistics
 //' 
 //' \code{cmpt_all_stat} computes the statistics.
 //' 
@@ -77,6 +108,7 @@ double cmpt_directional_stat(arma::mat &usc,
 //' @param ancstrl2 an integer.
 //' @param adm an integer.
 //' @param axis a numeric vector.
+//' @param map a numeric vector containing the genetic positions.
 //' 
 //' @return The returned value is a numeric vector.
 //' 
@@ -92,7 +124,8 @@ arma::vec cmpt_all_stat(const arma::mat &geno,
                         const int ancstrl1,
                         const int ancstrl2,
                         const int adm, 
-                        const arma::vec axis){
+                        const arma::vec axis,
+                        const arma::vec map){
   int nSNP = geno.n_cols;
   int nIND = geno.n_rows;
   int K = V.n_cols;
@@ -100,58 +133,40 @@ arma::vec cmpt_all_stat(const arma::mat &geno,
   arma::vec dglob(K, arma::fill::zeros);
   arma::vec dloc(K, arma::fill::zeros);
   arma::mat usc(nIND, K, arma::fill::zeros);
-  arma::vec stat(nSNP, arma::fill::zeros);
+  //arma::vec stat(nSNP, arma::fill::zeros);
+  arma::vec stat(nSNP - window_size, arma::fill::zeros);
   arma::vec ax(K, arma::fill::zeros);
   arma::mat R(K, K, arma::fill::zeros); // ROTATION CORRECTION
   R.eye();
   
   arma::mat uglob = cmpt_global_pca(geno, V, sigma);
   arma::mat uloc = cmpt_local_pca(geno, V, sigma, 0, window_size);
-  ax = get_axis(uglob, lab, ancstrl1, ancstrl2);
+  //ax = get_axis(uglob, lab, ancstrl1, ancstrl2);
+  ax = get_axis(uglob, lab, adm, ancstrl2);
   for (int k = 0; k < K; k++){
     ax[k] *= axis[k];   
   }
   cmpt_transformation(uloc, uglob, lab, ancstrl1, ancstrl2, s, dloc, dglob, R);
   usc = rescale_local_pca(uloc, s, dglob, dloc, R);
+  arma::vec idx_old(2, arma::fill::zeros);
+  arma::vec idx_new(2, arma::fill::zeros);
+  idx_old = cmpt_new_win(0, map, window_size);
   for (int i = 1; i < (nSNP - window_size); i++){
-    updt_local_scores(uloc, geno, V, sigma, i, i + window_size);
+    idx_new = cmpt_new_win(i, map, window_size);
+    //updt_local_scores(uloc, geno, V, sigma, i, i + window_size);
+    updt_local_scores_2(uloc, geno, V, sigma, idx_old[0], idx_old[1], 
+                        idx_new[0], idx_new[1]);
     cmpt_transformation(uloc, uglob, lab, ancstrl1, ancstrl2, s, dloc, dglob, R);
     usc = rescale_local_pca(uloc, s, dloc, dglob, R);
     stat[i] = cmpt_directional_stat(usc, uglob, lab, adm, ax);
-    //stat[i] = cmpt_wilcoxon_stat(usc, uglob, direction, lab, adm, axis);
+    idx_old[0] = idx_new[0];
+    idx_old[1] = idx_new[1];
   }
   stat[0] = stat[1];
-  for (int i = (nSNP - window_size); i < nSNP; i++){
-    stat[i] = stat[nSNP - window_size - 1];
-  }
+  //for (int i = (nSNP - window_size); i < nSNP; i++){
+    //stat[i] = stat[nSNP - window_size - 1];
+    //stat[i] = 0.0;
+  //}
   return(stat);
 }
 
-
-//' \code{cmpt_new_win} computes the statistics.
-//' 
-//' @param i an integer.
-//' @param map a vector containing the genetic positions in Morgans.
-//' @param window_size a numeric value specifying the window size en Morgans.
-//' 
-//' @return The returned value is a numeric vector.
-//' 
-//' @export
-//' 
-// [[Rcpp::export]]
-arma::vec cmpt_new_win(int i, const arma::vec &map, const double window_size){
-  int n = map.n_elem;
-  double half_window = window_size / 2.0;
-  int idx_left = i;
-  int idx_right = i;
-  while ((map[i] - map[idx_left] < half_window) && (idx_left > 0)){
-    idx_left -= 1;
-  }
-  while ((map[idx_right] - map[i] < half_window) && (idx_right < n - 1)){
-    idx_right += 1;
-  }
-  arma::vec lr(2, arma::fill::zeros);
-  lr[0] = idx_left;
-  lr[1] = idx_right;
-  return(lr);
-}

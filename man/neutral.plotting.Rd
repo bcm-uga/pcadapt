@@ -9,10 +9,12 @@ neutral.plotting(x, K)
 \arguments{
 \item{x}{an output from \code{outlier} containing the chi-squared statistics.}
 
-\item{K}{an integer indicating which principal component the histogram will be associated with.}
+\item{K}{an integer indicating which principal component the histogram will 
+be associated with.}
 }
 \description{
-\code{neutral.plotting} plots the histogram of the chi-squared statistics, as well as the estimated null distribution.
+\code{neutral.plotting} plots the histogram of the chi-squared statistics, 
+as well as the estimated null distribution.
 }
 \examples{
 ## see ?pcadapt for examples

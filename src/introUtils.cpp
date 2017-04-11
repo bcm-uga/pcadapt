@@ -99,3 +99,52 @@ void updt_local_scores(arma::mat &u, const arma::mat &geno, const arma::mat &V,
     }
   }
 }
+
+
+//' Update local Principal Component Analysis
+//' 
+//' \code{updt_local_scores} computes the scores using a subset of genetic 
+//' markers.
+//' 
+//' @param u a score matrix.
+//' @param geno a genotype matrix.
+//' @param V a loading matrix.
+//' @param sigma a vector of singular values.
+//' @param beg_old an integer specifying the first marker to be included.
+//' @param end_old an integer specifying the first marker to be excluded.
+//' @param beg_new an integer specifying the first marker to be excluded.
+//' @param end_new an integer specifying the first marker to be excluded.
+//' 
+//' @return The returned value is a score matrix.
+//' 
+//' @export
+//' 
+// [[Rcpp::export]]
+void updt_local_scores_2(arma::mat &u, 
+                       const arma::mat &geno, 
+                       const arma::mat &V, 
+                       const arma::vec &sigma, 
+                       const int beg_old, 
+                       const int end_old,
+                       const int beg_new,
+                       const int end_new){
+  int nIND = geno.n_rows; 
+  int nSNP = geno.n_cols;
+  int K = u.n_cols;
+  double cst = (double) nSNP / (end_new - beg_new);
+  for (int j = 0; j < nIND; j++){
+    for (int k = 0; k < K; k++){
+      if (beg_new > beg_old){
+        for (int p = beg_old; p < beg_new; p++){
+          u(j, k) -= (geno.at(j, p) * V(p, k)) * cst / sigma[k];
+        }
+      }
+      if (end_new > end_old){
+        for (int q = end_old; q < end_new; q++){
+          u(j, k) += (geno.at(j, q) * V(q, k)) * cst / sigma[k];
+        }
+      }
+    }
+  }
+}
+

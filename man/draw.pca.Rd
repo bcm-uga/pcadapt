@@ -22,11 +22,13 @@ draw.pca(geno, V, sigma, uglob, beg, end, pop, i = 1, j = 2, ancstrl1,
 
 \item{pop}{a list of integers.}
 
-\item{i}{an integer indicating onto which principal component the individuals are projected when the "scores" option is chosen.
-Default value is set to \code{1}.}
+\item{i}{an integer indicating onto which principal component the individuals
+are projected when the "scores" option is chosen. Default value is set to 
+\code{1}.}
 
-\item{j}{an integer indicating onto which principal component the individuals are projected when the "scores" option is chosen.
-Default value is set to \code{2}.}
+\item{j}{an integer indicating onto which principal component the individuals
+are projected when the "scores" option is chosen. Default value is set to 
+\code{2}.}
 
 \item{ancstrl1}{an integer.}
 
@@ -35,7 +37,8 @@ Default value is set to \code{2}.}
 \item{adm}{an integer.}
 }
 \value{
-The returned value is a list containing the test statistics and the associated p-values.
+The returned value is a list containing the test statistics and the 
+associated p-values.
 }
 \description{
 \code{draw.pca} displays both local and global scores.

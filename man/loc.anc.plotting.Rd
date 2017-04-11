@@ -4,12 +4,18 @@
 \alias{loc.anc.plotting}
 \title{Local Ancestry}
 \usage{
-loc.anc.plotting(x, by.step = by.step, hline = hline)
+loc.anc.plotting(x, by.step = by.step, hline = hline, chr = chr)
 }
 \arguments{
 \item{x}{an output from \code{outlier} containing the chi-squared statistics.}
 
 \item{by.step}{an integer specifying the density}
+
+\item{hline}{a numeric value specifying the number of standard deviations 
+above which the z-scores are considered extreme.}
+
+\item{chr}{an integer specifying the chromosome to display. If `chr==0`,
+all the chromosomes are concatenated.}
 }
 \description{
 \code{loc.anc.plotting} plots the z-scores derived from the statistics 

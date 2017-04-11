@@ -5,8 +5,8 @@
 
 using namespace Rcpp;
 
-Rcpp::List cmpt_centroids(arma::mat u, const arma::vec lab, const int anc1, 
-                          const int anc2);
+Rcpp::List cmpt_centroids(arma::mat u, const arma::vec lab, const int pop1, 
+                          const int pop2);
 
 void cmpt_transformation(arma::mat &uloc, 
                          arma::mat &uglob, 

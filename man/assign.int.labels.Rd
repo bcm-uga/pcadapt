@@ -7,7 +7,8 @@
 assign.int.labels(pop)
 }
 \arguments{
-\item{pop}{a vector of integers or strings specifying which subpopulation the individuals belong to.}
+\item{pop}{a vector of integers or strings specifying which subpopulation the
+individuals belong to.}
 }
 \value{
 The returned value is a vector of integers.

@@ -31,6 +31,7 @@
 #' @param snp.info a list containing the names of all genetic markers present in
 #' the input.
 #' @param chr.info a list containing the chromosome information for each marker.
+#' @param chr an integer specifying the chromosome to display.
 #' @param threshold for the \code{"qqplot"} option, it displays an additional 
 #' bar which shows the \code{threshold} percent of SNPs with smallest p-values
 #' and separates them from SNPs with higher p-values.
@@ -57,6 +58,7 @@ plot.pcadapt = function(x,
                         gg.col,
                         snp.info = NULL,
                         chr.info = NULL,
+                        chr = 1,
                         threshold = NULL,
                         by.step = 10,
                         hline = 3.0,
@@ -69,7 +71,7 @@ plot.pcadapt = function(x,
                       "stat.distribution"))){
     warning(paste("Plotting option", option, "not valid, options currently available are: screeplot, scores, manhattan, qqplot, stat.distribution."))
   } else if (attr(x, "method") == "introgression"){
-    loc.anc.plotting(x, by.step = by.step, hline = hline)
+    loc.anc.plotting(x, by.step = by.step, hline = hline, chr = chr)
   } else {
     if (option == "screeplot"){
       scree.plotting(x, K)
@@ -392,10 +394,12 @@ pvalqq.plotting = function(x, K, threshold){
 
 #' Neutral Distribution Estimation
 #'
-#' \code{neutral.plotting} plots the histogram of the chi-squared statistics, as well as the estimated null distribution.
+#' \code{neutral.plotting} plots the histogram of the chi-squared statistics, 
+#' as well as the estimated null distribution.
 #'
 #' @param x an output from \code{outlier} containing the chi-squared statistics.
-#' @param K an integer indicating which principal component the histogram will be associated with.
+#' @param K an integer indicating which principal component the histogram will 
+#' be associated with.
 #'
 #' @examples
 #' ## see ?pcadapt for examples
@@ -445,6 +449,10 @@ neutral.plotting = function(x, K){
 #'
 #' @param x an output from \code{outlier} containing the chi-squared statistics.
 #' @param by.step an integer specifying the density
+#' @param hline a numeric value specifying the number of standard deviations 
+#' above which the z-scores are considered extreme.
+#' @param chr an integer specifying the chromosome to display. If `chr==0`,
+#' all the chromosomes are concatenated.
 #'
 #' @examples
 #' ## see ?pcadapt for examples
@@ -454,19 +462,60 @@ neutral.plotting = function(x, K){
 #' @importFrom ggplot2 ggplot aes_string geom_area ggtitle labs geom_hline
 #'
 #' @export
-loc.anc.plotting = function(x, by.step = by.step, hline = hline){
+loc.anc.plotting = function(x, by.step = by.step, hline = hline, 
+                            chr = chr){
   #to display one out of ten points, thus reducing plotting time
-  subset <- seq(1, length(x), by = by.step) 
-  xaxis <- (by.step * 1:length(subset))
-  sign.Y <- (x[subset] > 0)
-  anc.lab <- character(length = length(subset))
-  anc.lab[!sign.Y] <- attr(x, "ancstrl.1")
-  anc.lab[sign.Y] <- attr(x, "ancstrl.2")
-  df <- data.frame(X = xaxis, Y = x[subset], Ancestral = anc.lab)
-  plt.1 <- ggplot2::ggplot(df, aes_string("X", "Y", fill = "Ancestral")) + 
-    ggplot2::geom_area() +
+  if (chr == 0){
+    nb.chr <- length(x) / 2
+    nb.stat <- 0
+    wg.stat <- NULL
+    pos.vline <- NULL
+    for (p in 1:nb.chr){
+      nb.stat <- nb.stat + length(x[[2 * p - 1]])
+      if (p < nb.chr){
+        pos.vline <- c(pos.vline, nb.stat)  
+      }
+      wg.stat <- c(wg.stat, x[[2 * p - 1]])
+    }
+    subset <- seq(1, nb.stat, by = by.step)
+    xaxis <- (1:nb.stat)[subset]
+    yaxis <- wg.stat[subset]
+    sign.Y <- (yaxis > 0)
+    anc.lab <- character(length = length(subset))
+    anc.lab[!sign.Y] <- attr(x, "ancstrl.1")
+    anc.lab[sign.Y] <- attr(x, "ancstrl.2")  
+  } else {
+    subset <- seq(1, length(x[[2 * chr]]), by = by.step)
+    xaxis <- (x[[2 * chr]])[subset]
+    yaxis <- (x[[2 * chr - 1]])[subset]
+    sign.Y <- (yaxis > 0)
+    anc.lab <- character(length = length(subset))
+    anc.lab[!sign.Y] <- attr(x, "ancstrl.1")
+    anc.lab[sign.Y] <- attr(x, "ancstrl.2")    
+  }
+  # y1 <- yaxis
+  # y1[!sign.Y] <- 0
+  # y2 <- yaxis
+  # y2[sign.Y] <- 0
+  # df.1 <- data.frame(X = xaxis, Y = y1, Ancestral = as.factor(anc.lab))
+  # df.2 <- data.frame(X = xaxis, Y = y2, Ancestral = as.factor(anc.lab))
+  # plt.2 <- ggplot() + 
+  #   geom_area(data = df.1, aes_string("X", "Y", fill = "Ancestral")) +
+  #   geom_area(data = df.2, aes_string("X", "Y", fill = "Ancestral")) +
+  #   ggplot2::ggtitle(paste0("Excess of local ancestry")) +
+  #   ggplot2::labs(x = "Position", y = "z-scores") + 
+  #   ggplot2::geom_hline(yintercept = hline) +
+  #   ggplot2::geom_hline(yintercept = 0.0)
+  # print(plt.2)
+  df <- data.frame(X = xaxis, Y = yaxis, Ancestral = anc.lab)
+  plt.1 <- ggplot2::ggplot(df, aes_string("X", "Y")) +
+    ggplot2::geom_area(aes_string(fill = "Ancestral")) +
     ggplot2::ggtitle(paste0("Excess of local ancestry")) +
-    ggplot2::labs(x = "Position", y = "z-scores") + 
-    ggplot2::geom_hline(yintercept = hline)
+    ggplot2::labs(x = "Position", y = "z-scores") +
+    ggplot2::geom_hline(yintercept = hline) +
+    ggplot2::geom_hline(yintercept = 0.0)
+  if (chr == 0){
+    plt.1 <- plt.1 + ggplot2::geom_vline(xintercept = pos.vline, linetype = 4)
+  }
   print(plt.1)
 }

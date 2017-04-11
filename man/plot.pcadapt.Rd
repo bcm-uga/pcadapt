@@ -5,7 +5,7 @@
 \title{pcadapt visualization tool}
 \usage{
 \method{plot}{pcadapt}(x, ..., option = "manhattan", K = NULL, i = 1,
-  j = 2, pop, gg.col, snp.info = NULL, chr.info = NULL,
+  j = 2, pop, gg.col, snp.info = NULL, chr.info = NULL, chr = 1,
   threshold = NULL, by.step = 10, hline = 3, plt.pkg = "ggplot")
 }
 \arguments{
@@ -36,6 +36,8 @@ individuals belong to.}
 the input.}
 
 \item{chr.info}{a list containing the chromosome information for each marker.}
+
+\item{chr}{an integer specifying the chromosome to display.}
 
 \item{threshold}{for the \code{"qqplot"} option, it displays an additional 
 bar which shows the \code{threshold} percent of SNPs with smallest p-values

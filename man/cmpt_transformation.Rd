@@ -26,5 +26,6 @@ cmpt_transformation(uloc, uglob, lab, ancstrl1, ancstrl2, s, dloc, dglob, R)
 \item{R}{a numeric matrix.}
 }
 \description{
-\code{cmpt_transformation} computes the local centroid, the global centroid and the scaling factor.
+\code{cmpt_transformation} computes the local centroid, the global centroid 
+and the scaling factor.
 }

@@ -4,20 +4,20 @@
 \alias{cmpt_centroids}
 \title{Ancestral populations centroids}
 \usage{
-cmpt_centroids(u, lab, anc1, anc2)
+cmpt_centroids(u, lab, pop1, pop2)
 }
 \arguments{
 \item{u}{a matrix of scores.}
 
 \item{lab}{a vector of integers.}
 
-\item{anc1}{an integer.}
+\item{pop1}{an integer.}
 
-\item{anc2}{an integer.}
+\item{pop2}{an integer.}
 }
 \value{
 The returned value is a list.
 }
 \description{
-\code{cmpt_centroids} returns the average scores for each ancestral population.
+\code{cmpt_centroids} returns the average scores for each population.
 }

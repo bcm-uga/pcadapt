@@ -2,10 +2,10 @@
 % Please edit documentation in R/RcppExports.R
 \name{cmpt_all_stat}
 \alias{cmpt_all_stat}
-\title{Wilcoxon statistics}
+\title{Introgression statistics}
 \usage{
 cmpt_all_stat(geno, V, sigma, window_size, direction, lab, ancstrl1, ancstrl2,
-  adm, axis)
+  adm, axis, map)
 }
 \arguments{
 \item{geno}{a genotype matrix.}
@@ -27,6 +27,8 @@ cmpt_all_stat(geno, V, sigma, window_size, direction, lab, ancstrl1, ancstrl2,
 \item{adm}{an integer.}
 
 \item{axis}{a numeric vector.}
+
+\item{map}{a numeric vector containing the genetic positions.}
 }
 \value{
 The returned value is a numeric vector.

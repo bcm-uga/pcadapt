@@ -9,31 +9,31 @@ using namespace Rcpp;
 
 //' Ancestral populations centroids
 //' 
-//' \code{cmpt_centroids} returns the average scores for each ancestral population.
+//' \code{cmpt_centroids} returns the average scores for each population.
 //' 
 //' @param u a matrix of scores.
 //' @param lab a vector of integers.
-//' @param anc1 an integer.
-//' @param anc2 an integer.
+//' @param pop1 an integer.
+//' @param pop2 an integer.
 //' 
 //' @return The returned value is a list.
 //' 
 //' @export
 //' 
 // [[Rcpp::export]]
-Rcpp::List cmpt_centroids(arma::mat u, const arma::vec lab, const int anc1, 
-                          const int anc2){
+Rcpp::List cmpt_centroids(arma::mat u, const arma::vec lab, const int pop1, 
+                          const int pop2){
   int nIND = u.n_rows;
   int K = u.n_cols;
   arma::vec m1(K, arma::fill::zeros);
   arma::vec m2(K, arma::fill::zeros);
-  int c1 = get_nb_ind(lab, anc1);
-  int c2 = get_nb_ind(lab, anc2);
+  int c1 = get_nb_ind(lab, pop1);
+  int c2 = get_nb_ind(lab, pop2);
   for (int j = 0; j < nIND; j++){
     for (int k = 0; k < K; k++){
-      if (lab[j] == anc1){
+      if (lab[j] == pop1){
         m1[k] += u(j, k) / c1;
-      } else if (lab[j] == anc2){
+      } else if (lab[j] == pop2){
         m2[k] += u(j, k) / c2;
       }
     }
@@ -44,7 +44,8 @@ Rcpp::List cmpt_centroids(arma::mat u, const arma::vec lab, const int anc1,
 
 //' Match global centroids and local centroids
 //' 
-//' \code{cmpt_transformation} computes the local centroid, the global centroid and the scaling factor.
+//' \code{cmpt_transformation} computes the local centroid, the global centroid 
+//' and the scaling factor.
 //' 
 //' @param uloc a matrix of local scores.
 //' @param uglob a matrix of global scores.
