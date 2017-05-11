@@ -39,6 +39,9 @@ imputed.}
 \item{chr.info}{a list containing the chromosome information for each marker.}
 
 \item{map}{a numeric vector containing the genetic positions.}
+
+\item{side}{a character string specifying whether the window should be aligned on 
+the left, middle or right.}
 }
 \value{
 The returned value is a list containing the test statistics and the 

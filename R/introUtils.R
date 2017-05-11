@@ -82,6 +82,8 @@ assign.int.labels = function(pop){
 #' imputed. 
 #' @param chr.info a list containing the chromosome information for each marker.
 #' @param map a numeric vector containing the genetic positions.
+#' @param side a character string specifying whether the window should be aligned on 
+#' the left, middle or right.
 #' 
 #' @return The returned value is a list containing the test statistics and the 
 #' associated p-values.
