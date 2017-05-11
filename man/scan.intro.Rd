@@ -5,7 +5,8 @@
 \title{Introgression}
 \usage{
 scan.intro(input, K = 2, pop, ancstrl.1, ancstrl.2, admxd, min.maf = 0.05,
-  ploidy = 2, window.size = 1000, impute = FALSE, chr.info, map)
+  ploidy = 2, window.size = 1000, impute = FALSE, chr.info, map,
+  side = "middle")
 }
 \arguments{
 \item{input}{a genotype matrix or a character string specifying the name of 

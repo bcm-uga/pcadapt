@@ -4,7 +4,7 @@
 \alias{updt_local_scores}
 \title{Update local Principal Component Analysis}
 \usage{
-updt_local_scores(u, geno, V, sigma, beg, end)
+updt_local_scores(u, geno, V, sigma, beg_old, end_old, beg_new, end_new)
 }
 \arguments{
 \item{u}{a score matrix.}
@@ -15,9 +15,13 @@ updt_local_scores(u, geno, V, sigma, beg, end)
 
 \item{sigma}{a vector of singular values.}
 
-\item{beg}{an integer specifying the first marker to be included.}
+\item{beg_old}{an integer specifying the first marker to be included.}
 
-\item{end}{an integer specifying the first marker to be excluded.}
+\item{end_old}{an integer specifying the first marker to be excluded.}
+
+\item{beg_new}{an integer specifying the first marker to be included.}
+
+\item{end_new}{an integer specifying the first marker to be excluded.}
 }
 \value{
 The returned value is a score matrix.

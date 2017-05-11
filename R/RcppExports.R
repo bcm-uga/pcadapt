@@ -35,7 +35,8 @@ median_per_pop <- function(x, lab, pop, i) {
 
 #' Skip or discard 
 #' 
-#' \code{check_row} returns 0 for markers to be kept and 1 for markers to be discarded.
+#' \code{check_row} returns 0 for markers to be kept and 1 for markers to be 
+#' discarded.
 #' 
 #' @param x a genotype matrix.
 #' @param i an integer.
@@ -117,23 +118,25 @@ cmpt_directional_stat <- function(usc, uglob, lab, adm, ax) {
     .Call('pcadapt_cmpt_directional_stat', PACKAGE = 'pcadapt', usc, uglob, lab, adm, ax)
 }
 
-#' \code{cmpt_new_win} computes the statistics.
+#' \code{get_window}
 #' 
 #' @param i an integer.
 #' @param map a vector containing the genetic positions in Morgans.
 #' @param window_size a numeric value specifying the window size en Morgans.
+#' @param side an integer specifying whether the window should be aligned on 
+#' the left, middle or right.
 #' 
 #' @return The returned value is a numeric vector.
 #' 
 #' @export
 #' 
-cmpt_new_win <- function(i, map, window_size) {
-    .Call('pcadapt_cmpt_new_win', PACKAGE = 'pcadapt', i, map, window_size)
+get_window <- function(i, map, window_size, side) {
+    .Call('pcadapt_get_window', PACKAGE = 'pcadapt', i, map, window_size, side)
 }
 
 #' Introgression statistics
 #' 
-#' \code{cmpt_all_stat} computes the statistics.
+#' \code{cmpt_stat_introgr} computes the statistics.
 #' 
 #' @param geno a genotype matrix.
 #' @param V a loading matrix.
@@ -146,13 +149,17 @@ cmpt_new_win <- function(i, map, window_size) {
 #' @param adm an integer.
 #' @param axis a numeric vector.
 #' @param map a numeric vector containing the genetic positions.
+#' @param with_map an integer specifying whether the genetic positions have
+#' been provided.
+#' @param side an integer specifying whether the window should be aligned on 
+#' the left, middle or right.
 #' 
 #' @return The returned value is a numeric vector.
 #' 
 #' @export
 #' 
-cmpt_all_stat <- function(geno, V, sigma, window_size, direction, lab, ancstrl1, ancstrl2, adm, axis, map) {
-    .Call('pcadapt_cmpt_all_stat', PACKAGE = 'pcadapt', geno, V, sigma, window_size, direction, lab, ancstrl1, ancstrl2, adm, axis, map)
+cmpt_stat_introgr <- function(geno, V, sigma, window_size, direction, lab, ancstrl1, ancstrl2, adm, axis, map, with_map, side) {
+    .Call('pcadapt_cmpt_stat_introgr', PACKAGE = 'pcadapt', geno, V, sigma, window_size, direction, lab, ancstrl1, ancstrl2, adm, axis, map, with_map, side)
 }
 
 #' Global Principal Component Analysis
@@ -205,8 +212,8 @@ cmpt_local_pca <- function(geno, V, sigma, beg, end) {
 #' 
 #' @export
 #' 
-updt_local_scores <- function(u, geno, V, sigma, beg, end) {
-    invisible(.Call('pcadapt_updt_local_scores', PACKAGE = 'pcadapt', u, geno, V, sigma, beg, end))
+updt_local_scores_deprecated <- function(u, geno, V, sigma, beg, end) {
+    invisible(.Call('pcadapt_updt_local_scores_deprecated', PACKAGE = 'pcadapt', u, geno, V, sigma, beg, end))
 }
 
 #' Update local Principal Component Analysis
@@ -220,15 +227,15 @@ updt_local_scores <- function(u, geno, V, sigma, beg, end) {
 #' @param sigma a vector of singular values.
 #' @param beg_old an integer specifying the first marker to be included.
 #' @param end_old an integer specifying the first marker to be excluded.
-#' @param beg_new an integer specifying the first marker to be excluded.
+#' @param beg_new an integer specifying the first marker to be included.
 #' @param end_new an integer specifying the first marker to be excluded.
 #' 
 #' @return The returned value is a score matrix.
 #' 
 #' @export
 #' 
-updt_local_scores_2 <- function(u, geno, V, sigma, beg_old, end_old, beg_new, end_new) {
-    invisible(.Call('pcadapt_updt_local_scores_2', PACKAGE = 'pcadapt', u, geno, V, sigma, beg_old, end_old, beg_new, end_new))
+updt_local_scores <- function(u, geno, V, sigma, beg_old, end_old, beg_new, end_new) {
+    invisible(.Call('pcadapt_updt_local_scores', PACKAGE = 'pcadapt', u, geno, V, sigma, beg_old, end_old, beg_new, end_new))
 }
 
 colMedian_cpp <- function(x) {

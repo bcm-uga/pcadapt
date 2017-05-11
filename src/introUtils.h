@@ -14,10 +14,11 @@ arma::mat cmpt_global_pca(const arma::mat &geno,
 arma::mat cmpt_local_pca(const arma::mat &geno, const arma::mat &V, 
                          const arma::vec &sigma, const int beg, const int end);
 
-void updt_local_scores(arma::mat &u, const arma::mat &geno, const arma::mat &V, 
-                       const arma::vec &sigma, const int beg, const int end);
+void updt_local_scores_deprecated(arma::mat &u, const arma::mat &geno, 
+                                  const arma::mat &V, const arma::vec &sigma, 
+                                  const int beg, const int end);
 
-void updt_local_scores_2(arma::mat &u, 
+void updt_local_scores(arma::mat &u, 
                          const arma::mat &geno, 
                          const arma::mat &V, 
                          const arma::vec &sigma, 

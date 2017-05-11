@@ -86,7 +86,7 @@ arma::mat cmpt_local_pca(const arma::mat &geno, const arma::mat &V,
 //' @export
 //' 
 // [[Rcpp::export]]
-void updt_local_scores(arma::mat &u, const arma::mat &geno, const arma::mat &V, 
+void updt_local_scores_deprecated(arma::mat &u, const arma::mat &geno, const arma::mat &V, 
                        const arma::vec &sigma, const int beg, const int end){
   int nIND = geno.n_rows; 
   int nSNP = geno.n_cols;
@@ -100,7 +100,6 @@ void updt_local_scores(arma::mat &u, const arma::mat &geno, const arma::mat &V,
   }
 }
 
-
 //' Update local Principal Component Analysis
 //' 
 //' \code{updt_local_scores} computes the scores using a subset of genetic 
@@ -112,7 +111,7 @@ void updt_local_scores(arma::mat &u, const arma::mat &geno, const arma::mat &V,
 //' @param sigma a vector of singular values.
 //' @param beg_old an integer specifying the first marker to be included.
 //' @param end_old an integer specifying the first marker to be excluded.
-//' @param beg_new an integer specifying the first marker to be excluded.
+//' @param beg_new an integer specifying the first marker to be included.
 //' @param end_new an integer specifying the first marker to be excluded.
 //' 
 //' @return The returned value is a score matrix.
@@ -120,7 +119,7 @@ void updt_local_scores(arma::mat &u, const arma::mat &geno, const arma::mat &V,
 //' @export
 //' 
 // [[Rcpp::export]]
-void updt_local_scores_2(arma::mat &u, 
+void updt_local_scores(arma::mat &u, 
                        const arma::mat &geno, 
                        const arma::mat &V, 
                        const arma::vec &sigma, 
@@ -131,20 +130,25 @@ void updt_local_scores_2(arma::mat &u,
   int nIND = geno.n_rows; 
   int nSNP = geno.n_cols;
   int K = u.n_cols;
-  double cst = (double) nSNP / (end_new - beg_new);
+  double cst_old = (double) nSNP / (end_old - beg_old);
+  u /= cst_old;
+  
   for (int j = 0; j < nIND; j++){
     for (int k = 0; k < K; k++){
       if (beg_new > beg_old){
         for (int p = beg_old; p < beg_new; p++){
-          u(j, k) -= (geno.at(j, p) * V(p, k)) * cst / sigma[k];
+          u(j, k) -= (geno.at(j, p) * V(p, k)) / sigma[k];
         }
       }
       if (end_new > end_old){
         for (int q = end_old; q < end_new; q++){
-          u(j, k) += (geno.at(j, q) * V(q, k)) * cst / sigma[k];
+          u(j, k) += (geno.at(j, q) * V(q, k)) / sigma[k];
         }
       }
     }
   }
+  
+  double cst_new = (double) nSNP / (end_new - beg_new);
+  u *= cst_new;
 }
 

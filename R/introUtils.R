@@ -102,7 +102,8 @@ scan.intro = function(input,
                       window.size = 1000, 
                       impute = FALSE, 
                       chr.info,
-                      map){
+                      map,
+                      side = "middle"){
   if (impute){
     geno <- (impute.pcadapt(input = input, pop = pop))$x
   } else if (!impute){
@@ -141,7 +142,6 @@ scan.intro = function(input,
   }
   
   geno <- geno[maf >= min.maf, ]
-  chr <- chr.info[maf >= min.maf]
   maf <- maf[maf >= min.maf]
   
   sd <- sqrt(ploidy * maf * (1 - maf))
@@ -153,9 +153,22 @@ scan.intro = function(input,
                          ploidy = ploidy, type = 1)
   cat("Computing the statistics...\n")
   
-
+  if (missing(map)){
+    with.map <- 0  
+  } else {
+    with.map <- 1
+  }
+  
+  if (side == "left"){
+    side.int <- -1
+  } else if (side == "middle"){
+    side.int <- 0
+  } else if (side == "right"){
+    side.int <- 1
+  }
+  
   if (missing(chr.info)){
-    stat <- cmpt_all_stat(geno = as.matrix(scaled.geno), 
+    s_1 <- cmpt_stat_introgr(geno = as.matrix(scaled.geno), 
                           V = as.matrix(obj.svd$v), 
                           sigma = as.vector(obj.svd$d), 
                           window_size = as.integer(window.size),  
@@ -165,12 +178,15 @@ scan.intro = function(input,
                           ancstrl2 = as.integer(ancstrl.int.2),
                           adm = as.integer(admxd.int), 
                           axis = as.vector(axis.vector),
-                          map = gmap)  
-    s_1 <- MASS::cov.rob(stat)
+                          map = gmap,
+                          with_map = with.map,
+                          side = side.int)  
+    aux <- MASS::cov.rob(s_1)
     obj.stat <- list()
-    obj.stat[[1]] <- s_1
-    obj.stat[[2]] <- xaxis[1:(length(s_1) - window.size)]
+    obj.stat[[1]] <- (s_1 - aux$center[1]) / sqrt(aux$cov[1, 1])
+    #obj.stat[[2]] <- xaxis[1:(length(s_1) - window.size)]
   } else {
+    chr <- chr.info[maf >= min.maf]
     chr.it <- unique(chr)
     stat <- vector(mode = "numeric", length = length(chr))
     obj.stat <- list()
@@ -180,7 +196,7 @@ scan.intro = function(input,
       gmap_k = gmap[chr_k]
       scaled.geno_k <- as.matrix(scaled.geno[, chr_k])
       v_k <- as.matrix(obj.svd$v[chr_k, ])
-      s_k <- cmpt_all_stat(geno = scaled.geno_k, 
+      s_k <- cmpt_stat_introgr(geno = scaled.geno_k, 
                             V = v_k, 
                             sigma = as.vector(obj.svd$d), 
                             window_size = as.integer(window.size),  
@@ -251,9 +267,9 @@ draw.pca = function(geno, V, sigma, uglob, beg, end, pop, i = 1, j = 2,
   shape.1 <- as.matrix(t(cbind(cent$m1, cent$m2)))
   shape.2 <- as.matrix(t(cbind(cent.loc$m1, cent.loc$m2)))
   
-  # R <- pca_rotation(shape.1, shape.2)
-  # R <- matrix(0, nrow = ncol(V), ncol = ncol(V))
-  # diag(R) <- 1
+  #R <- pca_rotation(shape.1, shape.2)
+  R <- matrix(0, nrow = ncol(V), ncol = ncol(V))
+  diag(R) <- 1
   
   cmpt_transformation(uloc, uglob, pop, ancstrl1, ancstrl2, s, dloc, dglob, R);
   usc <- rescale_local_pca(uloc, s, dloc, dglob, R);
@@ -267,7 +283,7 @@ draw.pca = function(geno, V, sigma, uglob, beg, end, pop, i = 1, j = 2,
        xlim = c(xmin, xmax), 
        ylim = c(ymin, ymax))
   points(uglob[, i], uglob[, j], col = as.factor(pop), cex = 1)
-  arrows(cent$m1[1], cent$m1[2], cent$m2[1], cent$m2[2])
-  arrows(uglob[pop == adm, i], uglob[pop == adm, j], 
-         usc[pop == adm, i], usc[pop == adm, j])
+  #arrows(cent$m1[1], cent$m1[2], cent$m2[1], cent$m2[2])
+  #arrows(uglob[pop == adm, i], uglob[pop == adm, j], 
+  #       usc[pop == adm, i], usc[pop == adm, j])
 }

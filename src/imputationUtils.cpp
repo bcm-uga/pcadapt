@@ -63,7 +63,8 @@ NumericVector median_per_pop(const arma::mat &x, const arma::vec &lab, const arm
 
 //' Skip or discard 
 //' 
-//' \code{check_row} returns 0 for markers to be kept and 1 for markers to be discarded.
+//' \code{check_row} returns 0 for markers to be kept and 1 for markers to be 
+//' discarded.
 //' 
 //' @param x a genotype matrix.
 //' @param i an integer.
@@ -76,7 +77,7 @@ NumericVector median_per_pop(const arma::mat &x, const arma::vec &lab, const arm
 int check_row(const arma::mat &x, int i){
   int ncol = x.n_cols;  
   double fe = NA_REAL;
-  int counter_fe = 0;
+  int counter_fe = 0; 
   int count = 0;
   int skip = 0;
   while ((NumericVector::is_na(fe) || (fe == NA)) && (counter_fe < ncol)){

@@ -15,5 +15,6 @@ check_row(x, i)
 The returned value is an integer.
 }
 \description{
-\code{check_row} returns 0 for markers to be kept and 1 for markers to be discarded.
+\code{check_row} returns 0 for markers to be kept and 1 for markers to be 
+discarded.
 }
