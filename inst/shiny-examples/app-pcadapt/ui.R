@@ -4,16 +4,17 @@ library(rjson)
 suppressPackageStartupMessages(library(shinyjs))
 library(shinyAce)
 library(shinyBS)
+library(shinydashboard)
 
+header <- dashboardHeader(
+  title = "pcadapt"
+)
 
-shiny::shinyUI(fluidPage(
+body <- dashboardBody(
   useShinyjs(),
   theme = "bootstrap.css",
   tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),
-  
-  # Application title
-  titlePanel("pcadapt"),
-  
+
   sidebarLayout(
     sidebarPanel(
       fileInput("file1", "Choose pcadapt file",
@@ -23,7 +24,7 @@ shiny::shinyUI(fluidPage(
                   ".csv",
                   ".pcadapt")
       ),
-      
+
       fileInput("file2", "Choose population file",
                 accept = c(
                   "text/csv",
@@ -33,7 +34,7 @@ shiny::shinyUI(fluidPage(
                   ".txt",
                   ".fam")
       ),
-      
+
       fileInput("file3", "Choose SNP file",
                 accept = c(
                   "text/csv",
@@ -42,19 +43,27 @@ shiny::shinyUI(fluidPage(
                   ".txt",
                   ".snp")
       ),
-      
-      selectInput("opt", label = "Option", 
-                  choices = c("PCA", "Manhattan", "Histogram")),
-      
+
       numericInput("K", label = "K", value = 2, min = 1),
       numericInput("ploidy", label = "ploidy", value = 2, min = 1, max = 2),
       numericInput("min.maf", label = "min.maf", value = 0.05, min = 0.0, max = 0.45),
       numericInput("i", label = "i", value = 1, min = 1),
       numericInput("j", label = "j", value = 2, min = 1)
     ),
-    
+
     mainPanel(
-       plotly::plotlyOutput("distPlot")
+      tabBox(
+        tabPanel("PCA", plotlyOutput("pcaPlot")),
+        tabPanel("Manhattan Plot", plotlyOutput("distPlot")),
+        tabPanel("p-values histogram", plotlyOutput("histPlot"))
+      )
     )
   )
-))
+)
+
+dashboardPage(
+  header,
+  dashboardSidebar(disable = TRUE),
+  body,
+  skin = "blue"
+)
