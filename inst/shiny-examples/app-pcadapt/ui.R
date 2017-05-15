@@ -47,16 +47,22 @@ body <- dashboardBody(
       numericInput("K", label = "K", value = 2, min = 1),
       numericInput("ploidy", label = "ploidy", value = 2, min = 1, max = 2),
       numericInput("min.maf", label = "min.maf", value = 0.05, min = 0.0, max = 0.45),
-      numericInput("i", label = "i", value = 1, min = 1),
-      numericInput("j", label = "j", value = 2, min = 1)
+      width = 3
     ),
 
     mainPanel(
       tabBox(
-        tabPanel("PCA", plotlyOutput("pcaPlot")),
-        tabPanel("Manhattan Plot", plotlyOutput("distPlot")),
-        tabPanel("p-values histogram", plotlyOutput("histPlot"))
-      )
+        tabPanel(strong("Screeplot"), plotlyOutput("screePlot")),
+        tabPanel(title = strong("PCA"), 
+                 br(),
+                 numericInput("i", label = "i", value = 1, min = 1),
+                 numericInput("j", label = "j", value = 2, min = 1),
+                 fixedRow(column(10, plotly::plotlyOutput("pcaPlot")))),
+        tabPanel(strong("Manhattan Plot"), plotly::plotlyOutput("distPlot")),
+        tabPanel(strong("p-values histogram"), plotly::plotlyOutput("histPlot")),
+        tabPanel(strong("Ranked SNPs"), DT::dataTableOutput("outlierTable")),
+        tabPanel(strong("R command"), verbatimTextOutput("rcommand"))
+      ), width = 9
     )
   )
 )
