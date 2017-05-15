@@ -213,10 +213,9 @@ get.pop.names = function(pop){
 #'
 get.pc = function(x, list){
   rem.na <- which(!is.na(x$zscores[list, 1]))
-  v <- array(0,dim = length(list))
+  v <- vector(mode = "numeric", length = length(list))
   v[rem.na] <- sapply(list[rem.na], FUN = function(h){which(x$zscores[h, ]^2 == max(x$zscores[h, ]^2, na.rm = TRUE))})
-  df <- cbind(list, lapply(v, as.numeric))
-  colnames(df) <- c("SNP", "PC")
+  df <- data.frame(SNP = list, PC = v)
   return(df)
 }
 

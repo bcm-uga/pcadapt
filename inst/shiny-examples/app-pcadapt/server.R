@@ -5,6 +5,7 @@ library(shiny)
 library(rjson)
 
 options(shiny.maxRequestSize = 2000 * 1024^2) 
+options(ddpcr.verbose = TRUE)
 
 shiny::shinyServer(function(input, output) {
   

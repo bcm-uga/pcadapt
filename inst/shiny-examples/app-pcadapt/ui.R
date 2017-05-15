@@ -13,8 +13,16 @@ header <- dashboardHeader(
 body <- dashboardBody(
   useShinyjs(),
   theme = "bootstrap.css",
-  tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),
-
+  tagList(
+    tags$head(
+      tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),
+      tags$script(type="text/javascript", src = "busy.js")
+    )
+  ),
+  div(class = "busy",  
+      p("Calculation in progress.."), 
+      img(src = "https://media.giphy.com/media/DIQqlqU0SeKXe/giphy.gif")
+  ),
   sidebarLayout(
     sidebarPanel(
       fileInput("file1", "Choose pcadapt file",
