@@ -15,7 +15,7 @@ shiny::shinyServer(function(input, output) {
     K <- input$K  
     ploidy <- input$ploidy
     min.maf <- input$min.maf
-
+    
     if (is.null(inFile)){
       return(NULL)
     }
@@ -73,7 +73,7 @@ shiny::shinyServer(function(input, output) {
                     hoverinfo = "text") %>%
       layout(xaxis = list(title = "Index", showgrid = F),      
              yaxis = list(title = "-log10(p-values)"))
-
+    
   })
   
   output$histPlot <- plotly::renderPlotly({
@@ -83,7 +83,7 @@ shiny::shinyServer(function(input, output) {
     if (is.null(inFile)){
       return(NULL)
     }
-
+    
     df <- data.frame(xx = r.x()$x$pvalues)
     plotly::plot_ly(df, x = ~xx, type = "histogram") %>%
       layout(xaxis = list(title = "p-values"),
@@ -96,7 +96,7 @@ shiny::shinyServer(function(input, output) {
     inSNP <- input$file3
     file <- inFile$datapath
     K <- input$K  
-
+    
     if (is.null(inFile)){
       return(NULL)
     }
@@ -143,7 +143,7 @@ shiny::shinyServer(function(input, output) {
                        pvalue  = sorted.snp$x, PC = as.integer(pc[, 2]))
     }
     
-
+    
     dt <- DT::datatable(df, class = 'cell-border stripe', rownames = FALSE)
   })
   
