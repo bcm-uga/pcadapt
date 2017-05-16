@@ -9,6 +9,14 @@ options(ddpcr.verbose = TRUE)
 
 shiny::shinyServer(function(input, output) {
   
+  # download sample data file
+  output$sampleDataFile <- downloadHandler(
+    filename = function() { "geno3pops.pcadapt" },
+    content = function(file) {
+      download.file("https://drive.google.com/uc?export=download&id=0B9o4VIJJSodfOTNOelRKNm9MQ2M", destfile = file)
+    }
+  )
+  
   r.x <- reactive({
     inFile <- input$file1
     file <- inFile$datapath

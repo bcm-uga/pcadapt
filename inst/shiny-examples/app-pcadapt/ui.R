@@ -7,6 +7,7 @@ library(shinyBS)
 library(shinydashboard)
 library(shinythemes)
 
+#source(file.path("ui", "helpers.R"))
 
 ui = fluidPage(
   tagList(
@@ -27,13 +28,15 @@ ui = fluidPage(
     tabPanel("Local Adaptation",
              sidebarPanel(
                fileInput("file1", "Choose pcadapt file",
+                         
+                         multiple = FALSE,
                          accept = c(
                            "text/csv",
                            "text/comma-separated-values,text/plain",
                            ".csv",
                            ".pcadapt")
                ),
-               
+               downloadLink("sampleDataFile", "Example data file"),
                fileInput("file2", "Choose population file",
                          accept = c(
                            "text/csv",
