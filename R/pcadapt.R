@@ -141,3 +141,16 @@ pcadapt = function(input,
     }
   }
 }
+
+# Shiny app
+#
+# \code{pcadapt} comes with a Shiny interface.
+#
+#' @export
+run.pcadapt <- function() {
+  appDir <- system.file("shiny-examples", "app-pcadapt", package = "pcadapt")
+  if (appDir == "") {
+    stop("Could not find example directory. Try re-installing `pcadapt`.", call. = FALSE)
+  }
+  shiny::runApp(appDir, launch.browser = TRUE)
+}
