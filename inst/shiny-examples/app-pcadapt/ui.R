@@ -7,7 +7,7 @@ library(shinyBS)
 library(shinydashboard)
 library(shinythemes)
 
-#source(file.path("ui", "helpers.R"))
+source(file.path("ui", "helpers.R"))
 
 ui = fluidPage(
   tagList(
@@ -27,25 +27,50 @@ ui = fluidPage(
     title = "pcadapt",
     tabPanel("Local Adaptation",
              sidebarPanel(
-               fileInput("file1", "Choose pcadapt file",
-                         
-                         multiple = FALSE,
-                         accept = c(
-                           "text/csv",
-                           "text/comma-separated-values,text/plain",
-                           ".csv",
-                           ".pcadapt")
+               fileInput(
+                 "file1",
+                 div(id = "div1", "Choose pcadapt file",
+                     #helpPopup('Not working atm'), br(),
+                     div(class = "submit",
+                         tags$a(href = "https://drive.google.com/uc?export=download&id=0B9o4VIJJSodfOTNOelRKNm9MQ2M", h6("download example file"), target="_blank")
+                     )
+                 ),
+                 multiple = TRUE,
+                 accept = c(
+                   'text/csv',
+                   'text/comma-separated-values',
+                   '.csv',
+                   ".pcadapt"
+                 )
                ),
-               downloadLink("sampleDataFile", "Example data file"),
-               fileInput("file2", "Choose population file",
-                         accept = c(
-                           "text/csv",
-                           "text/comma-separated-values,text/plain",
-                           ".csv",
-                           ".pop",
-                           ".txt",
-                           ".fam")
+               
+               fileInput(
+                 "file2",
+                 div("Choose population file",
+                     #helpPopup('Not working atm'), br(),
+                     div(class = "submit",
+                         tags$a(href = "https://drive.google.com/uc?export=download&id=0B9o4VIJJSodfaUwwM3JZdVZTRWs", h6("download example file"), target="_blank")
+                     )
+                 ),
+                 multiple = TRUE,
+                 accept = c(
+                   'text/csv',
+                   'text/comma-separated-values',
+                   '.csv',
+                   '.pop',
+                   '.txt',
+                   '.fam')
                ),
+               
+               # fileInput("file2", "Choose population file",
+               #           accept = c(
+               #             "text/csv",
+               #             "text/comma-separated-values,text/plain",
+               #             ".csv",
+               #             ".pop",
+               #             ".txt",
+               #             ".fam")
+               # ),
                
                fileInput("file3", "Choose SNP file",
                          accept = c(
@@ -55,6 +80,7 @@ ui = fluidPage(
                            ".txt",
                            ".snp")
                ),
+               
                
                numericInput("K", label = "K", value = 2, min = 1),
                numericInput("ploidy", label = "ploidy", value = 2, min = 1, max = 2),

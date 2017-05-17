@@ -14,7 +14,3 @@ div.busy {
   border-radius: 5px;
   z-index: 99 !important;
 }
-
-#sampleDataFile, #sampleResultsFile {
-  font-weight: normal;
-}
