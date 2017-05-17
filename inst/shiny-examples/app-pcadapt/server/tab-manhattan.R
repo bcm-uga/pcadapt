@@ -1,4 +1,3 @@
-#output$distPlot <- plotly::renderPlotly({
 output$distPlot <- renderPlot({
   inFile <- input$file1
   if (is.null(inFile) || input$package != "ggplot2"){
@@ -11,8 +10,13 @@ output$distPlot <- renderPlot({
   # } else {
   #   txt <- as.character(read.table(input$file3$datapath)[, 1])
   # }
-  if (input$package == "ggplot2"){
+  if (input$package == "ggplot2" && is.null(input$file_chr)){
     plot(r.x()$x, option = "manhattan")
+  }
+  
+  if (input$package == "ggplot2" && !is.null(input$file_chr)){
+    chr.info <- read.table(r.chr()$inCHR$datapath)[, 1]
+    plot(r.x()$x, option = "manhattan", chr.info = chr.info)
   }
   
   # if (r.plotPackage()$plotPackage == "plotly"){
@@ -34,8 +38,12 @@ output$distPlotly <- plotly::renderPlotly({
   if (is.null(inFile) || (input$package != "plotly")){
     return(NULL)
   }
-  if (input$package == "plotly"){
+  if (input$package == "plotly" && is.null(input$file_chr)){
     plot(r.x()$x, option = "manhattan", plt.pkg = "plotly")
+  }
+  if (input$package == "plotly" && !is.null(input$file_chr)){
+    chr.info <- read.table(r.chr()$inCHR$datapath)[, 1]
+    plot(r.x()$x, option = "manhattan", plt.pkg = "plotly", chr.info = chr.info)
   }
 })
 

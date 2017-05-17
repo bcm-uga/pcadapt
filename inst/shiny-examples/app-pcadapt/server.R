@@ -35,6 +35,10 @@ shiny::shinyServer(function(input, output) {
     list(inSNP = input$file3)
   })
   
+  r.chr <- reactive({
+    list(inCHR = input$file_chr)
+  })
+  
   r.plotPackage <- reactive({
     list(plotPackage = input$plotPackage)
   })
