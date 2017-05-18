@@ -1,4 +1,5 @@
 tabPanel(
   strong("Screeplot"), 
-  plotlyOutput("screePlot")
+  plotlyOutput("screePlot"),
+  value = 1
 )

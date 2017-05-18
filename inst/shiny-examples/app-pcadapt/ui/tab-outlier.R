@@ -1,4 +1,5 @@
 tabPanel(
   strong("Ranked SNPs"), 
-  DT::dataTableOutput("outlierTable")
+  DT::dataTableOutput("outlierTable"),
+  value = 5
 )

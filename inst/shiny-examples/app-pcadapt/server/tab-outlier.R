@@ -15,10 +15,10 @@ output$outlierTable <- DT::renderDataTable({
     df <- data.frame(Rank = 1:nSNP, ID = ID, Index = sorted.snp$ix, 
                      pvalue  = sorted.snp$x, PC = pc[, 2])
   } else {
-    ID <- read.table(r.ID()$inSNP$datapath, header = FALSE)[,1]
+    ID <- read.table(r.ID()$inSNP$datapath, header = FALSE, stringsAsFactors = FALSE)[,1]
     ID <- ID[nna.idx]
     first.item <- ID[1]
-    letters <- strsplit(first.item, split = "")
+    letters <- strsplit(first.item, split = "")[[1]]
     if (length(letters) > 2 && letters[1] == "r" && letters[2] == "s"){
       ID.link <- paste0('<a href=https://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?searchType=adhoc_search&type=rs&rs=', ID, '>', ID, '</a>')
       df <- data.frame(Rank = 1:nSNP, ID = ID.link[sorted.snp$ix], Index = sorted.snp$ix, 

@@ -1,4 +1,5 @@
 tabPanel(
   strong("p-values histogram"), 
-  plotly::plotlyOutput("histPlot")
+  plotly::plotlyOutput("histPlot"),
+  value = 4
 )

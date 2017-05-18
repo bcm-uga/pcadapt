@@ -7,5 +7,5 @@ tabPanel(title = strong("PCA"),
            column(10, 
                   plotly::plotlyOutput("pcaPlot")
            )
-         )
+         ), value = 2
 )
