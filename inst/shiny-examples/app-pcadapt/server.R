@@ -43,6 +43,19 @@ shiny::shinyServer(function(input, output) {
     list(plotPackage = input$plotPackage)
   })
   
+  r.file_intrg_pop <- reactive({
+    if (is.null(input$file_intrg_pop)){
+      return(NULL)
+    }
+    list(path = input$file_intrg_pop$datapath)
+  })
+  
+  output$file_intrg_pop <- reactive({
+    return(!is.null(r.file_intrg_pop()))
+  })
+  
+  outputOptions(output, 'file_intrg_pop', suspendWhenHidden = FALSE)
+  
   source(file.path("server", "tab-screeplot.R"), local = TRUE)$value
   source(file.path("server", "tab-pca.R"), local = TRUE)$value
   source(file.path("server", "tab-manhattan.R"), local = TRUE)$value  
