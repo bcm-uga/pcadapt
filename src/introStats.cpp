@@ -152,9 +152,7 @@ arma::vec cmpt_stat_introgr(const arma::mat &geno,
   arma::vec dglob(K, arma::fill::zeros);
   arma::vec dloc(K, arma::fill::zeros);
   arma::mat usc(nIND, K, arma::fill::zeros);
-  
   arma::vec stat(nSNP, arma::fill::zeros);  
-  
   arma::vec ax(K, arma::fill::zeros);
   arma::mat R(K, K, arma::fill::zeros); // ROTATION CORRECTION
   R.eye();
@@ -206,6 +204,14 @@ arma::vec cmpt_stat_introgr(const arma::mat &geno,
     idx_old[0] = idx_new[0];
     idx_old[1] = idx_new[1];
   }
+  for (int i = 0; i < loop_beg; i++){
+    stat[i] = NA_REAL;
+  }
+  for (int i = loop_end; i < nSNP; i++){
+    stat[i] = NA_REAL;
+  }
+  stat[0] = 0;
+  stat[nSNP - 1] = 0;
   return(stat);
 }
 

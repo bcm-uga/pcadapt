@@ -3,8 +3,8 @@ title: app-pcadapt
 account: keurcien
 server: shinyapps.io
 appId: 169237
-bundleId: 832273
+bundleId: 833434
 url: https://keurcien.shinyapps.io/app-pcadapt/
-when: 1495113805.7275
+when: 1495186464.90147
 asMultiple: FALSE
 asStatic: FALSE

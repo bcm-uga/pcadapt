@@ -90,6 +90,7 @@ assign.int.labels = function(pop){
 #' 
 #' @importFrom data.table fread
 #' @importFrom MASS cov.rob
+#' @importFrom stats approx
 #' 
 #' @export
 #'
@@ -183,10 +184,11 @@ scan.intro = function(input,
                           map = gmap,
                           with_map = with.map,
                           side = side.int)  
-    aux <- MASS::cov.rob(s_1)
+    yint <- approx(gmap[!is.na(s_1)], s_1[!is.na(s_1)], 1:nSNP)  
+    aux <- MASS::cov.rob(yint$y)
     obj.stat <- list()
-    obj.stat[[1]] <- (s_1 - aux$center[1]) / sqrt(aux$cov[1, 1])
-    #obj.stat[[2]] <- xaxis[1:(length(s_1) - window.size)]
+    obj.stat[[1]] <- (yint$y - aux$center[1]) / sqrt(aux$cov[1, 1])
+    obj.stat[[2]] <- gmap
   } else {
     chr <- chr.info[maf >= min.maf]
     chr.it <- unique(chr)
