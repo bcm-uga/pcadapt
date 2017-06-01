@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.org/BioShock38/pcadapt.svg?branch=master)](https://travis-ci.org/BioShock38/pcadapt)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/pcadapt)](https://cran.r-project.org/package=pcadapt)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/pcadapt)](https://cran.r-project.org/package=pcadapt)
-<a href="https://zenodo.org/badge/latestdoi/74918018"><img src="https://zenodo.org/badge/74918018.svg" alt="DOI"></a>
+<a href="10.1111/1755-0998.12592"><img src="10.1111/1755-0998.12592" alt="DOI"></a>
 
 **pcadapt** has been developed to detect genetic markers involved in biological adaptation. **pcadapt** provides statistical tools for outlier detection based on Principal Component Analysis (PCA).
 
