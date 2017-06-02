@@ -85,8 +85,7 @@ assign.int.labels = function(pop){
 #' @param side a character string specifying whether the window should be aligned on 
 #' the left, middle or right.
 #' 
-#' @return The returned value is a list containing the test statistics and the 
-#' associated p-values.
+#' @return The returned value is a list containing the test statistics.
 #' 
 #' @importFrom data.table fread
 #' @importFrom MASS cov.rob
@@ -227,6 +226,53 @@ scan.intro = function(input,
   attr(obj.stat, "window.size") <- window.size
   return(obj.stat)
 } 
+
+#' Introgression
+#'
+#' \code{logit.stat} computes statistics to detect excesses of local ancestry 
+#' based on a logistic regression approach. The method currently supports only
+#' two ancestral populations.
+#'
+#' @param input a genotype matrix or a character string specifying the name of 
+#' the file to be imputed.
+#' @param pop a vector of integers or strings specifying which subpopulation the
+#' individuals belong to.
+#' @param ancstrl.1 a string specifying the label of the ancestral population 
+#' genetically closer to the hybrid population.
+#' @param ancstrl.2 a string specifying the label of the ancestral population 
+#' genetically further from the hybrid population.
+#' @param admxd a string specifying the label of the hybrid population.
+#' @param window.size an integer specifying the window size.
+#' 
+#' @return The returned value is a list containing the test statistics.
+#' 
+#' @importFrom data.table fread
+#' @importFrom RcppNumerical fastLR
+#' @importFrom stats approx
+#' 
+#' @export
+#'
+logit.stat = function(input, pop, ancstrl.1, ancstrl.2, admxd, window.size = 1000){
+  xadm <- t(as.matrix(input[, pop == admxd]))
+  y <- pop[pop %in% c(ancstrl.1, ancstrl.2)]
+  y[y == ancstrl.1] <- 0
+  y[y == ancstrl.2] <- 1
+  x <- t(as.matrix(input[, pop %in% c(ancstrl.1, ancstrl.2)]))
+  
+  ### RcppNumerical::fastLR
+  nSNP <- ncol(xadm)
+  obj.lr <- RcppNumerical::fastLR(x, y)
+  ancstry <- roll_prod(xadm, regcoeff = obj.lr$coefficients, window_size = window.size)
+  m.ancstry <- mean(ancstry, na.rm = TRUE)
+  ancstry[1] <- m.ancstry
+  ancstry[nSNP] <- m.ancstry
+  nna.stat <- which(!is.na(ancstry))
+  yint <- stats::approx(x = nna.stat, y = ancstry[nna.stat], xout = (1:nSNP)[-nna.stat])
+  ancstry[-nna.stat] <- yint$y[-nna.stat]
+  m.a <- mean(ancstry)
+  s.a <- sd(ancstry)
+  return((ancstry - m.a) / s.a)
+}
 
 #' Display local PCA
 #'
