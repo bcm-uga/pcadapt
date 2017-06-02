@@ -6,6 +6,14 @@
 
 using namespace Rcpp;
 
+//' Fast computation of rolling products.
+//' 
+//' \code{test} 
+//' 
+//' @param x a genotype matrix.
+//' 
+//' @return The returned value is a numerical vector.
+//' 
 //' @export
 //' 
 // [[Rcpp::export]]
@@ -13,6 +21,16 @@ double logit_fun(double x){
   return(1 / (1 + exp(-x)));
 }
 
+//' Fast computation of rolling products.
+//' 
+//' \code{roll_prod} 
+//' 
+//' @param x a genotype matrix.
+//' @param regcoeff a numerical vector.
+//' @param window_size an integer.
+//' 
+//' @return The returned value is a numerical vector.
+//' 
 //' @export
 //' 
 // [[Rcpp::export]]

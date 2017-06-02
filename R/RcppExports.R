@@ -238,6 +238,36 @@ updt_local_scores <- function(u, geno, V, sigma, beg_old, end_old, beg_new, end_
     invisible(.Call('pcadapt_updt_local_scores', PACKAGE = 'pcadapt', u, geno, V, sigma, beg_old, end_old, beg_new, end_new))
 }
 
+#' Fast computation of rolling products.
+#' 
+#' \code{test} 
+#' 
+#' @param x a genotype matrix.
+#' 
+#' @return The returned value is a numerical vector.
+#' 
+#' @export
+#' 
+logit_fun <- function(x) {
+    .Call('pcadapt_logit_fun', PACKAGE = 'pcadapt', x)
+}
+
+#' Fast computation of rolling products.
+#' 
+#' \code{roll_prod} 
+#' 
+#' @param x a genotype matrix.
+#' @param regcoeff a numerical vector.
+#' @param window_size an integer.
+#' 
+#' @return The returned value is a numerical vector.
+#' 
+#' @export
+#' 
+roll_prod <- function(x, regcoeff, window_size) {
+    .Call('pcadapt_roll_prod', PACKAGE = 'pcadapt', x, regcoeff, window_size)
+}
+
 colMedian_cpp <- function(x) {
     .Call('pcadapt_colMedian_cpp', PACKAGE = 'pcadapt', x)
 }
@@ -423,6 +453,21 @@ cmpt_transformation <- function(uloc, uglob, lab, ancstrl1, ancstrl2, s, dloc, d
 #' 
 rescale_local_pca <- function(u, s, dep_loc, dep_glob, R) {
     .Call('pcadapt_rescale_local_pca', PACKAGE = 'pcadapt', u, s, dep_loc, dep_glob, R)
+}
+
+#' Covariance for loaded genotype data
+#' 
+#' \code{rsvd_cpp} computes the randomized SVD.
+#' 
+#' @param A a numeric matrix.
+#' @param k an integer.
+#' 
+#' @return The returned value is a Rcpp::List.
+#' 
+#' @export
+#' 
+rsvd_cpp <- function(A, k) {
+    .Call('pcadapt_rsvd_cpp', PACKAGE = 'pcadapt', A, k)
 }
 
 #' File size

@@ -44,8 +44,7 @@ imputed.}
 the left, middle or right.}
 }
 \value{
-The returned value is a list containing the test statistics and the 
-associated p-values.
+The returned value is a list containing the test statistics.
 }
 \description{
 \code{scan.intro} computes statistics to detect excesses of local ancestry 

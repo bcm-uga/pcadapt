@@ -249,6 +249,7 @@ scan.intro = function(input,
 #' @importFrom data.table fread
 #' @importFrom RcppNumerical fastLR
 #' @importFrom stats approx
+#' @importFrom MASS cov.rob
 #' 
 #' @export
 #'
@@ -267,11 +268,10 @@ logit.stat = function(input, pop, ancstrl.1, ancstrl.2, admxd, window.size = 100
   ancstry[1] <- m.ancstry
   ancstry[nSNP] <- m.ancstry
   nna.stat <- which(!is.na(ancstry))
-  yint <- stats::approx(x = nna.stat, y = ancstry[nna.stat], xout = (1:nSNP)[-nna.stat])
-  ancstry[-nna.stat] <- yint$y[-nna.stat]
-  m.a <- mean(ancstry)
-  s.a <- sd(ancstry)
-  return((ancstry - m.a) / s.a)
+  yint <- stats::approx(x = nna.stat, y = ancstry[nna.stat], xout = 1:nSNP)
+  ancstry <- yint$y
+  aux <- MASS::cov.rob(ancstry)
+  return((ancstry - aux$center[1]) / sqrt(aux$cov[1, 1]))
 }
 
 #' Display local PCA

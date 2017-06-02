@@ -6,6 +6,16 @@
 
 using namespace Rcpp;
 
+
+//' Covariance for loaded genotype data
+//' 
+//' \code{rsvd_cpp} computes the randomized SVD.
+//' 
+//' @param A a numeric matrix.
+//' @param k an integer.
+//' 
+//' @return The returned value is a Rcpp::List.
+//' 
 //' @export
 //' 
 // [[Rcpp::export]]

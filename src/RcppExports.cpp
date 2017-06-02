@@ -194,6 +194,30 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// logit_fun
+double logit_fun(double x);
+RcppExport SEXP pcadapt_logit_fun(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(logit_fun(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// roll_prod
+arma::vec roll_prod(const arma::mat& x, const arma::vec& regcoeff, int window_size);
+RcppExport SEXP pcadapt_roll_prod(SEXP xSEXP, SEXP regcoeffSEXP, SEXP window_sizeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type regcoeff(regcoeffSEXP);
+    Rcpp::traits::input_parameter< int >::type window_size(window_sizeSEXP);
+    rcpp_result_gen = Rcpp::wrap(roll_prod(x, regcoeff, window_size));
+    return rcpp_result_gen;
+END_RCPP
+}
 // colMedian_cpp
 NumericVector colMedian_cpp(arma::mat& x);
 RcppExport SEXP pcadapt_colMedian_cpp(SEXP xSEXP) {
@@ -425,6 +449,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::vec& >::type dep_glob(dep_globSEXP);
     Rcpp::traits::input_parameter< arma::mat& >::type R(RSEXP);
     rcpp_result_gen = Rcpp::wrap(rescale_local_pca(u, s, dep_loc, dep_glob, R));
+    return rcpp_result_gen;
+END_RCPP
+}
+// rsvd_cpp
+Rcpp::List rsvd_cpp(arma::mat& A, int k);
+RcppExport SEXP pcadapt_rsvd_cpp(SEXP ASEXP, SEXP kSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type A(ASEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    rcpp_result_gen = Rcpp::wrap(rsvd_cpp(A, k));
     return rcpp_result_gen;
 END_RCPP
 }
