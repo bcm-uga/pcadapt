@@ -656,3 +656,61 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+
+static const R_CallMethodDef CallEntries[] = {
+    {"pcadapt_median_row_i", (DL_FUNC) &pcadapt_median_row_i, 2},
+    {"pcadapt_median_per_pop", (DL_FUNC) &pcadapt_median_per_pop, 4},
+    {"pcadapt_check_row", (DL_FUNC) &pcadapt_check_row, 2},
+    {"pcadapt_impute_geno", (DL_FUNC) &pcadapt_impute_geno, 1},
+    {"pcadapt_impute_geno_pop", (DL_FUNC) &pcadapt_impute_geno_pop, 3},
+    {"pcadapt_get_axis", (DL_FUNC) &pcadapt_get_axis, 4},
+    {"pcadapt_cmpt_directional_stat", (DL_FUNC) &pcadapt_cmpt_directional_stat, 5},
+    {"pcadapt_get_window", (DL_FUNC) &pcadapt_get_window, 4},
+    {"pcadapt_cmpt_stat_introgr", (DL_FUNC) &pcadapt_cmpt_stat_introgr, 13},
+    {"pcadapt_cmpt_global_pca", (DL_FUNC) &pcadapt_cmpt_global_pca, 3},
+    {"pcadapt_cmpt_local_pca", (DL_FUNC) &pcadapt_cmpt_local_pca, 5},
+    {"pcadapt_updt_local_scores_deprecated", (DL_FUNC) &pcadapt_updt_local_scores_deprecated, 6},
+    {"pcadapt_updt_local_scores", (DL_FUNC) &pcadapt_updt_local_scores, 8},
+    {"pcadapt_logit_fun", (DL_FUNC) &pcadapt_logit_fun, 1},
+    {"pcadapt_roll_prod", (DL_FUNC) &pcadapt_roll_prod, 3},
+    {"pcadapt_colMedian_cpp", (DL_FUNC) &pcadapt_colMedian_cpp, 1},
+    {"pcadapt_Erho_cpp", (DL_FUNC) &pcadapt_Erho_cpp, 1},
+    {"pcadapt_Es2_cpp", (DL_FUNC) &pcadapt_Es2_cpp, 1},
+    {"pcadapt_scaleTau2_matrix", (DL_FUNC) &pcadapt_scaleTau2_matrix, 1},
+    {"pcadapt_scaleTau2_vector", (DL_FUNC) &pcadapt_scaleTau2_vector, 1},
+    {"pcadapt_covGK_cpp", (DL_FUNC) &pcadapt_covGK_cpp, 2},
+    {"pcadapt_ogk_step", (DL_FUNC) &pcadapt_ogk_step, 1},
+    {"pcadapt_getDistance_cpp", (DL_FUNC) &pcadapt_getDistance_cpp, 3},
+    {"pcadapt_covRob_cpp", (DL_FUNC) &pcadapt_covRob_cpp, 1},
+    {"pcadapt_print_convert", (DL_FUNC) &pcadapt_print_convert, 5},
+    {"pcadapt_ped2pcadapt", (DL_FUNC) &pcadapt_ped2pcadapt, 2},
+    {"pcadapt_lfmm2pcadapt", (DL_FUNC) &pcadapt_lfmm2pcadapt, 2},
+    {"pcadapt_sample_geno_matrix", (DL_FUNC) &pcadapt_sample_geno_matrix, 3},
+    {"pcadapt_fJ_cpp", (DL_FUNC) &pcadapt_fJ_cpp, 1},
+    {"pcadapt_fcnt_cpp", (DL_FUNC) &pcadapt_fcnt_cpp, 1},
+    {"pcadapt_pca_rotation", (DL_FUNC) &pcadapt_pca_rotation, 2},
+    {"pcadapt_cmpt_centroids", (DL_FUNC) &pcadapt_cmpt_centroids, 4},
+    {"pcadapt_cmpt_transformation", (DL_FUNC) &pcadapt_cmpt_transformation, 9},
+    {"pcadapt_rescale_local_pca", (DL_FUNC) &pcadapt_rescale_local_pca, 5},
+    {"pcadapt_rsvd_cpp", (DL_FUNC) &pcadapt_rsvd_cpp, 2},
+    {"pcadapt_get_size_cpp", (DL_FUNC) &pcadapt_get_size_cpp, 1},
+    {"pcadapt_get_nb_ind", (DL_FUNC) &pcadapt_get_nb_ind, 2},
+    {"pcadapt_cmpt_minor_af", (DL_FUNC) &pcadapt_cmpt_minor_af, 2},
+    {"pcadapt_scale_geno", (DL_FUNC) &pcadapt_scale_geno, 4},
+    {"pcadapt_cmpt_cov_cpp", (DL_FUNC) &pcadapt_cmpt_cov_cpp, 5},
+    {"pcadapt_cmpt_loadings", (DL_FUNC) &pcadapt_cmpt_loadings, 10},
+    {"pcadapt_lrfunc_cpp", (DL_FUNC) &pcadapt_lrfunc_cpp, 10},
+    {"pcadapt_sample_geno_file", (DL_FUNC) &pcadapt_sample_geno_file, 4},
+    {"pcadapt_get_geno_char", (DL_FUNC) &pcadapt_get_geno_char, 1},
+    {"pcadapt_get_geno_int", (DL_FUNC) &pcadapt_get_geno_int, 1},
+    {"pcadapt_check_line_na", (DL_FUNC) &pcadapt_check_line_na, 2},
+    {"pcadapt_vcf_convert", (DL_FUNC) &pcadapt_vcf_convert, 3},
+    {"pcadapt_get_rank", (DL_FUNC) &pcadapt_get_rank, 1},
+    {"pcadapt_cmpt_wilcoxon_stat", (DL_FUNC) &pcadapt_cmpt_wilcoxon_stat, 6},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_pcadapt(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
+}
