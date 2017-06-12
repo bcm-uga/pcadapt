@@ -6,6 +6,22 @@
 
 using namespace Rcpp;
 
+// cmpt_cov_cpp
+Rcpp::List cmpt_cov_cpp(std::string filename, arma::mat& xmatrix, double min_maf, int ploidy, int type, int blocksize);
+RcppExport SEXP pcadapt_cmpt_cov_cpp(SEXP filenameSEXP, SEXP xmatrixSEXP, SEXP min_mafSEXP, SEXP ploidySEXP, SEXP typeSEXP, SEXP blocksizeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type xmatrix(xmatrixSEXP);
+    Rcpp::traits::input_parameter< double >::type min_maf(min_mafSEXP);
+    Rcpp::traits::input_parameter< int >::type ploidy(ploidySEXP);
+    Rcpp::traits::input_parameter< int >::type type(typeSEXP);
+    Rcpp::traits::input_parameter< int >::type blocksize(blocksizeSEXP);
+    rcpp_result_gen = Rcpp::wrap(cmpt_cov_cpp(filename, xmatrix, min_maf, ploidy, type, blocksize));
+    return rcpp_result_gen;
+END_RCPP
+}
 // median_row_i
 double median_row_i(const arma::mat& x, int i);
 RcppExport SEXP pcadapt_median_row_i(SEXP xSEXP, SEXP iSEXP) {
@@ -513,21 +529,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// cmpt_cov_cpp
-Rcpp::List cmpt_cov_cpp(std::string filename, arma::mat& xmatrix, double min_maf, int ploidy, int type);
-RcppExport SEXP pcadapt_cmpt_cov_cpp(SEXP filenameSEXP, SEXP xmatrixSEXP, SEXP min_mafSEXP, SEXP ploidySEXP, SEXP typeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type xmatrix(xmatrixSEXP);
-    Rcpp::traits::input_parameter< double >::type min_maf(min_mafSEXP);
-    Rcpp::traits::input_parameter< int >::type ploidy(ploidySEXP);
-    Rcpp::traits::input_parameter< int >::type type(typeSEXP);
-    rcpp_result_gen = Rcpp::wrap(cmpt_cov_cpp(filename, xmatrix, min_maf, ploidy, type));
-    return rcpp_result_gen;
-END_RCPP
-}
 // cmpt_loadings
 arma::mat cmpt_loadings(std::string filename, arma::mat& xmatrix, arma::mat& scores, int nIND, int nSNP, int K, int ploidy, double min_maf, arma::vec& sigma, int type);
 RcppExport SEXP pcadapt_cmpt_loadings(SEXP filenameSEXP, SEXP xmatrixSEXP, SEXP scoresSEXP, SEXP nINDSEXP, SEXP nSNPSEXP, SEXP KSEXP, SEXP ploidySEXP, SEXP min_mafSEXP, SEXP sigmaSEXP, SEXP typeSEXP) {
@@ -658,6 +659,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"pcadapt_cmpt_cov_cpp", (DL_FUNC) &pcadapt_cmpt_cov_cpp, 6},
     {"pcadapt_median_row_i", (DL_FUNC) &pcadapt_median_row_i, 2},
     {"pcadapt_median_per_pop", (DL_FUNC) &pcadapt_median_per_pop, 4},
     {"pcadapt_check_row", (DL_FUNC) &pcadapt_check_row, 2},
@@ -697,7 +699,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"pcadapt_get_nb_ind", (DL_FUNC) &pcadapt_get_nb_ind, 2},
     {"pcadapt_cmpt_minor_af", (DL_FUNC) &pcadapt_cmpt_minor_af, 2},
     {"pcadapt_scale_geno", (DL_FUNC) &pcadapt_scale_geno, 4},
-    {"pcadapt_cmpt_cov_cpp", (DL_FUNC) &pcadapt_cmpt_cov_cpp, 5},
     {"pcadapt_cmpt_loadings", (DL_FUNC) &pcadapt_cmpt_loadings, 10},
     {"pcadapt_lrfunc_cpp", (DL_FUNC) &pcadapt_lrfunc_cpp, 10},
     {"pcadapt_sample_geno_file", (DL_FUNC) &pcadapt_sample_geno_file, 4},

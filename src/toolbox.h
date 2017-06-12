@@ -22,7 +22,7 @@ int scale_rows(FILE *xfile, arma::mat &xmatrix, arma::mat &xs, int nIND,
 void add_to_cov_cpp(arma::mat &cov, arma::mat &genoblock);
 
 Rcpp::List cmpt_cov_cpp(std::string filename, arma::mat &xmatrix, 
-                        double min_maf, int ploidy, int type);
+                        double min_maf, int ploidy, int type, int blocksize);
 
 arma::mat cmpt_loadings(std::string filename, arma::mat &xmatrix, 
                         arma::mat &scores, int nIND, int nSNP, int K, 

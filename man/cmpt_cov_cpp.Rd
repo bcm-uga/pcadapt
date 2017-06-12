@@ -4,7 +4,7 @@
 \alias{cmpt_cov_cpp}
 \title{Covariance for loaded genotype data}
 \usage{
-cmpt_cov_cpp(filename, xmatrix, min_maf, ploidy, type)
+cmpt_cov_cpp(filename, xmatrix, min_maf, ploidy, type, blocksize = 120L)
 }
 \arguments{
 \item{filename}{a character string specifying the name of the file to be 
@@ -18,6 +18,8 @@ threshold of minor allele frequencies above which p-values are computed.}
 \item{ploidy}{an integer specifying the ploidy of the individuals.}
 
 \item{type}{an integer specifying the input type.}
+
+\item{blocksize}{an integer specifying the number of rows for each block.}
 }
 \value{
 The returned value is a Rcpp::List containing the covariance matrix, 
