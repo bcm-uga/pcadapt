@@ -493,18 +493,34 @@ rsvd_cpp <- function(A, k) {
     .Call('pcadapt_rsvd_cpp', PACKAGE = 'pcadapt', A, k)
 }
 
-#' @export
+#' A * x
 #' 
-AX_fun <- function(filename, l, nSNP, nIND) {
-    .Call('pcadapt_AX_fun', PACKAGE = 'pcadapt', filename, l, nSNP, nIND)
-}
-
+#' \code{AX} computes the product A * x.
+#' 
+#' @param filename a character string.
+#' @param x a numeric vector.
+#' @param nSNP an integer.
+#' @param nIND an integer.
+#' 
+#' @return The returned value is a numeric vector.
+#' 
 #' @export
 #' 
 AX <- function(filename, x, nSNP, nIND) {
     .Call('pcadapt_AX', PACKAGE = 'pcadapt', filename, x, nSNP, nIND)
 }
 
+#' A.t * x
+#' 
+#' \code{tAX} computes the product A.t * x.
+#' 
+#' @param filename a character string.
+#' @param x a numeric vector.
+#' @param nSNP an integer.
+#' @param nIND an integer.
+#' 
+#' @return The returned value is a numeric vector.
+#' 
 #' @export
 #' 
 tAX <- function(filename, x, nSNP, nIND) {

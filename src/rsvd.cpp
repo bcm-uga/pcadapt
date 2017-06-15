@@ -58,32 +58,17 @@ Rcpp::List rsvd_cpp(arma::mat &A, int k){
                             Rcpp::Named("B") = B);
 }
 
-//' @export
+//' A * x
 //' 
-// [[Rcpp::export]]
-arma::mat AX_fun(std::string filename, int l, int nSNP, int nIND){
-  FILE *xfile;
-  xfile = fopen(filename.c_str(), "r");
-  Rprintf("Reading file %s...\n", filename.c_str());
-  arma::mat resprod(l, nIND, arma::fill::zeros);
-  
-  for (int i = 0; i < nSNP; i++){
-    arma::vec geno(nIND, arma::fill::zeros);
-    arma::vec random_vec(l);
-    random_vec = runif(l);
-    float value;
-    for (int j = 0; j < nIND; j++){
-      if (fscanf(xfile, "%g", &value) != EOF){
-        geno[j] = (double) value;
-      }
-      for (int p = 0; p < l; p++){
-        resprod(p, j) += geno[j] * random_vec[p];
-      }
-    }
-  }
-  return(resprod);
-}
-
+//' \code{AX} computes the product A * x.
+//' 
+//' @param filename a character string.
+//' @param x a numeric vector.
+//' @param nSNP an integer.
+//' @param nIND an integer.
+//' 
+//' @return The returned value is a numeric vector.
+//' 
 //' @export
 //' 
 // [[Rcpp::export]]
@@ -103,7 +88,17 @@ arma::vec AX(std::string filename, arma::vec x, int nSNP, int nIND){
   return(resprod);
 }
 
-
+//' A.t * x
+//' 
+//' \code{tAX} computes the product A.t * x.
+//' 
+//' @param filename a character string.
+//' @param x a numeric vector.
+//' @param nSNP an integer.
+//' @param nIND an integer.
+//' 
+//' @return The returned value is a numeric vector.
+//' 
 //' @export
 //' 
 // [[Rcpp::export]]
