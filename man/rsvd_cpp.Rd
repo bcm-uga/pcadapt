@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{rsvd_cpp}
 \alias{rsvd_cpp}
-\title{Covariance for loaded genotype data}
+\title{Randomized SVD}
 \usage{
 rsvd_cpp(A, k)
 }

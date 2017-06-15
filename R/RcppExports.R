@@ -478,7 +478,7 @@ rescale_local_pca <- function(u, s, dep_loc, dep_glob, R) {
     .Call('pcadapt_rescale_local_pca', PACKAGE = 'pcadapt', u, s, dep_loc, dep_glob, R)
 }
 
-#' Covariance for loaded genotype data
+#' Randomized SVD
 #' 
 #' \code{rsvd_cpp} computes the randomized SVD.
 #' 
@@ -491,6 +491,24 @@ rescale_local_pca <- function(u, s, dep_loc, dep_glob, R) {
 #' 
 rsvd_cpp <- function(A, k) {
     .Call('pcadapt_rsvd_cpp', PACKAGE = 'pcadapt', A, k)
+}
+
+#' @export
+#' 
+AX_fun <- function(filename, l, nSNP, nIND) {
+    .Call('pcadapt_AX_fun', PACKAGE = 'pcadapt', filename, l, nSNP, nIND)
+}
+
+#' @export
+#' 
+AX <- function(filename, x, nSNP, nIND) {
+    .Call('pcadapt_AX', PACKAGE = 'pcadapt', filename, x, nSNP, nIND)
+}
+
+#' @export
+#' 
+tAX <- function(filename, x, nSNP, nIND) {
+    .Call('pcadapt_tAX', PACKAGE = 'pcadapt', filename, x, nSNP, nIND)
 }
 
 #' File size

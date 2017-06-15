@@ -480,6 +480,48 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// AX_fun
+arma::mat AX_fun(std::string filename, int l, int nSNP, int nIND);
+RcppExport SEXP pcadapt_AX_fun(SEXP filenameSEXP, SEXP lSEXP, SEXP nSNPSEXP, SEXP nINDSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
+    Rcpp::traits::input_parameter< int >::type l(lSEXP);
+    Rcpp::traits::input_parameter< int >::type nSNP(nSNPSEXP);
+    Rcpp::traits::input_parameter< int >::type nIND(nINDSEXP);
+    rcpp_result_gen = Rcpp::wrap(AX_fun(filename, l, nSNP, nIND));
+    return rcpp_result_gen;
+END_RCPP
+}
+// AX
+arma::vec AX(std::string filename, arma::vec x, int nSNP, int nIND);
+RcppExport SEXP pcadapt_AX(SEXP filenameSEXP, SEXP xSEXP, SEXP nSNPSEXP, SEXP nINDSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type nSNP(nSNPSEXP);
+    Rcpp::traits::input_parameter< int >::type nIND(nINDSEXP);
+    rcpp_result_gen = Rcpp::wrap(AX(filename, x, nSNP, nIND));
+    return rcpp_result_gen;
+END_RCPP
+}
+// tAX
+arma::vec tAX(std::string filename, arma::vec x, int nSNP, int nIND);
+RcppExport SEXP pcadapt_tAX(SEXP filenameSEXP, SEXP xSEXP, SEXP nSNPSEXP, SEXP nINDSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type nSNP(nSNPSEXP);
+    Rcpp::traits::input_parameter< int >::type nIND(nINDSEXP);
+    rcpp_result_gen = Rcpp::wrap(tAX(filename, x, nSNP, nIND));
+    return rcpp_result_gen;
+END_RCPP
+}
 // get_size_cpp
 NumericVector get_size_cpp(std::string filename);
 RcppExport SEXP pcadapt_get_size_cpp(SEXP filenameSEXP) {
@@ -695,6 +737,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"pcadapt_cmpt_transformation", (DL_FUNC) &pcadapt_cmpt_transformation, 9},
     {"pcadapt_rescale_local_pca", (DL_FUNC) &pcadapt_rescale_local_pca, 5},
     {"pcadapt_rsvd_cpp", (DL_FUNC) &pcadapt_rsvd_cpp, 2},
+    {"pcadapt_AX_fun", (DL_FUNC) &pcadapt_AX_fun, 4},
+    {"pcadapt_AX", (DL_FUNC) &pcadapt_AX, 4},
+    {"pcadapt_tAX", (DL_FUNC) &pcadapt_tAX, 4},
     {"pcadapt_get_size_cpp", (DL_FUNC) &pcadapt_get_size_cpp, 1},
     {"pcadapt_get_nb_ind", (DL_FUNC) &pcadapt_get_nb_ind, 2},
     {"pcadapt_cmpt_minor_af", (DL_FUNC) &pcadapt_cmpt_minor_af, 2},
