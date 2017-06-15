@@ -22,6 +22,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cart2bary_cpp
+arma::mat cart2bary_cpp(const arma::mat X, const arma::mat P);
+RcppExport SEXP pcadapt_cart2bary_cpp(SEXP XSEXP, SEXP PSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type P(PSEXP);
+    rcpp_result_gen = Rcpp::wrap(cart2bary_cpp(X, P));
+    return rcpp_result_gen;
+END_RCPP
+}
 // median_row_i
 double median_row_i(const arma::mat& x, int i);
 RcppExport SEXP pcadapt_median_row_i(SEXP xSEXP, SEXP iSEXP) {
@@ -688,6 +700,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"pcadapt_cmpt_cov_cpp", (DL_FUNC) &pcadapt_cmpt_cov_cpp, 6},
+    {"pcadapt_cart2bary_cpp", (DL_FUNC) &pcadapt_cart2bary_cpp, 2},
     {"pcadapt_median_row_i", (DL_FUNC) &pcadapt_median_row_i, 2},
     {"pcadapt_median_per_pop", (DL_FUNC) &pcadapt_median_per_pop, 4},
     {"pcadapt_check_row", (DL_FUNC) &pcadapt_check_row, 2},

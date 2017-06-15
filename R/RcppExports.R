@@ -24,6 +24,21 @@ cmpt_cov_cpp <- function(filename, xmatrix, min_maf, ploidy, type, blocksize = 1
     .Call('pcadapt_cmpt_cov_cpp', PACKAGE = 'pcadapt', filename, xmatrix, min_maf, ploidy, type, blocksize)
 }
 
+#' Cartesian coordinates to barycentric coordinates
+#' 
+#' \code{cart2bary_cpp} returns the barycentric coordinates.
+#' 
+#' @param X a matrix.
+#' @param P a matrix.
+#' 
+#' @return The returned value is a numeric matrix.
+#' 
+#' @export
+#' 
+cart2bary_cpp <- function(X, P) {
+    .Call('pcadapt_cart2bary_cpp', PACKAGE = 'pcadapt', X, P)
+}
+
 #' Median
 #' 
 #' \code{median_row_i} computes the median of a specific row.
