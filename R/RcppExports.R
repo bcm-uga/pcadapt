@@ -200,6 +200,34 @@ cmpt_stat_introgr <- function(geno, V, sigma, window_size, direction, lab, ancst
     .Call('pcadapt_cmpt_stat_introgr', PACKAGE = 'pcadapt', geno, V, sigma, window_size, direction, lab, ancstrl1, ancstrl2, adm, axis, map, with_map, side)
 }
 
+#' Introgression statistics
+#' 
+#' \code{cmpt_stat_introgr_bary} computes the statistics.
+#' 
+#' @param geno a genotype matrix.
+#' @param V a loading matrix.
+#' @param sigma a vector of singular values.
+#' @param window_size an integer.
+#' @param direction an integer.
+#' @param lab a vector of integers.
+#' @param ancstrl1 an integer.
+#' @param ancstrl2 an integer.
+#' @param adm an integer.
+#' @param axis a numeric vector.
+#' @param map a numeric vector containing the genetic positions.
+#' @param with_map an integer specifying whether the genetic positions have
+#' been provided.
+#' @param side an integer specifying whether the window should be aligned on 
+#' the left, middle or right.
+#' 
+#' @return The returned value is a numeric vector.
+#' 
+#' @export
+#' 
+cmpt_stat_introgr_bary <- function(geno, V, sigma, window_size, direction, lab, ancstrl1, ancstrl2, adm, axis, map, with_map, side) {
+    .Call('pcadapt_cmpt_stat_introgr_bary', PACKAGE = 'pcadapt', geno, V, sigma, window_size, direction, lab, ancstrl1, ancstrl2, adm, axis, map, with_map, side)
+}
+
 #' Global Principal Component Analysis
 #' 
 #' \code{cmpt_global_pca} computes the scores using all genetic markers.
@@ -452,6 +480,23 @@ pca_rotation <- function(a, b) {
 #' 
 cmpt_centroids <- function(u, lab, pop1, pop2) {
     .Call('pcadapt_cmpt_centroids', PACKAGE = 'pcadapt', u, lab, pop1, pop2)
+}
+
+#' Ancestral populations centroids
+#' 
+#' \code{cmpt_centroids_bary} returns the average scores for each population.
+#' 
+#' @param u a matrix of scores.
+#' @param lab a vector of integers.
+#' @param pop1 an integer.
+#' @param pop2 an integer.
+#' 
+#' @return The returned value is a matrix.
+#' 
+#' @export
+#' 
+cmpt_centroids_bary <- function(u, lab, pop1, pop2) {
+    .Call('pcadapt_cmpt_centroids_bary', PACKAGE = 'pcadapt', u, lab, pop1, pop2)
 }
 
 #' Match global centroids and local centroids

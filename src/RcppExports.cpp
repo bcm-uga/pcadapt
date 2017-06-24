@@ -162,6 +162,29 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cmpt_stat_introgr_bary
+arma::vec cmpt_stat_introgr_bary(const arma::mat& geno, const arma::mat& V, const arma::vec& sigma, const int window_size, const int direction, const arma::vec lab, const int ancstrl1, const int ancstrl2, const int adm, const arma::vec axis, const arma::vec map, const int with_map, const int side);
+RcppExport SEXP pcadapt_cmpt_stat_introgr_bary(SEXP genoSEXP, SEXP VSEXP, SEXP sigmaSEXP, SEXP window_sizeSEXP, SEXP directionSEXP, SEXP labSEXP, SEXP ancstrl1SEXP, SEXP ancstrl2SEXP, SEXP admSEXP, SEXP axisSEXP, SEXP mapSEXP, SEXP with_mapSEXP, SEXP sideSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type geno(genoSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type V(VSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< const int >::type window_size(window_sizeSEXP);
+    Rcpp::traits::input_parameter< const int >::type direction(directionSEXP);
+    Rcpp::traits::input_parameter< const arma::vec >::type lab(labSEXP);
+    Rcpp::traits::input_parameter< const int >::type ancstrl1(ancstrl1SEXP);
+    Rcpp::traits::input_parameter< const int >::type ancstrl2(ancstrl2SEXP);
+    Rcpp::traits::input_parameter< const int >::type adm(admSEXP);
+    Rcpp::traits::input_parameter< const arma::vec >::type axis(axisSEXP);
+    Rcpp::traits::input_parameter< const arma::vec >::type map(mapSEXP);
+    Rcpp::traits::input_parameter< const int >::type with_map(with_mapSEXP);
+    Rcpp::traits::input_parameter< const int >::type side(sideSEXP);
+    rcpp_result_gen = Rcpp::wrap(cmpt_stat_introgr_bary(geno, V, sigma, window_size, direction, lab, ancstrl1, ancstrl2, adm, axis, map, with_map, side));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cmpt_global_pca
 arma::mat cmpt_global_pca(const arma::mat& geno, const arma::mat& V, const arma::vec& sigma);
 RcppExport SEXP pcadapt_cmpt_global_pca(SEXP genoSEXP, SEXP VSEXP, SEXP sigmaSEXP) {
@@ -447,6 +470,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cmpt_centroids_bary
+arma::mat cmpt_centroids_bary(arma::mat u, const arma::vec lab, const int pop1, const int pop2);
+RcppExport SEXP pcadapt_cmpt_centroids_bary(SEXP uSEXP, SEXP labSEXP, SEXP pop1SEXP, SEXP pop2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type u(uSEXP);
+    Rcpp::traits::input_parameter< const arma::vec >::type lab(labSEXP);
+    Rcpp::traits::input_parameter< const int >::type pop1(pop1SEXP);
+    Rcpp::traits::input_parameter< const int >::type pop2(pop2SEXP);
+    rcpp_result_gen = Rcpp::wrap(cmpt_centroids_bary(u, lab, pop1, pop2));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cmpt_transformation
 void cmpt_transformation(arma::mat& uloc, arma::mat& uglob, const arma::vec& lab, const int ancstrl1, const int ancstrl2, arma::vec& s, arma::vec& dloc, arma::vec& dglob, arma::mat& R);
 RcppExport SEXP pcadapt_cmpt_transformation(SEXP ulocSEXP, SEXP uglobSEXP, SEXP labSEXP, SEXP ancstrl1SEXP, SEXP ancstrl2SEXP, SEXP sSEXP, SEXP dlocSEXP, SEXP dglobSEXP, SEXP RSEXP) {
@@ -710,6 +747,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"pcadapt_cmpt_directional_stat", (DL_FUNC) &pcadapt_cmpt_directional_stat, 5},
     {"pcadapt_get_window", (DL_FUNC) &pcadapt_get_window, 4},
     {"pcadapt_cmpt_stat_introgr", (DL_FUNC) &pcadapt_cmpt_stat_introgr, 13},
+    {"pcadapt_cmpt_stat_introgr_bary", (DL_FUNC) &pcadapt_cmpt_stat_introgr_bary, 13},
     {"pcadapt_cmpt_global_pca", (DL_FUNC) &pcadapt_cmpt_global_pca, 3},
     {"pcadapt_cmpt_local_pca", (DL_FUNC) &pcadapt_cmpt_local_pca, 5},
     {"pcadapt_updt_local_scores_deprecated", (DL_FUNC) &pcadapt_updt_local_scores_deprecated, 6},
@@ -733,6 +771,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"pcadapt_fcnt_cpp", (DL_FUNC) &pcadapt_fcnt_cpp, 1},
     {"pcadapt_pca_rotation", (DL_FUNC) &pcadapt_pca_rotation, 2},
     {"pcadapt_cmpt_centroids", (DL_FUNC) &pcadapt_cmpt_centroids, 4},
+    {"pcadapt_cmpt_centroids_bary", (DL_FUNC) &pcadapt_cmpt_centroids_bary, 4},
     {"pcadapt_cmpt_transformation", (DL_FUNC) &pcadapt_cmpt_transformation, 9},
     {"pcadapt_rescale_local_pca", (DL_FUNC) &pcadapt_rescale_local_pca, 5},
     {"pcadapt_rsvd_cpp", (DL_FUNC) &pcadapt_rsvd_cpp, 2},

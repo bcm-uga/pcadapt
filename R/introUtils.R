@@ -84,6 +84,7 @@ assign.int.labels = function(pop){
 #' @param map a numeric vector containing the genetic positions.
 #' @param side a character string specifying whether the window should be aligned on 
 #' the left, middle or right.
+#' @param method a character string specifying the method. Default "barycentric".
 #' 
 #' @return The returned value is a list containing the test statistics.
 #' 
@@ -105,7 +106,8 @@ scan.intro = function(input,
                       impute = FALSE, 
                       chr.info,
                       map,
-                      side = "middle"){
+                      side = "middle",
+                      method = "barycentric"){
   if (impute){
     geno <- (impute.pcadapt(input = input, pop = pop))$x
   } else if (!impute){
@@ -170,6 +172,7 @@ scan.intro = function(input,
   }
   
   if (missing(chr.info)){
+    if (method != "barycentric"){
     s_1 <- cmpt_stat_introgr(geno = as.matrix(scaled.geno), 
                           V = as.matrix(obj.svd$v), 
                           sigma = as.vector(obj.svd$d), 
@@ -183,10 +186,29 @@ scan.intro = function(input,
                           map = gmap,
                           with_map = with.map,
                           side = side.int)  
+    } else if (method == "barycentric"){
+      s_1 <- cmpt_stat_introgr_bary(geno = as.matrix(scaled.geno), 
+                               V = as.matrix(obj.svd$v), 
+                               sigma = as.vector(obj.svd$d), 
+                               window_size = as.integer(window.size),  
+                               direction = as.integer(0), 
+                               lab = as.vector(pop.int), 
+                               ancstrl1 = as.integer(ancstrl.int.1),
+                               ancstrl2 = as.integer(ancstrl.int.2),
+                               adm = as.integer(admxd.int), 
+                               axis = as.vector(axis.vector),
+                               map = gmap,
+                               with_map = with.map,
+                               side = side.int)    
+    }
     yint <- approx(gmap[!is.na(s_1)], s_1[!is.na(s_1)], 1:nSNP)  
-    aux <- MASS::cov.rob(yint$y)
+    #aux <- MASS::cov.rob(yint$y)
+    median.y <- median(yint$y, na.rm = TRUE)
+    mad.y <- mad(yint$y, na.rm = TRUE)
     obj.stat <- list()
-    obj.stat[[1]] <- (yint$y - aux$center[1]) / sqrt(aux$cov[1, 1])
+    #obj.stat[[1]] <- yint$y
+    #obj.stat[[1]] <- (yint$y - aux$center[1]) / sqrt(aux$cov[1, 1])
+    obj.stat[[1]] <- (yint$y - median.y) / mad.y
     obj.stat[[2]] <- gmap
   } else {
     chr <- chr.info[maf >= min.maf]

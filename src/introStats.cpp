@@ -4,6 +4,7 @@
 #include "registration.h"
 #include "toolbox.h"
 #include "wilcoxon.h"
+#include "geometry.h"
 
 // [[Rcpp::depends("RcppArmadillo")]]
 
@@ -214,4 +215,114 @@ arma::vec cmpt_stat_introgr(const arma::mat &geno,
   stat[nSNP - 1] = 0;
   return(stat);
 }
+
+
+//' Introgression statistics
+//' 
+//' \code{cmpt_stat_introgr_bary} computes the statistics.
+//' 
+//' @param geno a genotype matrix.
+//' @param V a loading matrix.
+//' @param sigma a vector of singular values.
+//' @param window_size an integer.
+//' @param direction an integer.
+//' @param lab a vector of integers.
+//' @param ancstrl1 an integer.
+//' @param ancstrl2 an integer.
+//' @param adm an integer.
+//' @param axis a numeric vector.
+//' @param map a numeric vector containing the genetic positions.
+//' @param with_map an integer specifying whether the genetic positions have
+//' been provided.
+//' @param side an integer specifying whether the window should be aligned on 
+//' the left, middle or right.
+//' 
+//' @return The returned value is a numeric vector.
+//' 
+//' @export
+//' 
+// [[Rcpp::export]]
+arma::vec cmpt_stat_introgr_bary(const arma::mat &geno, 
+                            const arma::mat &V, 
+                            const arma::vec &sigma, 
+                            const int window_size,  
+                            const int direction, 
+                            const arma::vec lab, 
+                            const int ancstrl1,
+                            const int ancstrl2,
+                            const int adm, 
+                            const arma::vec axis,
+                            const arma::vec map,
+                            const int with_map,
+                            const int side){
+  int nSNP = geno.n_cols;
+  int nIND = geno.n_rows;
+  int K = V.n_cols;
+  arma::mat usc(nIND, K, arma::fill::zeros);
+  arma::vec stat(nSNP, arma::fill::zeros);  
+  arma::mat uglob = cmpt_global_pca(geno, V, sigma);
+  
+  IntegerVector idx_old(2);
+  IntegerVector idx_new(2);
+  
+  int hws = window_size / 2;
+  int loop_beg;
+  int loop_end;
+  
+  if (side == -1 and with_map == 0){
+    idx_old = get_window(window_size, map, window_size, side);    
+    loop_beg = window_size + 1;
+    loop_end = nSNP;
+  } else if (side == 0 and with_map == 0){
+    idx_old = get_window(hws, map, window_size, side);    
+    loop_beg = hws + 1;
+    loop_end = nSNP - hws;
+  } else if (side == 1 and with_map == 0){
+    idx_old = get_window(0, map, window_size, side);    
+    loop_beg = 1;
+    loop_end = window_size;
+  } else if (with_map == 1){
+    idx_old = get_window(0, map, window_size, side);
+    loop_beg = idx_old[1] / 2;
+    IntegerVector idx_last;
+    idx_last = get_window(nSNP - 1, map, window_size, side);
+    loop_end = idx_last[0] + (idx_last[1] - idx_last[0]) / 2; 
+  }
+  
+  arma::mat uloc = cmpt_local_pca(geno, V, sigma, idx_old[0], idx_old[1]);
+  arma::mat mglob = cmpt_centroids_bary(uglob, lab, ancstrl1, ancstrl2);
+  arma::mat mloc(nIND, 1, arma::fill::zeros);
+  mloc.col(0) = uglob.col(0);
+  arma::mat res_glob = cart2bary_cpp(mglob, mloc);
+  int number_of_admixed = 0;
+  number_of_admixed = get_nb_ind(lab, adm);
+  arma::mat res;
+  for (int i = loop_beg; i < loop_end; i++){
+    idx_new = get_window(i, map, window_size, side);
+    updt_local_scores(uloc, geno, V, sigma, idx_old[0], idx_old[1], idx_new[0], idx_new[1]);
+    arma::mat mglob = cmpt_centroids_bary(uloc, lab, ancstrl1, ancstrl2);
+    mloc.col(0) = uloc.col(0);
+    res = cart2bary_cpp(mglob, mloc);
+    for (int j = 0; j < nIND; j++){
+      if (lab[j] == adm){
+        //stat[i] += (res(j, 1) - res_glob(j, 1)) / number_of_admixed;
+        stat[i] += res(j, 1) / number_of_admixed;
+      }
+    }
+    idx_old[0] = idx_new[0];
+    idx_old[1] = idx_new[1];
+  }
+  double mean = sum(stat) / (loop_end - loop_beg);
+  for (int i = 0; i < loop_beg; i++){
+    stat[i] = NA_REAL;
+  }
+  for (int i = loop_end; i < nSNP; i++){
+    stat[i] = NA_REAL;
+  }
+  stat[0] = mean;
+  stat[nSNP - 1] = mean;
+  return(stat);
+}
+
+
 

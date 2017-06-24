@@ -42,6 +42,37 @@ Rcpp::List cmpt_centroids(arma::mat u, const arma::vec lab, const int pop1,
                             Rcpp::Named("m2") = m2);
 }
 
+//' Ancestral populations centroids
+//' 
+//' \code{cmpt_centroids_bary} returns the average scores for each population.
+//' 
+//' @param u a matrix of scores.
+//' @param lab a vector of integers.
+//' @param pop1 an integer.
+//' @param pop2 an integer.
+//' 
+//' @return The returned value is a matrix.
+//' 
+//' @export
+//' 
+// [[Rcpp::export]]
+arma::mat cmpt_centroids_bary(arma::mat u, const arma::vec lab, const int pop1, 
+                              const int pop2){
+  int nIND = u.n_rows;
+  int K = u.n_cols;
+  arma::mat m(2, 1, arma::fill::zeros);
+  int c1 = get_nb_ind(lab, pop1);
+  int c2 = get_nb_ind(lab, pop2);
+  for (int j = 0; j < nIND; j++){
+    if (lab[j] == pop1){
+      m(0, 0) += u(j, 0) / c1;
+    } else if (lab[j] == pop2){
+      m(1, 0) += u(j, 0) / c2;
+    }
+  }
+  return(m);
+}
+
 //' Match global centroids and local centroids
 //' 
 //' \code{cmpt_transformation} computes the local centroid, the global centroid 

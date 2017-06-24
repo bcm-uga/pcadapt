@@ -6,7 +6,7 @@
 \usage{
 scan.intro(input, K = 2, pop, ancstrl.1, ancstrl.2, admxd, min.maf = 0.05,
   ploidy = 2, window.size = 1000, impute = FALSE, chr.info, map,
-  side = "middle")
+  side = "middle", method = "barycentric")
 }
 \arguments{
 \item{input}{a genotype matrix or a character string specifying the name of 
@@ -42,6 +42,8 @@ imputed.}
 
 \item{side}{a character string specifying whether the window should be aligned on 
 the left, middle or right.}
+
+\item{method}{a character string specifying the method. Default "barycentric".}
 }
 \value{
 The returned value is a list containing the test statistics.
