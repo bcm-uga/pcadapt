@@ -1,5 +1,8 @@
 #include <RcppArmadillo.h>
 #include "toolbox.h"
+#ifdef _OPENMP
+  #include <omp.h>
+#endif
 
 // [[Rcpp::depends("RcppArmadillo")]]
 
@@ -22,6 +25,13 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 NumericVector get_size_cpp(std::string filename){
   NumericVector file_size(2);
+  
+  if (FILE *check_f = fopen(filename.c_str(), "r")){
+    fclose(check_f);
+  } else {
+    stop("Error, file does not exists.\n");
+  }
+  
   FILE *input;
   if ((input = fopen(filename.c_str(), "r")) == NULL){
     Rprintf("Error, invalid input file.\n");
@@ -88,6 +98,8 @@ NumericVector cmpt_minor_af(arma::mat &xmatrix, int ploidy){
   int nSNP = xmatrix.n_rows;
   int nIND = xmatrix.n_cols;
   NumericVector maf(nSNP);
+  
+  # pragma omp parallel for 
   for (int i = 0; i < nSNP; i++){
     var = 0;
     mean = 0;
@@ -120,6 +132,7 @@ NumericVector cmpt_minor_af(arma::mat &xmatrix, int ploidy){
   }
   return(maf);
 }
+
 
 //' Scale genotype matrices
 //' 

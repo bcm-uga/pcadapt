@@ -110,7 +110,8 @@ pcadapt = function(input,
       
       if (!is.null(local)){
         if (local == FALSE){
-          obj.pca <- create.pcadapt(input = input, 
+          abs.path <- normalizePath(input)
+          obj.pca <- create.pcadapt(input = abs.path, 
                                     K = K,
                                     method = method, 
                                     min.maf = min.maf, 

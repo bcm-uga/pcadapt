@@ -1,5 +1,8 @@
 #include <RcppArmadillo.h>
 #include "toolbox.h"
+#ifdef _OPENMP
+  #include <omp.h>
+#endif
 
 // [[Rcpp::depends("RcppArmadillo")]]
 
@@ -61,7 +64,7 @@ Rcpp::List cmpt_cov_cpp(std::string filename, arma::mat &xmatrix,
   }
   Rprintf("Number of SNPs: %i\n", nSNP);
   Rprintf("Number of individuals: %i\n", nIND);  
-  arma::mat scale_geno(nSNP, nIND);
+  
   int unused_na = 0;
   double unused_maf = 0;
   int b;
