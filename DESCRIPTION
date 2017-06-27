@@ -30,7 +30,7 @@ Imports:
     RcppNumerical
 LinkingTo: Rcpp, RcppArmadillo
 LazyData: TRUE
-Suggests: knitr, rmarkdown, testthat, shiny
+Suggests: knitr, rmarkdown, testthat, shiny, geometry
 SystemRequirements: C++11
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr

@@ -90,7 +90,7 @@ assign.int.labels = function(pop){
 #' 
 #' @importFrom data.table fread
 #' @importFrom MASS cov.rob
-#' @importFrom stats approx
+#' @importFrom stats approx median mad
 #' 
 #' @export
 #'
@@ -203,8 +203,8 @@ scan.intro = function(input,
     }
     yint <- approx(gmap[!is.na(s_1)], s_1[!is.na(s_1)], 1:nSNP)  
     #aux <- MASS::cov.rob(yint$y)
-    median.y <- median(yint$y, na.rm = TRUE)
-    mad.y <- mad(yint$y, na.rm = TRUE)
+    median.y <- stats::median(yint$y, na.rm = TRUE)
+    mad.y <- stats::mad(yint$y, na.rm = TRUE)
     obj.stat <- list()
     #obj.stat[[1]] <- yint$y
     #obj.stat[[1]] <- (yint$y - aux$center[1]) / sqrt(aux$cov[1, 1])
