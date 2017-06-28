@@ -355,7 +355,4 @@ draw.pca = function(geno, V, sigma, uglob, beg, end, pop, i = 1, j = 2,
        xlim = c(xmin, xmax), 
        ylim = c(ymin, ymax))
   points(uglob[, i], uglob[, j], col = as.factor(pop), cex = 1)
-  #arrows(cent$m1[1], cent$m1[2], cent$m2[1], cent$m2[2])
-  #arrows(uglob[pop == adm, i], uglob[pop == adm, j], 
-  #       usc[pop == adm, i], usc[pop == adm, j])
 }
