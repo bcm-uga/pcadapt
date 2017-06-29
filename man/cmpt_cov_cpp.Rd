@@ -17,7 +17,8 @@ threshold of minor allele frequencies above which p-values are computed.}
 
 \item{ploidy}{an integer specifying the ploidy of the individuals.}
 
-\item{type}{an integer specifying the input type.}
+\item{type}{an integer specifying the input type: \code{0} for genotype 
+matrices or \code{1} for genotype files.}
 
 \item{blocksize}{an integer specifying the number of rows for each block.}
 }

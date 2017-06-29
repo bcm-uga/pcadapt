@@ -493,20 +493,6 @@ loc.anc.plotting = function(x, by.step = by.step, hline = hline,
     anc.lab[!sign.Y] <- attr(x, "ancstrl.1")
     anc.lab[sign.Y] <- attr(x, "ancstrl.2")    
   }
-  # y1 <- yaxis
-  # y1[!sign.Y] <- 0
-  # y2 <- yaxis
-  # y2[sign.Y] <- 0
-  # df.1 <- data.frame(X = xaxis, Y = y1, Ancestral = as.factor(anc.lab))
-  # df.2 <- data.frame(X = xaxis, Y = y2, Ancestral = as.factor(anc.lab))
-  # plt.2 <- ggplot() + 
-  #   geom_area(data = df.1, aes_string("X", "Y", fill = "Ancestral")) +
-  #   geom_area(data = df.2, aes_string("X", "Y", fill = "Ancestral")) +
-  #   ggplot2::ggtitle(paste0("Excess of local ancestry")) +
-  #   ggplot2::labs(x = "Position", y = "z-scores") + 
-  #   ggplot2::geom_hline(yintercept = hline) +
-  #   ggplot2::geom_hline(yintercept = 0.0)
-  # print(plt.2)
   df <- data.frame(X = xaxis, Y = yaxis, Ancestral = anc.lab)
   plt.1 <- ggplot2::ggplot(df, aes_string("X", "Y")) +
     ggplot2::geom_area(aes_string(fill = "Ancestral")) +
@@ -519,3 +505,49 @@ loc.anc.plotting = function(x, by.step = by.step, hline = hline,
   }
   print(plt.1)
 }
+
+
+#' Local Ancestry
+#'
+#' \code{loc.anc.plotting} plots the z-scores derived from the statistics 
+#' computed with `scan.intro`.
+#'
+#' @param geno a scaled genotype matrix..
+#' @param obj.svd an object with \code{u}, \code{d} and \code{v}.
+#' @param begin an integer.
+#' @param end an integer.
+#' @param i an integer.
+#' @param j an integer.
+#' @param pop a list of integers or strings specifying which subpopulation the 
+#' individuals belong to.
+#'
+#' @examples
+#' ## see ?pcadapt for examples
+#' 
+#' @export
+#'
+display.local.pca <- function(geno, obj.svd, begin = 1, end = nrow(obj.svd$v), i = 1, j = 2, pop){
+  u <- cmpt_local_pca(geno, obj.svd$v, sigma = obj.svd$d, beg = begin, end = end)  
+  if (missing(pop)){
+    plot(u[, i], u[, j], pch = 19, 
+         xlab = paste0("PC", i), 
+         ylab = paste0("PC", j), 
+         main = paste("Window ranging from", begin, "to", end)
+    )
+  } else {
+    n.pop <- length(unique(pop))
+    plt <- grDevices::rainbow(n.pop)
+    col.pop <- vector("character", length = length(pop))
+    for (k in 1:n.pop){
+      col.pop[which(pop == unique(pop)[k])] <- plt[which(unique(pop) == unique(pop)[k])]    
+    }
+    plot(u[, i], u[, j], col = col.pop, pch = 19, 
+         xlab = paste0("PC", i), 
+         ylab = paste0("PC", j),
+         main = paste("Window ranging from", begin, "to", end)
+    )
+    legend('bottomleft', legend = unique(pop), 
+           lty = 1, col = plt, bty = 'n', cex = .75)
+  }
+}
+

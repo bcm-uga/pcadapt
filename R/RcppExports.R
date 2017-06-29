@@ -11,7 +11,8 @@
 #' @param min_maf a value between \code{0} and \code{0.45} specifying the 
 #' threshold of minor allele frequencies above which p-values are computed.
 #' @param ploidy an integer specifying the ploidy of the individuals.
-#' @param type an integer specifying the input type.
+#' @param type an integer specifying the input type: \code{0} for genotype 
+#' matrices or \code{1} for genotype files.
 #' @param blocksize an integer specifying the number of rows for each block.
 #' 
 #' @return The returned value is a Rcpp::List containing the covariance matrix, 

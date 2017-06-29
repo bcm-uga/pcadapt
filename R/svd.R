@@ -19,7 +19,7 @@
 #' 
 #' @export
 #'
-svd.pcadapt = function(input, K, min.maf, ploidy, type){
+svd.pcadapt = function(input, K, min.maf = 0.05, ploidy = s, type){
   if (type == 0){
     unused_matrix <- matrix(0, nrow = 2, ncol = 2)
     aux <- cmpt_cov_cpp(filename = input, xmatrix = unused_matrix, 
