@@ -131,14 +131,14 @@ scan.intro.2 = function(input,
   obj.svd <- svd.pcadapt(input = geno, K = k, min.maf = min.maf, 
                          ploidy = ploidy, type = 1)
   cat("Computing the statistics...\n")
-
+  
   s_1 <- cmpt_stat_bary(scaled.geno = as.matrix(scaled.geno), 
                         V = as.matrix(obj.svd$v), 
                         sigma = as.vector(obj.svd$d), 
                         window_size = window.size,  
                         pop = pop, 
                         adm = admxd
-                        )    
+  )    
   
   complete.stat <- rep(NA, length = nSNP)
   complete.stat[maf >= min.maf] <- s_1[ ,1]
@@ -156,7 +156,7 @@ scan.intro.2 = function(input,
   
   flush.console()
   cat("DONE\n")
-
+  
   return(obj.stat)
 } 
 
@@ -224,7 +224,7 @@ residuals_stat <- function(geno, obj.svd, pop, adm, K = 1, window.size = 100){
   mean.stat <- apply(res[pop == adm, ],
                      MARGIN = 2,
                      FUN = function(X){mean(X, na.rm = TRUE)}
-                     )
+  )
   
   stat <- (mean.stat - median(mean.stat, na.rm = TRUE)) / mad(mean.stat, na.rm = TRUE)
   smooth.stat <- RcppRoll::roll_mean(stat, n = window.size, by = 1, align = "center")
