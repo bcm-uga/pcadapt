@@ -191,7 +191,7 @@ cmpt_stat_scalar = function(scaled.geno, V, sigma, window_size, pop, adm, donor,
 #' @export
 #'
 display.local.pca <- function(geno, obj.svd, begin = 1, end = nrow(obj.svd$v), i = 1, j = 2, pop){
-  u <- cmpt_local_pca(geno, obj.svd$v, sigma = obj.svd$d, beg = begin, end = end)  
+  u <- cmpt_local_pca(geno, as.matrix(obj.svd$v), sigma = as.vector(obj.svd$d), beg = begin - 1, end = end - 1)  
   if (missing(pop)){
     plot(u[, i], u[, j], pch = 19, 
          xlab = paste0("PC", i), 
