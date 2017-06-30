@@ -14,8 +14,8 @@ using namespace Rcpp;
 //' 
 //' \code{get_axis} returns the axis onto which projection should be performed.
 //' 
-//' @param uglob a matrix of global scores.
-//' @param lab a vector of integers.
+//' @param u a matrix of global scores.
+//' @param labels a vector of integers.
 //' @param pop1 an integer.
 //' @param pop2 an integer.
 //' 
@@ -24,9 +24,11 @@ using namespace Rcpp;
 //' @export
 //' 
 // [[Rcpp::export]]
-arma::vec get_axis(arma::mat &uglob, const arma::vec &lab, const int pop1, 
+arma::vec get_axis(arma::mat &u, 
+                   const arma::vec &labels, 
+                   const int pop1, 
                    const int pop2){
-  Rcpp::List res = cmpt_centroids(uglob, lab, pop1, pop2);
+  Rcpp::List res = cmpt_centroids(u, labels, pop1, pop2);
   arma::vec m1 = res[0];
   arma::vec m2 = res[1];
   return(m2 - m1);
@@ -35,12 +37,12 @@ arma::vec get_axis(arma::mat &uglob, const arma::vec &lab, const int pop1,
 //' Directional statistics
 //' 
 //' \code{cmpt_directional_stat} computes the displacement of admixed 
-//' individuals such that positive (resp. negative) displacement corresponds to 
-//' a displacement towards ancestral population 2 (resp. 1).
+//' individuals such that a positive (resp. negative) displacement corresponds 
+//' to a displacement towards ancestral population 2 (resp. 1).
 //' 
 //' @param usc a matrix of rescaled local scores.
 //' @param uglob a matrix of global scores.
-//' @param lab a vector of integers.
+//' @param labels a vector of integers.
 //' @param adm an integer.
 //' @param ax a numeric vector.
 //' 
@@ -51,13 +53,13 @@ arma::vec get_axis(arma::mat &uglob, const arma::vec &lab, const int pop1,
 // [[Rcpp::export]]
 double cmpt_directional_stat(arma::mat &usc,
                              arma::mat &uglob, 
-                             const arma::vec &lab, 
+                             const arma::vec &labels, 
                              const int adm, 
                              arma::vec &ax){
   int nIND = uglob.n_rows; 
   double stat = 0;
   for (int j = 0; j < nIND; j++){
-    if (lab[j] == adm){
+    if (labels[j] == adm){
       stat += arma::dot(usc.row(j) - uglob.row(j), ax);
     }
   }
@@ -78,7 +80,9 @@ double cmpt_directional_stat(arma::mat &usc,
 //' @export
 //' 
 // [[Rcpp::export]]
-IntegerVector get_window(int i, const arma::vec &map, const double window_size,
+IntegerVector get_window(int i, 
+                         const arma::vec &map, 
+                         const double window_size,
                          const int side){
   int n = map.n_elem;
   double half_window = window_size / 2.0;
@@ -101,9 +105,11 @@ IntegerVector get_window(int i, const arma::vec &map, const double window_size,
       idx_right += 1;
     } 
   }
+  
   IntegerVector lr(2);
   lr[0] = idx_left;
   lr[1] = idx_right;
+  
   return(lr);
 }
 

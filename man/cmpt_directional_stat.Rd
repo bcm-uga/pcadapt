@@ -4,14 +4,14 @@
 \alias{cmpt_directional_stat}
 \title{Directional statistics}
 \usage{
-cmpt_directional_stat(usc, uglob, lab, adm, ax)
+cmpt_directional_stat(usc, uglob, labels, adm, ax)
 }
 \arguments{
 \item{usc}{a matrix of rescaled local scores.}
 
 \item{uglob}{a matrix of global scores.}
 
-\item{lab}{a vector of integers.}
+\item{labels}{a vector of integers.}
 
 \item{adm}{an integer.}
 
@@ -22,6 +22,6 @@ The returned value is a numeric value.
 }
 \description{
 \code{cmpt_directional_stat} computes the displacement of admixed 
-individuals such that positive (resp. negative) displacement corresponds to 
-a displacement towards ancestral population 2 (resp. 1).
+individuals such that a positive (resp. negative) displacement corresponds 
+to a displacement towards ancestral population 2 (resp. 1).
 }

@@ -4,12 +4,12 @@
 \alias{get_axis}
 \title{Axis of projection}
 \usage{
-get_axis(uglob, lab, pop1, pop2)
+get_axis(u, labels, pop1, pop2)
 }
 \arguments{
-\item{uglob}{a matrix of global scores.}
+\item{u}{a matrix of global scores.}
 
-\item{lab}{a vector of integers.}
+\item{labels}{a vector of integers.}
 
 \item{pop1}{an integer.}
 

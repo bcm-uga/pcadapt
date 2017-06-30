@@ -4,4 +4,4 @@
 
 using namespace Rcpp;
 
-arma::mat cart2bary_cpp(const arma::mat X, const arma::mat P);
+arma::mat cart2bary_cpp(arma::mat &X, arma::mat &P);

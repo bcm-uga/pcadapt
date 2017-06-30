@@ -16,7 +16,7 @@ using namespace Rcpp;
 //' @export
 //' 
 // [[Rcpp::export]]
-arma::mat cart2bary_cpp(const arma::mat X, const arma::mat P){
+arma::mat cart2bary_cpp(arma::mat &X, arma::mat &P){
   int M = P.n_rows; // number of points
   int N = P.n_cols; // number of coordinates
   if (X.n_cols != N){

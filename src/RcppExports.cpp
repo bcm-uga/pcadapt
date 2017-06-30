@@ -23,13 +23,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // cart2bary_cpp
-arma::mat cart2bary_cpp(const arma::mat X, const arma::mat P);
+arma::mat cart2bary_cpp(arma::mat& X, arma::mat& P);
 RcppExport SEXP pcadapt_cart2bary_cpp(SEXP XSEXP, SEXP PSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat >::type X(XSEXP);
-    Rcpp::traits::input_parameter< const arma::mat >::type P(PSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type P(PSEXP);
     rcpp_result_gen = Rcpp::wrap(cart2bary_cpp(X, P));
     return rcpp_result_gen;
 END_RCPP
@@ -97,31 +97,31 @@ BEGIN_RCPP
 END_RCPP
 }
 // get_axis
-arma::vec get_axis(arma::mat& uglob, const arma::vec& lab, const int pop1, const int pop2);
-RcppExport SEXP pcadapt_get_axis(SEXP uglobSEXP, SEXP labSEXP, SEXP pop1SEXP, SEXP pop2SEXP) {
+arma::vec get_axis(arma::mat& u, const arma::vec& labels, const int pop1, const int pop2);
+RcppExport SEXP pcadapt_get_axis(SEXP uSEXP, SEXP labelsSEXP, SEXP pop1SEXP, SEXP pop2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat& >::type uglob(uglobSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type lab(labSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type u(uSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type labels(labelsSEXP);
     Rcpp::traits::input_parameter< const int >::type pop1(pop1SEXP);
     Rcpp::traits::input_parameter< const int >::type pop2(pop2SEXP);
-    rcpp_result_gen = Rcpp::wrap(get_axis(uglob, lab, pop1, pop2));
+    rcpp_result_gen = Rcpp::wrap(get_axis(u, labels, pop1, pop2));
     return rcpp_result_gen;
 END_RCPP
 }
 // cmpt_directional_stat
-double cmpt_directional_stat(arma::mat& usc, arma::mat& uglob, const arma::vec& lab, const int adm, arma::vec& ax);
-RcppExport SEXP pcadapt_cmpt_directional_stat(SEXP uscSEXP, SEXP uglobSEXP, SEXP labSEXP, SEXP admSEXP, SEXP axSEXP) {
+double cmpt_directional_stat(arma::mat& usc, arma::mat& uglob, const arma::vec& labels, const int adm, arma::vec& ax);
+RcppExport SEXP pcadapt_cmpt_directional_stat(SEXP uscSEXP, SEXP uglobSEXP, SEXP labelsSEXP, SEXP admSEXP, SEXP axSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::mat& >::type usc(uscSEXP);
     Rcpp::traits::input_parameter< arma::mat& >::type uglob(uglobSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type lab(labSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type labels(labelsSEXP);
     Rcpp::traits::input_parameter< const int >::type adm(admSEXP);
     Rcpp::traits::input_parameter< arma::vec& >::type ax(axSEXP);
-    rcpp_result_gen = Rcpp::wrap(cmpt_directional_stat(usc, uglob, lab, adm, ax));
+    rcpp_result_gen = Rcpp::wrap(cmpt_directional_stat(usc, uglob, labels, adm, ax));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -557,6 +557,46 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// scores_centroids_cpp
+arma::mat scores_centroids_cpp(const arma::mat& scores, const StringVector& pop, const StringVector& popUnique);
+RcppExport SEXP pcadapt_scores_centroids_cpp(SEXP scoresSEXP, SEXP popSEXP, SEXP popUniqueSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type scores(scoresSEXP);
+    Rcpp::traits::input_parameter< const StringVector& >::type pop(popSEXP);
+    Rcpp::traits::input_parameter< const StringVector& >::type popUnique(popUniqueSEXP);
+    rcpp_result_gen = Rcpp::wrap(scores_centroids_cpp(scores, pop, popUnique));
+    return rcpp_result_gen;
+END_RCPP
+}
+// centroids_to_simplex_cpp
+arma::mat centroids_to_simplex_cpp(const arma::mat& centroids, const StringVector& popUnique, const CharacterVector& admixed);
+RcppExport SEXP pcadapt_centroids_to_simplex_cpp(SEXP centroidsSEXP, SEXP popUniqueSEXP, SEXP admixedSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type centroids(centroidsSEXP);
+    Rcpp::traits::input_parameter< const StringVector& >::type popUnique(popUniqueSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type admixed(admixedSEXP);
+    rcpp_result_gen = Rcpp::wrap(centroids_to_simplex_cpp(centroids, popUnique, admixed));
+    return rcpp_result_gen;
+END_RCPP
+}
+// bary_to_ancestry_cpp
+NumericVector bary_to_ancestry_cpp(const arma::mat& scores, const StringVector& pop, const StringVector& popUnique, const CharacterVector& admixed);
+RcppExport SEXP pcadapt_bary_to_ancestry_cpp(SEXP scoresSEXP, SEXP popSEXP, SEXP popUniqueSEXP, SEXP admixedSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type scores(scoresSEXP);
+    Rcpp::traits::input_parameter< const StringVector& >::type pop(popSEXP);
+    Rcpp::traits::input_parameter< const StringVector& >::type popUnique(popUniqueSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type admixed(admixedSEXP);
+    rcpp_result_gen = Rcpp::wrap(bary_to_ancestry_cpp(scores, pop, popUnique, admixed));
+    return rcpp_result_gen;
+END_RCPP
+}
 // get_size_cpp
 NumericVector get_size_cpp(std::string filename);
 RcppExport SEXP pcadapt_get_size_cpp(SEXP filenameSEXP) {
@@ -777,6 +817,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"pcadapt_rsvd_cpp", (DL_FUNC) &pcadapt_rsvd_cpp, 2},
     {"pcadapt_AX", (DL_FUNC) &pcadapt_AX, 4},
     {"pcadapt_tAX", (DL_FUNC) &pcadapt_tAX, 4},
+    {"pcadapt_scores_centroids_cpp", (DL_FUNC) &pcadapt_scores_centroids_cpp, 3},
+    {"pcadapt_centroids_to_simplex_cpp", (DL_FUNC) &pcadapt_centroids_to_simplex_cpp, 3},
+    {"pcadapt_bary_to_ancestry_cpp", (DL_FUNC) &pcadapt_bary_to_ancestry_cpp, 4},
     {"pcadapt_get_size_cpp", (DL_FUNC) &pcadapt_get_size_cpp, 1},
     {"pcadapt_get_nb_ind", (DL_FUNC) &pcadapt_get_nb_ind, 2},
     {"pcadapt_cmpt_minor_af", (DL_FUNC) &pcadapt_cmpt_minor_af, 2},

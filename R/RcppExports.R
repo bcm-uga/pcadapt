@@ -124,8 +124,8 @@ impute_geno_pop <- function(x, lab, pop) {
 #' 
 #' \code{get_axis} returns the axis onto which projection should be performed.
 #' 
-#' @param uglob a matrix of global scores.
-#' @param lab a vector of integers.
+#' @param u a matrix of global scores.
+#' @param labels a vector of integers.
 #' @param pop1 an integer.
 #' @param pop2 an integer.
 #' 
@@ -133,19 +133,19 @@ impute_geno_pop <- function(x, lab, pop) {
 #' 
 #' @export
 #' 
-get_axis <- function(uglob, lab, pop1, pop2) {
-    .Call('pcadapt_get_axis', PACKAGE = 'pcadapt', uglob, lab, pop1, pop2)
+get_axis <- function(u, labels, pop1, pop2) {
+    .Call('pcadapt_get_axis', PACKAGE = 'pcadapt', u, labels, pop1, pop2)
 }
 
 #' Directional statistics
 #' 
 #' \code{cmpt_directional_stat} computes the displacement of admixed 
-#' individuals such that positive (resp. negative) displacement corresponds to 
-#' a displacement towards ancestral population 2 (resp. 1).
+#' individuals such that a positive (resp. negative) displacement corresponds 
+#' to a displacement towards ancestral population 2 (resp. 1).
 #' 
 #' @param usc a matrix of rescaled local scores.
 #' @param uglob a matrix of global scores.
-#' @param lab a vector of integers.
+#' @param labels a vector of integers.
 #' @param adm an integer.
 #' @param ax a numeric vector.
 #' 
@@ -153,8 +153,8 @@ get_axis <- function(uglob, lab, pop1, pop2) {
 #' 
 #' @export
 #' 
-cmpt_directional_stat <- function(usc, uglob, lab, adm, ax) {
-    .Call('pcadapt_cmpt_directional_stat', PACKAGE = 'pcadapt', usc, uglob, lab, adm, ax)
+cmpt_directional_stat <- function(usc, uglob, labels, adm, ax) {
+    .Call('pcadapt_cmpt_directional_stat', PACKAGE = 'pcadapt', usc, uglob, labels, adm, ax)
 }
 
 #' \code{get_window}
@@ -586,6 +586,24 @@ AX <- function(filename, x, nSNP, nIND) {
 #' 
 tAX <- function(filename, x, nSNP, nIND) {
     .Call('pcadapt_tAX', PACKAGE = 'pcadapt', filename, x, nSNP, nIND)
+}
+
+#' @export
+#' 
+scores_centroids_cpp <- function(scores, pop, popUnique) {
+    .Call('pcadapt_scores_centroids_cpp', PACKAGE = 'pcadapt', scores, pop, popUnique)
+}
+
+#' @export
+#' 
+centroids_to_simplex_cpp <- function(centroids, popUnique, admixed) {
+    .Call('pcadapt_centroids_to_simplex_cpp', PACKAGE = 'pcadapt', centroids, popUnique, admixed)
+}
+
+#' @export
+#' 
+bary_to_ancestry_cpp <- function(scores, pop, popUnique, admixed) {
+    .Call('pcadapt_bary_to_ancestry_cpp', PACKAGE = 'pcadapt', scores, pop, popUnique, admixed)
 }
 
 #' File size

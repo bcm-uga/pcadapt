@@ -83,12 +83,9 @@ scalar_prod = function(scores, anc, donor, adm, PCs){
   c1 <- cent[pop.name == anc, PCs]
   c2 <- cent[pop.name == donor, PCs]
   c.adm <- cent[pop.name == adm, PCs]
-  #res <- sum((c.adm - c1) * (c2 - c1)) / (sum((c.adm - c1) * (c.adm - c1)) * sum((c2 - c1) * (c2 - c1))) 
-  res <- sum((c.adm - c1) * (c2 - c1)) / sqrt((sum((c2 - c1) * (c2 - c1)))) 
+  res <- sum((c.adm - c1) * (c2 - c1)) / (sum((c.adm - c1) * (c.adm - c1)) * sum((c2 - c1) * (c2 - c1))) 
   return(res)
 }
-
-
 
 #' @export
 #'
@@ -186,50 +183,4 @@ cmpt_stat_scalar = function(scaled.geno, V, sigma, window_size, pop, adm, donor,
     idx_old <- idx_new;
   }
   return(stat)
-}
-
-#' @export
-#'
-display.local.pca <- function(geno, obj.svd, begin = 1, end = nrow(obj.svd$v), i = 1, j = 2, pop){
-  u <- cmpt_local_pca(geno, as.matrix(obj.svd$v), sigma = as.vector(obj.svd$d), beg = begin - 1, end = end - 1)  
-  if (missing(pop)){
-    plot(u[, i], u[, j], pch = 19, 
-         xlab = paste0("PC", i), 
-         ylab = paste0("PC", j), 
-         main = paste("Window ranging from", begin, "to", end)
-    )
-  } else {
-    n.pop <- length(unique(pop))
-    plt <- grDevices::rainbow(n.pop)
-    col.pop <- vector("character", length = length(pop))
-    for (k in 1:n.pop){
-      col.pop[which(pop == unique(pop)[k])] <- plt[which(unique(pop) == unique(pop)[k])]    
-    }
-    plot(u[, i], u[, j], col = col.pop, pch = 19, 
-         xlab = paste0("PC", i), 
-         ylab = paste0("PC", j),
-         main = paste("Window ranging from", begin, "to", end)
-    )
-    legend('bottomleft', legend = unique(pop), 
-           lty = 1, col = plt, bty = 'n', cex = .75)
-  }
-}
-
-#' @export
-#' 
-residuals_stat <- function(geno, obj.svd, pop, adm, K = 1, window.size = 100){
-  D <- Matrix::Diagonal(x = obj.svd$d)
-  pred <- (cbind(obj.svd$u[, K] * obj.svd$d[ K])) %*% (t(obj.svd$v[, K]))
-  res <- geno - pred
-  mean.stat <- apply(res[pop == adm, ],
-                     MARGIN = 2,
-                     FUN = function(X){mean(X, na.rm = TRUE)}
-  )
-  
-  stat <- (mean.stat - median(mean.stat, na.rm = TRUE)) / mad(mean.stat, na.rm = TRUE)
-  smooth.stat <- RcppRoll::roll_mean(stat, n = window.size, by = 1, align = "center")
-  final.stat <- c(rep(smooth.stat[1], window.size / 2),
-                  smooth.stat,
-                  rep(tail(smooth.stat, n = 1), window.size / 2 - 1))  
-  return(final.stat)
 }
