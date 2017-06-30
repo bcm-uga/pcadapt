@@ -1,3 +1,5 @@
+[WARNING] This project has been moved to https://github.com/bcm-uga/pcadapt
+
 # pcadapt
 [![Build Status](https://travis-ci.org/BioShock38/pcadapt.svg?branch=master)](https://travis-ci.org/BioShock38/pcadapt)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/pcadapt)](https://cran.r-project.org/package=pcadapt)
