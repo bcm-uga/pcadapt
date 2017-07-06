@@ -10,6 +10,16 @@
 
 using namespace Rcpp;
 
+//' Centroids
+//' 
+//' \code{scores_centroids_cpp} returns the centroids of each population.
+//' 
+//' @param scores a numeric matrix.
+//' @param pop a string vector.
+//' @param popUnique a string vector.
+//' 
+//' @return The returned value is a numeric matrix.
+//' 
 //' @export
 //' 
 // [[Rcpp::export]]
@@ -38,6 +48,16 @@ arma::mat scores_centroids_cpp(const arma::mat &scores,
   return(centroids);
 }
 
+//' Simplex
+//' 
+//' \code{centroids_to_simplex_cpp}
+//' 
+//' @param centroids a numeric matrix.
+//' @param popUnique a string vector.
+//' @param admixed a character vector.
+//' 
+//' @return The returned value is a numeric matrix.
+//' 
 //' @export
 //' 
 // [[Rcpp::export]]

@@ -1,7 +1,5 @@
-[WARNING] This project has been moved to https://github.com/bcm-uga/pcadapt
-
 # pcadapt
-[![Build Status](https://travis-ci.org/BioShock38/pcadapt.svg?branch=master)](https://travis-ci.org/BioShock38/pcadapt)
+[![Build Status](https://travis-ci.org/bcm-uga/pcadapt.svg?branch=master)](https://travis-ci.org/bcm-uga/pcadapt)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/pcadapt)](https://cran.r-project.org/package=pcadapt)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/pcadapt)](https://cran.r-project.org/package=pcadapt)
 [![Rdoc](http://www.rdocumentation.org/badges/version/pcadapt)](http://www.rdocumentation.org/packages/pcadapt)
