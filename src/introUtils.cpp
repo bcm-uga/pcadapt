@@ -7,6 +7,52 @@
 
 using namespace Rcpp;
 
+//' \code{get_window}
+//' 
+//' @param i an integer.
+//' @param map a vector containing the genetic positions in Morgans.
+//' @param window_size a numeric value specifying the window size en Morgans.
+//' @param side an integer specifying whether the window should be aligned on 
+//' the left, middle or right.
+//' 
+//' @return The returned value is a numeric vector.
+//' 
+//' @export
+//' 
+// [[Rcpp::export]]
+IntegerVector get_window(int i, 
+                         const arma::vec &map, 
+                         const double window_size,
+                         const int side){
+  int n = map.n_elem;
+  double half_window = window_size / 2.0;
+  int idx_left = i;
+  int idx_right = i;
+  
+  if (side == -1){
+    while ((map[i] - map[idx_left] < 2 * half_window) && (idx_left > 0)){
+      idx_left -= 1;
+    }
+  } else if (side == 0){
+    while ((map[i] - map[idx_left] < half_window) && (idx_left > 0)){
+      idx_left -= 1;
+    }
+    while ((map[idx_right] - map[i] < half_window) && (idx_right < n - 1)){
+      idx_right += 1;
+    } 
+  } else if (side == 1){
+    while ((map[idx_right] - map[i] < 2 * half_window) && (idx_right < n - 1)){
+      idx_right += 1;
+    } 
+  }
+  
+  IntegerVector lr(2);
+  lr[0] = idx_left;
+  lr[1] = idx_right;
+  
+  return(lr);
+}
+
 //' Global Principal Component Analysis
 //' 
 //' \code{cmpt_global_pca} computes the scores using all genetic markers.

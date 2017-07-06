@@ -15,7 +15,6 @@ cmpt_stat_bary = function(scaled.geno, V, sigma, window_size, pop, adm, donor, a
   tmp <- matrix(0, nrow = nIND, ncol = K)
   for (i in loop_beg:loop_end){
     idx_new = get_window(i, map, window_size, 0);
-    print(idx_new)
     updt_local_scores(uloc, scaled.geno, V, sigma, idx_old[1], idx_old[2], idx_new[1], idx_new[2]);
     tmp[, 1:K] <- uloc[, 1:K]
     stat[i, ] <- bary_to_anc(scores = tmp, pop = pop, adm = adm)

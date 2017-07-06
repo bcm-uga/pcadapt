@@ -157,22 +157,6 @@ cmpt_directional_stat <- function(usc, uglob, labels, adm, ax) {
     .Call('pcadapt_cmpt_directional_stat', PACKAGE = 'pcadapt', usc, uglob, labels, adm, ax)
 }
 
-#' \code{get_window}
-#' 
-#' @param i an integer.
-#' @param map a vector containing the genetic positions in Morgans.
-#' @param window_size a numeric value specifying the window size en Morgans.
-#' @param side an integer specifying whether the window should be aligned on 
-#' the left, middle or right.
-#' 
-#' @return The returned value is a numeric vector.
-#' 
-#' @export
-#' 
-get_window <- function(i, map, window_size, side) {
-    .Call('pcadapt_get_window', PACKAGE = 'pcadapt', i, map, window_size, side)
-}
-
 #' Introgression statistics
 #' 
 #' \code{cmpt_stat_introgr} computes the statistics.
@@ -227,6 +211,22 @@ cmpt_stat_introgr <- function(geno, V, sigma, window_size, direction, lab, ancst
 #' 
 cmpt_stat_introgr_bary <- function(geno, V, sigma, window_size, direction, lab, ancstrl1, ancstrl2, adm, axis, map, with_map, side) {
     .Call('pcadapt_cmpt_stat_introgr_bary', PACKAGE = 'pcadapt', geno, V, sigma, window_size, direction, lab, ancstrl1, ancstrl2, adm, axis, map, with_map, side)
+}
+
+#' \code{get_window}
+#' 
+#' @param i an integer.
+#' @param map a vector containing the genetic positions in Morgans.
+#' @param window_size a numeric value specifying the window size en Morgans.
+#' @param side an integer specifying whether the window should be aligned on 
+#' the left, middle or right.
+#' 
+#' @return The returned value is a numeric vector.
+#' 
+#' @export
+#' 
+get_window <- function(i, map, window_size, side) {
+    .Call('pcadapt_get_window', PACKAGE = 'pcadapt', i, map, window_size, side)
 }
 
 #' Global Principal Component Analysis
@@ -604,6 +604,12 @@ centroids_to_simplex_cpp <- function(centroids, popUnique, admixed) {
 #' 
 bary_to_ancestry_cpp <- function(scores, pop, popUnique, admixed) {
     .Call('pcadapt_bary_to_ancestry_cpp', PACKAGE = 'pcadapt', scores, pop, popUnique, admixed)
+}
+
+#' @export
+#' 
+slidingWindows <- function(sgeno, d, v, pop, popUnique, admixed, window_size, map) {
+    .Call('pcadapt_slidingWindows', PACKAGE = 'pcadapt', sgeno, d, v, pop, popUnique, admixed, window_size, map)
 }
 
 #' File size
