@@ -4,7 +4,7 @@
 \alias{get_window}
 \title{\code{get_window}}
 \usage{
-get_window(i, map, window_size, side)
+get_window(i, map, window_size)
 }
 \arguments{
 \item{i}{an integer.}
@@ -12,9 +12,6 @@ get_window(i, map, window_size, side)
 \item{map}{a vector containing the genetic positions in Morgans.}
 
 \item{window_size}{a numeric value specifying the window size en Morgans.}
-
-\item{side}{an integer specifying whether the window should be aligned on 
-the left, middle or right.}
 }
 \value{
 The returned value is a numeric vector.

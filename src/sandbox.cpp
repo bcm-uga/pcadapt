@@ -1,4 +1,4 @@
-#include <RcppArmadillo.h>
+ #include <RcppArmadillo.h>
 #include "introUtils.h"
 #include "toolbox.h"
 #include "geometry.h"
@@ -181,7 +181,7 @@ arma::mat slidingWindows(const arma::mat &sgeno,
   arma::mat tmp(nIND, K, arma::fill::zeros);
   
   for (int i = loop_start; i < loop_end; i++){
-    ix_n = get_window(i, map, window_size, 0);  
+    ix_n = get_window(i, map, window_size);  
     updt_local_scores(u, sgeno, v, d, ix_o[0], ix_o[1], ix_n[0], ix_n[1]);
     for (int k = 0; k < K; k++){
       tmp.col(k) = u.col(k);

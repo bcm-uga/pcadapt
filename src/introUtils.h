@@ -7,8 +7,7 @@ using namespace Rcpp;
 
 IntegerVector get_window(int i, 
                          const arma::vec &map, 
-                         const double window_size,
-                         const int side);
+                         const double window_size);
 
 arma::mat cmpt_global_pca(const arma::mat &geno, 
                           const arma::mat &V, 

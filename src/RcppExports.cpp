@@ -97,16 +97,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // get_window
-IntegerVector get_window(int i, const arma::vec& map, const double window_size, const int side);
-RcppExport SEXP pcadapt_get_window(SEXP iSEXP, SEXP mapSEXP, SEXP window_sizeSEXP, SEXP sideSEXP) {
+IntegerVector get_window(int i, const arma::vec& map, const double window_size);
+RcppExport SEXP pcadapt_get_window(SEXP iSEXP, SEXP mapSEXP, SEXP window_sizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< int >::type i(iSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type map(mapSEXP);
     Rcpp::traits::input_parameter< const double >::type window_size(window_sizeSEXP);
-    Rcpp::traits::input_parameter< const int >::type side(sideSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_window(i, map, window_size, side));
+    rcpp_result_gen = Rcpp::wrap(get_window(i, map, window_size));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -525,7 +524,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"pcadapt_check_row", (DL_FUNC) &pcadapt_check_row, 2},
     {"pcadapt_impute_geno", (DL_FUNC) &pcadapt_impute_geno, 1},
     {"pcadapt_impute_geno_pop", (DL_FUNC) &pcadapt_impute_geno_pop, 3},
-    {"pcadapt_get_window", (DL_FUNC) &pcadapt_get_window, 4},
+    {"pcadapt_get_window", (DL_FUNC) &pcadapt_get_window, 3},
     {"pcadapt_cmpt_global_pca", (DL_FUNC) &pcadapt_cmpt_global_pca, 3},
     {"pcadapt_cmpt_local_pca", (DL_FUNC) &pcadapt_cmpt_local_pca, 5},
     {"pcadapt_updt_local_scores", (DL_FUNC) &pcadapt_updt_local_scores, 8},

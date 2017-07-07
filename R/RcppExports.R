@@ -125,15 +125,13 @@ impute_geno_pop <- function(x, lab, pop) {
 #' @param i an integer.
 #' @param map a vector containing the genetic positions in Morgans.
 #' @param window_size a numeric value specifying the window size en Morgans.
-#' @param side an integer specifying whether the window should be aligned on 
-#' the left, middle or right.
 #' 
 #' @return The returned value is a numeric vector.
 #' 
 #' @export
 #' 
-get_window <- function(i, map, window_size, side) {
-    .Call('pcadapt_get_window', PACKAGE = 'pcadapt', i, map, window_size, side)
+get_window <- function(i, map, window_size) {
+    .Call('pcadapt_get_window', PACKAGE = 'pcadapt', i, map, window_size)
 }
 
 #' Global Principal Component Analysis
