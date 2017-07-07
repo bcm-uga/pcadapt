@@ -27,7 +27,9 @@ Imports:
     rrcov,
     data.table,
     plotly,
-    RcppNumerical
+    RcppNumerical,
+    RcppRoll,
+    Matrix
 LinkingTo: Rcpp, RcppArmadillo
 LazyData: TRUE
 Suggests: knitr, rmarkdown, testthat, shiny, geometry

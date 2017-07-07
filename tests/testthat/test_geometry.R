@@ -16,9 +16,9 @@ testthat::test_that("centroids are exact", {
   res[2, ] = (u[2, ] + u[4, ]) / 2
   res[3, ] = u[3, ]
   
-  testthat::expect_equal(res, scores_centroids(u, pop), tolerance = 0.001)
-  testthat::expect_equal(res[2:3, ], centroids_to_simplex(res, pop, "POP1"), tolerance = 0.001)
-  testthat::expect_equal(res[c(1, 3), ], centroids_to_simplex(res, pop, "POP2"), tolerance = 0.001)
-  testthat::expect_equal(res[1:2, ], centroids_to_simplex(res, pop, "POP3"), tolerance = 0.001)
+  testthat::expect_equal(res, scores_centroids_cpp(u, pop, unique(pop)), tolerance = 0.001)
+  testthat::expect_equal(res[2:3, ], centroids_to_simplex_cpp(res, unique(pop), "POP1"), tolerance = 0.001)
+  testthat::expect_equal(res[c(1, 3), ], centroids_to_simplex_cpp(res, unique(pop), "POP2"), tolerance = 0.001)
+  testthat::expect_equal(res[1:2, ], centroids_to_simplex_cpp(res, unique(pop), "POP3"), tolerance = 0.001)
 })
 

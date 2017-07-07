@@ -1,43 +1,3 @@
-#' Genotype matrix imputation
-#'
-#' \code{impute.pcadapt} imputes values based on medians.
-#'
-#' @param input a genotype matrix or a character string specifying the name of 
-#' the file to be imputed.
-#' @param pop a vector of integers or strings specifying which subpopulation the 
-#' individuals belong to.
-#' @param skip.return a logical value specifying whether the list of markers to 
-#' be skipped should be returned or not. 
-#' 
-#' @return The returned value is a list containing the test statistics and the 
-#' associated p-values.
-#' 
-#' @export
-#'
-impute.pcadapt = function(input, pop, skip.return = FALSE){
-  if (is.character(input)){
-    dt <- as.matrix(data.table::fread(input))
-  } else if (class(input) %in% c("array", "matrix", "data.frame")){
-    dt <- as.matrix(input)
-  } else {
-    stop("Wrong argument.")
-  }
-  
-  if (missing(pop)){
-    y <- impute_geno(dt)   
-  } else if (!missing(pop)){
-    pop.int <- assign.int.labels(pop)
-    pop.names <- pcadapt::get.pop.names(pop.int)
-    y <- impute_geno_pop(dt, pop.int, pop.names)   
-  }
-  if (skip.return == FALSE){
-    return(list(x = y$x[y$skip == 0, ]))  
-  } else if (skip.return == TRUE){
-    return(list(x = y$x[y$skip == 0, ], ix = which(y$skip == 1))) 
-  }
-}
-
-
 #' Convert string labels to integer labels
 #'
 #' \code{assign.int.labels} returns a vector of integers.
@@ -69,11 +29,8 @@ assign.int.labels = function(pop){
 #' ancestries may vary.
 #' @param pop a vector of integers or strings specifying which subpopulation the
 #' individuals belong to.
-#' @param ancstrl.1 a string specifying the label of the ancestral population 
-#' genetically closer to the hybrid population.
-#' @param ancstrl.2 a string specifying the label of the ancestral population 
-#' genetically further from the hybrid population.
-#' @param admxd a string specifying the label of the hybrid population.
+#' @param ancestral a string specifying the label of the donor population.
+#' @param admixed a string specifying the label of the hybrid population.
 #' @param min.maf a value between \code{0} and \code{0.45} specifying the 
 #' threshold of minor allele frequencies above which p-values are computed.
 #' @param ploidy an integer specifying the ploidy of the individuals.
@@ -82,32 +39,27 @@ assign.int.labels = function(pop){
 #' imputed. 
 #' @param chr.info a list containing the chromosome information for each marker.
 #' @param map a numeric vector containing the genetic positions.
-#' @param side a character string specifying whether the window should be aligned on 
-#' the left, middle or right.
-#' @param method a character string specifying the method. Default "barycentric".
 #' 
 #' @return The returned value is a list containing the test statistics.
 #' 
 #' @importFrom data.table fread
 #' @importFrom MASS cov.rob
 #' @importFrom stats approx median mad
+#' @importFrom utils flush.console
 #' 
 #' @export
 #'
 scan.intro = function(input, 
                       K = 2, 
                       pop, 
-                      ancstrl.1,
-                      ancstrl.2,
-                      admxd,
+                      ancestral,
+                      admixed,
                       min.maf = 0.05, 
                       ploidy = 2, 
                       window.size = 1000, 
                       impute = FALSE, 
                       chr.info,
-                      map,
-                      side = "middle",
-                      method = "barycentric"){
+                      map){
   if (impute){
     geno <- (impute.pcadapt(input = input, pop = pop))$x
   } else if (!impute){
@@ -120,11 +72,6 @@ scan.intro = function(input,
     }
   }
   nSNP <- nrow(geno)
-  pop.names <- get.pop.names(pop)
-  pop.int <- assign.int.labels(pop)
-  ancstrl.int.1 <- which(pop.names == ancstrl.1)
-  ancstrl.int.2 <- which(pop.names == ancstrl.2)
-  admxd.int <- which(pop.names == admxd)
   
   if (length(K) == 1 && K == 1){
     k = 2
@@ -132,12 +79,7 @@ scan.intro = function(input,
     k = max(K)
   }
   
-  axis.vector <- vector(length = k, mode = "numeric")
-  axis.vector[K] <- 1
-  
   maf <- cmpt_minor_af(xmatrix = geno, ploidy = ploidy)
-  
-  xaxis <- (1:nSNP)[maf >= min.maf]
   
   if (missing(map)){
     gmap <- (1:nSNP)[maf >= min.maf]
@@ -146,9 +88,9 @@ scan.intro = function(input,
   }
   
   geno <- geno[maf >= min.maf, ]
-  maf <- maf[maf >= min.maf]
-  
-  sd <- sqrt(ploidy * maf * (1 - maf))
+  filtered.maf <- maf[maf >= min.maf]
+
+  sd <- sqrt(ploidy * filtered.maf * (1 - filtered.maf))
   cat("Scaling the genotype matrix...")
   scaled.geno <- scale(t(geno), center = TRUE, scale = sd) 
   cat("DONE\n")
@@ -157,202 +99,35 @@ scan.intro = function(input,
                          ploidy = ploidy, type = 1)
   cat("Computing the statistics...\n")
   
-  if (missing(map)){
-    with.map <- 0  
-  } else {
-    with.map <- 1
-  }
-  
-  if (side == "left"){
-    side.int <- -1
-  } else if (side == "middle"){
-    side.int <- 0
-  } else if (side == "right"){
-    side.int <- 1
-  }
-  
   if (missing(chr.info)){
-    if (method != "barycentric"){
-    s_1 <- cmpt_stat_introgr(geno = as.matrix(scaled.geno), 
-                          V = as.matrix(obj.svd$v), 
-                          sigma = as.vector(obj.svd$d), 
-                          window_size = as.integer(window.size),  
-                          direction = as.integer(0), 
-                          lab = as.vector(pop.int), 
-                          ancstrl1 = as.integer(ancstrl.int.1),
-                          ancstrl2 = as.integer(ancstrl.int.2),
-                          adm = as.integer(admxd.int), 
-                          axis = as.vector(axis.vector),
-                          map = gmap,
-                          with_map = with.map,
-                          side = side.int)  
-    } else if (method == "barycentric"){
-      s_1 <- cmpt_stat_introgr_bary(geno = as.matrix(scaled.geno), 
-                               V = as.matrix(obj.svd$v), 
-                               sigma = as.vector(obj.svd$d), 
-                               window_size = as.integer(window.size),  
-                               direction = as.integer(0), 
-                               lab = as.vector(pop.int), 
-                               ancstrl1 = as.integer(ancstrl.int.1),
-                               ancstrl2 = as.integer(ancstrl.int.2),
-                               adm = as.integer(admxd.int), 
-                               axis = as.vector(axis.vector),
-                               map = gmap,
-                               with_map = with.map,
-                               side = side.int)    
-    }
-    yint <- approx(gmap[!is.na(s_1)], s_1[!is.na(s_1)], 1:nSNP)  
-    #aux <- MASS::cov.rob(yint$y)
-    median.y <- stats::median(yint$y, na.rm = TRUE)
-    mad.y <- stats::mad(yint$y, na.rm = TRUE)
-    obj.stat <- list()
-    #obj.stat[[1]] <- yint$y
-    #obj.stat[[1]] <- (yint$y - aux$center[1]) / sqrt(aux$cov[1, 1])
-    obj.stat[[1]] <- (yint$y - median.y) / mad.y
-    obj.stat[[2]] <- gmap
-  } else {
-    chr <- chr.info[maf >= min.maf]
-    chr.it <- unique(chr)
-    stat <- vector(mode = "numeric", length = length(chr))
-    obj.stat <- list()
-    for (k in chr.it){
-      cat("Analyzing chromosome ", k, "\n")
-      chr_k <- (chr == k)
-      gmap_k = gmap[chr_k]
-      scaled.geno_k <- as.matrix(scaled.geno[, chr_k])
-      v_k <- as.matrix(obj.svd$v[chr_k, ])
-      s_k <- cmpt_stat_introgr(geno = scaled.geno_k, 
-                            V = v_k, 
-                            sigma = as.vector(obj.svd$d), 
-                            window_size = as.integer(window.size),  
-                            direction = as.integer(0), 
-                            lab = as.vector(pop.int), 
-                            ancstrl1 = as.integer(ancstrl.int.1),
-                            ancstrl2 = as.integer(ancstrl.int.2),
-                            adm = as.integer(admxd.int), 
-                            axis = as.vector(axis.vector),
-                            map = gmap_k)   
-      aux <- MASS::cov.rob(s_k)
-      obj.stat[[2 * k - 1]] <- (s_k - aux$center[1]) / sqrt(aux$cov[1, 1])
-      obj.stat[[2 * k]] <- 1:(length(s_k) - window.size)
-    }
+    stat <- slidingWindows(sgeno = as.matrix(scaled.geno),
+                           d = as.vector(obj.svd$d),
+                           v = as.matrix(obj.svd$v),
+                           pop = pop,
+                           popUnique = unique(pop),
+                           admixed = admixed,
+                           window_size = as.integer(window.size),
+                           gmap)
+  }
+  stat.med <- apply(stat, MARGIN = 2, FUN = function(x){median(x, na.rm = TRUE)})
+  obj.stat <- matrix(NA, nrow = nSNP, ncol = ncol(stat))
+  obj.stat[maf >= min.maf, ] <- stat
+  
+  obj.stat[1, ] <- stat.med
+  obj.stat[nSNP, ] <- stat.med
+  
+  for (k in 1:ncol(stat)){
+    subset <- which(!is.na(obj.stat[, k]))
+    y.int <- approx(subset, obj.stat[subset, k], 1:nSNP)    
+    median.y <- stats::median(y.int$y, na.rm = TRUE)
+    mad.y <- stats::mad(y.int$y, na.rm = TRUE)
+    obj.stat[, k] <- (y.int$y - median.y) / mad.y
   }
   flush.console()
   cat("DONE\n")
   class(obj.stat) <- "pcadapt"
-  attr(obj.stat, "K") <- K
   attr(obj.stat, "method") <- "introgression"
   attr(obj.stat, "min.maf") <- min.maf
-  attr(obj.stat, "ancstrl.1") <- ancstrl.1
-  attr(obj.stat, "ancstrl.2") <- ancstrl.2
   attr(obj.stat, "window.size") <- window.size
   return(obj.stat)
 } 
-
-#' Introgression
-#'
-#' \code{logit.stat} computes statistics to detect excesses of local ancestry 
-#' based on a logistic regression approach. The method currently supports only
-#' two ancestral populations.
-#'
-#' @param input a genotype matrix or a character string specifying the name of 
-#' the file to be imputed.
-#' @param pop a vector of integers or strings specifying which subpopulation the
-#' individuals belong to.
-#' @param ancstrl.1 a string specifying the label of the ancestral population 
-#' genetically closer to the hybrid population.
-#' @param ancstrl.2 a string specifying the label of the ancestral population 
-#' genetically further from the hybrid population.
-#' @param admxd a string specifying the label of the hybrid population.
-#' @param window.size an integer specifying the window size.
-#' 
-#' @return The returned value is a list containing the test statistics.
-#' 
-#' @importFrom data.table fread
-#' @importFrom RcppNumerical fastLR
-#' @importFrom stats approx
-#' @importFrom MASS cov.rob
-#' 
-#' @export
-#'
-logit.stat = function(input, pop, ancstrl.1, ancstrl.2, admxd, window.size = 1000){
-  xadm <- t(as.matrix(input[, pop == admxd]))
-  y <- pop[pop %in% c(ancstrl.1, ancstrl.2)]
-  y[y == ancstrl.1] <- 0
-  y[y == ancstrl.2] <- 1
-  x <- t(as.matrix(input[, pop %in% c(ancstrl.1, ancstrl.2)]))
-  
-  ### RcppNumerical::fastLR
-  nSNP <- ncol(xadm)
-  obj.lr <- RcppNumerical::fastLR(x, y)
-  ancstry <- roll_prod(xadm, regcoeff = obj.lr$coefficients, window_size = window.size)
-  m.ancstry <- mean(ancstry, na.rm = TRUE)
-  ancstry[1] <- m.ancstry
-  ancstry[nSNP] <- m.ancstry
-  nna.stat <- which(!is.na(ancstry))
-  yint <- stats::approx(x = nna.stat, y = ancstry[nna.stat], xout = 1:nSNP)
-  ancstry <- yint$y
-  aux <- MASS::cov.rob(ancstry)
-  return((ancstry - aux$center[1]) / sqrt(aux$cov[1, 1]))
-}
-
-#' Display local PCA
-#'
-#' \code{draw.pca} displays both local and global scores.
-#'
-#' @param geno a genotype matrix.
-#' @param V a loading matrix.
-#' @param sigma a vector of singular values.
-#' @param uglob a matrix of global scores.
-#' @param beg an integer specifying the first marker to be included.
-#' @param end an integer specifying the first marker to be excluded.
-#' @param pop a list of integers.
-#' @param i an integer indicating onto which principal component the individuals
-#' are projected when the "scores" option is chosen. Default value is set to 
-#' \code{1}.
-#' @param j an integer indicating onto which principal component the individuals
-#' are projected when the "scores" option is chosen. Default value is set to 
-#' \code{2}.
-#' @param ancstrl1 an integer.
-#' @param ancstrl2 an integer.
-#' @param adm an integer.
-#' 
-#' @return The returned value is a list containing the test statistics and the 
-#' associated p-values.
-#' 
-#' @importFrom graphics arrows plot points
-#' @importFrom stats pnorm
-#' @importFrom utils flush.console
-#' 
-#' @export
-#'
-draw.pca = function(geno, V, sigma, uglob, beg, end, pop, i = 1, j = 2, 
-                    ancstrl1, ancstrl2, adm){
-  uloc <- cmpt_local_pca(geno, V, sigma = sigma, beg = beg, end = end)
-  dloc <- vector(length = ncol(V), mode = "numeric")
-  dglob <- vector(length = ncol(V), mode = "numeric")
-  s <- vector(length = ncol(V), mode = "numeric")
-  R <- matrix(0, nrow = ncol(V), ncol = ncol(V))
-  cent <- cmpt_centroids(uglob, pop, ancstrl1, ancstrl2)
-  cent.loc <- cmpt_centroids(uloc, pop, ancstrl1, ancstrl2)
-  axis <- cent$m2 - cent$m2
-  shape.1 <- as.matrix(t(cbind(cent$m1, cent$m2)))
-  shape.2 <- as.matrix(t(cbind(cent.loc$m1, cent.loc$m2)))
-  
-  #R <- pca_rotation(shape.1, shape.2)
-  R <- matrix(0, nrow = ncol(V), ncol = ncol(V))
-  diag(R) <- 1
-  
-  cmpt_transformation(uloc, uglob, pop, ancstrl1, ancstrl2, s, dloc, dglob, R);
-  usc <- rescale_local_pca(uloc, s, dloc, dglob, R);
-  
-  xmin <- min(min(uglob[, i]), min(usc[, i]))
-  xmax <- max(max(uglob[, i]), max(usc[, i]))
-  ymin <- min(min(uglob[, j]), min(usc[, j]))
-  ymax <- max(max(uglob[, j]), max(usc[, j]))
-  
-  plot(usc[, i], usc[, j], col = as.factor(pop), pch = 19, cex = 0.5,  
-       xlim = c(xmin, xmax), 
-       ylim = c(ymin, ymax))
-  points(uglob[, i], uglob[, j], col = as.factor(pop), cex = 1)
-}

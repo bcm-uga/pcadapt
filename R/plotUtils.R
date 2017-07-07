@@ -524,15 +524,17 @@ loc.anc.plotting = function(x, by.step = by.step, hline = hline,
 #' @examples
 #' ## see ?pcadapt for examples
 #' 
+#' @importFrom graphics legend plot
+#' 
 #' @export
 #'
 display.local.pca <- function(geno, obj.svd, begin = 1, end = nrow(obj.svd$v), i = 1, j = 2, pop){
   u <- cmpt_local_pca(geno, obj.svd$v, sigma = obj.svd$d, beg = begin, end = end)  
   if (missing(pop)){
-    plot(u[, i], u[, j], pch = 19, 
-         xlab = paste0("PC", i), 
-         ylab = paste0("PC", j), 
-         main = paste("Window ranging from", begin, "to", end)
+    graphics::plot(u[, i], u[, j], pch = 19, 
+                   xlab = paste0("PC", i), 
+                   ylab = paste0("PC", j), 
+                   main = paste("Window ranging from", begin, "to", end)
     )
   } else {
     n.pop <- length(unique(pop))
@@ -541,13 +543,13 @@ display.local.pca <- function(geno, obj.svd, begin = 1, end = nrow(obj.svd$v), i
     for (k in 1:n.pop){
       col.pop[which(pop == unique(pop)[k])] <- plt[which(unique(pop) == unique(pop)[k])]    
     }
-    plot(u[, i], u[, j], col = col.pop, pch = 19, 
-         xlab = paste0("PC", i), 
-         ylab = paste0("PC", j),
-         main = paste("Window ranging from", begin, "to", end)
+    graphics::plot(u[, i], u[, j], col = col.pop, pch = 19, 
+                   xlab = paste0("PC", i), 
+                   ylab = paste0("PC", j),
+                   main = paste("Window ranging from", begin, "to", end)
     )
-    legend('bottomleft', legend = unique(pop), 
-           lty = 1, col = plt, bty = 'n', cex = .75)
+    graphics::legend('bottomleft', legend = unique(pop), 
+                     lty = 1, col = plt, bty = 'n', cex = .75)
   }
 }
 

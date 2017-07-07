@@ -7,6 +7,8 @@
 residuals_to_stat(geno, obj.svd, K = 1, pop, admixed, window.size = 100)
 }
 \arguments{
+\item{geno}{a scaled genotype matrix.}
+
 \item{obj.svd}{an object with \code{u}, \code{d} and \code{v}.}
 
 \item{K}{an integer.}
@@ -17,8 +19,6 @@ individuals belong to.}
 \item{admixed}{a string specifying the label of the hybrid population.}
 
 \item{window.size}{an integer.}
-
-\item{input}{a scaled genotype matrix.}
 }
 \value{
 The returned value is a numeric vector.

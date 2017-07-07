@@ -23,7 +23,7 @@ If you desire to install from GitHub, run the following commands:
 
 ```
 install.packages("devtools")
-devtools::install_github("BioShock38/pcadapt")
+devtools::install_github("bcm-uga/pcadapt")
 ```
 
 

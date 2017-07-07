@@ -120,99 +120,6 @@ impute_geno_pop <- function(x, lab, pop) {
     .Call('pcadapt_impute_geno_pop', PACKAGE = 'pcadapt', x, lab, pop)
 }
 
-#' Axis of projection
-#' 
-#' \code{get_axis} returns the axis onto which projection should be performed.
-#' 
-#' @param u a matrix of global scores.
-#' @param labels a vector of integers.
-#' @param pop1 an integer.
-#' @param pop2 an integer.
-#' 
-#' @return The returned value is a numeric vector.
-#' 
-#' @export
-#' 
-get_axis <- function(u, labels, pop1, pop2) {
-    .Call('pcadapt_get_axis', PACKAGE = 'pcadapt', u, labels, pop1, pop2)
-}
-
-#' Directional statistics
-#' 
-#' \code{cmpt_directional_stat} computes the displacement of admixed 
-#' individuals such that a positive (resp. negative) displacement corresponds 
-#' to a displacement towards ancestral population 2 (resp. 1).
-#' 
-#' @param usc a matrix of rescaled local scores.
-#' @param uglob a matrix of global scores.
-#' @param labels a vector of integers.
-#' @param adm an integer.
-#' @param ax a numeric vector.
-#' 
-#' @return The returned value is a numeric value.
-#' 
-#' @export
-#' 
-cmpt_directional_stat <- function(usc, uglob, labels, adm, ax) {
-    .Call('pcadapt_cmpt_directional_stat', PACKAGE = 'pcadapt', usc, uglob, labels, adm, ax)
-}
-
-#' Introgression statistics
-#' 
-#' \code{cmpt_stat_introgr} computes the statistics.
-#' 
-#' @param geno a genotype matrix.
-#' @param V a loading matrix.
-#' @param sigma a vector of singular values.
-#' @param window_size an integer.
-#' @param direction an integer.
-#' @param lab a vector of integers.
-#' @param ancstrl1 an integer.
-#' @param ancstrl2 an integer.
-#' @param adm an integer.
-#' @param axis a numeric vector.
-#' @param map a numeric vector containing the genetic positions.
-#' @param with_map an integer specifying whether the genetic positions have
-#' been provided.
-#' @param side an integer specifying whether the window should be aligned on 
-#' the left, middle or right.
-#' 
-#' @return The returned value is a numeric vector.
-#' 
-#' @export
-#' 
-cmpt_stat_introgr <- function(geno, V, sigma, window_size, direction, lab, ancstrl1, ancstrl2, adm, axis, map, with_map, side) {
-    .Call('pcadapt_cmpt_stat_introgr', PACKAGE = 'pcadapt', geno, V, sigma, window_size, direction, lab, ancstrl1, ancstrl2, adm, axis, map, with_map, side)
-}
-
-#' Introgression statistics
-#' 
-#' \code{cmpt_stat_introgr_bary} computes the statistics.
-#' 
-#' @param geno a genotype matrix.
-#' @param V a loading matrix.
-#' @param sigma a vector of singular values.
-#' @param window_size an integer.
-#' @param direction an integer.
-#' @param lab a vector of integers.
-#' @param ancstrl1 an integer.
-#' @param ancstrl2 an integer.
-#' @param adm an integer.
-#' @param axis a numeric vector.
-#' @param map a numeric vector containing the genetic positions.
-#' @param with_map an integer specifying whether the genetic positions have
-#' been provided.
-#' @param side an integer specifying whether the window should be aligned on 
-#' the left, middle or right.
-#' 
-#' @return The returned value is a numeric vector.
-#' 
-#' @export
-#' 
-cmpt_stat_introgr_bary <- function(geno, V, sigma, window_size, direction, lab, ancstrl1, ancstrl2, adm, axis, map, with_map, side) {
-    .Call('pcadapt_cmpt_stat_introgr_bary', PACKAGE = 'pcadapt', geno, V, sigma, window_size, direction, lab, ancstrl1, ancstrl2, adm, axis, map, with_map, side)
-}
-
 #' \code{get_window}
 #' 
 #' @param i an integer.
@@ -272,26 +179,6 @@ cmpt_local_pca <- function(geno, V, sigma, beg, end) {
 #' @param geno a genotype matrix.
 #' @param V a loading matrix.
 #' @param sigma a vector of singular values.
-#' @param beg an integer specifying the first marker to be included.
-#' @param end an integer specifying the first marker to be excluded.
-#' 
-#' @return The returned value is a score matrix.
-#' 
-#' @export
-#' 
-updt_local_scores_deprecated <- function(u, geno, V, sigma, beg, end) {
-    invisible(.Call('pcadapt_updt_local_scores_deprecated', PACKAGE = 'pcadapt', u, geno, V, sigma, beg, end))
-}
-
-#' Update local Principal Component Analysis
-#' 
-#' \code{updt_local_scores} computes the scores using a subset of genetic 
-#' markers.
-#' 
-#' @param u a score matrix.
-#' @param geno a genotype matrix.
-#' @param V a loading matrix.
-#' @param sigma a vector of singular values.
 #' @param beg_old an integer specifying the first marker to be included.
 #' @param end_old an integer specifying the first marker to be excluded.
 #' @param beg_new an integer specifying the first marker to be included.
@@ -303,36 +190,6 @@ updt_local_scores_deprecated <- function(u, geno, V, sigma, beg, end) {
 #' 
 updt_local_scores <- function(u, geno, V, sigma, beg_old, end_old, beg_new, end_new) {
     invisible(.Call('pcadapt_updt_local_scores', PACKAGE = 'pcadapt', u, geno, V, sigma, beg_old, end_old, beg_new, end_new))
-}
-
-#' Fast computation of rolling products.
-#' 
-#' \code{test} 
-#' 
-#' @param x a genotype matrix.
-#' 
-#' @return The returned value is a numerical vector.
-#' 
-#' @export
-#' 
-logit_fun <- function(x) {
-    .Call('pcadapt_logit_fun', PACKAGE = 'pcadapt', x)
-}
-
-#' Fast computation of rolling products.
-#' 
-#' \code{roll_prod} 
-#' 
-#' @param x a genotype matrix.
-#' @param regcoeff a numerical vector.
-#' @param window_size an integer.
-#' 
-#' @return The returned value is a numerical vector.
-#' 
-#' @export
-#' 
-roll_prod <- function(x, regcoeff, window_size) {
-    .Call('pcadapt_roll_prod', PACKAGE = 'pcadapt', x, regcoeff, window_size)
 }
 
 colMedian_cpp <- function(x) {
@@ -454,158 +311,70 @@ sample_geno_matrix <- function(freq, ploidy, sample_size) {
     .Call('pcadapt_sample_geno_matrix', PACKAGE = 'pcadapt', freq, ploidy, sample_size)
 }
 
-fJ_cpp <- function(n) {
-    .Call('pcadapt_fJ_cpp', PACKAGE = 'pcadapt', n)
-}
-
-fcnt_cpp <- function(a) {
-    .Call('pcadapt_fcnt_cpp', PACKAGE = 'pcadapt', a)
-}
-
-pca_rotation <- function(a, b) {
-    .Call('pcadapt_pca_rotation', PACKAGE = 'pcadapt', a, b)
-}
-
-#' Ancestral populations centroids
+#' Centroids
 #' 
-#' \code{cmpt_centroids} returns the average scores for each population.
+#' \code{scores_centroids_cpp} returns the centroids of each population.
 #' 
-#' @param u a matrix of scores.
-#' @param lab a vector of integers.
-#' @param pop1 an integer.
-#' @param pop2 an integer.
+#' @param scores a numeric matrix.
+#' @param pop a string vector.
+#' @param popUnique a string vector.
 #' 
-#' @return The returned value is a list.
+#' @return The returned value is a numeric matrix.
 #' 
-#' @export
-#' 
-cmpt_centroids <- function(u, lab, pop1, pop2) {
-    .Call('pcadapt_cmpt_centroids', PACKAGE = 'pcadapt', u, lab, pop1, pop2)
-}
-
-#' Ancestral populations centroids
-#' 
-#' \code{cmpt_centroids_bary} returns the average scores for each population.
-#' 
-#' @param u a matrix of scores.
-#' @param lab a vector of integers.
-#' @param pop1 an integer.
-#' @param pop2 an integer.
-#' 
-#' @return The returned value is a matrix.
-#' 
-#' @export
-#' 
-cmpt_centroids_bary <- function(u, lab, pop1, pop2) {
-    .Call('pcadapt_cmpt_centroids_bary', PACKAGE = 'pcadapt', u, lab, pop1, pop2)
-}
-
-#' Match global centroids and local centroids
-#' 
-#' \code{cmpt_transformation} computes the local centroid, the global centroid 
-#' and the scaling factor.
-#' 
-#' @param uloc a matrix of local scores.
-#' @param uglob a matrix of global scores.
-#' @param lab a vector of integers.
-#' @param ancstrl1 an integer.
-#' @param ancstrl2 an integer.
-#' @param s a numeric vector.
-#' @param dloc a numeric vector.
-#' @param dglob a numeric vector.
-#' @param R a numeric matrix.
-#' 
-#' @export
-#' 
-cmpt_transformation <- function(uloc, uglob, lab, ancstrl1, ancstrl2, s, dloc, dglob, R) {
-    invisible(.Call('pcadapt_cmpt_transformation', PACKAGE = 'pcadapt', uloc, uglob, lab, ancstrl1, ancstrl2, s, dloc, dglob, R))
-}
-
-#' Rescale local scores
-#' 
-#' \code{rescale_local_pca} returns the rescaled local scores.
-#' 
-#' @param u a matrix of scores.
-#' @param s a numeric vector.
-#' @param dep_loc a numeric vector.
-#' @param dep_glob a numeric vector.
-#' @param R a numeric matrix.
-#' 
-#' @return The returned value is a list.
-#' 
-#' @export
-#' 
-rescale_local_pca <- function(u, s, dep_loc, dep_glob, R) {
-    .Call('pcadapt_rescale_local_pca', PACKAGE = 'pcadapt', u, s, dep_loc, dep_glob, R)
-}
-
-#' Randomized SVD
-#' 
-#' \code{rsvd_cpp} computes the randomized SVD.
-#' 
-#' @param A a numeric matrix.
-#' @param k an integer.
-#' 
-#' @return The returned value is a Rcpp::List.
-#' 
-#' @export
-#' 
-rsvd_cpp <- function(A, k) {
-    .Call('pcadapt_rsvd_cpp', PACKAGE = 'pcadapt', A, k)
-}
-
-#' A * x
-#' 
-#' \code{AX} computes the product A * x.
-#' 
-#' @param filename a character string.
-#' @param x a numeric vector.
-#' @param nSNP an integer.
-#' @param nIND an integer.
-#' 
-#' @return The returned value is a numeric vector.
-#' 
-#' @export
-#' 
-AX <- function(filename, x, nSNP, nIND) {
-    .Call('pcadapt_AX', PACKAGE = 'pcadapt', filename, x, nSNP, nIND)
-}
-
-#' A.t * x
-#' 
-#' \code{tAX} computes the product A.t * x.
-#' 
-#' @param filename a character string.
-#' @param x a numeric vector.
-#' @param nSNP an integer.
-#' @param nIND an integer.
-#' 
-#' @return The returned value is a numeric vector.
-#' 
-#' @export
-#' 
-tAX <- function(filename, x, nSNP, nIND) {
-    .Call('pcadapt_tAX', PACKAGE = 'pcadapt', filename, x, nSNP, nIND)
-}
-
 #' @export
 #' 
 scores_centroids_cpp <- function(scores, pop, popUnique) {
     .Call('pcadapt_scores_centroids_cpp', PACKAGE = 'pcadapt', scores, pop, popUnique)
 }
 
+#' Simplex
+#' 
+#' \code{centroids_to_simplex_cpp}
+#' 
+#' @param centroids a numeric matrix.
+#' @param popUnique a string vector.
+#' @param admixed a character vector.
+#' 
+#' @return The returned value is a numeric matrix.
+#' 
 #' @export
 #' 
 centroids_to_simplex_cpp <- function(centroids, popUnique, admixed) {
     .Call('pcadapt_centroids_to_simplex_cpp', PACKAGE = 'pcadapt', centroids, popUnique, admixed)
 }
 
+#' Barycentric coordinates to ancestry
+#' 
+#' \code{centroids_to_simplex_cpp}
+#' 
+#' @param scores a numeric matrix.
+#' @param pop a string vector.
+#' @param popUnique a string vector.
+#' @param admixed a character vector.
+#' 
+#' @return The returned value is a numeric vector.
+#' 
 #' @export
 #' 
 bary_to_ancestry_cpp <- function(scores, pop, popUnique, admixed) {
     .Call('pcadapt_bary_to_ancestry_cpp', PACKAGE = 'pcadapt', scores, pop, popUnique, admixed)
 }
 
+#' Simplex
+#' 
+#' \code{centroids_to_simplex_cpp}
+#' 
+#' @param sgeno a scaled genotype matrix.
+#' @param d a numeric vector.
+#' @param v a numeric matrix.
+#' @param pop a string vector.
+#' @param popUnique a string vector.
+#' @param admixed a character vector.
+#' @param window_size a numeric value.
+#' @param map a numeric vector.
+#' 
+#' @return The returned value is a numeric matrix.
+#' 
 #' @export
 #' 
 slidingWindows <- function(sgeno, d, v, pop, popUnique, admixed, window_size, map) {
@@ -771,38 +540,5 @@ check_line_na <- function(string_geno_row, geno_char) {
 #'
 vcf_convert <- function(string_geno, output, allele_sep) {
     .Call('pcadapt_vcf_convert', PACKAGE = 'pcadapt', string_geno, output, allele_sep)
-}
-
-#' Wilcoxon rank
-#' 
-#' \code{get_rank} returns the ordering index.
-#' 
-#' @param v_temp a numeric vector.
-#' 
-#' @return The returned value is a vector of integers.
-#' 
-#' @export
-#' 
-get_rank <- function(v_temp) {
-    .Call('pcadapt_get_rank', PACKAGE = 'pcadapt', v_temp)
-}
-
-#' Wilcoxon statistics
-#' 
-#' \code{cmpt_wilcoxon_stat} computes the Wilcoxon statistics.
-#' 
-#' @param usc a matrix of rescaled local scores.
-#' @param uglob a matrix of global scores.
-#' @param direction an integer.
-#' @param lab a vector of integers.
-#' @param adm an integer.
-#' @param axis a numeric value.
-#' 
-#' @return The returned value is a numeric value.
-#' 
-#' @export
-#' 
-cmpt_wilcoxon_stat <- function(usc, uglob, direction, lab, adm, axis) {
-    .Call('pcadapt_cmpt_wilcoxon_stat', PACKAGE = 'pcadapt', usc, uglob, direction, lab, adm, axis)
 }
 

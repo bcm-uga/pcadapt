@@ -1,6 +1,4 @@
 #include <RcppArmadillo.h>
-#include "procrustes.h"
-#include "registration.h"
 #include "toolbox.h"
 
 // [[Rcpp::depends("RcppArmadillo")]]
@@ -113,37 +111,6 @@ arma::mat cmpt_local_pca(const arma::mat &geno, const arma::mat &V,
     }
   }
   return(u);
-}
-
-//' Update local Principal Component Analysis
-//' 
-//' \code{updt_local_scores} computes the scores using a subset of genetic 
-//' markers.
-//' 
-//' @param u a score matrix.
-//' @param geno a genotype matrix.
-//' @param V a loading matrix.
-//' @param sigma a vector of singular values.
-//' @param beg an integer specifying the first marker to be included.
-//' @param end an integer specifying the first marker to be excluded.
-//' 
-//' @return The returned value is a score matrix.
-//' 
-//' @export
-//' 
-// [[Rcpp::export]]
-void updt_local_scores_deprecated(arma::mat &u, const arma::mat &geno, const arma::mat &V, 
-                       const arma::vec &sigma, const int beg, const int end){
-  int nIND = geno.n_rows; 
-  int nSNP = geno.n_cols;
-  int K = u.n_cols;
-  double cst = (double) nSNP / (end - beg);
-  for (int j = 0; j < nIND; j++){
-    for (int k = 0; k < K; k++){
-      u(j, k) -= (geno.at(j, beg - 1) * V(beg - 1, k)) * cst / sigma[k];
-      u(j, k) += (geno.at(j, end) * V(end, k)) * cst / sigma[k];
-    }
-  }
 }
 
 //' Update local Principal Component Analysis

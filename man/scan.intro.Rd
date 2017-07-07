@@ -4,9 +4,8 @@
 \alias{scan.intro}
 \title{Introgression}
 \usage{
-scan.intro(input, K = 2, pop, ancstrl.1, ancstrl.2, admxd, min.maf = 0.05,
-  ploidy = 2, window.size = 1000, impute = FALSE, chr.info, map,
-  side = "middle", method = "barycentric")
+scan.intro(input, K = 2, pop, ancestral, admixed, min.maf = 0.05,
+  ploidy = 2, window.size = 1000, impute = FALSE, chr.info, map)
 }
 \arguments{
 \item{input}{a genotype matrix or a character string specifying the name of 
@@ -18,13 +17,9 @@ ancestries may vary.}
 \item{pop}{a vector of integers or strings specifying which subpopulation the
 individuals belong to.}
 
-\item{ancstrl.1}{a string specifying the label of the ancestral population 
-genetically closer to the hybrid population.}
+\item{ancestral}{a string specifying the label of the donor population.}
 
-\item{ancstrl.2}{a string specifying the label of the ancestral population 
-genetically further from the hybrid population.}
-
-\item{admxd}{a string specifying the label of the hybrid population.}
+\item{admixed}{a string specifying the label of the hybrid population.}
 
 \item{min.maf}{a value between \code{0} and \code{0.45} specifying the 
 threshold of minor allele frequencies above which p-values are computed.}
@@ -39,11 +34,6 @@ imputed.}
 \item{chr.info}{a list containing the chromosome information for each marker.}
 
 \item{map}{a numeric vector containing the genetic positions.}
-
-\item{side}{a character string specifying whether the window should be aligned on 
-the left, middle or right.}
-
-\item{method}{a character string specifying the method. Default "barycentric".}
 }
 \value{
 The returned value is a list containing the test statistics.

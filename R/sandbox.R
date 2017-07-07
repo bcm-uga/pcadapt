@@ -2,7 +2,7 @@
 #'
 #' \code{residuals_to_stat}
 #'
-#' @param input a scaled genotype matrix.
+#' @param geno a scaled genotype matrix.
 #' @param obj.svd an object with \code{u}, \code{d} and \code{v}.
 #' @param K an integer.
 #' @param pop a list of integers or strings specifying which subpopulation the 
@@ -14,6 +14,7 @@
 #' 
 #' @importFrom RSpectra eigs_sym
 #' @importFrom RcppRoll roll_mean
+#' @importFrom Matrix Diagonal
 #' 
 #' @export
 #'

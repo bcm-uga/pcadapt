@@ -4,7 +4,7 @@
 \alias{svd.pcadapt}
 \title{Singular Value Decomposition}
 \usage{
-svd.pcadapt(input, K, min.maf = 0.05, ploidy = s, type)
+svd.pcadapt(input, K, min.maf = 0.05, ploidy = 2, type)
 }
 \arguments{
 \item{input}{a genotype matrix or a character string specifying the name of 

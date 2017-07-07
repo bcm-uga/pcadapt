@@ -1,9 +1,6 @@
 #include <RcppArmadillo.h>
 #include "introUtils.h"
-#include "procrustes.h"
-#include "registration.h"
 #include "toolbox.h"
-#include "wilcoxon.h"
 #include "geometry.h"
 
 // [[Rcpp::depends("RcppArmadillo")]]
@@ -82,6 +79,18 @@ arma::mat centroids_to_simplex_cpp(const arma::mat &centroids,
   return(simplex);
 }
 
+
+//' Barycentric coordinates to ancestry
+//' 
+//' \code{centroids_to_simplex_cpp}
+//' 
+//' @param scores a numeric matrix.
+//' @param pop a string vector.
+//' @param popUnique a string vector.
+//' @param admixed a character vector.
+//' 
+//' @return The returned value is a numeric vector.
+//' 
 //' @export
 //' 
 // [[Rcpp::export]]
@@ -96,7 +105,6 @@ arma::vec bary_to_ancestry_cpp(const arma::mat &scores,
                                                popUnique,
                                                admixed);
   int nb_admixed = 0;
-  int nb_pop_anc = popUnique.size() - 1;
   int K = scores.n_cols;
   std::string str_admixed = Rcpp::as<std::string> (admixed);
   
@@ -127,6 +135,22 @@ arma::vec bary_to_ancestry_cpp(const arma::mat &scores,
   return(ancestry);
 }
 
+
+//' Simplex
+//' 
+//' \code{centroids_to_simplex_cpp}
+//' 
+//' @param sgeno a scaled genotype matrix.
+//' @param d a numeric vector.
+//' @param v a numeric matrix.
+//' @param pop a string vector.
+//' @param popUnique a string vector.
+//' @param admixed a character vector.
+//' @param window_size a numeric value.
+//' @param map a numeric vector.
+//' 
+//' @return The returned value is a numeric matrix.
+//' 
 //' @export
 //' 
 // [[Rcpp::export]]
