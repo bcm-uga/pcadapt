@@ -169,7 +169,7 @@ arma::mat slidingWindows(const arma::mat &sgeno,
   int hws = (int) window_size / 2;
   int K = std::max(1, nPOP - 2);
   
-  IntegerVector ix_o = get_window(hws, map, window_size, 0);    
+  IntegerVector ix_o = get_window(hws, map, window_size);    
   IntegerVector ix_n(2);
   
   int loop_start = hws + 1;
