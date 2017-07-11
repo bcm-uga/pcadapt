@@ -64,7 +64,7 @@ scan.intro = function(input,
     geno <- (impute.pcadapt(input = input, pop = pop))$x
   } else if (!impute){
     if (is.character(input)){
-      geno <- as.matrix(data.table::fread(input))
+      geno <- as.matrix(data.table::fread(input, data.table = FALSE))
     } else if (class(input) %in% c("array", "matrix", "data.frame")){
       geno <- as.matrix(input)
     } else {
@@ -89,7 +89,7 @@ scan.intro = function(input,
   
   geno <- geno[maf >= min.maf, ]
   filtered.maf <- maf[maf >= min.maf]
-
+  
   sd <- sqrt(ploidy * filtered.maf * (1 - filtered.maf))
   cat("Scaling the genotype matrix...")
   scaled.geno <- scale(t(geno), center = TRUE, scale = sd) 
@@ -99,16 +99,15 @@ scan.intro = function(input,
                          ploidy = ploidy, type = 1)
   cat("Computing the statistics...\n")
   
-  if (missing(chr.info)){
-    stat <- slidingWindows(sgeno = as.matrix(scaled.geno),
-                           d = as.vector(obj.svd$d),
-                           v = as.matrix(obj.svd$v),
-                           pop = pop,
-                           popUnique = unique(pop),
-                           admixed = admixed,
-                           window_size = as.integer(window.size),
-                           gmap)
-  }
+  stat <- slidingWindows(sgeno = as.matrix(scaled.geno),
+                         d = as.vector(obj.svd$d),
+                         v = as.matrix(obj.svd$v),
+                         pop = pop,
+                         popUnique = unique(pop),
+                         admixed = admixed,
+                         window_size = window.size,
+                         gmap)
+  
   stat.med <- apply(stat, MARGIN = 2, FUN = function(x){median(x, na.rm = TRUE)})
   obj.stat <- matrix(NA, nrow = nSNP, ncol = ncol(stat))
   obj.stat[maf >= min.maf, ] <- stat
