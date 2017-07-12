@@ -99,14 +99,14 @@ scan.intro = function(input,
                          ploidy = ploidy, type = 1)
   cat("Computing the statistics...\n")
   
-  stat <- slidingWindows(sgeno = as.matrix(scaled.geno),
-                         d = as.vector(obj.svd$d),
-                         v = as.matrix(obj.svd$v),
-                         pop = pop,
-                         popUnique = unique(pop),
-                         admixed = admixed,
-                         window_size = window.size,
-                         gmap)
+  stat <- slidingWindows_fast(as.matrix(scaled.geno),
+                              d = as.vector(obj.svd$d),
+                              v = as.matrix(obj.svd$v),
+                              pop = pop,
+                              popUnique = unique(pop),
+                              admixed = admixed,
+                              window_size = window.size,
+                              gmap)
   
   stat.med <- apply(stat, MARGIN = 2, FUN = function(x){median(x, na.rm = TRUE)})
   obj.stat <- matrix(NA, nrow = nSNP, ncol = ncol(stat))

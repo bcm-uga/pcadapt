@@ -309,11 +309,10 @@ sample_geno_matrix <- function(freq, ploidy, sample_size) {
     .Call('pcadapt_sample_geno_matrix', PACKAGE = 'pcadapt', freq, ploidy, sample_size)
 }
 
-#' Centroids
+#' Get population size
 #' 
-#' \code{scores_centroids_cpp} returns the centroids of each population.
+#' \code{get_pop_size} 
 #' 
-#' @param scores a numeric matrix.
 #' @param pop a string vector.
 #' @param popUnique a string vector.
 #' 
@@ -321,46 +320,21 @@ sample_geno_matrix <- function(freq, ploidy, sample_size) {
 #' 
 #' @export
 #' 
-scores_centroids_cpp <- function(scores, pop, popUnique) {
-    .Call('pcadapt_scores_centroids_cpp', PACKAGE = 'pcadapt', scores, pop, popUnique)
+get_pop_size <- function(pop, popUnique) {
+    .Call('pcadapt_get_pop_size', PACKAGE = 'pcadapt', pop, popUnique)
 }
 
-#' Simplex
-#' 
-#' \code{centroids_to_simplex_cpp}
-#' 
-#' @param centroids a numeric matrix.
-#' @param popUnique a string vector.
-#' @param admixed a character vector.
-#' 
-#' @return The returned value is a numeric matrix.
-#' 
-#' @export
-#' 
-centroids_to_simplex_cpp <- function(centroids, popUnique, admixed) {
-    .Call('pcadapt_centroids_to_simplex_cpp', PACKAGE = 'pcadapt', centroids, popUnique, admixed)
+updt_centroids_cpp <- function(centroids, scores, pop, popUnique, popSize, K) {
+    invisible(.Call('pcadapt_updt_centroids_cpp', PACKAGE = 'pcadapt', centroids, scores, pop, popUnique, popSize, K))
 }
 
-#' Barycentric coordinates to ancestry
-#' 
-#' \code{centroids_to_simplex_cpp}
-#' 
-#' @param scores a numeric matrix.
-#' @param pop a string vector.
-#' @param popUnique a string vector.
-#' @param admixed a character vector.
-#' 
-#' @return The returned value is a numeric vector.
-#' 
-#' @export
-#' 
-bary_to_ancestry_cpp <- function(scores, pop, popUnique, admixed) {
-    .Call('pcadapt_bary_to_ancestry_cpp', PACKAGE = 'pcadapt', scores, pop, popUnique, admixed)
+updt_simplex_cpp <- function(simplex, centroids, popUnique, admixed) {
+    invisible(.Call('pcadapt_updt_simplex_cpp', PACKAGE = 'pcadapt', simplex, centroids, popUnique, admixed))
 }
 
-#' Simplex
+#' Introgression statistics
 #' 
-#' \code{centroids_to_simplex_cpp}
+#' \code{slidingWindows_fast} 
 #' 
 #' @param sgeno a scaled genotype matrix.
 #' @param d a numeric vector.
@@ -375,8 +349,8 @@ bary_to_ancestry_cpp <- function(scores, pop, popUnique, admixed) {
 #' 
 #' @export
 #' 
-slidingWindows <- function(sgeno, d, v, pop, popUnique, admixed, window_size, map) {
-    .Call('pcadapt_slidingWindows', PACKAGE = 'pcadapt', sgeno, d, v, pop, popUnique, admixed, window_size, map)
+slidingWindows_fast <- function(sgeno, d, v, pop, popUnique, admixed, window_size, map) {
+    .Call('pcadapt_slidingWindows_fast', PACKAGE = 'pcadapt', sgeno, d, v, pop, popUnique, admixed, window_size, map)
 }
 
 #' File size

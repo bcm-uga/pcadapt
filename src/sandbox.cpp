@@ -7,11 +7,10 @@
 
 using namespace Rcpp;
 
-//' Centroids
+//' Get population size
 //' 
-//' \code{scores_centroids_cpp} returns the centroids of each population.
+//' \code{get_pop_size} 
 //' 
-//' @param scores a numeric matrix.
 //' @param pop a string vector.
 //' @param popUnique a string vector.
 //' 
@@ -20,119 +19,69 @@ using namespace Rcpp;
 //' @export
 //' 
 // [[Rcpp::export]]
-arma::mat scores_centroids_cpp(const arma::mat &scores,
-                               const StringVector &pop,
-                               const StringVector &popUnique){
-  int nb_pop = popUnique.size();
-  int nb_ind = scores.n_rows;
-  int K = scores.n_cols;
+IntegerVector get_pop_size(const StringVector &pop,
+                           const StringVector &popUnique){
   
-  arma::mat centroids(nb_pop, K, arma::fill::zeros);
+  int nb_ind = pop.size();
+  int nb_pop = popUnique.size();
+  IntegerVector popSize(nb_pop);
+  
   for (int i = 0; i < nb_pop; i++){
-    int tmp = 0; // counts the number of individuals in the i-th population
     for (int j = 0; j < nb_ind; j++){
       if (pop[j] == popUnique[i]){
-        tmp++;
-        for (int k = 0; k < K; k++){
-          centroids(i, k) += scores(j, k);    
+        popSize[i] += 1;  
+      }
+    }
+  }
+  return(popSize);
+}
+
+// [[Rcpp::export]]
+void updt_centroids_cpp(arma::mat &centroids,
+                        const arma::mat &scores,
+                        const StringVector &pop,
+                        const StringVector &popUnique,
+                        const IntegerVector &popSize,
+                        int K){
+  int nb_pop = centroids.n_rows;
+  int nb_ind = scores.n_rows;
+  
+  for (int i = 0; i < nb_pop; i++){
+    for (int k = 0; k < K; k++){
+      centroids(i, k) = 0.0;
+      for (int j = 0; j < nb_ind; j++){
+        if (pop[j] == popUnique[i]){
+          centroids(i, k) += (double) scores(j, k) / popSize[i];    
         }
       }
     }
-    for (int k = 0; k < K; k++){
-      centroids(i, k) /= (double) tmp;
-    }
   }
-  return(centroids);
 }
 
-//' Simplex
-//' 
-//' \code{centroids_to_simplex_cpp}
-//' 
-//' @param centroids a numeric matrix.
-//' @param popUnique a string vector.
-//' @param admixed a character vector.
-//' 
-//' @return The returned value is a numeric matrix.
-//' 
-//' @export
-//' 
 // [[Rcpp::export]]
-arma::mat centroids_to_simplex_cpp(const arma::mat &centroids,
-                                   const StringVector &popUnique,
-                                   const CharacterVector &admixed){
+void updt_simplex_cpp(arma::mat &simplex,
+                      const arma::mat &centroids,
+                      const StringVector &popUnique,
+                      const CharacterVector &admixed){
   
-  int nb_pop = popUnique.size();
-  int K = centroids.n_cols;
   std::string str_admixed = Rcpp::as<std::string> (admixed);
   
-  arma::mat simplex(nb_pop - 1, K);
   int idx = 0;
-  for (int i = 0; i < nb_pop; i++){
+  for (int i = 0; i < popUnique.size(); i++){
     if (popUnique[i] != str_admixed){
-      for (int k = 0; k < K; k++){
+      for (int k = 0; k < centroids.n_cols; k++){
         simplex(idx, k) = centroids(i, k);
       }
       idx++;
     }  
   }
-  return(simplex);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 
-//' Barycentric coordinates to ancestry
+//' Introgression statistics
 //' 
-//' \code{centroids_to_simplex_cpp}
-//' 
-//' @param scores a numeric matrix.
-//' @param pop a string vector.
-//' @param popUnique a string vector.
-//' @param admixed a character vector.
-//' 
-//' @return The returned value is a numeric vector.
-//' 
-//' @export
-//' 
-// [[Rcpp::export]]
-arma::vec bary_to_ancestry_cpp(const arma::mat &scores,
-                               const StringVector &pop,
-                               const StringVector &popUnique,
-                               const CharacterVector &admixed){
-  arma::mat centroids = scores_centroids_cpp(scores,
-                                             pop,
-                                             popUnique);
-  arma::mat simplex = centroids_to_simplex_cpp(centroids,
-                                               popUnique,
-                                               admixed);
-  int nb_admixed = get_nb_ind(pop, admixed);
-  int K = scores.n_cols;
-  std::string str_admixed = Rcpp::as<std::string> (admixed);
-
-  arma::mat scores_admixed(nb_admixed, K, arma::fill::zeros);
-  int idx = 0;
-  for (int i = 0; i < scores.n_rows; i++){
-    if (pop[i] == str_admixed){
-      for (int k = 0; k < K; k++){
-        scores_admixed(idx, k) = scores(i, k);
-      }
-      idx++;
-    }
-  }
-  
-  arma::mat bary_coord = cart2bary_cpp(simplex, scores_admixed);
-  
-  arma::vec ancestry(bary_coord.n_cols, arma::fill::zeros);
-  for (int k = 0; k < bary_coord.n_cols; k++){
-    ancestry[k] = mean(bary_coord.col(k));
-  }
-  
-  return(ancestry);
-}
-
-
-//' Simplex
-//' 
-//' \code{centroids_to_simplex_cpp}
+//' \code{slidingWindows_fast} 
 //' 
 //' @param sgeno a scaled genotype matrix.
 //' @param d a numeric vector.
@@ -148,43 +97,62 @@ arma::vec bary_to_ancestry_cpp(const arma::mat &scores,
 //' @export
 //' 
 // [[Rcpp::export]]
-arma::mat slidingWindows(const arma::mat &sgeno,
-                         const arma::vec &d,
-                         const arma::mat &v,
-                         const StringVector &pop,
-                         const StringVector &popUnique,
-                         const CharacterVector &admixed,
-                         const double window_size,
-                         const NumericVector &map){
-  
+arma::mat slidingWindows_fast(const arma::mat &sgeno, 
+                              const arma::vec &d, 
+                              const arma::mat &v,
+                              const StringVector &pop,
+                              const StringVector &popUnique,
+                              const CharacterVector &admixed,
+                              const int window_size,  
+                              const arma::vec map){
   int nSNP = sgeno.n_cols;
   int nIND = sgeno.n_rows;
   int nPOP = popUnique.size();
-  int hws = (int) window_size / 2;
   int K = std::max(1, nPOP - 2);
+  std::string str_admixed = Rcpp::as<std::string> (admixed);
   
-  IntegerVector ix_o = get_window(hws, map, window_size);    
+  int number_of_admixed = get_nb_ind(pop, admixed);
+  IntegerVector popSize = get_pop_size(pop, popUnique);
+  
+  arma::mat stat(nSNP, nPOP - 1, arma::fill::zeros); // the simplex must have nPOP - 1 points
+  stat.fill(NA_REAL);
+  
+  IntegerVector ix_o(2);
   IntegerVector ix_n(2);
   
+  int hws = window_size / 2;
   int loop_start = hws + 1;
   int loop_end = nSNP - hws;
+  
   arma::mat u = cmpt_local_pca(sgeno, v, d, ix_o[0], ix_o[1]);
-  
-  arma::mat stat(nSNP, nPOP - 1);
-  stat.fill(NA_REAL);
-  arma::mat tmp(nIND, K, arma::fill::zeros);
-  
+  arma::mat uK(nIND, K, arma::fill::zeros);
+  arma::mat tmp(popUnique.size(), K, arma::fill::zeros);
+  arma::mat simplex(popUnique.size() - 1, K, arma::fill::zeros);
+  double value = 0.0;
   for (int i = loop_start; i < loop_end; i++){
-    ix_n = get_window(i, map, window_size);  
+    ix_n = get_window(i, map, window_size);
     updt_local_scores(u, sgeno, v, d, ix_o[0], ix_o[1], ix_n[0], ix_n[1]);
+    updt_centroids_cpp(tmp, u, pop, popUnique, popSize, K);
+    updt_simplex_cpp(simplex, tmp, popUnique, admixed);
     for (int k = 0; k < K; k++){
-      tmp.col(k) = u.col(k);
+      uK.col(k) = u.col(k);  
     }
-    stat.row(i) = bary_to_ancestry_cpp(tmp, pop, popUnique, admixed).t();
+    arma::mat res = cart2bary_cpp(simplex, uK);
+    
+    for (int k = 0; k < nPOP - 1; k++){
+      value = 0.0;
+      for (int j = 0; j < nIND; j++){
+        if (pop[j] == str_admixed){
+          value += res(j, k) / number_of_admixed;  
+        }
+      }
+      stat(i, k) = value;  
+    }
+    
     ix_o[0] = ix_n[0];
     ix_o[1] = ix_n[1];
+    
   }
   
   return(stat);
-  
 }

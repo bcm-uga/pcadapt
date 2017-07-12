@@ -307,49 +307,49 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// scores_centroids_cpp
-arma::mat scores_centroids_cpp(const arma::mat& scores, const StringVector& pop, const StringVector& popUnique);
-RcppExport SEXP pcadapt_scores_centroids_cpp(SEXP scoresSEXP, SEXP popSEXP, SEXP popUniqueSEXP) {
+// get_pop_size
+IntegerVector get_pop_size(const StringVector& pop, const StringVector& popUnique);
+RcppExport SEXP pcadapt_get_pop_size(SEXP popSEXP, SEXP popUniqueSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type scores(scoresSEXP);
     Rcpp::traits::input_parameter< const StringVector& >::type pop(popSEXP);
     Rcpp::traits::input_parameter< const StringVector& >::type popUnique(popUniqueSEXP);
-    rcpp_result_gen = Rcpp::wrap(scores_centroids_cpp(scores, pop, popUnique));
+    rcpp_result_gen = Rcpp::wrap(get_pop_size(pop, popUnique));
     return rcpp_result_gen;
 END_RCPP
 }
-// centroids_to_simplex_cpp
-arma::mat centroids_to_simplex_cpp(const arma::mat& centroids, const StringVector& popUnique, const CharacterVector& admixed);
-RcppExport SEXP pcadapt_centroids_to_simplex_cpp(SEXP centroidsSEXP, SEXP popUniqueSEXP, SEXP admixedSEXP) {
+// updt_centroids_cpp
+void updt_centroids_cpp(arma::mat& centroids, const arma::mat& scores, const StringVector& pop, const StringVector& popUnique, const IntegerVector& popSize, int K);
+RcppExport SEXP pcadapt_updt_centroids_cpp(SEXP centroidsSEXP, SEXP scoresSEXP, SEXP popSEXP, SEXP popUniqueSEXP, SEXP popSizeSEXP, SEXP KSEXP) {
 BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type centroids(centroidsSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type scores(scoresSEXP);
+    Rcpp::traits::input_parameter< const StringVector& >::type pop(popSEXP);
+    Rcpp::traits::input_parameter< const StringVector& >::type popUnique(popUniqueSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type popSize(popSizeSEXP);
+    Rcpp::traits::input_parameter< int >::type K(KSEXP);
+    updt_centroids_cpp(centroids, scores, pop, popUnique, popSize, K);
+    return R_NilValue;
+END_RCPP
+}
+// updt_simplex_cpp
+void updt_simplex_cpp(arma::mat& simplex, const arma::mat& centroids, const StringVector& popUnique, const CharacterVector& admixed);
+RcppExport SEXP pcadapt_updt_simplex_cpp(SEXP simplexSEXP, SEXP centroidsSEXP, SEXP popUniqueSEXP, SEXP admixedSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type simplex(simplexSEXP);
     Rcpp::traits::input_parameter< const arma::mat& >::type centroids(centroidsSEXP);
     Rcpp::traits::input_parameter< const StringVector& >::type popUnique(popUniqueSEXP);
     Rcpp::traits::input_parameter< const CharacterVector& >::type admixed(admixedSEXP);
-    rcpp_result_gen = Rcpp::wrap(centroids_to_simplex_cpp(centroids, popUnique, admixed));
-    return rcpp_result_gen;
+    updt_simplex_cpp(simplex, centroids, popUnique, admixed);
+    return R_NilValue;
 END_RCPP
 }
-// bary_to_ancestry_cpp
-arma::vec bary_to_ancestry_cpp(const arma::mat& scores, const StringVector& pop, const StringVector& popUnique, const CharacterVector& admixed);
-RcppExport SEXP pcadapt_bary_to_ancestry_cpp(SEXP scoresSEXP, SEXP popSEXP, SEXP popUniqueSEXP, SEXP admixedSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type scores(scoresSEXP);
-    Rcpp::traits::input_parameter< const StringVector& >::type pop(popSEXP);
-    Rcpp::traits::input_parameter< const StringVector& >::type popUnique(popUniqueSEXP);
-    Rcpp::traits::input_parameter< const CharacterVector& >::type admixed(admixedSEXP);
-    rcpp_result_gen = Rcpp::wrap(bary_to_ancestry_cpp(scores, pop, popUnique, admixed));
-    return rcpp_result_gen;
-END_RCPP
-}
-// slidingWindows
-arma::mat slidingWindows(const arma::mat& sgeno, const arma::vec& d, const arma::mat& v, const StringVector& pop, const StringVector& popUnique, const CharacterVector& admixed, const double window_size, const NumericVector& map);
-RcppExport SEXP pcadapt_slidingWindows(SEXP sgenoSEXP, SEXP dSEXP, SEXP vSEXP, SEXP popSEXP, SEXP popUniqueSEXP, SEXP admixedSEXP, SEXP window_sizeSEXP, SEXP mapSEXP) {
+// slidingWindows_fast
+arma::mat slidingWindows_fast(const arma::mat& sgeno, const arma::vec& d, const arma::mat& v, const StringVector& pop, const StringVector& popUnique, const CharacterVector& admixed, const int window_size, const arma::vec map);
+RcppExport SEXP pcadapt_slidingWindows_fast(SEXP sgenoSEXP, SEXP dSEXP, SEXP vSEXP, SEXP popSEXP, SEXP popUniqueSEXP, SEXP admixedSEXP, SEXP window_sizeSEXP, SEXP mapSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -359,9 +359,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const StringVector& >::type pop(popSEXP);
     Rcpp::traits::input_parameter< const StringVector& >::type popUnique(popUniqueSEXP);
     Rcpp::traits::input_parameter< const CharacterVector& >::type admixed(admixedSEXP);
-    Rcpp::traits::input_parameter< const double >::type window_size(window_sizeSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type map(mapSEXP);
-    rcpp_result_gen = Rcpp::wrap(slidingWindows(sgeno, d, v, pop, popUnique, admixed, window_size, map));
+    Rcpp::traits::input_parameter< const int >::type window_size(window_sizeSEXP);
+    Rcpp::traits::input_parameter< const arma::vec >::type map(mapSEXP);
+    rcpp_result_gen = Rcpp::wrap(slidingWindows_fast(sgeno, d, v, pop, popUnique, admixed, window_size, map));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -541,10 +541,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"pcadapt_ped2pcadapt", (DL_FUNC) &pcadapt_ped2pcadapt, 2},
     {"pcadapt_lfmm2pcadapt", (DL_FUNC) &pcadapt_lfmm2pcadapt, 2},
     {"pcadapt_sample_geno_matrix", (DL_FUNC) &pcadapt_sample_geno_matrix, 3},
-    {"pcadapt_scores_centroids_cpp", (DL_FUNC) &pcadapt_scores_centroids_cpp, 3},
-    {"pcadapt_centroids_to_simplex_cpp", (DL_FUNC) &pcadapt_centroids_to_simplex_cpp, 3},
-    {"pcadapt_bary_to_ancestry_cpp", (DL_FUNC) &pcadapt_bary_to_ancestry_cpp, 4},
-    {"pcadapt_slidingWindows", (DL_FUNC) &pcadapt_slidingWindows, 8},
+    {"pcadapt_get_pop_size", (DL_FUNC) &pcadapt_get_pop_size, 2},
+    {"pcadapt_updt_centroids_cpp", (DL_FUNC) &pcadapt_updt_centroids_cpp, 6},
+    {"pcadapt_updt_simplex_cpp", (DL_FUNC) &pcadapt_updt_simplex_cpp, 4},
+    {"pcadapt_slidingWindows_fast", (DL_FUNC) &pcadapt_slidingWindows_fast, 8},
     {"pcadapt_get_size_cpp", (DL_FUNC) &pcadapt_get_size_cpp, 1},
     {"pcadapt_get_nb_ind", (DL_FUNC) &pcadapt_get_nb_ind, 2},
     {"pcadapt_cmpt_minor_af", (DL_FUNC) &pcadapt_cmpt_minor_af, 2},

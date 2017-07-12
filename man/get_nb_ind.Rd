@@ -4,12 +4,12 @@
 \alias{get_nb_ind}
 \title{Number of individuals in a specific population}
 \usage{
-get_nb_ind(lab, anc)
+get_nb_ind(pop, name)
 }
 \arguments{
-\item{lab}{a vector of integers.}
+\item{pop}{a string vector.}
 
-\item{anc}{an integer.}
+\item{name}{a character vector.}
 }
 \value{
 The returned value is an integer.
