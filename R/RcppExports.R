@@ -399,15 +399,15 @@ get_size_cpp <- function(filename) {
 #' 
 #' \code{get_nb_ind} returns the number of individuals in a specific population.
 #' 
-#' @param lab a vector of integers.
-#' @param anc an integer.
+#' @param pop a string vector.
+#' @param name a character vector.
 #' 
 #' @return The returned value is an integer.
 #' 
 #' @export
 #' 
-get_nb_ind <- function(lab, anc) {
-    .Call('pcadapt_get_nb_ind', PACKAGE = 'pcadapt', lab, anc)
+get_nb_ind <- function(pop, name) {
+    .Call('pcadapt_get_nb_ind', PACKAGE = 'pcadapt', pop, name)
 }
 
 #' Minor allele frequencies

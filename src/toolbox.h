@@ -8,7 +8,7 @@ using namespace Rcpp;
 
 NumericVector get_size_cpp(std::string filename);
 
-int get_nb_ind(const arma::vec &lab, const int anc);
+int get_nb_ind(const StringVector &pop, const CharacterVector &name);
 
 NumericVector cmpt_minor_af(arma::mat &xmatrix, int ploidy);
 

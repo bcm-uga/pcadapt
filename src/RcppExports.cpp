@@ -377,14 +377,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // get_nb_ind
-int get_nb_ind(const arma::vec& lab, const int anc);
-RcppExport SEXP pcadapt_get_nb_ind(SEXP labSEXP, SEXP ancSEXP) {
+int get_nb_ind(const StringVector& pop, const CharacterVector& name);
+RcppExport SEXP pcadapt_get_nb_ind(SEXP popSEXP, SEXP nameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::vec& >::type lab(labSEXP);
-    Rcpp::traits::input_parameter< const int >::type anc(ancSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_nb_ind(lab, anc));
+    Rcpp::traits::input_parameter< const StringVector& >::type pop(popSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type name(nameSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_nb_ind(pop, name));
     return rcpp_result_gen;
 END_RCPP
 }

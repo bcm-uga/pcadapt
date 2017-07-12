@@ -59,19 +59,19 @@ NumericVector get_size_cpp(std::string filename){
 //' 
 //' \code{get_nb_ind} returns the number of individuals in a specific population.
 //' 
-//' @param lab a vector of integers.
-//' @param anc an integer.
+//' @param pop a string vector.
+//' @param name a character vector.
 //' 
 //' @return The returned value is an integer.
 //' 
 //' @export
 //' 
 // [[Rcpp::export]]
-int get_nb_ind(const arma::vec &lab, const int anc){
-  int n = lab.n_elem;
+int get_nb_ind(const StringVector &pop, const CharacterVector &name){
+  std::string str_name = Rcpp::as<std::string> (name);
   int c = 0;
-  for (int i = 0; i < n; i++){
-    if (lab[i] == anc){
+  for (int i = 0; i < pop.size(); i++){
+    if (pop[i] == str_name){
       c++;  
     }
   }

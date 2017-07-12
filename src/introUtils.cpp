@@ -152,4 +152,3 @@ void updt_local_scores(arma::mat &u,
   double cst_new = (double) nSNP / (end_new - beg_new);
   u *= cst_new;
 }
-

@@ -1,4 +1,4 @@
- #include <RcppArmadillo.h>
+#include <RcppArmadillo.h>
 #include "introUtils.h"
 #include "toolbox.h"
 #include "geometry.h"
@@ -104,16 +104,10 @@ arma::vec bary_to_ancestry_cpp(const arma::mat &scores,
   arma::mat simplex = centroids_to_simplex_cpp(centroids,
                                                popUnique,
                                                admixed);
-  int nb_admixed = 0;
+  int nb_admixed = get_nb_ind(pop, admixed);
   int K = scores.n_cols;
   std::string str_admixed = Rcpp::as<std::string> (admixed);
-  
-  for (int i = 0; i < pop.size(); i++){
-    if (pop[i] == str_admixed){
-      nb_admixed++;
-    }
-  }
-  
+
   arma::mat scores_admixed(nb_admixed, K, arma::fill::zeros);
   int idx = 0;
   for (int i = 0; i < scores.n_rows; i++){
