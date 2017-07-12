@@ -293,18 +293,6 @@ lfmm2pcadapt <- function(input, output) {
     .Call('pcadapt_lfmm2pcadapt', PACKAGE = 'pcadapt', input, output)
 }
 
-#' Sample genotype matrix from pooled samples
-#' 
-#' \code{sample_geno_matrix} sample genotypes based on observed allelic frequencies.
-#' 
-#' @param freq a matrix containing allele frequencies.
-#' @param ploidy an integer specifying the ploidy of the sampled individuals.
-#' @param sample_size a vector specifying the number of individuals to be sampled for each pool.
-#' 
-#' @return The returned value is a numeric vector of length 2.
-#' 
-#' @export
-#' 
 sample_geno_matrix <- function(freq, ploidy, sample_size) {
     .Call('pcadapt_sample_geno_matrix', PACKAGE = 'pcadapt', freq, ploidy, sample_size)
 }

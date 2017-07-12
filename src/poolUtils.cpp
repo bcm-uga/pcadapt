@@ -15,6 +15,7 @@ using namespace Rcpp;
 //' 
 //' @export
 //' 
+// [[Rcpp::plugins(cpp11)]]
 // [[Rcpp::export]]
 NumericMatrix sample_geno_matrix(NumericMatrix freq, double ploidy, IntegerVector sample_size){
   int nIND = Rcpp::sum(sample_size);
