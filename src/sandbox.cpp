@@ -91,6 +91,7 @@ void updt_simplex_cpp(arma::mat &simplex,
 //' @param admixed a character vector.
 //' @param window_size a numeric value.
 //' @param map a numeric vector.
+//' @param with_map an integer.
 //' 
 //' @return The returned value is a numeric matrix.
 //' 
@@ -104,7 +105,8 @@ arma::mat slidingWindows_fast(const arma::mat &sgeno,
                               const StringVector &popUnique,
                               const CharacterVector &admixed,
                               const int window_size,  
-                              const arma::vec map){
+                              const arma::vec map,
+                              const int with_map){
   int nSNP = sgeno.n_cols;
   int nIND = sgeno.n_rows;
   int nPOP = popUnique.size();
@@ -121,8 +123,16 @@ arma::mat slidingWindows_fast(const arma::mat &sgeno,
   IntegerVector ix_n(2);
   
   int hws = window_size / 2;
-  int loop_start = hws + 1;
-  int loop_end = nSNP - hws;
+  int loop_start = 0;
+  int loop_end = 0;
+  
+  if (with_map == 1){
+    loop_start = 0;
+    loop_end = nSNP - 1;
+  } else {
+    loop_start = hws + 1;
+    loop_end = nSNP - hws;  
+  }
   
   arma::mat u = cmpt_local_pca(sgeno, v, d, ix_o[0], ix_o[1]);
   arma::mat uK(nIND, K, arma::fill::zeros);

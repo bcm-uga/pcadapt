@@ -344,13 +344,14 @@ updt_simplex_cpp <- function(simplex, centroids, popUnique, admixed) {
 #' @param admixed a character vector.
 #' @param window_size a numeric value.
 #' @param map a numeric vector.
+#' @param with_map an integer.
 #' 
 #' @return The returned value is a numeric matrix.
 #' 
 #' @export
 #' 
-slidingWindows_fast <- function(sgeno, d, v, pop, popUnique, admixed, window_size, map) {
-    .Call('pcadapt_slidingWindows_fast', PACKAGE = 'pcadapt', sgeno, d, v, pop, popUnique, admixed, window_size, map)
+slidingWindows_fast <- function(sgeno, d, v, pop, popUnique, admixed, window_size, map, with_map) {
+    .Call('pcadapt_slidingWindows_fast', PACKAGE = 'pcadapt', sgeno, d, v, pop, popUnique, admixed, window_size, map, with_map)
 }
 
 #' File size
@@ -497,11 +498,13 @@ check_line_na <- function(string_geno_row, geno_char) {
 
 #' Convert vcfR genotype matrices
 #'
-#' \code{vcf_convert} converts outputs of \code{extract.gt} to the format \code{pcadapt}.
+#' \code{vcf_convert} converts outputs of \code{extract.gt} to the format 
+#' \code{pcadapt}.
 #'
 #' @param string_geno a genotype matrix extracted from a VCF file with `vcfR`. 
 #' @param output a character string indicating the name of the output file.
-#' @param allele.sep a vector of characters indicating what delimiters are used to separate alleles.
+#' @param allele.sep a vector of characters indicating what delimiters are used 
+#' to separate alleles.
 #'
 #' @examples
 #' ## see also ?pcadapt for examples

@@ -83,8 +83,10 @@ scan.intro = function(input,
   
   if (missing(map)){
     gmap <- (1:nSNP)[maf >= min.maf]
+    with.map <- 0
   } else {
     gmap <- map[maf >= min.maf]
+    with.map <- 1
   }
   
   geno <- geno[maf >= min.maf, ]
@@ -106,14 +108,17 @@ scan.intro = function(input,
                               popUnique = unique(pop),
                               admixed = admixed,
                               window_size = window.size,
-                              gmap)
+                              gmap,
+                              with.map)
   
   stat.med <- apply(stat, MARGIN = 2, FUN = function(x){median(x, na.rm = TRUE)})
   obj.stat <- matrix(NA, nrow = nSNP, ncol = ncol(stat))
   obj.stat[maf >= min.maf, ] <- stat
   
-  obj.stat[1, ] <- stat.med
-  obj.stat[nSNP, ] <- stat.med
+  #obj.stat[1, ] <- stat.med
+  #obj.stat[nSNP, ] <- stat.med
+  obj.stat[1, ] <- stat[1, ]
+  obj.stat[nSNP, ] <- stat[nrow(stat), ]
   
   for (k in 1:ncol(stat)){
     subset <- which(!is.na(obj.stat[, k]))

@@ -11,10 +11,12 @@ vcf_convert(string_geno, output, allele_sep)
 
 \item{output}{a character string indicating the name of the output file.}
 
-\item{allele.sep}{a vector of characters indicating what delimiters are used to separate alleles.}
+\item{allele.sep}{a vector of characters indicating what delimiters are used 
+to separate alleles.}
 }
 \description{
-\code{vcf_convert} converts outputs of \code{extract.gt} to the format \code{pcadapt}.
+\code{vcf_convert} converts outputs of \code{extract.gt} to the format 
+\code{pcadapt}.
 }
 \examples{
 ## see also ?pcadapt for examples

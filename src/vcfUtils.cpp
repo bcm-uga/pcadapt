@@ -58,11 +58,13 @@ int check_line_na(CharacterVector string_geno_row, CharacterVector geno_char){
 
 //' Convert vcfR genotype matrices
 //'
-//' \code{vcf_convert} converts outputs of \code{extract.gt} to the format \code{pcadapt}.
+//' \code{vcf_convert} converts outputs of \code{extract.gt} to the format 
+//' \code{pcadapt}.
 //'
 //' @param string_geno a genotype matrix extracted from a VCF file with `vcfR`. 
 //' @param output a character string indicating the name of the output file.
-//' @param allele.sep a vector of characters indicating what delimiters are used to separate alleles.
+//' @param allele.sep a vector of characters indicating what delimiters are used 
+//' to separate alleles.
 //'
 //' @examples
 //' ## see also ?pcadapt for examples
@@ -72,7 +74,9 @@ int check_line_na(CharacterVector string_geno_row, CharacterVector geno_char){
 //' @export
 //'
 // [[Rcpp::export]]
-int vcf_convert(CharacterMatrix string_geno, std::string output, CharacterVector allele_sep){
+IntegerVector vcf_convert(CharacterMatrix string_geno, 
+                          std::string output, 
+                          CharacterVector allele_sep){
   int nIND = string_geno.ncol();
   int nSNP = string_geno.nrow();
   int n_delim = allele_sep.size();
@@ -81,6 +85,7 @@ int vcf_convert(CharacterMatrix string_geno, std::string output, CharacterVector
   geno_char = get_geno_char(allele_sep);
   geno_int = get_geno_int(allele_sep);
   CharacterVector geno_row(nIND);
+  IntegerVector res(nSNP);
   
   int count_ij;
   int skip_bool;
@@ -117,11 +122,12 @@ int vcf_convert(CharacterMatrix string_geno, std::string output, CharacterVector
       fprintf(file, "\n");
       i++;
     } else {
+      res[i] = 1;
       i++;
       na_tot++;
     }
   }
   fclose(file);
-  return(na_tot);
+  return(res);
 }
 

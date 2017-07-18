@@ -348,8 +348,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // slidingWindows_fast
-arma::mat slidingWindows_fast(const arma::mat& sgeno, const arma::vec& d, const arma::mat& v, const StringVector& pop, const StringVector& popUnique, const CharacterVector& admixed, const int window_size, const arma::vec map);
-RcppExport SEXP pcadapt_slidingWindows_fast(SEXP sgenoSEXP, SEXP dSEXP, SEXP vSEXP, SEXP popSEXP, SEXP popUniqueSEXP, SEXP admixedSEXP, SEXP window_sizeSEXP, SEXP mapSEXP) {
+arma::mat slidingWindows_fast(const arma::mat& sgeno, const arma::vec& d, const arma::mat& v, const StringVector& pop, const StringVector& popUnique, const CharacterVector& admixed, const int window_size, const arma::vec map, const int with_map);
+RcppExport SEXP pcadapt_slidingWindows_fast(SEXP sgenoSEXP, SEXP dSEXP, SEXP vSEXP, SEXP popSEXP, SEXP popUniqueSEXP, SEXP admixedSEXP, SEXP window_sizeSEXP, SEXP mapSEXP, SEXP with_mapSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -361,7 +361,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const CharacterVector& >::type admixed(admixedSEXP);
     Rcpp::traits::input_parameter< const int >::type window_size(window_sizeSEXP);
     Rcpp::traits::input_parameter< const arma::vec >::type map(mapSEXP);
-    rcpp_result_gen = Rcpp::wrap(slidingWindows_fast(sgeno, d, v, pop, popUnique, admixed, window_size, map));
+    Rcpp::traits::input_parameter< const int >::type with_map(with_mapSEXP);
+    rcpp_result_gen = Rcpp::wrap(slidingWindows_fast(sgeno, d, v, pop, popUnique, admixed, window_size, map, with_map));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -503,7 +504,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // vcf_convert
-int vcf_convert(CharacterMatrix string_geno, std::string output, CharacterVector allele_sep);
+IntegerVector vcf_convert(CharacterMatrix string_geno, std::string output, CharacterVector allele_sep);
 RcppExport SEXP pcadapt_vcf_convert(SEXP string_genoSEXP, SEXP outputSEXP, SEXP allele_sepSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -544,7 +545,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"pcadapt_get_pop_size", (DL_FUNC) &pcadapt_get_pop_size, 2},
     {"pcadapt_updt_centroids_cpp", (DL_FUNC) &pcadapt_updt_centroids_cpp, 6},
     {"pcadapt_updt_simplex_cpp", (DL_FUNC) &pcadapt_updt_simplex_cpp, 4},
-    {"pcadapt_slidingWindows_fast", (DL_FUNC) &pcadapt_slidingWindows_fast, 8},
+    {"pcadapt_slidingWindows_fast", (DL_FUNC) &pcadapt_slidingWindows_fast, 9},
     {"pcadapt_get_size_cpp", (DL_FUNC) &pcadapt_get_size_cpp, 1},
     {"pcadapt_get_nb_ind", (DL_FUNC) &pcadapt_get_nb_ind, 2},
     {"pcadapt_cmpt_minor_af", (DL_FUNC) &pcadapt_cmpt_minor_af, 2},

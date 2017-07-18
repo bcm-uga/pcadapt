@@ -12,6 +12,7 @@
 #' ## see also ?pcadapt for examples
 #'
 #' @importFrom vcfR read.vcfR extract.gt
+#' @importFrom utils write.table
 #'
 #' @export
 #'
@@ -21,13 +22,20 @@ vcf2pcadapt <- function(input, output = "tmp.pcadapt", allele.sep = c("/", "|"))
   }
   obj.vcf <- vcfR::read.vcfR(input, verbose = FALSE)
   geno <- vcfR::extract.gt(obj.vcf)
+  pos <- vcfR::getPOS(obj.vcf)
   nIND <- ncol(geno)
   nSNP <- nrow(geno)
-  skipped <- vcf_convert(string_geno = geno, output = output, allele_sep = allele.sep)
+  res <- vcf_convert(string_geno = geno, output = output, allele_sep = allele.sep)
+  skipped <- sum(res)
   if (skipped > 0){
     cat(skipped, "variant(s) have been discarded as they are not SNPs.\n")
   } else {
     cat("No variant got discarded.\n")
   }
   print_convert(input = input, output = output, M = nSNP, N = nIND, pool = 0)
+  write.table(pos[res == 0], "positions.txt", 
+              col.names = FALSE, 
+              row.names = FALSE, 
+              quote = FALSE)
+  return(res)
 }
