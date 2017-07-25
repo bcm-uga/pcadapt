@@ -39,6 +39,8 @@ assign.int.labels = function(pop){
 #' imputed. 
 #' @param chr.info a list containing the chromosome information for each marker.
 #' @param map a numeric vector containing the genetic positions.
+#' @param exclude.admixed a boolean indicating whether the admixed individuals
+#' should be kept or not to learn the principal components. 
 #' 
 #' @return The returned value is a list containing the test statistics.
 #' 
@@ -59,7 +61,8 @@ scan.intro = function(input,
                       window.size = 1000, 
                       impute = FALSE, 
                       chr.info,
-                      map){
+                      map,
+                      exclude.admixed = TRUE){
   if (impute){
     geno <- (impute.pcadapt(input = input, pop = pop))$x
   } else if (!impute){
@@ -97,16 +100,21 @@ scan.intro = function(input,
   scaled.geno <- scale(t(geno), center = TRUE, scale = sd) 
   cat("DONE\n")
   cat("Performing PCA...\n")
-  obj.svd <- svd.pcadapt(input = geno[, pop != admixed], 
-                         K = k,
-                         min.maf = min.maf, 
-                         ploidy = ploidy, 
-                         type = 1)
-  # obj.svd <- svd.pcadapt(input = geno, 
-  #                        K = k,
-  #                        min.maf = min.maf, 
-  #                        ploidy = ploidy, 
-  #                        type = 1)
+  
+  if (exclude.admixed) {
+    obj.svd <- svd.pcadapt(input = geno[, pop != admixed], 
+                           K = k,
+                           min.maf = min.maf,
+                           ploidy = ploidy,
+                           type = 1)
+  } else {
+    obj.svd <- svd.pcadapt(input = geno,
+                           K = k,
+                           min.maf = min.maf, 
+                           ploidy = ploidy, 
+                           type = 1) 
+  }
+
   cat("Computing the statistics...\n")
   
   stat <- slidingWindows_fast(as.matrix(scaled.geno),

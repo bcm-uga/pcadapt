@@ -5,7 +5,8 @@
 \title{Introgression}
 \usage{
 scan.intro(input, K = 2, pop, ancestral, admixed, min.maf = 0.05,
-  ploidy = 2, window.size = 1000, impute = FALSE, chr.info, map)
+  ploidy = 2, window.size = 1000, impute = FALSE, chr.info, map,
+  exclude.admixed = TRUE)
 }
 \arguments{
 \item{input}{a genotype matrix or a character string specifying the name of 
@@ -34,6 +35,9 @@ imputed.}
 \item{chr.info}{a list containing the chromosome information for each marker.}
 
 \item{map}{a numeric vector containing the genetic positions.}
+
+\item{exclude.admixed}{a boolean indicating whether the admixed individuals
+should be kept or not to learn the principal components.}
 }
 \value{
 The returned value is a list containing the test statistics.
