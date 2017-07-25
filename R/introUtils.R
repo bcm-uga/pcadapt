@@ -97,8 +97,16 @@ scan.intro = function(input,
   scaled.geno <- scale(t(geno), center = TRUE, scale = sd) 
   cat("DONE\n")
   cat("Performing PCA...\n")
-  obj.svd <- svd.pcadapt(input = geno, K = k, min.maf = min.maf, 
-                         ploidy = ploidy, type = 1)
+  obj.svd <- svd.pcadapt(input = geno[, pop != admixed], 
+                         K = k,
+                         min.maf = min.maf, 
+                         ploidy = ploidy, 
+                         type = 1)
+  # obj.svd <- svd.pcadapt(input = geno, 
+  #                        K = k,
+  #                        min.maf = min.maf, 
+  #                        ploidy = ploidy, 
+  #                        type = 1)
   cat("Computing the statistics...\n")
   
   stat <- slidingWindows_fast(as.matrix(scaled.geno),
@@ -112,13 +120,15 @@ scan.intro = function(input,
                               with.map)
   
   stat.med <- apply(stat, MARGIN = 2, FUN = function(x){median(x, na.rm = TRUE)})
+  stat.begin <- apply(stat, MARGIN = 2, FUN = function(x){x[which(!is.na(x))][1]})
+  stat.end <- apply(stat, MARGIN = 2, FUN = function(x){tail(x[which(!is.na(x))], n = 1)})
   obj.stat <- matrix(NA, nrow = nSNP, ncol = ncol(stat))
   obj.stat[maf >= min.maf, ] <- stat
   
   #obj.stat[1, ] <- stat.med
   #obj.stat[nSNP, ] <- stat.med
-  obj.stat[1, ] <- stat[1, ]
-  obj.stat[nSNP, ] <- stat[nrow(stat), ]
+  obj.stat[1, ] <- stat.begin
+  obj.stat[nSNP, ] <- stat.end
   
   for (k in 1:ncol(stat)){
     subset <- which(!is.na(obj.stat[, k]))
