@@ -52,7 +52,8 @@ IntegerVector get_window(int i,
 //' @export
 //' 
 // [[Rcpp::export]]
-arma::mat cmpt_global_pca(const arma::mat &geno, const arma::mat &V,
+arma::mat cmpt_global_pca(const arma::mat &geno, 
+                          const arma::mat &V,
                           const arma::vec &sigma){
   int nIND = geno.n_rows;
   int nSNP = V.n_rows;

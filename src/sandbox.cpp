@@ -166,3 +166,124 @@ arma::mat slidingWindows_fast(const arma::mat &sgeno,
   
   return(stat);
 }
+
+////////////////////////////////////////////////////////////////////////////////
+
+//' @export
+//' 
+// [[Rcpp::export]]
+arma::vec displacement(arma::mat &local_centroids,
+                       const arma::mat &global_centroids,
+                       const StringVector &popUnique,
+                       const CharacterVector &admixed){
+  int K = local_centroids.n_cols;
+  arma::vec D(K);
+  arma::vec scale(K);
+  std::string str_admixed = Rcpp::as<std::string> (admixed);
+  for (int k = 0; k < K; k++){
+    for (int j = 0; j < local_centroids.n_rows; j++){
+      if (popUnique[j] != str_admixed){
+        D[k] += global_centroids(j, k) - local_centroids(j, k);
+      }
+    }
+    D[k] /= (popUnique.size() - 1);
+  }
+  
+  return(D);
+  
+}
+
+
+//' Introgression statistics
+//' 
+//' \code{slidingWindows_new} 
+//' 
+//' @param sgeno a scaled genotype matrix.
+//' @param d a numeric vector.
+//' @param v a numeric matrix.
+//' @param pop a string vector.
+//' @param popUnique a string vector.
+//' @param admixed a character vector.
+//' @param window_size a numeric value.
+//' @param map a numeric vector.
+//' @param with_map an integer.
+//' 
+//' @return The returned value is a numeric matrix.
+//' 
+//' @export
+//' 
+// [[Rcpp::export]]
+arma::mat slidingWindows_new(const arma::mat &sgeno, 
+                             const arma::vec &d, 
+                             const arma::mat &v,
+                             const StringVector &pop,
+                             const StringVector &popUnique,
+                             const CharacterVector &admixed,
+                             const int window_size,  
+                             const arma::vec map,
+                             const int with_map){
+  int nSNP = sgeno.n_cols;
+  int nIND = sgeno.n_rows;
+  int nPOP = popUnique.size();
+  int K = std::max(1, nPOP - 1);
+  std::string str_admixed = Rcpp::as<std::string> (admixed);
+  
+  int number_of_admixed = get_nb_ind(pop, admixed);
+  IntegerVector popSize = get_pop_size(pop, popUnique);
+  
+  arma::mat stat(nSNP, nPOP - 1, arma::fill::zeros); // the simplex must have nPOP - 1 points
+  stat.fill(NA_REAL);
+  
+  IntegerVector ix_o(2);
+  IntegerVector ix_n(2);
+  
+  int hws = window_size / 2;
+  int loop_start = 0;
+  int loop_end = 0;
+  
+  if (with_map == 1){
+    loop_start = 0;
+    loop_end = nSNP - 1;
+  } else {
+    loop_start = hws + 1;
+    loop_end = nSNP - hws;  
+  }
+  
+  arma::mat u = cmpt_local_pca(sgeno, v, d, ix_o[0], ix_o[1]);
+  arma::mat uG = cmpt_global_pca(sgeno, v, d);
+  
+  arma::mat simplexG(popUnique.size(), K, arma::fill::zeros);
+  updt_centroids_cpp(simplexG, uG, pop, popUnique, popSize, K);
+  
+  
+  arma::mat uK(nIND, K, arma::fill::zeros);
+  arma::mat tmp(popUnique.size(), K, arma::fill::zeros);
+  
+  double value = 0.0;
+  for (int i = loop_start; i < loop_end; i++){
+    ix_n = get_window(i, map, window_size);
+    updt_local_scores(u, sgeno, v, d, ix_o[0], ix_o[1], ix_n[0], ix_n[1]);
+    updt_centroids_cpp(tmp, u, pop, popUnique, popSize, K);
+    
+    for (int k = 0; k < K; k++){
+      uK.col(k) = u.col(k);  
+    }
+    arma::mat res = cart2bary_cpp(simplexG, uK);
+    
+    for (int k = 0; k < nPOP - 1; k++){
+      value = 0.0;
+      for (int j = 0; j < nIND; j++){
+        if (pop[j] == str_admixed){
+          value += res(j, k) / number_of_admixed;  
+        }
+      }
+      stat(i, k) = value;  
+    }
+    
+    ix_o[0] = ix_n[0];
+    ix_o[1] = ix_n[1];
+    
+  }
+  
+  return(stat);
+}
