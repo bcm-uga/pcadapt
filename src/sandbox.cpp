@@ -169,31 +169,6 @@ arma::mat slidingWindows_fast(const arma::mat &sgeno,
 
 ////////////////////////////////////////////////////////////////////////////////
 
-//' @export
-//' 
-// [[Rcpp::export]]
-arma::vec displacement(arma::mat &local_centroids,
-                       const arma::mat &global_centroids,
-                       const StringVector &popUnique,
-                       const CharacterVector &admixed){
-  int K = local_centroids.n_cols;
-  arma::vec D(K);
-  arma::vec scale(K);
-  std::string str_admixed = Rcpp::as<std::string> (admixed);
-  for (int k = 0; k < K; k++){
-    for (int j = 0; j < local_centroids.n_rows; j++){
-      if (popUnique[j] != str_admixed){
-        D[k] += global_centroids(j, k) - local_centroids(j, k);
-      }
-    }
-    D[k] /= (popUnique.size() - 1);
-  }
-  
-  return(D);
-  
-}
-
-
 //' Introgression statistics
 //' 
 //' \code{slidingWindows_new} 
@@ -255,7 +230,6 @@ arma::mat slidingWindows_new(const arma::mat &sgeno,
   arma::mat simplexG(popUnique.size(), K, arma::fill::zeros);
   updt_centroids_cpp(simplexG, uG, pop, popUnique, popSize, K);
   
-  
   arma::mat uK(nIND, K, arma::fill::zeros);
   arma::mat tmp(popUnique.size(), K, arma::fill::zeros);
   
@@ -264,7 +238,13 @@ arma::mat slidingWindows_new(const arma::mat &sgeno,
     ix_n = get_window(i, map, window_size);
     updt_local_scores(u, sgeno, v, d, ix_o[0], ix_o[1], ix_n[0], ix_n[1]);
     updt_centroids_cpp(tmp, u, pop, popUnique, popSize, K);
-    
+    for (int p = 0; p < simplexG.n_rows; p++){
+      for (int q = 0; q < simplexG.n_cols; q++){
+        if (popUnique[p] != str_admixed){
+          simplexG(p, q) = tmp(p, q);
+        }
+      }
+    }
     for (int k = 0; k < K; k++){
       uK.col(k) = u.col(k);  
     }
