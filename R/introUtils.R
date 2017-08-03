@@ -114,10 +114,10 @@ scan.intro = function(input,
                            ploidy = ploidy, 
                            type = 1) 
   }
-
+  
   cat("Computing the statistics...\n")
   
-  stat <- slidingWindows_new(as.matrix(scaled.geno),
+  stat <- slidingWindows_fast(as.matrix(scaled.geno),
                               d = as.vector(obj.svd$d),
                               v = as.matrix(obj.svd$v),
                               pop = pop,
