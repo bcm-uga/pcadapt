@@ -22,6 +22,13 @@ arma::mat fcnt_cpp(arma::mat &a){
   return(aa * a);
 }
 
+//' \code{pca_rotation}
+//' 
+//' @param a a numeric matrix.
+//' @param b a numeric matrix.
+//' 
+//' @return The returned value is a numeric vector.
+//' 
 //' @export
 //'
 // [[Rcpp::export]]

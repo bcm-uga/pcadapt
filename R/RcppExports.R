@@ -22,7 +22,7 @@
 #' @export
 #' 
 cmpt_cov_cpp <- function(filename, xmatrix, min_maf, ploidy, type, blocksize = 120L) {
-    .Call('pcadapt_cmpt_cov_cpp', PACKAGE = 'pcadapt', filename, xmatrix, min_maf, ploidy, type, blocksize)
+    .Call('_pcadapt_cmpt_cov_cpp', PACKAGE = 'pcadapt', filename, xmatrix, min_maf, ploidy, type, blocksize)
 }
 
 #' Cartesian coordinates to barycentric coordinates
@@ -37,7 +37,7 @@ cmpt_cov_cpp <- function(filename, xmatrix, min_maf, ploidy, type, blocksize = 1
 #' @export
 #' 
 cart2bary_cpp <- function(X, P) {
-    .Call('pcadapt_cart2bary_cpp', PACKAGE = 'pcadapt', X, P)
+    .Call('_pcadapt_cart2bary_cpp', PACKAGE = 'pcadapt', X, P)
 }
 
 #' Median
@@ -52,7 +52,7 @@ cart2bary_cpp <- function(X, P) {
 #' @export
 #' 
 median_row_i <- function(x, i) {
-    .Call('pcadapt_median_row_i', PACKAGE = 'pcadapt', x, i)
+    .Call('_pcadapt_median_row_i', PACKAGE = 'pcadapt', x, i)
 }
 
 #' Median
@@ -69,7 +69,7 @@ median_row_i <- function(x, i) {
 #' @export
 #' 
 median_per_pop <- function(x, lab, pop, i) {
-    .Call('pcadapt_median_per_pop', PACKAGE = 'pcadapt', x, lab, pop, i)
+    .Call('_pcadapt_median_per_pop', PACKAGE = 'pcadapt', x, lab, pop, i)
 }
 
 #' Skip or discard 
@@ -85,7 +85,7 @@ median_per_pop <- function(x, lab, pop, i) {
 #' @export
 #' 
 check_row <- function(x, i) {
-    .Call('pcadapt_check_row', PACKAGE = 'pcadapt', x, i)
+    .Call('_pcadapt_check_row', PACKAGE = 'pcadapt', x, i)
 }
 
 #' Genotype matrix imputation
@@ -100,7 +100,7 @@ check_row <- function(x, i) {
 #' @export
 #' 
 impute_geno <- function(x) {
-    .Call('pcadapt_impute_geno', PACKAGE = 'pcadapt', x)
+    .Call('_pcadapt_impute_geno', PACKAGE = 'pcadapt', x)
 }
 
 #' Genotype matrix imputation
@@ -117,7 +117,7 @@ impute_geno <- function(x) {
 #' @export
 #' 
 impute_geno_pop <- function(x, lab, pop) {
-    .Call('pcadapt_impute_geno_pop', PACKAGE = 'pcadapt', x, lab, pop)
+    .Call('_pcadapt_impute_geno_pop', PACKAGE = 'pcadapt', x, lab, pop)
 }
 
 #' \code{get_window}
@@ -131,7 +131,7 @@ impute_geno_pop <- function(x, lab, pop) {
 #' @export
 #' 
 get_window <- function(i, map, window_size) {
-    .Call('pcadapt_get_window', PACKAGE = 'pcadapt', i, map, window_size)
+    .Call('_pcadapt_get_window', PACKAGE = 'pcadapt', i, map, window_size)
 }
 
 #' Global Principal Component Analysis
@@ -147,7 +147,7 @@ get_window <- function(i, map, window_size) {
 #' @export
 #' 
 cmpt_global_pca <- function(geno, V, sigma) {
-    .Call('pcadapt_cmpt_global_pca', PACKAGE = 'pcadapt', geno, V, sigma)
+    .Call('_pcadapt_cmpt_global_pca', PACKAGE = 'pcadapt', geno, V, sigma)
 }
 
 #' Local Principal Component Analysis
@@ -165,7 +165,7 @@ cmpt_global_pca <- function(geno, V, sigma) {
 #' @export
 #' 
 cmpt_local_pca <- function(geno, V, sigma, beg, end) {
-    .Call('pcadapt_cmpt_local_pca', PACKAGE = 'pcadapt', geno, V, sigma, beg, end)
+    .Call('_pcadapt_cmpt_local_pca', PACKAGE = 'pcadapt', geno, V, sigma, beg, end)
 }
 
 #' Update local Principal Component Analysis
@@ -187,39 +187,39 @@ cmpt_local_pca <- function(geno, V, sigma, beg, end) {
 #' @export
 #' 
 updt_local_scores <- function(u, geno, V, sigma, beg_old, end_old, beg_new, end_new) {
-    invisible(.Call('pcadapt_updt_local_scores', PACKAGE = 'pcadapt', u, geno, V, sigma, beg_old, end_old, beg_new, end_new))
+    invisible(.Call('_pcadapt_updt_local_scores', PACKAGE = 'pcadapt', u, geno, V, sigma, beg_old, end_old, beg_new, end_new))
 }
 
 colMedian_cpp <- function(x) {
-    .Call('pcadapt_colMedian_cpp', PACKAGE = 'pcadapt', x)
+    .Call('_pcadapt_colMedian_cpp', PACKAGE = 'pcadapt', x)
 }
 
 Erho_cpp <- function(b) {
-    .Call('pcadapt_Erho_cpp', PACKAGE = 'pcadapt', b)
+    .Call('_pcadapt_Erho_cpp', PACKAGE = 'pcadapt', b)
 }
 
 Es2_cpp <- function(c) {
-    .Call('pcadapt_Es2_cpp', PACKAGE = 'pcadapt', c)
+    .Call('_pcadapt_Es2_cpp', PACKAGE = 'pcadapt', c)
 }
 
 scaleTau2_matrix <- function(x) {
-    .Call('pcadapt_scaleTau2_matrix', PACKAGE = 'pcadapt', x)
+    .Call('_pcadapt_scaleTau2_matrix', PACKAGE = 'pcadapt', x)
 }
 
 scaleTau2_vector <- function(x) {
-    .Call('pcadapt_scaleTau2_vector', PACKAGE = 'pcadapt', x)
+    .Call('_pcadapt_scaleTau2_vector', PACKAGE = 'pcadapt', x)
 }
 
 covGK_cpp <- function(x, y) {
-    .Call('pcadapt_covGK_cpp', PACKAGE = 'pcadapt', x, y)
+    .Call('_pcadapt_covGK_cpp', PACKAGE = 'pcadapt', x, y)
 }
 
 ogk_step <- function(x) {
-    .Call('pcadapt_ogk_step', PACKAGE = 'pcadapt', x)
+    .Call('_pcadapt_ogk_step', PACKAGE = 'pcadapt', x)
 }
 
 getDistance_cpp <- function(x, center, cov) {
-    .Call('pcadapt_getDistance_cpp', PACKAGE = 'pcadapt', x, center, cov)
+    .Call('_pcadapt_getDistance_cpp', PACKAGE = 'pcadapt', x, center, cov)
 }
 
 #' Robust estimates for location and scatter
@@ -235,7 +235,7 @@ getDistance_cpp <- function(x, center, cov) {
 #' @export
 #'
 covRob_cpp <- function(x) {
-    .Call('pcadapt_covRob_cpp', PACKAGE = 'pcadapt', x)
+    .Call('_pcadapt_covRob_cpp', PACKAGE = 'pcadapt', x)
 }
 
 #' Summary
@@ -254,7 +254,7 @@ covRob_cpp <- function(x) {
 #' @export
 #'
 print_convert <- function(input, output, M, N, pool) {
-    invisible(.Call('pcadapt_print_convert', PACKAGE = 'pcadapt', input, output, M, N, pool))
+    invisible(.Call('_pcadapt_print_convert', PACKAGE = 'pcadapt', input, output, M, N, pool))
 }
 
 #' Convert ped files
@@ -272,7 +272,7 @@ print_convert <- function(input, output, M, N, pool) {
 #' @export
 #'
 ped2pcadapt <- function(input, output) {
-    .Call('pcadapt_ped2pcadapt', PACKAGE = 'pcadapt', input, output)
+    .Call('_pcadapt_ped2pcadapt', PACKAGE = 'pcadapt', input, output)
 }
 
 #' Convert lfmm files
@@ -290,7 +290,7 @@ ped2pcadapt <- function(input, output) {
 #' @export
 #'
 lfmm2pcadapt <- function(input, output) {
-    .Call('pcadapt_lfmm2pcadapt', PACKAGE = 'pcadapt', input, output)
+    .Call('_pcadapt_lfmm2pcadapt', PACKAGE = 'pcadapt', input, output)
 }
 
 #' Sample genotype matrix from pooled samples
@@ -306,7 +306,7 @@ lfmm2pcadapt <- function(input, output) {
 #' @export
 #' 
 sample_geno_matrix <- function(freq, ploidy, sample_size) {
-    .Call('pcadapt_sample_geno_matrix', PACKAGE = 'pcadapt', freq, ploidy, sample_size)
+    .Call('_pcadapt_sample_geno_matrix', PACKAGE = 'pcadapt', freq, ploidy, sample_size)
 }
 
 #' Get population size
@@ -321,15 +321,15 @@ sample_geno_matrix <- function(freq, ploidy, sample_size) {
 #' @export
 #' 
 get_pop_size <- function(pop, popUnique) {
-    .Call('pcadapt_get_pop_size', PACKAGE = 'pcadapt', pop, popUnique)
+    .Call('_pcadapt_get_pop_size', PACKAGE = 'pcadapt', pop, popUnique)
 }
 
 updt_centroids_cpp <- function(centroids, scores, pop, popUnique, popSize, K) {
-    invisible(.Call('pcadapt_updt_centroids_cpp', PACKAGE = 'pcadapt', centroids, scores, pop, popUnique, popSize, K))
+    invisible(.Call('_pcadapt_updt_centroids_cpp', PACKAGE = 'pcadapt', centroids, scores, pop, popUnique, popSize, K))
 }
 
 updt_simplex_cpp <- function(simplex, centroids, popUnique, admixed) {
-    invisible(.Call('pcadapt_updt_simplex_cpp', PACKAGE = 'pcadapt', simplex, centroids, popUnique, admixed))
+    invisible(.Call('_pcadapt_updt_simplex_cpp', PACKAGE = 'pcadapt', simplex, centroids, popUnique, admixed))
 }
 
 #' Introgression statistics
@@ -351,7 +351,7 @@ updt_simplex_cpp <- function(simplex, centroids, popUnique, admixed) {
 #' @export
 #' 
 slidingWindows_fast <- function(sgeno, d, v, pop, popUnique, admixed, window_size, map, with_map) {
-    .Call('pcadapt_slidingWindows_fast', PACKAGE = 'pcadapt', sgeno, d, v, pop, popUnique, admixed, window_size, map, with_map)
+    .Call('_pcadapt_slidingWindows_fast', PACKAGE = 'pcadapt', sgeno, d, v, pop, popUnique, admixed, window_size, map, with_map)
 }
 
 #' Introgression statistics
@@ -373,21 +373,28 @@ slidingWindows_fast <- function(sgeno, d, v, pop, popUnique, admixed, window_siz
 #' @export
 #' 
 slidingWindows_new <- function(sgeno, d, v, pop, popUnique, admixed, window_size, map, with_map) {
-    .Call('pcadapt_slidingWindows_new', PACKAGE = 'pcadapt', sgeno, d, v, pop, popUnique, admixed, window_size, map, with_map)
+    .Call('_pcadapt_slidingWindows_new', PACKAGE = 'pcadapt', sgeno, d, v, pop, popUnique, admixed, window_size, map, with_map)
 }
 
 fJ_cpp <- function(n) {
-    .Call('pcadapt_fJ_cpp', PACKAGE = 'pcadapt', n)
+    .Call('_pcadapt_fJ_cpp', PACKAGE = 'pcadapt', n)
 }
 
 fcnt_cpp <- function(a) {
-    .Call('pcadapt_fcnt_cpp', PACKAGE = 'pcadapt', a)
+    .Call('_pcadapt_fcnt_cpp', PACKAGE = 'pcadapt', a)
 }
 
+#' \code{pca_rotation}
+#' 
+#' @param a a numeric matrix.
+#' @param b a numeric matrix.
+#' 
+#' @return The returned value is a numeric vector.
+#' 
 #' @export
 #'
 pca_rotation <- function(a, b) {
-    .Call('pcadapt_pca_rotation', PACKAGE = 'pcadapt', a, b)
+    .Call('_pcadapt_pca_rotation', PACKAGE = 'pcadapt', a, b)
 }
 
 #' File size
@@ -403,7 +410,7 @@ pca_rotation <- function(a, b) {
 #' @export
 #' 
 get_size_cpp <- function(filename) {
-    .Call('pcadapt_get_size_cpp', PACKAGE = 'pcadapt', filename)
+    .Call('_pcadapt_get_size_cpp', PACKAGE = 'pcadapt', filename)
 }
 
 #' Number of individuals in a specific population
@@ -418,7 +425,7 @@ get_size_cpp <- function(filename) {
 #' @export
 #' 
 get_nb_ind <- function(pop, name) {
-    .Call('pcadapt_get_nb_ind', PACKAGE = 'pcadapt', pop, name)
+    .Call('_pcadapt_get_nb_ind', PACKAGE = 'pcadapt', pop, name)
 }
 
 #' Minor allele frequencies
@@ -433,7 +440,7 @@ get_nb_ind <- function(pop, name) {
 #' @export
 #' 
 cmpt_minor_af <- function(xmatrix, ploidy) {
-    .Call('pcadapt_cmpt_minor_af', PACKAGE = 'pcadapt', xmatrix, ploidy)
+    .Call('_pcadapt_cmpt_minor_af', PACKAGE = 'pcadapt', xmatrix, ploidy)
 }
 
 #' Scale genotype matrices
@@ -450,7 +457,7 @@ cmpt_minor_af <- function(xmatrix, ploidy) {
 #' @export
 #' 
 scale_geno <- function(xmatrix, ploidy, maf, keep_or_not) {
-    .Call('pcadapt_scale_geno', PACKAGE = 'pcadapt', xmatrix, ploidy, maf, keep_or_not)
+    .Call('_pcadapt_scale_geno', PACKAGE = 'pcadapt', xmatrix, ploidy, maf, keep_or_not)
 }
 
 #' Compute the loadings
@@ -477,7 +484,7 @@ scale_geno <- function(xmatrix, ploidy, maf, keep_or_not) {
 #' @export
 #' 
 cmpt_loadings <- function(filename, xmatrix, scores, nIND, nSNP, K, ploidy, min_maf, sigma, type) {
-    .Call('pcadapt_cmpt_loadings', PACKAGE = 'pcadapt', filename, xmatrix, scores, nIND, nSNP, K, ploidy, min_maf, sigma, type)
+    .Call('_pcadapt_cmpt_loadings', PACKAGE = 'pcadapt', filename, xmatrix, scores, nIND, nSNP, K, ploidy, min_maf, sigma, type)
 }
 
 #' Linear regression
@@ -500,7 +507,7 @@ cmpt_loadings <- function(filename, xmatrix, scores, nIND, nSNP, K, ploidy, min_
 #' @export
 #' 
 lrfunc_cpp <- function(filename, xmatrix, scores, nIND, nSNP, K, ploidy, min_maf, sigma, type) {
-    .Call('pcadapt_lrfunc_cpp', PACKAGE = 'pcadapt', filename, xmatrix, scores, nIND, nSNP, K, ploidy, min_maf, sigma, type)
+    .Call('_pcadapt_lrfunc_cpp', PACKAGE = 'pcadapt', filename, xmatrix, scores, nIND, nSNP, K, ploidy, min_maf, sigma, type)
 }
 
 #' Sample genotype matrix from pooled samples
@@ -517,19 +524,19 @@ lrfunc_cpp <- function(filename, xmatrix, scores, nIND, nSNP, K, ploidy, min_maf
 #' @export
 #' 
 sample_geno_file <- function(input, output, ploidy, sample_size) {
-    .Call('pcadapt_sample_geno_file', PACKAGE = 'pcadapt', input, output, ploidy, sample_size)
+    .Call('_pcadapt_sample_geno_file', PACKAGE = 'pcadapt', input, output, ploidy, sample_size)
 }
 
 get_geno_char <- function(allele_sep) {
-    .Call('pcadapt_get_geno_char', PACKAGE = 'pcadapt', allele_sep)
+    .Call('_pcadapt_get_geno_char', PACKAGE = 'pcadapt', allele_sep)
 }
 
 get_geno_int <- function(allele_sep) {
-    .Call('pcadapt_get_geno_int', PACKAGE = 'pcadapt', allele_sep)
+    .Call('_pcadapt_get_geno_int', PACKAGE = 'pcadapt', allele_sep)
 }
 
 check_line_na <- function(string_geno_row, geno_char) {
-    .Call('pcadapt_check_line_na', PACKAGE = 'pcadapt', string_geno_row, geno_char)
+    .Call('_pcadapt_check_line_na', PACKAGE = 'pcadapt', string_geno_row, geno_char)
 }
 
 #' Convert vcfR genotype matrices
@@ -550,6 +557,6 @@ check_line_na <- function(string_geno_row, geno_char) {
 #' @export
 #'
 vcf_convert <- function(string_geno, output, allele_sep) {
-    .Call('pcadapt_vcf_convert', PACKAGE = 'pcadapt', string_geno, output, allele_sep)
+    .Call('_pcadapt_vcf_convert', PACKAGE = 'pcadapt', string_geno, output, allele_sep)
 }
 

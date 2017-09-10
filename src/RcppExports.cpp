@@ -8,7 +8,7 @@ using namespace Rcpp;
 
 // cmpt_cov_cpp
 Rcpp::List cmpt_cov_cpp(std::string filename, arma::mat& xmatrix, double min_maf, int ploidy, int type, int blocksize);
-RcppExport SEXP pcadapt_cmpt_cov_cpp(SEXP filenameSEXP, SEXP xmatrixSEXP, SEXP min_mafSEXP, SEXP ploidySEXP, SEXP typeSEXP, SEXP blocksizeSEXP) {
+RcppExport SEXP _pcadapt_cmpt_cov_cpp(SEXP filenameSEXP, SEXP xmatrixSEXP, SEXP min_mafSEXP, SEXP ploidySEXP, SEXP typeSEXP, SEXP blocksizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -24,7 +24,7 @@ END_RCPP
 }
 // cart2bary_cpp
 arma::mat cart2bary_cpp(arma::mat& X, arma::mat& P);
-RcppExport SEXP pcadapt_cart2bary_cpp(SEXP XSEXP, SEXP PSEXP) {
+RcppExport SEXP _pcadapt_cart2bary_cpp(SEXP XSEXP, SEXP PSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -36,7 +36,7 @@ END_RCPP
 }
 // median_row_i
 double median_row_i(const arma::mat& x, int i);
-RcppExport SEXP pcadapt_median_row_i(SEXP xSEXP, SEXP iSEXP) {
+RcppExport SEXP _pcadapt_median_row_i(SEXP xSEXP, SEXP iSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -48,7 +48,7 @@ END_RCPP
 }
 // median_per_pop
 NumericVector median_per_pop(const arma::mat& x, const arma::vec& lab, const arma::vec& pop, int i);
-RcppExport SEXP pcadapt_median_per_pop(SEXP xSEXP, SEXP labSEXP, SEXP popSEXP, SEXP iSEXP) {
+RcppExport SEXP _pcadapt_median_per_pop(SEXP xSEXP, SEXP labSEXP, SEXP popSEXP, SEXP iSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -62,7 +62,7 @@ END_RCPP
 }
 // check_row
 int check_row(const arma::mat& x, int i);
-RcppExport SEXP pcadapt_check_row(SEXP xSEXP, SEXP iSEXP) {
+RcppExport SEXP _pcadapt_check_row(SEXP xSEXP, SEXP iSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -74,7 +74,7 @@ END_RCPP
 }
 // impute_geno
 Rcpp::List impute_geno(const arma::mat& x);
-RcppExport SEXP pcadapt_impute_geno(SEXP xSEXP) {
+RcppExport SEXP _pcadapt_impute_geno(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -85,7 +85,7 @@ END_RCPP
 }
 // impute_geno_pop
 Rcpp::List impute_geno_pop(const arma::mat& x, const arma::vec& lab, const arma::vec& pop);
-RcppExport SEXP pcadapt_impute_geno_pop(SEXP xSEXP, SEXP labSEXP, SEXP popSEXP) {
+RcppExport SEXP _pcadapt_impute_geno_pop(SEXP xSEXP, SEXP labSEXP, SEXP popSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -98,7 +98,7 @@ END_RCPP
 }
 // get_window
 IntegerVector get_window(int i, const arma::vec& map, const double window_size);
-RcppExport SEXP pcadapt_get_window(SEXP iSEXP, SEXP mapSEXP, SEXP window_sizeSEXP) {
+RcppExport SEXP _pcadapt_get_window(SEXP iSEXP, SEXP mapSEXP, SEXP window_sizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -111,7 +111,7 @@ END_RCPP
 }
 // cmpt_global_pca
 arma::mat cmpt_global_pca(const arma::mat& geno, const arma::mat& V, const arma::vec& sigma);
-RcppExport SEXP pcadapt_cmpt_global_pca(SEXP genoSEXP, SEXP VSEXP, SEXP sigmaSEXP) {
+RcppExport SEXP _pcadapt_cmpt_global_pca(SEXP genoSEXP, SEXP VSEXP, SEXP sigmaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -124,7 +124,7 @@ END_RCPP
 }
 // cmpt_local_pca
 arma::mat cmpt_local_pca(const arma::mat& geno, const arma::mat& V, const arma::vec& sigma, const int beg, const int end);
-RcppExport SEXP pcadapt_cmpt_local_pca(SEXP genoSEXP, SEXP VSEXP, SEXP sigmaSEXP, SEXP begSEXP, SEXP endSEXP) {
+RcppExport SEXP _pcadapt_cmpt_local_pca(SEXP genoSEXP, SEXP VSEXP, SEXP sigmaSEXP, SEXP begSEXP, SEXP endSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -139,7 +139,7 @@ END_RCPP
 }
 // updt_local_scores
 void updt_local_scores(arma::mat& u, const arma::mat& geno, const arma::mat& V, const arma::vec& sigma, const int beg_old, const int end_old, const int beg_new, const int end_new);
-RcppExport SEXP pcadapt_updt_local_scores(SEXP uSEXP, SEXP genoSEXP, SEXP VSEXP, SEXP sigmaSEXP, SEXP beg_oldSEXP, SEXP end_oldSEXP, SEXP beg_newSEXP, SEXP end_newSEXP) {
+RcppExport SEXP _pcadapt_updt_local_scores(SEXP uSEXP, SEXP genoSEXP, SEXP VSEXP, SEXP sigmaSEXP, SEXP beg_oldSEXP, SEXP end_oldSEXP, SEXP beg_newSEXP, SEXP end_newSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::mat& >::type u(uSEXP);
@@ -156,7 +156,7 @@ END_RCPP
 }
 // colMedian_cpp
 NumericVector colMedian_cpp(arma::mat& x);
-RcppExport SEXP pcadapt_colMedian_cpp(SEXP xSEXP) {
+RcppExport SEXP _pcadapt_colMedian_cpp(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -167,7 +167,7 @@ END_RCPP
 }
 // Erho_cpp
 double Erho_cpp(double b);
-RcppExport SEXP pcadapt_Erho_cpp(SEXP bSEXP) {
+RcppExport SEXP _pcadapt_Erho_cpp(SEXP bSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -178,7 +178,7 @@ END_RCPP
 }
 // Es2_cpp
 double Es2_cpp(double c);
-RcppExport SEXP pcadapt_Es2_cpp(SEXP cSEXP) {
+RcppExport SEXP _pcadapt_Es2_cpp(SEXP cSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -189,7 +189,7 @@ END_RCPP
 }
 // scaleTau2_matrix
 Rcpp::List scaleTau2_matrix(arma::mat& x);
-RcppExport SEXP pcadapt_scaleTau2_matrix(SEXP xSEXP) {
+RcppExport SEXP _pcadapt_scaleTau2_matrix(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -200,7 +200,7 @@ END_RCPP
 }
 // scaleTau2_vector
 NumericVector scaleTau2_vector(arma::vec& x);
-RcppExport SEXP pcadapt_scaleTau2_vector(SEXP xSEXP) {
+RcppExport SEXP _pcadapt_scaleTau2_vector(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -211,7 +211,7 @@ END_RCPP
 }
 // covGK_cpp
 double covGK_cpp(arma::vec x, arma::vec y);
-RcppExport SEXP pcadapt_covGK_cpp(SEXP xSEXP, SEXP ySEXP) {
+RcppExport SEXP _pcadapt_covGK_cpp(SEXP xSEXP, SEXP ySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -223,7 +223,7 @@ END_RCPP
 }
 // ogk_step
 Rcpp::List ogk_step(arma::mat& x);
-RcppExport SEXP pcadapt_ogk_step(SEXP xSEXP) {
+RcppExport SEXP _pcadapt_ogk_step(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -234,7 +234,7 @@ END_RCPP
 }
 // getDistance_cpp
 arma::vec getDistance_cpp(arma::mat& x, arma::rowvec center, arma::mat cov);
-RcppExport SEXP pcadapt_getDistance_cpp(SEXP xSEXP, SEXP centerSEXP, SEXP covSEXP) {
+RcppExport SEXP _pcadapt_getDistance_cpp(SEXP xSEXP, SEXP centerSEXP, SEXP covSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -247,7 +247,7 @@ END_RCPP
 }
 // covRob_cpp
 Rcpp::List covRob_cpp(arma::mat& x);
-RcppExport SEXP pcadapt_covRob_cpp(SEXP xSEXP) {
+RcppExport SEXP _pcadapt_covRob_cpp(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -258,7 +258,7 @@ END_RCPP
 }
 // print_convert
 void print_convert(std::string input, std::string output, int M, int N, int pool);
-RcppExport SEXP pcadapt_print_convert(SEXP inputSEXP, SEXP outputSEXP, SEXP MSEXP, SEXP NSEXP, SEXP poolSEXP) {
+RcppExport SEXP _pcadapt_print_convert(SEXP inputSEXP, SEXP outputSEXP, SEXP MSEXP, SEXP NSEXP, SEXP poolSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type input(inputSEXP);
@@ -272,7 +272,7 @@ END_RCPP
 }
 // ped2pcadapt
 int ped2pcadapt(std::string input, std::string output);
-RcppExport SEXP pcadapt_ped2pcadapt(SEXP inputSEXP, SEXP outputSEXP) {
+RcppExport SEXP _pcadapt_ped2pcadapt(SEXP inputSEXP, SEXP outputSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -284,7 +284,7 @@ END_RCPP
 }
 // lfmm2pcadapt
 int lfmm2pcadapt(std::string input, std::string output);
-RcppExport SEXP pcadapt_lfmm2pcadapt(SEXP inputSEXP, SEXP outputSEXP) {
+RcppExport SEXP _pcadapt_lfmm2pcadapt(SEXP inputSEXP, SEXP outputSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -296,7 +296,7 @@ END_RCPP
 }
 // sample_geno_matrix
 NumericMatrix sample_geno_matrix(NumericMatrix freq, double ploidy, IntegerVector sample_size);
-RcppExport SEXP pcadapt_sample_geno_matrix(SEXP freqSEXP, SEXP ploidySEXP, SEXP sample_sizeSEXP) {
+RcppExport SEXP _pcadapt_sample_geno_matrix(SEXP freqSEXP, SEXP ploidySEXP, SEXP sample_sizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -309,7 +309,7 @@ END_RCPP
 }
 // get_pop_size
 IntegerVector get_pop_size(const StringVector& pop, const StringVector& popUnique);
-RcppExport SEXP pcadapt_get_pop_size(SEXP popSEXP, SEXP popUniqueSEXP) {
+RcppExport SEXP _pcadapt_get_pop_size(SEXP popSEXP, SEXP popUniqueSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -321,7 +321,7 @@ END_RCPP
 }
 // updt_centroids_cpp
 void updt_centroids_cpp(arma::mat& centroids, const arma::mat& scores, const StringVector& pop, const StringVector& popUnique, const IntegerVector& popSize, int K);
-RcppExport SEXP pcadapt_updt_centroids_cpp(SEXP centroidsSEXP, SEXP scoresSEXP, SEXP popSEXP, SEXP popUniqueSEXP, SEXP popSizeSEXP, SEXP KSEXP) {
+RcppExport SEXP _pcadapt_updt_centroids_cpp(SEXP centroidsSEXP, SEXP scoresSEXP, SEXP popSEXP, SEXP popUniqueSEXP, SEXP popSizeSEXP, SEXP KSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::mat& >::type centroids(centroidsSEXP);
@@ -336,7 +336,7 @@ END_RCPP
 }
 // updt_simplex_cpp
 void updt_simplex_cpp(arma::mat& simplex, const arma::mat& centroids, const StringVector& popUnique, const CharacterVector& admixed);
-RcppExport SEXP pcadapt_updt_simplex_cpp(SEXP simplexSEXP, SEXP centroidsSEXP, SEXP popUniqueSEXP, SEXP admixedSEXP) {
+RcppExport SEXP _pcadapt_updt_simplex_cpp(SEXP simplexSEXP, SEXP centroidsSEXP, SEXP popUniqueSEXP, SEXP admixedSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::mat& >::type simplex(simplexSEXP);
@@ -349,7 +349,7 @@ END_RCPP
 }
 // slidingWindows_fast
 arma::mat slidingWindows_fast(const arma::mat& sgeno, const arma::vec& d, const arma::mat& v, const StringVector& pop, const StringVector& popUnique, const CharacterVector& admixed, const int window_size, const arma::vec map, const int with_map);
-RcppExport SEXP pcadapt_slidingWindows_fast(SEXP sgenoSEXP, SEXP dSEXP, SEXP vSEXP, SEXP popSEXP, SEXP popUniqueSEXP, SEXP admixedSEXP, SEXP window_sizeSEXP, SEXP mapSEXP, SEXP with_mapSEXP) {
+RcppExport SEXP _pcadapt_slidingWindows_fast(SEXP sgenoSEXP, SEXP dSEXP, SEXP vSEXP, SEXP popSEXP, SEXP popUniqueSEXP, SEXP admixedSEXP, SEXP window_sizeSEXP, SEXP mapSEXP, SEXP with_mapSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -368,7 +368,7 @@ END_RCPP
 }
 // slidingWindows_new
 arma::mat slidingWindows_new(const arma::mat& sgeno, const arma::vec& d, const arma::mat& v, const StringVector& pop, const StringVector& popUnique, const CharacterVector& admixed, const int window_size, const arma::vec map, const int with_map);
-RcppExport SEXP pcadapt_slidingWindows_new(SEXP sgenoSEXP, SEXP dSEXP, SEXP vSEXP, SEXP popSEXP, SEXP popUniqueSEXP, SEXP admixedSEXP, SEXP window_sizeSEXP, SEXP mapSEXP, SEXP with_mapSEXP) {
+RcppExport SEXP _pcadapt_slidingWindows_new(SEXP sgenoSEXP, SEXP dSEXP, SEXP vSEXP, SEXP popSEXP, SEXP popUniqueSEXP, SEXP admixedSEXP, SEXP window_sizeSEXP, SEXP mapSEXP, SEXP with_mapSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -387,7 +387,7 @@ END_RCPP
 }
 // fJ_cpp
 arma::mat fJ_cpp(int n);
-RcppExport SEXP pcadapt_fJ_cpp(SEXP nSEXP) {
+RcppExport SEXP _pcadapt_fJ_cpp(SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -398,7 +398,7 @@ END_RCPP
 }
 // fcnt_cpp
 arma::mat fcnt_cpp(arma::mat& a);
-RcppExport SEXP pcadapt_fcnt_cpp(SEXP aSEXP) {
+RcppExport SEXP _pcadapt_fcnt_cpp(SEXP aSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -409,7 +409,7 @@ END_RCPP
 }
 // pca_rotation
 arma::mat pca_rotation(arma::mat& a, arma::mat& b);
-RcppExport SEXP pcadapt_pca_rotation(SEXP aSEXP, SEXP bSEXP) {
+RcppExport SEXP _pcadapt_pca_rotation(SEXP aSEXP, SEXP bSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -421,7 +421,7 @@ END_RCPP
 }
 // get_size_cpp
 NumericVector get_size_cpp(std::string filename);
-RcppExport SEXP pcadapt_get_size_cpp(SEXP filenameSEXP) {
+RcppExport SEXP _pcadapt_get_size_cpp(SEXP filenameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -432,7 +432,7 @@ END_RCPP
 }
 // get_nb_ind
 int get_nb_ind(const StringVector& pop, const CharacterVector& name);
-RcppExport SEXP pcadapt_get_nb_ind(SEXP popSEXP, SEXP nameSEXP) {
+RcppExport SEXP _pcadapt_get_nb_ind(SEXP popSEXP, SEXP nameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -444,7 +444,7 @@ END_RCPP
 }
 // cmpt_minor_af
 NumericVector cmpt_minor_af(arma::mat& xmatrix, int ploidy);
-RcppExport SEXP pcadapt_cmpt_minor_af(SEXP xmatrixSEXP, SEXP ploidySEXP) {
+RcppExport SEXP _pcadapt_cmpt_minor_af(SEXP xmatrixSEXP, SEXP ploidySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -456,7 +456,7 @@ END_RCPP
 }
 // scale_geno
 arma::mat scale_geno(arma::mat& xmatrix, int ploidy, arma::vec maf, arma::vec keep_or_not);
-RcppExport SEXP pcadapt_scale_geno(SEXP xmatrixSEXP, SEXP ploidySEXP, SEXP mafSEXP, SEXP keep_or_notSEXP) {
+RcppExport SEXP _pcadapt_scale_geno(SEXP xmatrixSEXP, SEXP ploidySEXP, SEXP mafSEXP, SEXP keep_or_notSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -470,7 +470,7 @@ END_RCPP
 }
 // cmpt_loadings
 arma::mat cmpt_loadings(std::string filename, arma::mat& xmatrix, arma::mat& scores, int nIND, int nSNP, int K, int ploidy, double min_maf, arma::vec& sigma, int type);
-RcppExport SEXP pcadapt_cmpt_loadings(SEXP filenameSEXP, SEXP xmatrixSEXP, SEXP scoresSEXP, SEXP nINDSEXP, SEXP nSNPSEXP, SEXP KSEXP, SEXP ploidySEXP, SEXP min_mafSEXP, SEXP sigmaSEXP, SEXP typeSEXP) {
+RcppExport SEXP _pcadapt_cmpt_loadings(SEXP filenameSEXP, SEXP xmatrixSEXP, SEXP scoresSEXP, SEXP nINDSEXP, SEXP nSNPSEXP, SEXP KSEXP, SEXP ploidySEXP, SEXP min_mafSEXP, SEXP sigmaSEXP, SEXP typeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -490,7 +490,7 @@ END_RCPP
 }
 // lrfunc_cpp
 Rcpp::List lrfunc_cpp(std::string filename, arma::mat& xmatrix, arma::mat& scores, int nIND, int nSNP, int K, int ploidy, double min_maf, arma::vec& sigma, int type);
-RcppExport SEXP pcadapt_lrfunc_cpp(SEXP filenameSEXP, SEXP xmatrixSEXP, SEXP scoresSEXP, SEXP nINDSEXP, SEXP nSNPSEXP, SEXP KSEXP, SEXP ploidySEXP, SEXP min_mafSEXP, SEXP sigmaSEXP, SEXP typeSEXP) {
+RcppExport SEXP _pcadapt_lrfunc_cpp(SEXP filenameSEXP, SEXP xmatrixSEXP, SEXP scoresSEXP, SEXP nINDSEXP, SEXP nSNPSEXP, SEXP KSEXP, SEXP ploidySEXP, SEXP min_mafSEXP, SEXP sigmaSEXP, SEXP typeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -510,7 +510,7 @@ END_RCPP
 }
 // sample_geno_file
 NumericVector sample_geno_file(std::string input, std::string output, double ploidy, IntegerVector sample_size);
-RcppExport SEXP pcadapt_sample_geno_file(SEXP inputSEXP, SEXP outputSEXP, SEXP ploidySEXP, SEXP sample_sizeSEXP) {
+RcppExport SEXP _pcadapt_sample_geno_file(SEXP inputSEXP, SEXP outputSEXP, SEXP ploidySEXP, SEXP sample_sizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -524,7 +524,7 @@ END_RCPP
 }
 // get_geno_char
 CharacterVector get_geno_char(CharacterVector allele_sep);
-RcppExport SEXP pcadapt_get_geno_char(SEXP allele_sepSEXP) {
+RcppExport SEXP _pcadapt_get_geno_char(SEXP allele_sepSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -535,7 +535,7 @@ END_RCPP
 }
 // get_geno_int
 IntegerVector get_geno_int(CharacterVector allele_sep);
-RcppExport SEXP pcadapt_get_geno_int(SEXP allele_sepSEXP) {
+RcppExport SEXP _pcadapt_get_geno_int(SEXP allele_sepSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -546,7 +546,7 @@ END_RCPP
 }
 // check_line_na
 int check_line_na(CharacterVector string_geno_row, CharacterVector geno_char);
-RcppExport SEXP pcadapt_check_line_na(SEXP string_geno_rowSEXP, SEXP geno_charSEXP) {
+RcppExport SEXP _pcadapt_check_line_na(SEXP string_geno_rowSEXP, SEXP geno_charSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -558,7 +558,7 @@ END_RCPP
 }
 // vcf_convert
 IntegerVector vcf_convert(CharacterMatrix string_geno, std::string output, CharacterVector allele_sep);
-RcppExport SEXP pcadapt_vcf_convert(SEXP string_genoSEXP, SEXP outputSEXP, SEXP allele_sepSEXP) {
+RcppExport SEXP _pcadapt_vcf_convert(SEXP string_genoSEXP, SEXP outputSEXP, SEXP allele_sepSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -571,49 +571,49 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"pcadapt_cmpt_cov_cpp", (DL_FUNC) &pcadapt_cmpt_cov_cpp, 6},
-    {"pcadapt_cart2bary_cpp", (DL_FUNC) &pcadapt_cart2bary_cpp, 2},
-    {"pcadapt_median_row_i", (DL_FUNC) &pcadapt_median_row_i, 2},
-    {"pcadapt_median_per_pop", (DL_FUNC) &pcadapt_median_per_pop, 4},
-    {"pcadapt_check_row", (DL_FUNC) &pcadapt_check_row, 2},
-    {"pcadapt_impute_geno", (DL_FUNC) &pcadapt_impute_geno, 1},
-    {"pcadapt_impute_geno_pop", (DL_FUNC) &pcadapt_impute_geno_pop, 3},
-    {"pcadapt_get_window", (DL_FUNC) &pcadapt_get_window, 3},
-    {"pcadapt_cmpt_global_pca", (DL_FUNC) &pcadapt_cmpt_global_pca, 3},
-    {"pcadapt_cmpt_local_pca", (DL_FUNC) &pcadapt_cmpt_local_pca, 5},
-    {"pcadapt_updt_local_scores", (DL_FUNC) &pcadapt_updt_local_scores, 8},
-    {"pcadapt_colMedian_cpp", (DL_FUNC) &pcadapt_colMedian_cpp, 1},
-    {"pcadapt_Erho_cpp", (DL_FUNC) &pcadapt_Erho_cpp, 1},
-    {"pcadapt_Es2_cpp", (DL_FUNC) &pcadapt_Es2_cpp, 1},
-    {"pcadapt_scaleTau2_matrix", (DL_FUNC) &pcadapt_scaleTau2_matrix, 1},
-    {"pcadapt_scaleTau2_vector", (DL_FUNC) &pcadapt_scaleTau2_vector, 1},
-    {"pcadapt_covGK_cpp", (DL_FUNC) &pcadapt_covGK_cpp, 2},
-    {"pcadapt_ogk_step", (DL_FUNC) &pcadapt_ogk_step, 1},
-    {"pcadapt_getDistance_cpp", (DL_FUNC) &pcadapt_getDistance_cpp, 3},
-    {"pcadapt_covRob_cpp", (DL_FUNC) &pcadapt_covRob_cpp, 1},
-    {"pcadapt_print_convert", (DL_FUNC) &pcadapt_print_convert, 5},
-    {"pcadapt_ped2pcadapt", (DL_FUNC) &pcadapt_ped2pcadapt, 2},
-    {"pcadapt_lfmm2pcadapt", (DL_FUNC) &pcadapt_lfmm2pcadapt, 2},
-    {"pcadapt_sample_geno_matrix", (DL_FUNC) &pcadapt_sample_geno_matrix, 3},
-    {"pcadapt_get_pop_size", (DL_FUNC) &pcadapt_get_pop_size, 2},
-    {"pcadapt_updt_centroids_cpp", (DL_FUNC) &pcadapt_updt_centroids_cpp, 6},
-    {"pcadapt_updt_simplex_cpp", (DL_FUNC) &pcadapt_updt_simplex_cpp, 4},
-    {"pcadapt_slidingWindows_fast", (DL_FUNC) &pcadapt_slidingWindows_fast, 9},
-    {"pcadapt_slidingWindows_new", (DL_FUNC) &pcadapt_slidingWindows_new, 9},
-    {"pcadapt_fJ_cpp", (DL_FUNC) &pcadapt_fJ_cpp, 1},
-    {"pcadapt_fcnt_cpp", (DL_FUNC) &pcadapt_fcnt_cpp, 1},
-    {"pcadapt_pca_rotation", (DL_FUNC) &pcadapt_pca_rotation, 2},
-    {"pcadapt_get_size_cpp", (DL_FUNC) &pcadapt_get_size_cpp, 1},
-    {"pcadapt_get_nb_ind", (DL_FUNC) &pcadapt_get_nb_ind, 2},
-    {"pcadapt_cmpt_minor_af", (DL_FUNC) &pcadapt_cmpt_minor_af, 2},
-    {"pcadapt_scale_geno", (DL_FUNC) &pcadapt_scale_geno, 4},
-    {"pcadapt_cmpt_loadings", (DL_FUNC) &pcadapt_cmpt_loadings, 10},
-    {"pcadapt_lrfunc_cpp", (DL_FUNC) &pcadapt_lrfunc_cpp, 10},
-    {"pcadapt_sample_geno_file", (DL_FUNC) &pcadapt_sample_geno_file, 4},
-    {"pcadapt_get_geno_char", (DL_FUNC) &pcadapt_get_geno_char, 1},
-    {"pcadapt_get_geno_int", (DL_FUNC) &pcadapt_get_geno_int, 1},
-    {"pcadapt_check_line_na", (DL_FUNC) &pcadapt_check_line_na, 2},
-    {"pcadapt_vcf_convert", (DL_FUNC) &pcadapt_vcf_convert, 3},
+    {"_pcadapt_cmpt_cov_cpp", (DL_FUNC) &_pcadapt_cmpt_cov_cpp, 6},
+    {"_pcadapt_cart2bary_cpp", (DL_FUNC) &_pcadapt_cart2bary_cpp, 2},
+    {"_pcadapt_median_row_i", (DL_FUNC) &_pcadapt_median_row_i, 2},
+    {"_pcadapt_median_per_pop", (DL_FUNC) &_pcadapt_median_per_pop, 4},
+    {"_pcadapt_check_row", (DL_FUNC) &_pcadapt_check_row, 2},
+    {"_pcadapt_impute_geno", (DL_FUNC) &_pcadapt_impute_geno, 1},
+    {"_pcadapt_impute_geno_pop", (DL_FUNC) &_pcadapt_impute_geno_pop, 3},
+    {"_pcadapt_get_window", (DL_FUNC) &_pcadapt_get_window, 3},
+    {"_pcadapt_cmpt_global_pca", (DL_FUNC) &_pcadapt_cmpt_global_pca, 3},
+    {"_pcadapt_cmpt_local_pca", (DL_FUNC) &_pcadapt_cmpt_local_pca, 5},
+    {"_pcadapt_updt_local_scores", (DL_FUNC) &_pcadapt_updt_local_scores, 8},
+    {"_pcadapt_colMedian_cpp", (DL_FUNC) &_pcadapt_colMedian_cpp, 1},
+    {"_pcadapt_Erho_cpp", (DL_FUNC) &_pcadapt_Erho_cpp, 1},
+    {"_pcadapt_Es2_cpp", (DL_FUNC) &_pcadapt_Es2_cpp, 1},
+    {"_pcadapt_scaleTau2_matrix", (DL_FUNC) &_pcadapt_scaleTau2_matrix, 1},
+    {"_pcadapt_scaleTau2_vector", (DL_FUNC) &_pcadapt_scaleTau2_vector, 1},
+    {"_pcadapt_covGK_cpp", (DL_FUNC) &_pcadapt_covGK_cpp, 2},
+    {"_pcadapt_ogk_step", (DL_FUNC) &_pcadapt_ogk_step, 1},
+    {"_pcadapt_getDistance_cpp", (DL_FUNC) &_pcadapt_getDistance_cpp, 3},
+    {"_pcadapt_covRob_cpp", (DL_FUNC) &_pcadapt_covRob_cpp, 1},
+    {"_pcadapt_print_convert", (DL_FUNC) &_pcadapt_print_convert, 5},
+    {"_pcadapt_ped2pcadapt", (DL_FUNC) &_pcadapt_ped2pcadapt, 2},
+    {"_pcadapt_lfmm2pcadapt", (DL_FUNC) &_pcadapt_lfmm2pcadapt, 2},
+    {"_pcadapt_sample_geno_matrix", (DL_FUNC) &_pcadapt_sample_geno_matrix, 3},
+    {"_pcadapt_get_pop_size", (DL_FUNC) &_pcadapt_get_pop_size, 2},
+    {"_pcadapt_updt_centroids_cpp", (DL_FUNC) &_pcadapt_updt_centroids_cpp, 6},
+    {"_pcadapt_updt_simplex_cpp", (DL_FUNC) &_pcadapt_updt_simplex_cpp, 4},
+    {"_pcadapt_slidingWindows_fast", (DL_FUNC) &_pcadapt_slidingWindows_fast, 9},
+    {"_pcadapt_slidingWindows_new", (DL_FUNC) &_pcadapt_slidingWindows_new, 9},
+    {"_pcadapt_fJ_cpp", (DL_FUNC) &_pcadapt_fJ_cpp, 1},
+    {"_pcadapt_fcnt_cpp", (DL_FUNC) &_pcadapt_fcnt_cpp, 1},
+    {"_pcadapt_pca_rotation", (DL_FUNC) &_pcadapt_pca_rotation, 2},
+    {"_pcadapt_get_size_cpp", (DL_FUNC) &_pcadapt_get_size_cpp, 1},
+    {"_pcadapt_get_nb_ind", (DL_FUNC) &_pcadapt_get_nb_ind, 2},
+    {"_pcadapt_cmpt_minor_af", (DL_FUNC) &_pcadapt_cmpt_minor_af, 2},
+    {"_pcadapt_scale_geno", (DL_FUNC) &_pcadapt_scale_geno, 4},
+    {"_pcadapt_cmpt_loadings", (DL_FUNC) &_pcadapt_cmpt_loadings, 10},
+    {"_pcadapt_lrfunc_cpp", (DL_FUNC) &_pcadapt_lrfunc_cpp, 10},
+    {"_pcadapt_sample_geno_file", (DL_FUNC) &_pcadapt_sample_geno_file, 4},
+    {"_pcadapt_get_geno_char", (DL_FUNC) &_pcadapt_get_geno_char, 1},
+    {"_pcadapt_get_geno_int", (DL_FUNC) &_pcadapt_get_geno_int, 1},
+    {"_pcadapt_check_line_na", (DL_FUNC) &_pcadapt_check_line_na, 2},
+    {"_pcadapt_vcf_convert", (DL_FUNC) &_pcadapt_vcf_convert, 3},
     {NULL, NULL, 0}
 };
 
