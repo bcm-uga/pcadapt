@@ -385,6 +385,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// get_fitted_matrix
+arma::mat get_fitted_matrix(arma::mat& Y, arma::mat& U);
+RcppExport SEXP _pcadapt_get_fitted_matrix(SEXP YSEXP, SEXP USEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type U(USEXP);
+    rcpp_result_gen = Rcpp::wrap(get_fitted_matrix(Y, U));
+    return rcpp_result_gen;
+END_RCPP
+}
 // fJ_cpp
 arma::mat fJ_cpp(int n);
 RcppExport SEXP _pcadapt_fJ_cpp(SEXP nSEXP) {
@@ -600,6 +612,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_pcadapt_updt_simplex_cpp", (DL_FUNC) &_pcadapt_updt_simplex_cpp, 4},
     {"_pcadapt_slidingWindows_fast", (DL_FUNC) &_pcadapt_slidingWindows_fast, 9},
     {"_pcadapt_slidingWindows_new", (DL_FUNC) &_pcadapt_slidingWindows_new, 9},
+    {"_pcadapt_get_fitted_matrix", (DL_FUNC) &_pcadapt_get_fitted_matrix, 2},
     {"_pcadapt_fJ_cpp", (DL_FUNC) &_pcadapt_fJ_cpp, 1},
     {"_pcadapt_fcnt_cpp", (DL_FUNC) &_pcadapt_fcnt_cpp, 1},
     {"_pcadapt_pca_rotation", (DL_FUNC) &_pcadapt_pca_rotation, 2},

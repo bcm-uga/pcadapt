@@ -41,7 +41,10 @@ manhattan.plotting = function(x, K, snp.info, chr.info, plt.pkg){
     if (!is.null(chr.info)){
       chr.int <- chr.info %% 2
       ggdf <- data.frame(x = which(nan.idx), 
-                         y = -log10(pval.K),
+                         y = -as.numeric(pchisq(x$chi2.stat[nan.idx], 
+                                                df = K, 
+                                                lower.tail = FALSE, 
+                                                log.p = TRUE) / log(10)),
                          chr = chr.int[nan.idx])
       res.plot <- ggplot2::ggplot(ggdf, aes_string("x", "y")) + 
         ggplot2::geom_point(aes(colour = factor(ggdf$chr))) + 
@@ -49,7 +52,10 @@ manhattan.plotting = function(x, K, snp.info, chr.info, plt.pkg){
         ggplot2::scale_color_manual(values = c("#56B1F7", "#132B43"))
     } else {
       ggdf <- data.frame(x = which(nan.idx), 
-                         y = -log10(pval.K))
+                         y = -as.numeric(pchisq(x$chi2.stat[nan.idx], 
+                                                df = K, 
+                                                lower.tail = FALSE, 
+                                                log.p = TRUE) / log(10)))
       res.plot <- ggplot2::ggplot(ggdf, aes_string("x", "y")) +
         ggplot2::geom_point(color = "#132B43")
     }
@@ -59,7 +65,10 @@ manhattan.plotting = function(x, K, snp.info, chr.info, plt.pkg){
     print(res.plot)
   } else if (plt.pkg == "plotly"){
     df <- data.frame(xx = (1:length(x$pvalues))[nan.idx], 
-                     yy = -log10(x$pvalues)[nan.idx])
+                     yy = -as.numeric(pchisq(x$chi2.stat[nan.idx], 
+                                             df = K, 
+                                             lower.tail = FALSE, 
+                                             log.p = TRUE) / log(10))[nan.idx])
     if (is.null(snp.info)){
       txt <- (1:length(x$pvalues))[nan.idx]
     } else {

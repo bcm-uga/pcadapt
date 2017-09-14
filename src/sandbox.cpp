@@ -268,3 +268,23 @@ arma::mat slidingWindows_new(const arma::mat &sgeno,
   return(stat);
 }
 ////////////////////////////////////////////////////////////////////////////////
+
+//' Compute fitted matrix
+//' 
+//' \code{get_fitted_matrix} 
+//' 
+//' @param Y a normalized genotype matrix.
+//' @param U a matrix of scores.
+//' 
+//' @return The returned value is a numeric matrix.
+//' 
+//' @export
+// [[Rcpp::depends(RcppArmadillo)]]
+// [[Rcpp::export]]
+arma::mat get_fitted_matrix(arma::mat &Y,
+                            arma::mat &U) {
+  arma::mat Y_fitted(Y.n_rows, Y.n_cols);
+  Y_fitted = U * U.t() * Y;
+  return Y_fitted;
+}
+

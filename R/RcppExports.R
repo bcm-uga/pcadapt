@@ -376,6 +376,10 @@ slidingWindows_new <- function(sgeno, d, v, pop, popUnique, admixed, window_size
     .Call('_pcadapt_slidingWindows_new', PACKAGE = 'pcadapt', sgeno, d, v, pop, popUnique, admixed, window_size, map, with_map)
 }
 
+get_fitted_matrix <- function(Y, U) {
+    .Call('_pcadapt_get_fitted_matrix', PACKAGE = 'pcadapt', Y, U)
+}
+
 fJ_cpp <- function(n) {
     .Call('_pcadapt_fJ_cpp', PACKAGE = 'pcadapt', n)
 }
