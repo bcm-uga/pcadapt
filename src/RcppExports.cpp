@@ -6,6 +6,54 @@
 
 using namespace Rcpp;
 
+// bedadaptXPtr
+SEXP bedadaptXPtr(std::string path, int n, int p);
+RcppExport SEXP _pcadapt_bedadaptXPtr(SEXP pathSEXP, SEXP nSEXP, SEXP pSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type path(pathSEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< int >::type p(pSEXP);
+    rcpp_result_gen = Rcpp::wrap(bedadaptXPtr(path, n, p));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cmpt_minor_af_BED
+RObject cmpt_minor_af_BED(RObject xp_);
+RcppExport SEXP _pcadapt_cmpt_minor_af_BED(SEXP xp_SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< RObject >::type xp_(xp_SEXP);
+    rcpp_result_gen = Rcpp::wrap(cmpt_minor_af_BED(xp_));
+    return rcpp_result_gen;
+END_RCPP
+}
+// prodMatVec_export
+RObject prodMatVec_export(RObject xp_, NumericVector x);
+RcppExport SEXP _pcadapt_prodMatVec_export(SEXP xp_SEXP, SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< RObject >::type xp_(xp_SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(prodMatVec_export(xp_, x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// prodtMatVec_export
+RObject prodtMatVec_export(RObject xp_, NumericVector x);
+RcppExport SEXP _pcadapt_prodtMatVec_export(SEXP xp_SEXP, SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< RObject >::type xp_(xp_SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(prodtMatVec_export(xp_, x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cmpt_cov_cpp
 Rcpp::List cmpt_cov_cpp(std::string filename, arma::mat& xmatrix, double min_maf, int ploidy, int type, int blocksize);
 RcppExport SEXP _pcadapt_cmpt_cov_cpp(SEXP filenameSEXP, SEXP xmatrixSEXP, SEXP min_mafSEXP, SEXP ploidySEXP, SEXP typeSEXP, SEXP blocksizeSEXP) {
@@ -397,6 +445,23 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// clumping_cpp
+LogicalVector clumping_cpp(NumericMatrix& G, const IntegerVector& ord, LogicalVector& remain, const NumericVector& sumX, const NumericVector& denoX, int size, double thr);
+RcppExport SEXP _pcadapt_clumping_cpp(SEXP GSEXP, SEXP ordSEXP, SEXP remainSEXP, SEXP sumXSEXP, SEXP denoXSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix& >::type G(GSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ord(ordSEXP);
+    Rcpp::traits::input_parameter< LogicalVector& >::type remain(remainSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type sumX(sumXSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type denoX(denoXSEXP);
+    Rcpp::traits::input_parameter< int >::type size(sizeSEXP);
+    Rcpp::traits::input_parameter< double >::type thr(thrSEXP);
+    rcpp_result_gen = Rcpp::wrap(clumping_cpp(G, ord, remain, sumX, denoX, size, thr));
+    return rcpp_result_gen;
+END_RCPP
+}
 // fJ_cpp
 arma::mat fJ_cpp(int n);
 RcppExport SEXP _pcadapt_fJ_cpp(SEXP nSEXP) {
@@ -583,6 +648,10 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_pcadapt_bedadaptXPtr", (DL_FUNC) &_pcadapt_bedadaptXPtr, 3},
+    {"_pcadapt_cmpt_minor_af_BED", (DL_FUNC) &_pcadapt_cmpt_minor_af_BED, 1},
+    {"_pcadapt_prodMatVec_export", (DL_FUNC) &_pcadapt_prodMatVec_export, 2},
+    {"_pcadapt_prodtMatVec_export", (DL_FUNC) &_pcadapt_prodtMatVec_export, 2},
     {"_pcadapt_cmpt_cov_cpp", (DL_FUNC) &_pcadapt_cmpt_cov_cpp, 6},
     {"_pcadapt_cart2bary_cpp", (DL_FUNC) &_pcadapt_cart2bary_cpp, 2},
     {"_pcadapt_median_row_i", (DL_FUNC) &_pcadapt_median_row_i, 2},
@@ -613,6 +682,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_pcadapt_slidingWindows_fast", (DL_FUNC) &_pcadapt_slidingWindows_fast, 9},
     {"_pcadapt_slidingWindows_new", (DL_FUNC) &_pcadapt_slidingWindows_new, 9},
     {"_pcadapt_get_fitted_matrix", (DL_FUNC) &_pcadapt_get_fitted_matrix, 2},
+    {"_pcadapt_clumping_cpp", (DL_FUNC) &_pcadapt_clumping_cpp, 7},
     {"_pcadapt_fJ_cpp", (DL_FUNC) &_pcadapt_fJ_cpp, 1},
     {"_pcadapt_fcnt_cpp", (DL_FUNC) &_pcadapt_fcnt_cpp, 1},
     {"_pcadapt_pca_rotation", (DL_FUNC) &_pcadapt_pca_rotation, 2},

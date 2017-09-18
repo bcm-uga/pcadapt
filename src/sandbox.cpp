@@ -267,6 +267,7 @@ arma::mat slidingWindows_new(const arma::mat &sgeno,
   
   return(stat);
 }
+
 ////////////////////////////////////////////////////////////////////////////////
 
 //' Compute fitted matrix
@@ -286,5 +287,44 @@ arma::mat get_fitted_matrix(arma::mat &Y,
   arma::mat Y_fitted(Y.n_rows, Y.n_cols);
   Y_fitted = U * U.t() * Y;
   return Y_fitted;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+// [[Rcpp::export]]
+LogicalVector clumping_cpp(NumericMatrix &G,
+                           const IntegerVector &ord,
+                           LogicalVector &remain,
+                           const NumericVector &sumX,
+                           const NumericVector &denoX,
+                           int size, 
+                           double thr) {
+  int n = G.ncol();
+  int p = G.nrow();
+  LogicalVector keep(p);
+  
+  for (int k = 0; k < p; k++) {
+    int j0 = ord[k] - 1; // C++ index
+    if (remain[j0]) {
+      remain[j0] = false;
+      keep[j0] = true;
+      int j_min = std::max(0, j0 - size);
+      int j_max = std::min(p, j0 + size + 1);
+      for (int j = j_min; j < j_max; j++) {
+        if (remain[j]) {
+          double xySum = 0.0;
+          for (int i = 0; i < n; i++) {
+            xySum += G(j, i) * G(j0, i);  
+          }
+          double num = xySum - sumX[j] * sumX[j0] / n;
+          double r2 = num * num / (denoX[j] * denoX[j0]);
+          if (r2 > thr) {
+            remain[j] = false;
+          }
+        }
+      }
+    }
+  }
+  return(keep);
 }
 

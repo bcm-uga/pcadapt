@@ -20,6 +20,7 @@ License: GPL (>= 2)
 Imports:
     Rcpp (>= 0.12.8),  
     RcppArmadillo, 
+    methods,
     MASS,
     ggplot2, 
     vcfR,
@@ -30,7 +31,7 @@ Imports:
     RcppNumerical,
     RcppRoll,
     Matrix
-LinkingTo: Rcpp, RcppArmadillo
+LinkingTo: Rcpp, RcppArmadillo, BH
 LazyData: TRUE
 Suggests: knitr, rmarkdown, testthat, shiny, geometry
 SystemRequirements: C++11

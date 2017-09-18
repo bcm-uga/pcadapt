@@ -32,3 +32,56 @@ residuals_to_stat <- function(geno, obj.svd, K = 1, pop, admixed, window.size = 
                   rep(tail(smooth.stat, n = 1), window.size / 2 - 1))  
   return(final.stat)
 }
+
+#' LD clumping
+#'
+#' \code{clumping} is adapted from the snp_clumping function implemented in 
+#' the bigsnpr package developed by Florian Prive.
+#'
+#' @param G a genotype matrix. 
+#' @param chr.info a vector containing the chromosome information for each 
+#' marker.
+#' @param size an integer.
+#' @param thr a numerical value.
+#' 
+#' @return The returned value is a logical vector.
+#' 
+#' @importFrom stats var
+#'
+#' @export
+#'
+clumping = function(G, chr.info, size = 100, thr = 0.2) {
+  n <- ncol(G) # Number of individuals
+  p <- nrow(G) # Number of SNPs
+  S <- cmpt_minor_af(G, 2)
+  sumX <- apply(G, MARGIN = 1, FUN = function(h) {sum(h, na.rm = TRUE)})
+  denoX <- apply(G, MARGIN = 1, FUN = function(h) {var(h, na.rm = TRUE)})
+  denoX <- (n - 1) * denoX # Does not account for missing values -> (n - na - 1)
+  if (missing(chr.info)) {
+    ord.chr <- order(S, decreasing = TRUE)
+    remain <- rep(TRUE, length(ord.chr))
+    ind.keep <- clumping_cpp(G,
+                             ord.chr,
+                             remain,
+                             sumX,
+                             denoX,
+                             size, 
+                             thr)
+  } else {
+    ind.chrs <- split(seq_along(chr.info), chr.info)
+    ind.keep <- NULL
+    for (n.chr in 1:length(ind.chrs)) {
+      ord.chr <- order(S[ind.chrs[[n.chr]]], decreasing = TRUE)
+      remain <- rep(TRUE, length(ord.chr))
+      aux <- clumping_cpp(G[ind.chrs[[n.chr]], ],
+                          ord.chr,
+                          remain,
+                          sumX[ind.chrs[[n.chr]]],
+                          denoX[ind.chrs[[n.chr]]],
+                          size, 
+                          thr)
+      ind.keep <- c(ind.keep, aux)
+    }
+  }
+  return(ind.keep)
+}
