@@ -19,16 +19,13 @@ Description: Methods to detect genetic markers involved in biological
 License: GPL (>= 2)
 Imports:
     Rcpp (>= 0.12.8),  
-    RcppArmadillo, 
     methods,
     MASS,
     ggplot2, 
     vcfR,
     RSpectra,
-    rrcov,
     data.table,
     plotly,
-    RcppNumerical,
     RcppRoll,
     Matrix
 LinkingTo: Rcpp, RcppArmadillo, BH

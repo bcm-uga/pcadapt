@@ -28,8 +28,7 @@ bedadapt_RC <- methods::setRefClass(
   methods = list(
     initialize = function(path,
                           nIND = NULL, 
-                          nSNP = NULL,
-                          init = NULL) {
+                          nSNP = NULL) {
       
       xpath <- path.expand(path)
       if (!file.exists(xpath)) {
@@ -103,8 +102,6 @@ bedadapt_RC <- methods::setRefClass(
       .self$nSNP <- as.integer(xSNP)
       .self$address  # connect once
       
-      #if (!is.null(init)) .self[] <- init
-      
     }
   )
 )
@@ -114,7 +111,6 @@ bedadapt_RC <- methods::setRefClass(
 #' @param path path to the .bed file.
 #' @param nIND number of individuals.
 #' @param nSNP number of SNPs.
-#' @param init not sure what it is made for.
 #'
 #' @rdname bedadapt-class
 #' 
@@ -124,15 +120,14 @@ bedadapt_RC <- methods::setRefClass(
 #'
 bedadapt <- function(path = tempfile(),
                      nIND = NULL, 
-                     nSNP = NULL,
-                     init = NULL) {
+                     nSNP = NULL) {
   
   do.call(methods::new, args = c(Class = "bedadapt", as.list(environment())))
 }
 
 #' SVD for genotype matrices stored in .bed files
 #'
-#' \code{ma_rsvd}
+#' \code{BED_rsvd}
 #'
 #' @param X an object of class bedadapt.
 #' @param k an integer specifying the number of principal components to retain.
@@ -140,17 +135,19 @@ bedadapt <- function(path = tempfile(),
 #' @export
 #' 
 # single core implementation
-ma_rsvd <- function(X, k) {
+BED_rsvd <- function(X, k) {
   nIND <- X$nIND
   nSNP <- X$nSNP
   m <- cmpt_minor_af_BED(X$address)
   s <- pmax(1e-6, sqrt(2 * m * (1 - m)))
   
   A <- function(x, args) {
+    # Input vector of length p
     x <- x / s
     return(prodMatVec_export(X$address, x) - 2 * sum(x * m))
   }
   Atrans <- function(x, args) {
+    # Input vector of length n
     return((prodtMatVec_export(X$address, x) - 2 * sum(x) * m) / s)
   }
   res <- RSpectra::svds(A, k, nu = k, nv = 0, Atrans = Atrans,
@@ -159,3 +156,37 @@ ma_rsvd <- function(X, k) {
   return(res)
 }
 
+#' SVD for genotype matrices stored in .bed files with missing values
+#'
+#' \code{BED_rsvd_missing}
+#'
+#' @param X an object of class bedadapt.
+#' @param k an integer specifying the number of principal components to retain.
+#' @param miss.ind a vector indicating the number of missing values for each 
+#' individual.
+#' @param miss.snp a vector indicating the number of missing values for each 
+#' SNP.
+#' 
+#' @export
+#' 
+# single core implementation
+BED_rsvd_missing <- function(X, k, miss.ind, miss.snp) {
+  nIND <- X$nIND
+  nSNP <- X$nSNP
+  m <- cmpt_minor_af_BED(X$address)
+  s <- pmax(1e-6, sqrt(2 * m * (1 - m)))
+  
+  A <- function(x, args) {
+    # Input vector of length p
+    x <- x / s
+    return((prodMatVec_export(X$address, x) - 2 * sum(x * m)) * miss.ind)
+  }
+  Atrans <- function(x, args) {
+    # Input vector of length n
+    return(((prodtMatVec_export(X$address, x) - 2 * sum(x) * m) / s) * miss.snp)
+  }
+  res <- RSpectra::svds(A, k, nu = k, nv = 0, Atrans = Atrans,
+                        opts = list(tol = 1e-4, maxitr = 100),
+                        dim = c(nIND, nSNP))
+  return(res)
+}

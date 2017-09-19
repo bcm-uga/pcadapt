@@ -7,7 +7,7 @@
 \alias{bedadapt}
 \title{Class bedadapt}
 \usage{
-bedadapt(path = tempfile(), nIND = NULL, nSNP = NULL, init = NULL)
+bedadapt(path = tempfile(), nIND = NULL, nSNP = NULL)
 }
 \arguments{
 \item{path}{path to the .bed file.}
@@ -15,8 +15,6 @@ bedadapt(path = tempfile(), nIND = NULL, nSNP = NULL, init = NULL)
 \item{nIND}{number of individuals.}
 
 \item{nSNP}{number of SNPs.}
-
-\item{init}{not sure what it is made for.}
 }
 \description{
 Class bedadapt
