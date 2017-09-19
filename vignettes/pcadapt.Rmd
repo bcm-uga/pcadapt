@@ -1,8 +1,9 @@
 ---
-title: <center>Using pcadapt to detect local adaption</center>
-author: <center>Keurcien Luu, Michael G.B. Blum</center>
+title: Using pcadapt to detect local adaption
+author: Keurcien Luu, Michael G.B. Blum
 output: 
-  rmarkdown::html_document
+  rmarkdown::html_document:
+    css: style.css
 vignette: >
   %\VignetteIndexEntry{pcadapt}
   %\VignetteEngine{knitr::rmarkdown}

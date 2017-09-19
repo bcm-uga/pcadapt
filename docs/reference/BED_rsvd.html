@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Covariance for loaded genotype data — cmpt_cov_cpp • pcadapt</title>
+<title>SVD for genotype matrices stored in .bed files — BED_rsvd • pcadapt</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -80,52 +80,27 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Covariance for loaded genotype data</h1>
+    <h1>SVD for genotype matrices stored in .bed files</h1>
     </div>
 
     
-    <p><code>cmpt_cov_cpp</code> computes the covariance matrix of a genotype matrix.</p>
+    <p><code>BED_rsvd</code></p>
     
 
-    <pre class="usage"><span class='fu'>cmpt_cov_cpp</span>(<span class='no'>filename</span>, <span class='no'>xmatrix</span>, <span class='no'>min_maf</span>, <span class='no'>ploidy</span>, <span class='no'>type</span>, <span class='kw'>blocksize</span> <span class='kw'>=</span> <span class='fl'>120L</span>)</pre>
+    <pre class="usage"><span class='fu'>BED_rsvd</span>(<span class='no'>X</span>, <span class='no'>k</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>filename</th>
-      <td><p>a character string specifying the name of the file to be 
-processed with <code>pcadapt</code>.</p></td>
+      <th>X</th>
+      <td><p>an object of class bedadapt.</p></td>
     </tr>
     <tr>
-      <th>xmatrix</th>
-      <td><p>a genotype matrix.</p></td>
-    </tr>
-    <tr>
-      <th>min_maf</th>
-      <td><p>a value between <code>0</code> and <code>0.45</code> specifying the 
-threshold of minor allele frequencies above which p-values are computed.</p></td>
-    </tr>
-    <tr>
-      <th>ploidy</th>
-      <td><p>an integer specifying the ploidy of the individuals.</p></td>
-    </tr>
-    <tr>
-      <th>type</th>
-      <td><p>an integer specifying the input type: <code>0</code> for genotype 
-matrices or <code>1</code> for genotype files.</p></td>
-    </tr>
-    <tr>
-      <th>blocksize</th>
-      <td><p>an integer specifying the number of rows for each block.</p></td>
+      <th>k</th>
+      <td><p>an integer specifying the number of principal components to retain.</p></td>
     </tr>
     </table>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>The returned value is a Rcpp::List containing the covariance matrix, 
-the number of individuals and the number of genetic markers present in the 
-data.</p>
     
 
   </div>
@@ -133,9 +108,7 @@ data.</p>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-          </ul>
+                </ul>
 
   </div>
 </div>

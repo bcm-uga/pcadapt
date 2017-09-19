@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Covariance for loaded genotype data — cmpt_cov_cpp • pcadapt</title>
+<title>Introgression statistics — slidingWindows_new • pcadapt</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -80,52 +80,60 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Covariance for loaded genotype data</h1>
+    <h1>Introgression statistics</h1>
     </div>
 
     
-    <p><code>cmpt_cov_cpp</code> computes the covariance matrix of a genotype matrix.</p>
+    <p><code>slidingWindows_new</code></p>
     
 
-    <pre class="usage"><span class='fu'>cmpt_cov_cpp</span>(<span class='no'>filename</span>, <span class='no'>xmatrix</span>, <span class='no'>min_maf</span>, <span class='no'>ploidy</span>, <span class='no'>type</span>, <span class='kw'>blocksize</span> <span class='kw'>=</span> <span class='fl'>120L</span>)</pre>
+    <pre class="usage"><span class='fu'>slidingWindows_new</span>(<span class='no'>sgeno</span>, <span class='no'>d</span>, <span class='no'>v</span>, <span class='no'>pop</span>, <span class='no'>popUnique</span>, <span class='no'>admixed</span>, <span class='no'>window_size</span>, <span class='no'>map</span>,
+  <span class='no'>with_map</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>filename</th>
-      <td><p>a character string specifying the name of the file to be 
-processed with <code>pcadapt</code>.</p></td>
+      <th>sgeno</th>
+      <td><p>a scaled genotype matrix.</p></td>
     </tr>
     <tr>
-      <th>xmatrix</th>
-      <td><p>a genotype matrix.</p></td>
+      <th>d</th>
+      <td><p>a numeric vector.</p></td>
     </tr>
     <tr>
-      <th>min_maf</th>
-      <td><p>a value between <code>0</code> and <code>0.45</code> specifying the 
-threshold of minor allele frequencies above which p-values are computed.</p></td>
+      <th>v</th>
+      <td><p>a numeric matrix.</p></td>
     </tr>
     <tr>
-      <th>ploidy</th>
-      <td><p>an integer specifying the ploidy of the individuals.</p></td>
+      <th>pop</th>
+      <td><p>a string vector.</p></td>
     </tr>
     <tr>
-      <th>type</th>
-      <td><p>an integer specifying the input type: <code>0</code> for genotype 
-matrices or <code>1</code> for genotype files.</p></td>
+      <th>popUnique</th>
+      <td><p>a string vector.</p></td>
     </tr>
     <tr>
-      <th>blocksize</th>
-      <td><p>an integer specifying the number of rows for each block.</p></td>
+      <th>admixed</th>
+      <td><p>a character vector.</p></td>
+    </tr>
+    <tr>
+      <th>window_size</th>
+      <td><p>a numeric value.</p></td>
+    </tr>
+    <tr>
+      <th>map</th>
+      <td><p>a numeric vector.</p></td>
+    </tr>
+    <tr>
+      <th>with_map</th>
+      <td><p>an integer.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The returned value is a Rcpp::List containing the covariance matrix, 
-the number of individuals and the number of genetic markers present in the 
-data.</p>
+    <p>The returned value is a numeric matrix.</p>
     
 
   </div>
