@@ -4,7 +4,6 @@
 
 using namespace Rcpp;
 
-// [[Rcpp::export]]
 arma::mat fJ_cpp(int n){
   arma::mat zz(n, n);
   zz.ones();
@@ -15,7 +14,6 @@ arma::mat fJ_cpp(int n){
   return(H);
 }
 
-// [[Rcpp::export]]
 arma::mat fcnt_cpp(arma::mat &a){
   int nrow = a.n_rows;
   arma::mat aa = fJ_cpp(nrow);

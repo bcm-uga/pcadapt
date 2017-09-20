@@ -36,7 +36,6 @@ IntegerVector get_pop_size(const StringVector &pop,
   return(popSize);
 }
 
-// [[Rcpp::export]]
 void updt_centroids_cpp(arma::mat &centroids,
                         const arma::mat &scores,
                         const StringVector &pop,
@@ -58,7 +57,6 @@ void updt_centroids_cpp(arma::mat &centroids,
   }
 }
 
-// [[Rcpp::export]]
 void updt_simplex_cpp(arma::mat &simplex,
                       const arma::mat &centroids,
                       const StringVector &popUnique,

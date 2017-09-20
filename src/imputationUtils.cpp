@@ -6,18 +6,15 @@
 
 using namespace Rcpp;
 
-//' Median
-//' 
-//' \code{median_row_i} computes the median of a specific row.
-//' 
-//' @param x a genotype matrix.
-//' @param i an integer.
-//' 
-//' @return The returned value is a real number.
-//' 
-//' @export
-//' 
-// [[Rcpp::export]]
+// Median
+// 
+// \code{median_row_i} computes the median of a specific row.
+// 
+// @param x a genotype matrix.
+// @param i an integer.
+// 
+// @return The returned value is a real number.
+// 
 double median_row_i(const arma::mat &x, int i){
   int nIND = x.n_cols;
   NumericVector row_i;
@@ -29,20 +26,17 @@ double median_row_i(const arma::mat &x, int i){
   return(Rcpp::median(row_i));
 }
 
-//' Median
-//' 
-//' \code{median_per_pop} computes the median of each population for a specific row.
-//' 
-//' @param x a genotype matrix.
-//' @param lab a vector of integers.
-//' @param pop a vector of integers.
-//' @param i an integer.
-//' 
-//' @return The returned value is a real-valued vector.
-//' 
-//' @export
-//' 
-// [[Rcpp::export]]
+// Median
+// 
+// \code{median_per_pop} computes the median of each population for a specific row.
+// 
+// @param x a genotype matrix.
+// @param lab a vector of integers.
+// @param pop a vector of integers.
+// @param i an integer.
+// 
+// @return The returned value is a real-valued vector.
+// 
 NumericVector median_per_pop(const arma::mat &x, const arma::vec &lab, const arma::vec &pop, int i){
   int nIND = x.n_cols;
   int nPOP = pop.n_elem;
@@ -61,19 +55,16 @@ NumericVector median_per_pop(const arma::mat &x, const arma::vec &lab, const arm
   return(out);
 }
 
-//' Skip or discard 
-//' 
-//' \code{check_row} returns 0 for markers to be kept and 1 for markers to be 
-//' discarded.
-//' 
-//' @param x a genotype matrix.
-//' @param i an integer.
-//' 
-//' @return The returned value is an integer.
-//' 
-//' @export
-//' 
-// [[Rcpp::export]]
+// Skip or discard 
+// 
+// \code{check_row} returns 0 for markers to be kept and 1 for markers to be 
+// discarded.
+// 
+// @param x a genotype matrix.
+// @param i an integer.
+// 
+// @return The returned value is an integer.
+// 
 int check_row(const arma::mat &x, int i){
   int ncol = x.n_cols;  
   double fe = NA_REAL;

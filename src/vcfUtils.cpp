@@ -2,7 +2,6 @@
 #include <fstream>
 using namespace Rcpp;
 
-// [[Rcpp::export]]
 CharacterVector get_geno_char(CharacterVector allele_sep){
   int n_delim = allele_sep.size();  
   CharacterVector geno_char(n_delim * 4 + 2);
@@ -17,7 +16,6 @@ CharacterVector get_geno_char(CharacterVector allele_sep){
   return(geno_char);
 }
 
-// [[Rcpp::export]]
 IntegerVector get_geno_int(CharacterVector allele_sep){
   int n_delim = allele_sep.size();  
   IntegerVector geno_int(n_delim * 4 + 2);
@@ -32,7 +30,6 @@ IntegerVector get_geno_int(CharacterVector allele_sep){
   return(geno_int);
 }
 
-// [[Rcpp::export]]
 int check_line_na(CharacterVector string_geno_row, CharacterVector geno_char){
   int nIND = string_geno_row.size();
   int M = geno_char.size();

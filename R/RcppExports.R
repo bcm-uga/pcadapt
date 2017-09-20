@@ -56,54 +56,6 @@ cart2bary_cpp <- function(X, P) {
     .Call('_pcadapt_cart2bary_cpp', PACKAGE = 'pcadapt', X, P)
 }
 
-#' Median
-#' 
-#' \code{median_row_i} computes the median of a specific row.
-#' 
-#' @param x a genotype matrix.
-#' @param i an integer.
-#' 
-#' @return The returned value is a real number.
-#' 
-#' @export
-#' 
-median_row_i <- function(x, i) {
-    .Call('_pcadapt_median_row_i', PACKAGE = 'pcadapt', x, i)
-}
-
-#' Median
-#' 
-#' \code{median_per_pop} computes the median of each population for a specific row.
-#' 
-#' @param x a genotype matrix.
-#' @param lab a vector of integers.
-#' @param pop a vector of integers.
-#' @param i an integer.
-#' 
-#' @return The returned value is a real-valued vector.
-#' 
-#' @export
-#' 
-median_per_pop <- function(x, lab, pop, i) {
-    .Call('_pcadapt_median_per_pop', PACKAGE = 'pcadapt', x, lab, pop, i)
-}
-
-#' Skip or discard 
-#' 
-#' \code{check_row} returns 0 for markers to be kept and 1 for markers to be 
-#' discarded.
-#' 
-#' @param x a genotype matrix.
-#' @param i an integer.
-#' 
-#' @return The returned value is an integer.
-#' 
-#' @export
-#' 
-check_row <- function(x, i) {
-    .Call('_pcadapt_check_row', PACKAGE = 'pcadapt', x, i)
-}
-
 #' Genotype matrix imputation
 #' 
 #' \code{impute_geno} imputes values based on the median per row.
@@ -204,38 +156,6 @@ cmpt_local_pca <- function(geno, V, sigma, beg, end) {
 #' 
 updt_local_scores <- function(u, geno, V, sigma, beg_old, end_old, beg_new, end_new) {
     invisible(.Call('_pcadapt_updt_local_scores', PACKAGE = 'pcadapt', u, geno, V, sigma, beg_old, end_old, beg_new, end_new))
-}
-
-colMedian_cpp <- function(x) {
-    .Call('_pcadapt_colMedian_cpp', PACKAGE = 'pcadapt', x)
-}
-
-Erho_cpp <- function(b) {
-    .Call('_pcadapt_Erho_cpp', PACKAGE = 'pcadapt', b)
-}
-
-Es2_cpp <- function(c) {
-    .Call('_pcadapt_Es2_cpp', PACKAGE = 'pcadapt', c)
-}
-
-scaleTau2_matrix <- function(x) {
-    .Call('_pcadapt_scaleTau2_matrix', PACKAGE = 'pcadapt', x)
-}
-
-scaleTau2_vector <- function(x) {
-    .Call('_pcadapt_scaleTau2_vector', PACKAGE = 'pcadapt', x)
-}
-
-covGK_cpp <- function(x, y) {
-    .Call('_pcadapt_covGK_cpp', PACKAGE = 'pcadapt', x, y)
-}
-
-ogk_step <- function(x) {
-    .Call('_pcadapt_ogk_step', PACKAGE = 'pcadapt', x)
-}
-
-getDistance_cpp <- function(x, center, cov) {
-    .Call('_pcadapt_getDistance_cpp', PACKAGE = 'pcadapt', x, center, cov)
 }
 
 #' Robust estimates for location and scatter
@@ -340,14 +260,6 @@ get_pop_size <- function(pop, popUnique) {
     .Call('_pcadapt_get_pop_size', PACKAGE = 'pcadapt', pop, popUnique)
 }
 
-updt_centroids_cpp <- function(centroids, scores, pop, popUnique, popSize, K) {
-    invisible(.Call('_pcadapt_updt_centroids_cpp', PACKAGE = 'pcadapt', centroids, scores, pop, popUnique, popSize, K))
-}
-
-updt_simplex_cpp <- function(simplex, centroids, popUnique, admixed) {
-    invisible(.Call('_pcadapt_updt_simplex_cpp', PACKAGE = 'pcadapt', simplex, centroids, popUnique, admixed))
-}
-
 #' Introgression statistics
 #' 
 #' \code{slidingWindows_fast} 
@@ -398,14 +310,6 @@ get_fitted_matrix <- function(Y, U) {
 
 clumping_cpp <- function(G, ord, remain, sumX, denoX, size, thr) {
     .Call('_pcadapt_clumping_cpp', PACKAGE = 'pcadapt', G, ord, remain, sumX, denoX, size, thr)
-}
-
-fJ_cpp <- function(n) {
-    .Call('_pcadapt_fJ_cpp', PACKAGE = 'pcadapt', n)
-}
-
-fcnt_cpp <- function(a) {
-    .Call('_pcadapt_fcnt_cpp', PACKAGE = 'pcadapt', a)
 }
 
 #' \code{pca_rotation}
@@ -549,18 +453,6 @@ lrfunc_cpp <- function(filename, xmatrix, scores, nIND, nSNP, K, ploidy, min_maf
 #' 
 sample_geno_file <- function(input, output, ploidy, sample_size) {
     .Call('_pcadapt_sample_geno_file', PACKAGE = 'pcadapt', input, output, ploidy, sample_size)
-}
-
-get_geno_char <- function(allele_sep) {
-    .Call('_pcadapt_get_geno_char', PACKAGE = 'pcadapt', allele_sep)
-}
-
-get_geno_int <- function(allele_sep) {
-    .Call('_pcadapt_get_geno_int', PACKAGE = 'pcadapt', allele_sep)
-}
-
-check_line_na <- function(string_geno_row, geno_char) {
-    .Call('_pcadapt_check_line_na', PACKAGE = 'pcadapt', string_geno_row, geno_char)
 }
 
 #' Convert vcfR genotype matrices

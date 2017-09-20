@@ -4,7 +4,6 @@
 
 using namespace Rcpp;
 
-// [[Rcpp::export]]
 NumericVector colMedian_cpp(arma::mat &x){
   int ncol = x.n_cols;
   NumericVector out(ncol);
@@ -14,7 +13,6 @@ NumericVector colMedian_cpp(arma::mat &x){
   return out;
 }
 
-// [[Rcpp::export]]
 double Erho_cpp(double b){
   double pb;
   double db;
@@ -25,7 +23,6 @@ double Erho_cpp(double b){
   return(res);
 }
 
-// [[Rcpp::export]]
 double Es2_cpp(double c){
   double q;
   double tmp;
@@ -36,7 +33,6 @@ double Es2_cpp(double c){
   return(res);
 }
 
-// [[Rcpp::export]]
 Rcpp::List scaleTau2_matrix(arma::mat &x){
   int n = x.n_rows;
   int p = x.n_cols;
@@ -86,7 +82,6 @@ Rcpp::List scaleTau2_matrix(arma::mat &x){
                             Rcpp::Named("sigma0") = sigma0);
 }
 
-// [[Rcpp::export]]
 NumericVector scaleTau2_vector(arma::vec &x){
   int n = x.size();
   double c1 = 4.5;
@@ -134,7 +129,6 @@ NumericVector scaleTau2_vector(arma::vec &x){
   return(musigma);
 }
 
-// [[Rcpp::export]]
 double covGK_cpp(arma::vec x, arma::vec y){
   arma::vec sum_xy = x + y;
   arma::vec diff_xy = x - y;
@@ -145,7 +139,6 @@ double covGK_cpp(arma::vec x, arma::vec y){
   return(((ms_sum[1] * ms_sum[1]) - (ms_diff[1] * ms_diff[1])) / 4);
 }
 
-// [[Rcpp::export]]
 Rcpp::List ogk_step(arma::mat &x){
   int p = x.n_cols;
   Rcpp::List ms;
@@ -172,7 +165,6 @@ Rcpp::List ogk_step(arma::mat &x){
                             Rcpp::Named("A") = D * eigvec);
 }
 
-// [[Rcpp::export]]
 arma::vec getDistance_cpp(arma::mat &x, arma::rowvec center, arma::mat cov){
   int n = x.n_rows;
   arma::mat x_cen;
