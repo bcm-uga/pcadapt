@@ -2,7 +2,6 @@
 
 S3method(plot,pcadapt)
 export(BED_rsvd)
-export(BED_rsvd_missing)
 export(assign.int.labels)
 export(bedadapt)
 export(cart2bary_cpp)

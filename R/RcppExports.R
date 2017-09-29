@@ -5,16 +5,20 @@ bedadaptXPtr <- function(path, n, p) {
     .Call('_pcadapt_bedadaptXPtr', PACKAGE = 'pcadapt', path, n, p)
 }
 
-cmpt_minor_af_BED <- function(xp_) {
-    .Call('_pcadapt_cmpt_minor_af_BED', PACKAGE = 'pcadapt', xp_)
+cmpt_af <- function(xp_) {
+    .Call('_pcadapt_cmpt_af', PACKAGE = 'pcadapt', xp_)
 }
 
-prodMatVec_export <- function(xp_, x) {
-    .Call('_pcadapt_prodMatVec_export', PACKAGE = 'pcadapt', xp_, x)
+prodMatVec <- function(xp_, x, m, s) {
+    .Call('_pcadapt_prodMatVec', PACKAGE = 'pcadapt', xp_, x, m, s)
 }
 
-prodtMatVec_export <- function(xp_, x) {
-    .Call('_pcadapt_prodtMatVec_export', PACKAGE = 'pcadapt', xp_, x)
+prodtMatVec <- function(xp_, x, m, s) {
+    .Call('_pcadapt_prodtMatVec', PACKAGE = 'pcadapt', xp_, x, m, s)
+}
+
+linReg <- function(xp_, u, d, v, m) {
+    .Call('_pcadapt_linReg', PACKAGE = 'pcadapt', xp_, u, d, v, m)
 }
 
 #' Covariance for loaded genotype data
@@ -417,20 +421,27 @@ cmpt_loadings <- function(filename, xmatrix, scores, nIND, nSNP, K, ploidy, min_
 
 #' Linear regression
 #' 
-#' \code{lrfunc_cpp} performs the multiple linear regression of the genotype matrix on the scores.
+#' \code{lrfunc_cpp} performs the multiple linear regression of the genotype 
+#' matrix on the scores.
 #' 
-#' @param filename a character string specifying the name of the file to be processed with \code{pcadapt}.
+#' @param filename a character string specifying the name of the file to be 
+#' processed with \code{pcadapt}.
 #' @param xmatrix a genotype matrix.
 #' @param scores a matrix containing the scores.
-#' @param nIND an integer specifying the number of individuals present in the data.
-#' @param nSNP an integer specifying the number of genetic markers present in the data.
+#' @param nIND an integer specifying the number of individuals present in the 
+#' data.
+#' @param nSNP an integer specifying the number of genetic markers present in 
+#' the data.
 #' @param K an integer specifying the number of principal components to retain.
 #' @param ploidy an integer specifying the ploidy of the individuals.
-#' @param min_maf a value between \code{0} and \code{0.45} specifying the threshold of minor allele frequencies above which p-values are computed.
+#' @param min_maf a value between \code{0} and \code{0.45} specifying the 
+#' threshold of minor allele frequencies above which p-values are computed.
 #' @param sigma a numeric vector.
 #' @param type an integer specifying the input type.
 #' 
-#' @return The returned value is a Rcpp::List containing the multiple linear regression z-scores, the minor allele frequencies and the number of missing values for each genetic marker.
+#' @return The returned value is a Rcpp::List containing the multiple linear 
+#' regression z-scores, the minor allele frequencies and the number of missing 
+#' values for each genetic marker.
 #' 
 #' @export
 #' 

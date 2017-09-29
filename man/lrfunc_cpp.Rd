@@ -8,29 +8,36 @@ lrfunc_cpp(filename, xmatrix, scores, nIND, nSNP, K, ploidy, min_maf, sigma,
   type)
 }
 \arguments{
-\item{filename}{a character string specifying the name of the file to be processed with \code{pcadapt}.}
+\item{filename}{a character string specifying the name of the file to be 
+processed with \code{pcadapt}.}
 
 \item{xmatrix}{a genotype matrix.}
 
 \item{scores}{a matrix containing the scores.}
 
-\item{nIND}{an integer specifying the number of individuals present in the data.}
+\item{nIND}{an integer specifying the number of individuals present in the 
+data.}
 
-\item{nSNP}{an integer specifying the number of genetic markers present in the data.}
+\item{nSNP}{an integer specifying the number of genetic markers present in 
+the data.}
 
 \item{K}{an integer specifying the number of principal components to retain.}
 
 \item{ploidy}{an integer specifying the ploidy of the individuals.}
 
-\item{min_maf}{a value between \code{0} and \code{0.45} specifying the threshold of minor allele frequencies above which p-values are computed.}
+\item{min_maf}{a value between \code{0} and \code{0.45} specifying the 
+threshold of minor allele frequencies above which p-values are computed.}
 
 \item{sigma}{a numeric vector.}
 
 \item{type}{an integer specifying the input type.}
 }
 \value{
-The returned value is a Rcpp::List containing the multiple linear regression z-scores, the minor allele frequencies and the number of missing values for each genetic marker.
+The returned value is a Rcpp::List containing the multiple linear 
+regression z-scores, the minor allele frequencies and the number of missing 
+values for each genetic marker.
 }
 \description{
-\code{lrfunc_cpp} performs the multiple linear regression of the genotype matrix on the scores.
+\code{lrfunc_cpp} performs the multiple linear regression of the genotype 
+matrix on the scores.
 }

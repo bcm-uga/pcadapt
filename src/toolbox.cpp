@@ -191,7 +191,7 @@ int scale_rows(FILE *xfile, arma::mat &xmatrix, arma::mat &xs, int nIND,
       for (int j = 0; j < nIND; j++){
         if (fscanf(xfile, "%g", &value) != EOF){
           xs(i, j) = (double) value;
-          if (value != NA){
+          if (value != NA) {
             mean += (double) value;
           } else {
             missing_i[j] = 1.0;
@@ -320,20 +320,27 @@ arma::mat cmpt_loadings(std::string filename, arma::mat &xmatrix,
 
 //' Linear regression
 //' 
-//' \code{lrfunc_cpp} performs the multiple linear regression of the genotype matrix on the scores.
+//' \code{lrfunc_cpp} performs the multiple linear regression of the genotype 
+//' matrix on the scores.
 //' 
-//' @param filename a character string specifying the name of the file to be processed with \code{pcadapt}.
+//' @param filename a character string specifying the name of the file to be 
+//' processed with \code{pcadapt}.
 //' @param xmatrix a genotype matrix.
 //' @param scores a matrix containing the scores.
-//' @param nIND an integer specifying the number of individuals present in the data.
-//' @param nSNP an integer specifying the number of genetic markers present in the data.
+//' @param nIND an integer specifying the number of individuals present in the 
+//' data.
+//' @param nSNP an integer specifying the number of genetic markers present in 
+//' the data.
 //' @param K an integer specifying the number of principal components to retain.
 //' @param ploidy an integer specifying the ploidy of the individuals.
-//' @param min_maf a value between \code{0} and \code{0.45} specifying the threshold of minor allele frequencies above which p-values are computed.
+//' @param min_maf a value between \code{0} and \code{0.45} specifying the 
+//' threshold of minor allele frequencies above which p-values are computed.
 //' @param sigma a numeric vector.
 //' @param type an integer specifying the input type.
 //' 
-//' @return The returned value is a Rcpp::List containing the multiple linear regression z-scores, the minor allele frequencies and the number of missing values for each genetic marker.
+//' @return The returned value is a Rcpp::List containing the multiple linear 
+//' regression z-scores, the minor allele frequencies and the number of missing 
+//' values for each genetic marker.
 //' 
 //' @export
 //' 
@@ -360,6 +367,8 @@ Rcpp::List lrfunc_cpp(std::string filename, arma::mat &xmatrix,
   arma::vec check_na(nIND, arma::fill::zeros);
   
   for (int i = 0; i < nSNP; i++){
+    GenoRowScale.zeros();
+    residual = 0;
     if (type == 0){
       missing[i] = scale_rows(xfile, xmatrix, GenoRowScale, nIND, ploidy, 
                               min_maf, 0, 1, &maf_i, check_na, 0);  
@@ -368,13 +377,29 @@ Rcpp::List lrfunc_cpp(std::string filename, arma::mat &xmatrix,
                               min_maf, i, i + 1, &maf_i, check_na, 1);  
     }
     maf[i] = maf_i;
-    Z.row(i) = GenoRowScale * scores;
+    
+    for (int j = 0; j < nIND; j++) {
+      if (check_na[j] != 1) {
+        for (int k = 0; k < K; k++) {
+          Z(i, k) += GenoRowScale[j] * scores(j, k);  
+        }
+      }
+    }
+    
     for (int k = 0; k < K; k++){
       V(i, k) = Z(i, k) * sqrt(nSNP / sigma[k]);
     }
+    
     Y = Z.row(i) * scores.t();
-    residual = dot(GenoRowScale - Y, (GenoRowScale - Y).t());
+    
+    for (int j = 0; j < nIND; j++) {
+      if (check_na[j] != 1) {
+        residual += (GenoRowScale[j] - Y[j]) * (GenoRowScale[j] - Y[j]);
+      }
+    }
+    
     Y.zeros();
+    
     if ((nIND - K - missing[i]) <= 0){
       residual = 0.0;
     } else {
@@ -386,20 +411,22 @@ Rcpp::List lrfunc_cpp(std::string filename, arma::mat &xmatrix,
     for (int k = 0; k < K; k++){
       for (int j = 0; j < nIND; j++){
         if (check_na[j] != 1.0){
-          sum_scores_sq[k] +=  (double) scores(j ,k) * scores(j, k);
+          sum_scores_sq[k] += (double) scores(j, k) * scores(j, k);
         }
       }
       if (residual == 0.0){
         Z(i, k) = 0.0;
       } else {
-        Z(i ,k) /= sqrt(residual);
+        Z(i, k) /= sqrt(residual);
       }
       if (sum_scores_sq[k] > 0){
-        Z(i ,k) /= sqrt(sum_scores_sq[k]);
+        Z(i, k) /= sqrt(sum_scores_sq[k]);
       }
     }
     check_na.zeros();
+    
   }
+  
   
   if (type == 0){
     fclose(xfile);

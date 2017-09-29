@@ -2,7 +2,7 @@
 % Please edit documentation in R/bedadapt.R
 \name{BED_rsvd}
 \alias{BED_rsvd}
-\title{SVD for genotype matrices stored in .bed files}
+\title{SVD for genotype matrices stored in .bed files with missing values}
 \usage{
 BED_rsvd(X, k)
 }

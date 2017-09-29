@@ -12,9 +12,18 @@ public:
   bedadapt(std::string path, std::size_t n, std::size_t p);
   size_t nrow() const { return n; }
   size_t ncol() const { return p; }
-  NumericVector minor_AF();
-  NumericVector prodMatVec(NumericVector x);
-  NumericVector prodtMatVec(NumericVector x);
+  NumericVector AF();
+  IntegerVector extractSNP(int j);
+  NumericVector prodMatVec(const NumericVector &x, 
+                           const NumericVector &m, 
+                           const NumericVector &s);
+  NumericVector prodtMatVec(const NumericVector &x, 
+                            const NumericVector &m, 
+                            const NumericVector &s);
+  NumericMatrix linReg(const NumericMatrix &u,
+                       const NumericVector &d,
+                       const NumericMatrix &v,
+                       const NumericVector &m);
 private:
   boost::interprocess::file_mapping file;
   boost::interprocess::mapped_region file_region;

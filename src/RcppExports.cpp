@@ -19,38 +19,57 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// cmpt_minor_af_BED
-RObject cmpt_minor_af_BED(RObject xp_);
-RcppExport SEXP _pcadapt_cmpt_minor_af_BED(SEXP xp_SEXP) {
+// cmpt_af
+RObject cmpt_af(RObject xp_);
+RcppExport SEXP _pcadapt_cmpt_af(SEXP xp_SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< RObject >::type xp_(xp_SEXP);
-    rcpp_result_gen = Rcpp::wrap(cmpt_minor_af_BED(xp_));
+    rcpp_result_gen = Rcpp::wrap(cmpt_af(xp_));
     return rcpp_result_gen;
 END_RCPP
 }
-// prodMatVec_export
-RObject prodMatVec_export(RObject xp_, NumericVector x);
-RcppExport SEXP _pcadapt_prodMatVec_export(SEXP xp_SEXP, SEXP xSEXP) {
+// prodMatVec
+RObject prodMatVec(RObject xp_, const NumericVector& x, const NumericVector& m, const NumericVector& s);
+RcppExport SEXP _pcadapt_prodMatVec(SEXP xp_SEXP, SEXP xSEXP, SEXP mSEXP, SEXP sSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< RObject >::type xp_(xp_SEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(prodMatVec_export(xp_, x));
+    Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type m(mSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type s(sSEXP);
+    rcpp_result_gen = Rcpp::wrap(prodMatVec(xp_, x, m, s));
     return rcpp_result_gen;
 END_RCPP
 }
-// prodtMatVec_export
-RObject prodtMatVec_export(RObject xp_, NumericVector x);
-RcppExport SEXP _pcadapt_prodtMatVec_export(SEXP xp_SEXP, SEXP xSEXP) {
+// prodtMatVec
+RObject prodtMatVec(RObject xp_, const NumericVector& x, const NumericVector& m, const NumericVector& s);
+RcppExport SEXP _pcadapt_prodtMatVec(SEXP xp_SEXP, SEXP xSEXP, SEXP mSEXP, SEXP sSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< RObject >::type xp_(xp_SEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(prodtMatVec_export(xp_, x));
+    Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type m(mSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type s(sSEXP);
+    rcpp_result_gen = Rcpp::wrap(prodtMatVec(xp_, x, m, s));
+    return rcpp_result_gen;
+END_RCPP
+}
+// linReg
+RObject linReg(RObject xp_, const NumericMatrix& u, const NumericVector& d, const NumericMatrix& v, const NumericVector& m);
+RcppExport SEXP _pcadapt_linReg(SEXP xp_SEXP, SEXP uSEXP, SEXP dSEXP, SEXP vSEXP, SEXP mSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< RObject >::type xp_(xp_SEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type u(uSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type d(dSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type v(vSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type m(mSEXP);
+    rcpp_result_gen = Rcpp::wrap(linReg(xp_, u, d, v, m));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -436,9 +455,10 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_pcadapt_bedadaptXPtr", (DL_FUNC) &_pcadapt_bedadaptXPtr, 3},
-    {"_pcadapt_cmpt_minor_af_BED", (DL_FUNC) &_pcadapt_cmpt_minor_af_BED, 1},
-    {"_pcadapt_prodMatVec_export", (DL_FUNC) &_pcadapt_prodMatVec_export, 2},
-    {"_pcadapt_prodtMatVec_export", (DL_FUNC) &_pcadapt_prodtMatVec_export, 2},
+    {"_pcadapt_cmpt_af", (DL_FUNC) &_pcadapt_cmpt_af, 1},
+    {"_pcadapt_prodMatVec", (DL_FUNC) &_pcadapt_prodMatVec, 4},
+    {"_pcadapt_prodtMatVec", (DL_FUNC) &_pcadapt_prodtMatVec, 4},
+    {"_pcadapt_linReg", (DL_FUNC) &_pcadapt_linReg, 5},
     {"_pcadapt_cmpt_cov_cpp", (DL_FUNC) &_pcadapt_cmpt_cov_cpp, 6},
     {"_pcadapt_cart2bary_cpp", (DL_FUNC) &_pcadapt_cart2bary_cpp, 2},
     {"_pcadapt_impute_geno", (DL_FUNC) &_pcadapt_impute_geno, 1},

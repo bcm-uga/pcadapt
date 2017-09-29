@@ -71,19 +71,50 @@ char bedadapt::get_byte(std::size_t i) {
   return genotypes;
 }
 
+std::size_t byte_position(int npbp, int j) {
+  // Every byte encodes 4 genotypes, find the one of interest
+  std::size_t res = std::floor(npbp * j / 4);
+  return(res);
+}
+
+IntegerVector bedadapt::extractSNP(int j) {
+  IntegerVector snp(this->n);
+  size_t byte_start = byte_position(this->n + this->byte_padding, j);
+  size_t byte_end = byte_position(this->n + this->byte_padding, j + 1);  
+  char raw_element;
+  char genotype;
+  int i = 0;
+  for (size_t byte = byte_start; byte < byte_end; byte++) {
+    for (size_t byte = byte_start; byte < byte_end; byte++) {
+      raw_element = get_byte(byte);
+      for (int idx = 0; idx < 4; idx++) {
+        genotype = raw_element >> (idx * 2) & 3;
+        if (i < this->n) {
+          if (genotype == 0) {
+            snp[i] = 2; // homozygous AA
+          } else if (genotype == 2) {
+            snp[i] = 1; // heterozygous AB
+          } else if (genotype == 3) {
+            snp[i] = 0; // homozygous BB
+          } else {
+            snp[i] = NA_INTEGER;
+          }
+          i++;
+        }
+      }
+    }  
+  }
+  return(snp);
+}
+
 /******************************************************************************/
 
-NumericVector bedadapt::minor_AF() {
+NumericVector bedadapt::AF() {
   Rcpp::NumericVector maf(this->p);
   for (int j = 0; j < this->p; j++) {
     int n_available = 0; // Counts the number of available values for SNP j
-    // No need to convert from 1-index to 0-index
-    size_t SNP_start = (this->n + this->byte_padding) * j;
-    size_t SNP_end = (this->n + this->byte_padding) * (j + 1);
-    
-    // Every byte encodes 4 genotypes, find the one of interest
-    size_t byte_start = std::floor(SNP_start / 4);
-    size_t byte_end = std::floor(SNP_end / 4);
+    size_t byte_start = byte_position(this->n + this->byte_padding, j);
+    size_t byte_end = byte_position(this->n + this->byte_padding, j + 1);
     int acc = 0;
     char raw_element;
     char genotype;
@@ -108,35 +139,35 @@ NumericVector bedadapt::minor_AF() {
   return maf;
 }
 
+// [[Rcpp::export]]
+RObject cmpt_af(RObject xp_) {
+  XPtr<bedadapt> ptr(xp_);
+  NumericVector res = ptr->AF();
+  return res;
+}
+
 /******************************************************************************/
 
 // [[Rcpp::export]]
-RObject cmpt_minor_af_BED(RObject xp_) {
-  XPtr<bedadapt> ptr(xp_);
-  NumericVector res = ptr->minor_AF();
-  return res;
-}
-
-// [[Rcpp::export]]
-RObject prodMatVec_export(RObject xp_, NumericVector x) {
+RObject prodMatVec(RObject xp_, 
+                   const NumericVector &x, 
+                   const NumericVector &m, 
+                   const NumericVector &s) {
   // Convert inputs to appropriate C++ types
   XPtr<bedadapt> ptr(xp_);
-  NumericVector res = ptr->prodMatVec(x);
+  NumericVector res = ptr->prodMatVec(x, m, s);
   return res;
 }
 
-NumericVector bedadapt::prodMatVec(NumericVector x) {
+NumericVector bedadapt::prodMatVec(const NumericVector &x, 
+                                   const NumericVector &m, 
+                                   const NumericVector &s) {
   // Input vector of length p
   // Output vector of length n
   NumericVector y(this->n);
   for (int j = 0; j < this->p; j++) {
-    // No need to convert from 1-index to 0-index
-    size_t SNP_start = (this->n + this->byte_padding) * j;
-    size_t SNP_end = (this->n + this->byte_padding) * (j + 1);
-    
-    // Every byte encodes 4 genotypes, find the one of interest
-    size_t byte_start = std::floor(SNP_start / 4);
-    size_t byte_end = std::floor(SNP_end / 4);
+    size_t byte_start = byte_position(this->n + this->byte_padding, j);
+    size_t byte_end = byte_position(this->n + this->byte_padding, j + 1);
     int acc = 0;
     char raw_element;
     char genotype;
@@ -145,10 +176,12 @@ NumericVector bedadapt::prodMatVec(NumericVector x) {
       for (int idx = 0; idx < 4; idx++) {
         genotype = raw_element >> (idx * 2) & 3;
         if (genotype == 0 && acc < this->n) {
-          y[acc] += (2.0 * x[j]); // homozygous AA
+          y[acc] += ((2.0 - 2 * m[j]) * x[j]) / s[j]; // homozygous AA
         } else if (genotype == 2 && acc < this->n) {
-          y[acc] += (1.0 * x[j]); // heterozygous AB
-        }
+          y[acc] += ((1.0 - 2 * m[j]) * x[j]) / s[j]; // heterozygous AB
+        } else if (genotype == 3 && acc < this->n) {
+          y[acc] -= 2 * m[j] * x[j] / s[j]; // heterozygous BB
+        } 
         acc ++;
       }
     }
@@ -157,25 +190,25 @@ NumericVector bedadapt::prodMatVec(NumericVector x) {
 }
 
 // [[Rcpp::export]]
-RObject prodtMatVec_export(RObject xp_, NumericVector x) {
+RObject prodtMatVec(RObject xp_, 
+                    const NumericVector &x, 
+                    const NumericVector &m, 
+                    const NumericVector &s) {
   // Convert inputs to appropriate C++ types
   XPtr<bedadapt> ptr(xp_);
-  NumericVector res = ptr->prodtMatVec(x);
+  NumericVector res = ptr->prodtMatVec(x, m, s);
   return res;
 }
 
-NumericVector bedadapt::prodtMatVec(NumericVector x) {
+NumericVector bedadapt::prodtMatVec(const NumericVector &x, 
+                                    const NumericVector &m, 
+                                    const NumericVector &s) {
   // Input vector of length n
   // Output vector of length p
   Rcpp::NumericVector y(this->p);
   for (int j = 0; j < this->p; j++) {
-    // No need to convert from 1-index to 0-index
-    std::size_t SNP_start = (this->n + this->byte_padding) * j;
-    std::size_t SNP_end = (this->n + this->byte_padding) * (j + 1);
-    
-    // Every byte encodes 4 genotypes, find the one of interest
-    std::size_t byte_start = std::floor(SNP_start / 4);
-    std::size_t byte_end = std::floor(SNP_end / 4);
+    size_t byte_start = byte_position(this->n + this->byte_padding, j);
+    size_t byte_end = byte_position(this->n + this->byte_padding, j + 1);
     int acc = 0;
     char raw_element;
     char genotype;
@@ -184,9 +217,11 @@ NumericVector bedadapt::prodtMatVec(NumericVector x) {
       for (int idx = 0; idx < 4; idx++) {
         genotype = raw_element >> (idx * 2) & 3;
         if (genotype == 0 && acc < this->n) {
-          y[j] += 2.0 * x[acc]; // homozygous AA
+          y[j] += ((2.0 - 2 * m[j]) * x[acc]) / s[j]; // homozygous AA
         } else if (genotype == 2 && acc < this->n) {
-          y[j] += 1.0 * x[acc]; // heterozygous AB
+          y[j] += ((1.0 - 2 * m[j]) * x[acc]) / s[j]; // heterozygous AB
+        } else if (genotype == 3 && acc < this->n) {
+          y[j] -= 2 * m[j] * x[acc] / s[j]; // heterozygous BB
         }
         acc ++;
       }
@@ -194,3 +229,63 @@ NumericVector bedadapt::prodtMatVec(NumericVector x) {
   }
   return y;
 }
+
+/******************************************************************************/
+
+NumericMatrix bedadapt::linReg(const NumericMatrix &u,
+                               const NumericVector &d,
+                               const NumericMatrix &v,
+                               const NumericVector &m) {
+  int K = u.ncol();
+  NumericMatrix Z(this->p, K); // z-scores
+  IntegerVector G(this->n);
+
+  for (int j = 0; j < this->p; j++) {
+    /* Compute the residuals */
+    G = this->extractSNP(j);
+    double residual = 0;
+    int n_available = 0;
+    NumericVector sum_squared_u(K);   
+    for (int i = 0; i < this->n; i++) {
+      double y = 0;
+      for (int k = 0; k < K; k++) {
+        y += u(i, k) * d[k] * v(j, k) ; // Y = UDV
+      }
+      if (!IntegerVector::is_na(G[i])) {
+        double tmp = y - (G[i] - 2 * m[j]) / sqrt(2 * m[j] * (1 - m[j]));
+        residual += tmp * tmp;
+        n_available++;
+        for (int k = 0; k < K; k++) {
+          // sum_squared_u = 1 if SNP j has no missing value
+          // sum_squared_u < 1 if SNP j has at least one missing value
+          sum_squared_u[k] += u(i, k) * u(i, k); 
+        }
+      } 
+    }
+    
+    /* t-score */
+    for (int k = 0; k < K; k++) {
+      if (residual > 0 && n_available > K) {
+        Z(j, k) = v(j, k) * d[k] / sqrt(residual / (n_available - K));
+      }
+      if (sum_squared_u[k] > 0) {
+        // this should never happen
+        Z(j, k) /= sqrt(sum_squared_u[k]);
+      }
+    }
+  }
+  return(Z);
+}
+
+// [[Rcpp::export]]
+RObject linReg(RObject xp_, 
+               const NumericMatrix &u, 
+               const NumericVector &d, 
+               const NumericMatrix &v, 
+               const NumericVector &m) {
+  // Convert inputs to appropriate C++ types
+  XPtr<bedadapt> ptr(xp_);
+  NumericVector res = ptr->linReg(u, d, v, m);
+  return res;
+}
+
