@@ -1,7 +1,7 @@
 /******************************************************************************/
 /* Inspired from
-* https://github.com/QuantGen/BEDMatrix/blob/master/src/BEDMatrix.cpp **********
-* https://github.com/privefl/bigstatsr/blob/master/src/FBM.cpp ****************/
+https://github.com/QuantGen/BEDMatrix/blob/master/src/BEDMatrix.cpp 
+https://github.com/privefl/bigstatsr/blob/master/src/FBM.cpp */
 
 #include <pcadapt/bedadapt.h>
 
@@ -11,7 +11,8 @@ using std::size_t;
 
 /******************************************************************************/
 
-bedadapt::bedadapt(std::string path, size_t n, size_t p) : n(n), p(p), byte_padding((n % 4 == 0) ? 0 : 4 - (n % 4)) {
+bedadapt::bedadapt(std::string path, size_t n, size_t p) : 
+  n(n), p(p), byte_padding((n % 4 == 0) ? 0 : 4 - (n % 4)) {
   
   try {
     this->file = file_mapping(path.c_str(), read_only);
@@ -26,11 +27,11 @@ bedadapt::bedadapt(std::string path, size_t n, size_t p) : n(n), p(p), byte_padd
     throw std::runtime_error("File is not a binary PED file.");
   }
   
-  // Check mode: 00000001 indicates the default variant-major mode (i.e.
-  // list all samples for first variant, all samples for second variant,
-  // etc), 00000000 indicates the unsupported sample-major mode (i.e. list
-  // all variants for the first sample, list all variants for the second
-  // sample, etc)
+  /* Check mode: 00000001 indicates the default variant-major mode (i.e.
+  list all samples for first variant, all samples for second variant,
+  etc), 00000000 indicates the unsupported sample-major mode (i.e. list
+  all variants for the first sample, list all variants for the second
+  sample, etc */
   if (this->file_data[2] != '\x01') {
     throw std::runtime_error("Sample-major mode is not supported.");
   }
@@ -53,8 +54,8 @@ SEXP bedadaptXPtr(std::string path, int n, int p) {
   
   // http://gallery.rcpp.org/articles/intro-to-exceptions/
   try {
-    // Create a pointer to a bedadapt object and wrap it as an external pointer
-    // http://dirk.eddelbuettel.com/code/rcpp/Rcpp-modules.pdf
+    /* Create a pointer to a bedadapt object and wrap it as an external pointer
+    http://dirk.eddelbuettel.com/code/rcpp/Rcpp-modules.pdf */
     XPtr<bedadapt> ptr(new bedadapt(path, n, p), true);
     // Return the external pointer to the R side
     return ptr;
@@ -74,7 +75,7 @@ char bedadapt::get_byte(std::size_t i) {
 std::size_t byte_position(int npbp, int j) {
   // Every byte encodes 4 genotypes, find the one of interest
   std::size_t res = std::floor(npbp * j / 4);
-  return(res);
+  return res;
 }
 
 IntegerVector bedadapt::extractSNP(int j) {
@@ -104,7 +105,7 @@ IntegerVector bedadapt::extractSNP(int j) {
       }
     }  
   }
-  return(snp);
+  return snp;
 }
 
 /******************************************************************************/
@@ -148,41 +149,80 @@ RObject cmpt_af(RObject xp_) {
 
 /******************************************************************************/
 
-// [[Rcpp::export]]
-RObject prodMatVec(RObject xp_, 
-                   const NumericVector &x, 
-                   const NumericVector &m, 
-                   const NumericVector &s) {
-  // Convert inputs to appropriate C++ types
-  XPtr<bedadapt> ptr(xp_);
-  NumericVector res = ptr->prodMatVec(x, m, s);
-  return res;
-}
-
 NumericVector bedadapt::prodMatVec(const NumericVector &x, 
                                    const NumericVector &m, 
-                                   const NumericVector &s) {
+                                   const NumericVector &s,
+                                   const LogicalVector &pass) {
   // Input vector of length p
   // Output vector of length n
   NumericVector y(this->n);
   for (int j = 0; j < this->p; j++) {
-    size_t byte_start = byte_position(this->n + this->byte_padding, j);
-    size_t byte_end = byte_position(this->n + this->byte_padding, j + 1);
-    int acc = 0;
-    char raw_element;
-    char genotype;
-    for (size_t byte = byte_start; byte < byte_end; byte++) {
-      raw_element = get_byte(byte);
-      for (int idx = 0; idx < 4; idx++) {
-        genotype = raw_element >> (idx * 2) & 3;
-        if (genotype == 0 && acc < this->n) {
-          y[acc] += ((2.0 - 2 * m[j]) * x[j]) / s[j]; // homozygous AA
-        } else if (genotype == 2 && acc < this->n) {
-          y[acc] += ((1.0 - 2 * m[j]) * x[j]) / s[j]; // heterozygous AB
-        } else if (genotype == 3 && acc < this->n) {
-          y[acc] -= 2 * m[j] * x[j] / s[j]; // heterozygous BB
-        } 
-        acc ++;
+    if (pass[j]) {
+      size_t byte_start = byte_position(this->n + this->byte_padding, j);
+      size_t byte_end = byte_position(this->n + this->byte_padding, j + 1);
+      int i = 0;
+      char raw_element;
+      char genotype;
+      for (size_t byte = byte_start; byte < byte_end; byte++) {
+        raw_element = get_byte(byte);
+        for (int idx = 0; idx < 4; idx++) {
+          genotype = raw_element >> (idx * 2) & 3;
+          if (genotype == 0 && i < this->n) {
+            y[i] += ((2.0 - 2 * m[j]) * x[j]) / s[j]; // homozygous AA
+          } else if (genotype == 2 && i < this->n) {
+            y[i] += ((1.0 - 2 * m[j]) * x[j]) / s[j]; // heterozygous AB
+          } else if (genotype == 3 && i < this->n) {
+            y[i] -= 2 * m[j] * x[j] / s[j]; // heterozygous BB
+          } 
+          i++;
+        }
+      }
+    }
+  }
+  return y;
+}
+
+// [[Rcpp::export]]
+RObject prodMatVec(RObject xp_, 
+                   const NumericVector &x, 
+                   const NumericVector &m, 
+                   const NumericVector &s,
+                   const LogicalVector &pass) {
+  // Convert inputs to appropriate C++ types
+  XPtr<bedadapt> ptr(xp_);
+  NumericVector res = ptr->prodMatVec(x, m, s, pass);
+  return res;
+}
+
+/******************************************************************************/
+
+NumericVector bedadapt::prodtMatVec(const NumericVector &x, 
+                                    const NumericVector &m, 
+                                    const NumericVector &s,
+                                    const LogicalVector &pass) {
+  // Input vector of length n
+  // Output vector of length p
+  Rcpp::NumericVector y(this->p);
+  for (int j = 0; j < this->p; j++) {
+    if (pass[j]) {
+      size_t byte_start = byte_position(this->n + this->byte_padding, j);
+      size_t byte_end = byte_position(this->n + this->byte_padding, j + 1);
+      int i = 0; // i-th individual
+      char raw_element;
+      char genotype;
+      for (size_t byte = byte_start; byte < byte_end; byte++) {
+        raw_element = get_byte(byte);
+        for (int idx = 0; idx < 4; idx++) {
+          genotype = raw_element >> (idx * 2) & 3;
+          if (genotype == 0 && i < this->n) {
+            y[j] += ((2.0 - 2 * m[j]) * x[i]) / s[j]; // homozygous AA
+          } else if (genotype == 2 && i < this->n) {
+            y[j] += ((1.0 - 2 * m[j]) * x[i]) / s[j]; // heterozygous AB
+          } else if (genotype == 3 && i < this->n) {
+            y[j] -= 2 * m[j] * x[i] / s[j]; // heterozygous BB
+          }
+          i++;
+        }
       }
     }
   }
@@ -193,41 +233,12 @@ NumericVector bedadapt::prodMatVec(const NumericVector &x,
 RObject prodtMatVec(RObject xp_, 
                     const NumericVector &x, 
                     const NumericVector &m, 
-                    const NumericVector &s) {
+                    const NumericVector &s,
+                    const LogicalVector &pass) {
   // Convert inputs to appropriate C++ types
   XPtr<bedadapt> ptr(xp_);
-  NumericVector res = ptr->prodtMatVec(x, m, s);
+  NumericVector res = ptr->prodtMatVec(x, m, s, pass);
   return res;
-}
-
-NumericVector bedadapt::prodtMatVec(const NumericVector &x, 
-                                    const NumericVector &m, 
-                                    const NumericVector &s) {
-  // Input vector of length n
-  // Output vector of length p
-  Rcpp::NumericVector y(this->p);
-  for (int j = 0; j < this->p; j++) {
-    size_t byte_start = byte_position(this->n + this->byte_padding, j);
-    size_t byte_end = byte_position(this->n + this->byte_padding, j + 1);
-    int acc = 0;
-    char raw_element;
-    char genotype;
-    for (size_t byte = byte_start; byte < byte_end; byte++) {
-      raw_element = get_byte(byte);
-      for (int idx = 0; idx < 4; idx++) {
-        genotype = raw_element >> (idx * 2) & 3;
-        if (genotype == 0 && acc < this->n) {
-          y[j] += ((2.0 - 2 * m[j]) * x[acc]) / s[j]; // homozygous AA
-        } else if (genotype == 2 && acc < this->n) {
-          y[j] += ((1.0 - 2 * m[j]) * x[acc]) / s[j]; // heterozygous AB
-        } else if (genotype == 3 && acc < this->n) {
-          y[j] -= 2 * m[j] * x[acc] / s[j]; // heterozygous BB
-        }
-        acc ++;
-      }
-    }
-  }
-  return y;
 }
 
 /******************************************************************************/
@@ -274,7 +285,7 @@ NumericMatrix bedadapt::linReg(const NumericMatrix &u,
       }
     }
   }
-  return(Z);
+  return Z;
 }
 
 // [[Rcpp::export]]

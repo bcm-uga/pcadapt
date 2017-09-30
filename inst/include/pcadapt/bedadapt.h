@@ -16,10 +16,12 @@ public:
   IntegerVector extractSNP(int j);
   NumericVector prodMatVec(const NumericVector &x, 
                            const NumericVector &m, 
-                           const NumericVector &s);
+                           const NumericVector &s,
+                           const LogicalVector &pass);
   NumericVector prodtMatVec(const NumericVector &x, 
                             const NumericVector &m, 
-                            const NumericVector &s);
+                            const NumericVector &s,
+                            const LogicalVector &pass);
   NumericMatrix linReg(const NumericMatrix &u,
                        const NumericVector &d,
                        const NumericMatrix &v,

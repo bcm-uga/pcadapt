@@ -31,8 +31,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // prodMatVec
-RObject prodMatVec(RObject xp_, const NumericVector& x, const NumericVector& m, const NumericVector& s);
-RcppExport SEXP _pcadapt_prodMatVec(SEXP xp_SEXP, SEXP xSEXP, SEXP mSEXP, SEXP sSEXP) {
+RObject prodMatVec(RObject xp_, const NumericVector& x, const NumericVector& m, const NumericVector& s, const LogicalVector& pass);
+RcppExport SEXP _pcadapt_prodMatVec(SEXP xp_SEXP, SEXP xSEXP, SEXP mSEXP, SEXP sSEXP, SEXP passSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -40,13 +40,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type m(mSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type s(sSEXP);
-    rcpp_result_gen = Rcpp::wrap(prodMatVec(xp_, x, m, s));
+    Rcpp::traits::input_parameter< const LogicalVector& >::type pass(passSEXP);
+    rcpp_result_gen = Rcpp::wrap(prodMatVec(xp_, x, m, s, pass));
     return rcpp_result_gen;
 END_RCPP
 }
 // prodtMatVec
-RObject prodtMatVec(RObject xp_, const NumericVector& x, const NumericVector& m, const NumericVector& s);
-RcppExport SEXP _pcadapt_prodtMatVec(SEXP xp_SEXP, SEXP xSEXP, SEXP mSEXP, SEXP sSEXP) {
+RObject prodtMatVec(RObject xp_, const NumericVector& x, const NumericVector& m, const NumericVector& s, const LogicalVector& pass);
+RcppExport SEXP _pcadapt_prodtMatVec(SEXP xp_SEXP, SEXP xSEXP, SEXP mSEXP, SEXP sSEXP, SEXP passSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -54,7 +55,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type m(mSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type s(sSEXP);
-    rcpp_result_gen = Rcpp::wrap(prodtMatVec(xp_, x, m, s));
+    Rcpp::traits::input_parameter< const LogicalVector& >::type pass(passSEXP);
+    rcpp_result_gen = Rcpp::wrap(prodtMatVec(xp_, x, m, s, pass));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -181,6 +183,47 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const int >::type end_new(end_newSEXP);
     updt_local_scores(u, geno, V, sigma, beg_old, end_old, beg_new, end_new);
     return R_NilValue;
+END_RCPP
+}
+// cmpt_af_matrix
+NumericVector cmpt_af_matrix(const NumericMatrix& G);
+RcppExport SEXP _pcadapt_cmpt_af_matrix(SEXP GSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type G(GSEXP);
+    rcpp_result_gen = Rcpp::wrap(cmpt_af_matrix(G));
+    return rcpp_result_gen;
+END_RCPP
+}
+// prodGx_matrix
+NumericVector prodGx_matrix(const NumericMatrix& G, const NumericVector& x, const NumericVector& m, const NumericVector& s, const LogicalVector& pass);
+RcppExport SEXP _pcadapt_prodGx_matrix(SEXP GSEXP, SEXP xSEXP, SEXP mSEXP, SEXP sSEXP, SEXP passSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type G(GSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type m(mSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type s(sSEXP);
+    Rcpp::traits::input_parameter< const LogicalVector& >::type pass(passSEXP);
+    rcpp_result_gen = Rcpp::wrap(prodGx_matrix(G, x, m, s, pass));
+    return rcpp_result_gen;
+END_RCPP
+}
+// prodtGx_matrix
+NumericVector prodtGx_matrix(const NumericMatrix& G, const NumericVector& x, const NumericVector& m, const NumericVector& s, const LogicalVector& pass);
+RcppExport SEXP _pcadapt_prodtGx_matrix(SEXP GSEXP, SEXP xSEXP, SEXP mSEXP, SEXP sSEXP, SEXP passSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type G(GSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type m(mSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type s(sSEXP);
+    Rcpp::traits::input_parameter< const LogicalVector& >::type pass(passSEXP);
+    rcpp_result_gen = Rcpp::wrap(prodtGx_matrix(G, x, m, s, pass));
+    return rcpp_result_gen;
 END_RCPP
 }
 // covRob_cpp
@@ -456,8 +499,8 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_pcadapt_bedadaptXPtr", (DL_FUNC) &_pcadapt_bedadaptXPtr, 3},
     {"_pcadapt_cmpt_af", (DL_FUNC) &_pcadapt_cmpt_af, 1},
-    {"_pcadapt_prodMatVec", (DL_FUNC) &_pcadapt_prodMatVec, 4},
-    {"_pcadapt_prodtMatVec", (DL_FUNC) &_pcadapt_prodtMatVec, 4},
+    {"_pcadapt_prodMatVec", (DL_FUNC) &_pcadapt_prodMatVec, 5},
+    {"_pcadapt_prodtMatVec", (DL_FUNC) &_pcadapt_prodtMatVec, 5},
     {"_pcadapt_linReg", (DL_FUNC) &_pcadapt_linReg, 5},
     {"_pcadapt_cmpt_cov_cpp", (DL_FUNC) &_pcadapt_cmpt_cov_cpp, 6},
     {"_pcadapt_cart2bary_cpp", (DL_FUNC) &_pcadapt_cart2bary_cpp, 2},
@@ -467,6 +510,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_pcadapt_cmpt_global_pca", (DL_FUNC) &_pcadapt_cmpt_global_pca, 3},
     {"_pcadapt_cmpt_local_pca", (DL_FUNC) &_pcadapt_cmpt_local_pca, 5},
     {"_pcadapt_updt_local_scores", (DL_FUNC) &_pcadapt_updt_local_scores, 8},
+    {"_pcadapt_cmpt_af_matrix", (DL_FUNC) &_pcadapt_cmpt_af_matrix, 1},
+    {"_pcadapt_prodGx_matrix", (DL_FUNC) &_pcadapt_prodGx_matrix, 5},
+    {"_pcadapt_prodtGx_matrix", (DL_FUNC) &_pcadapt_prodtGx_matrix, 5},
     {"_pcadapt_covRob_cpp", (DL_FUNC) &_pcadapt_covRob_cpp, 1},
     {"_pcadapt_print_convert", (DL_FUNC) &_pcadapt_print_convert, 5},
     {"_pcadapt_ped2pcadapt", (DL_FUNC) &_pcadapt_ped2pcadapt, 2},

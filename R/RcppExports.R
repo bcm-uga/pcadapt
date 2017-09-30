@@ -9,12 +9,12 @@ cmpt_af <- function(xp_) {
     .Call('_pcadapt_cmpt_af', PACKAGE = 'pcadapt', xp_)
 }
 
-prodMatVec <- function(xp_, x, m, s) {
-    .Call('_pcadapt_prodMatVec', PACKAGE = 'pcadapt', xp_, x, m, s)
+prodMatVec <- function(xp_, x, m, s, pass) {
+    .Call('_pcadapt_prodMatVec', PACKAGE = 'pcadapt', xp_, x, m, s, pass)
 }
 
-prodtMatVec <- function(xp_, x, m, s) {
-    .Call('_pcadapt_prodtMatVec', PACKAGE = 'pcadapt', xp_, x, m, s)
+prodtMatVec <- function(xp_, x, m, s, pass) {
+    .Call('_pcadapt_prodtMatVec', PACKAGE = 'pcadapt', xp_, x, m, s, pass)
 }
 
 linReg <- function(xp_, u, d, v, m) {
@@ -160,6 +160,18 @@ cmpt_local_pca <- function(geno, V, sigma, beg, end) {
 #' 
 updt_local_scores <- function(u, geno, V, sigma, beg_old, end_old, beg_new, end_new) {
     invisible(.Call('_pcadapt_updt_local_scores', PACKAGE = 'pcadapt', u, geno, V, sigma, beg_old, end_old, beg_new, end_new))
+}
+
+cmpt_af_matrix <- function(G) {
+    .Call('_pcadapt_cmpt_af_matrix', PACKAGE = 'pcadapt', G)
+}
+
+prodGx_matrix <- function(G, x, m, s, pass) {
+    .Call('_pcadapt_prodGx_matrix', PACKAGE = 'pcadapt', G, x, m, s, pass)
+}
+
+prodtGx_matrix <- function(G, x, m, s, pass) {
+    .Call('_pcadapt_prodtGx_matrix', PACKAGE = 'pcadapt', G, x, m, s, pass)
 }
 
 #' Robust estimates for location and scatter

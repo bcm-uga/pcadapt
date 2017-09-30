@@ -137,24 +137,27 @@ bedadapt <- function(path = tempfile(),
 #'
 #' @param X an object of class bedadapt.
 #' @param k an integer specifying the number of principal components to retain.
+#' @param min.maf a value between \code{0} and \code{0.45} specifying the 
+#' threshold of minor allele frequencies above which p-values are computed.
 #' 
 #' @export
 #' 
 # single core implementation
-BED_rsvd <- function(X, k) {
+BED_rsvd <- function(X, k, min.maf) {
   nIND <- X$nIND
   nSNP <- X$nSNP
   m <- cmpt_af(X$address)
   s <- pmax(1e-6, sqrt(2 * m * (1 - m)))
+  pass <- (pmin(m, 1 - m) >= min.maf)
   
   A <- function(x, args) {
     # Input vector of length p
-    return(prodMatVec(X$address, x, m, s))
+    return(prodMatVec(X$address, x, m, s, pass))
   }
   
   Atrans <- function(x, args) {
     # Input vector of length n
-    return(prodtMatVec(X$address, x, m, s))
+    return(prodtMatVec(X$address, x, m, s, pass))
   }
   
   res <- RSpectra::svds(A, k, nu = k, nv = k, Atrans = Atrans,
@@ -164,5 +167,43 @@ BED_rsvd <- function(X, k) {
   res$z <- linReg(X$address, res$u, res$d, res$v, m)
   return(res)
 }
+
+#' SVD for genotype matrices 
+#'
+#' \code{matrix_rsvd}
+#'
+#' @param X an object of class bedadapt.
+#' @param k an integer specifying the number of principal components to retain.
+#' @param min.maf a value between \code{0} and \code{0.45} specifying the 
+#' threshold of minor allele frequencies above which p-values are computed.
+#' 
+#' @export
+#' 
+# single core implementation
+matrix_rsvd <- function(X, k, min.maf) {
+  nIND <- nrow(X)
+  nSNP <- ncol(X)
+  m <- cmpt_af_matrix(X)
+  s <- pmax(1e-6, sqrt(2 * m * (1 - m)))
+  pass <- (pmin(m, 1 - m) >= min.maf)
+  
+  A <- function(x, args) {
+    # Input vector of length p
+    return(prodGx_matrix(X, x, m, s, pass))
+  }
+  
+  Atrans <- function(x, args) {
+    # Input vector of length n
+    return(prodtGx_matrix(X, x, m, s, pass))
+  }
+  
+  res <- RSpectra::svds(A, k, nu = k, nv = k, Atrans = Atrans,
+                        opts = list(tol = 1e-4, maxitr = 100),
+                        dim = c(nIND, nSNP))
+  
+  #res$z <- linReg(X$address, res$u, res$d, res$v, m)
+  return(res)
+}
+
 
 
