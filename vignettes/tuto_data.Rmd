@@ -11,8 +11,6 @@ files are binary files that contains the genotypes. As PLINK is really
 convenient to use (it is portable, fast and consistant), developing programs 
 that rely on this format seems to be a good choice.
 
-
-
 ## .vcf to .bed
 
 ```{bash, eval=FALSE}
