@@ -5,3 +5,4 @@
 *.o
 *.dll
 vignettes/tuto_ingrogression.Rmd
+tmp-data

@@ -6,6 +6,32 @@
 
 using namespace Rcpp;
 
+// af
+NumericVector af(SEXP obj, const NumericMatrix& lookup_scale, const IntegerMatrix& lookup_byte);
+RcppExport SEXP _pcadapt_af(SEXP objSEXP, SEXP lookup_scaleSEXP, SEXP lookup_byteSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type obj(objSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type lookup_scale(lookup_scaleSEXP);
+    Rcpp::traits::input_parameter< const IntegerMatrix& >::type lookup_byte(lookup_byteSEXP);
+    rcpp_result_gen = Rcpp::wrap(af(obj, lookup_scale, lookup_byte));
+    return rcpp_result_gen;
+END_RCPP
+}
+// bedXPtr
+SEXP bedXPtr(std::string path, int n, int p);
+RcppExport SEXP _pcadapt_bedXPtr(SEXP pathSEXP, SEXP nSEXP, SEXP pSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type path(pathSEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< int >::type p(pSEXP);
+    rcpp_result_gen = Rcpp::wrap(bedXPtr(path, n, p));
+    return rcpp_result_gen;
+END_RCPP
+}
 // bedadaptXPtr
 SEXP bedadaptXPtr(std::string path, int n, int p);
 RcppExport SEXP _pcadapt_bedadaptXPtr(SEXP pathSEXP, SEXP nSEXP, SEXP pSEXP) {
@@ -497,6 +523,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_pcadapt_af", (DL_FUNC) &_pcadapt_af, 3},
+    {"_pcadapt_bedXPtr", (DL_FUNC) &_pcadapt_bedXPtr, 3},
     {"_pcadapt_bedadaptXPtr", (DL_FUNC) &_pcadapt_bedadaptXPtr, 3},
     {"_pcadapt_cmpt_af", (DL_FUNC) &_pcadapt_cmpt_af, 1},
     {"_pcadapt_prodMatVec", (DL_FUNC) &_pcadapt_prodMatVec, 5},
