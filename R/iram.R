@@ -13,7 +13,7 @@ getCode = function(NA.VAL = 3L) {
 
 #' @export
 #'
-iram = function(input) {
+iram = function(input, K = 2) {
   
   lookup_byte <- getCode()
   
@@ -43,19 +43,21 @@ iram = function(input) {
     (g - 2 * p) / sqrt(2 * p * (1 - p))
   }), 0)
 
+  ### SVD using RSpectra
   obj.svd <- RSpectra::svds(
     A = function(x, args) {
       cat(".")
-      pcadapt:::pMatVec4(xptr, x, lookup_scale, lookup_byte) / nb_nona[[1]] * n
+      pMatVec4(xptr, x, lookup_scale, lookup_byte) / nb_nona[[1]] * p
     }, 
-    k = 5, 
+    k = K, 
     Atrans = function(x, args) {
-      pcadapt:::cpMatVec4(xptr, x, lookup_scale, lookup_byte) / nb_nona[[2]] * p
+      cpMatVec4(xptr, x, lookup_scale, lookup_byte) / nb_nona[[2]] * n
     },
     dim = c(n, p),
     opts = list(tol = 1e-4)
   )
-  
+  obj.svd$zscores <- multLinReg(xptr, lookup_scale, lookup_byte, obj.svd$u, obj.svd$d, obj.svd$v)
+  obj.svd$d <- obj.svd$d^2 / p
   return(obj.svd)
   
 }

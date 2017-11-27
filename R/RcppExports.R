@@ -170,6 +170,10 @@ updt_local_scores <- function(u, geno, V, sigma, beg_old, end_old, beg_new, end_
     invisible(.Call('_pcadapt_updt_local_scores', PACKAGE = 'pcadapt', u, geno, V, sigma, beg_old, end_old, beg_new, end_new))
 }
 
+multLinReg <- function(obj, lookup_scale, lookup_byte, u, d, v) {
+    .Call('_pcadapt_multLinReg', PACKAGE = 'pcadapt', obj, lookup_scale, lookup_byte, u, d, v)
+}
+
 cmpt_af_matrix <- function(G) {
     .Call('_pcadapt_cmpt_af_matrix', PACKAGE = 'pcadapt', G)
 }

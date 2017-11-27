@@ -1,7 +1,6 @@
 #include <pcadapt/bed-acc.h>
 #include <pcadapt/mat-acc.h>
 
-
 /******************************************************************************/
 
 template <class C>

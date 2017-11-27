@@ -211,6 +211,22 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// multLinReg
+NumericMatrix multLinReg(SEXP obj, const NumericMatrix& lookup_scale, const IntegerMatrix& lookup_byte, const NumericMatrix& u, const NumericVector& d, const NumericMatrix& v);
+RcppExport SEXP _pcadapt_multLinReg(SEXP objSEXP, SEXP lookup_scaleSEXP, SEXP lookup_byteSEXP, SEXP uSEXP, SEXP dSEXP, SEXP vSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type obj(objSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type lookup_scale(lookup_scaleSEXP);
+    Rcpp::traits::input_parameter< const IntegerMatrix& >::type lookup_byte(lookup_byteSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type u(uSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type d(dSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type v(vSEXP);
+    rcpp_result_gen = Rcpp::wrap(multLinReg(obj, lookup_scale, lookup_byte, u, d, v));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cmpt_af_matrix
 NumericVector cmpt_af_matrix(const NumericMatrix& G);
 RcppExport SEXP _pcadapt_cmpt_af_matrix(SEXP GSEXP) {
@@ -579,6 +595,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_pcadapt_cmpt_global_pca", (DL_FUNC) &_pcadapt_cmpt_global_pca, 3},
     {"_pcadapt_cmpt_local_pca", (DL_FUNC) &_pcadapt_cmpt_local_pca, 5},
     {"_pcadapt_updt_local_scores", (DL_FUNC) &_pcadapt_updt_local_scores, 8},
+    {"_pcadapt_multLinReg", (DL_FUNC) &_pcadapt_multLinReg, 6},
     {"_pcadapt_cmpt_af_matrix", (DL_FUNC) &_pcadapt_cmpt_af_matrix, 1},
     {"_pcadapt_prodGx_matrix", (DL_FUNC) &_pcadapt_prodGx_matrix, 5},
     {"_pcadapt_prodtGx_matrix", (DL_FUNC) &_pcadapt_prodtGx_matrix, 5},
