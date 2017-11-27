@@ -44,11 +44,11 @@ system.time({
   tmp3 <- RSpectra::svds(
     A = function(x, args) {
       cat(".")
-      pMatVec4(test, x, lookup_scale, lookup_byte) / nb_nona[[1]] * n
+      pcadapt:::pMatVec4(test, x, lookup_scale, lookup_byte) / nb_nona[[1]] * n
     }, 
     k = 5, 
     Atrans = function(x, args) {
-      cpMatVec4(test, x, lookup_scale, lookup_byte) / nb_nona[[2]] * p
+      pcadapt:::cpMatVec4(test, x, lookup_scale, lookup_byte) / nb_nona[[2]] * p
     },
     dim = c(n, p),
     opts = list(tol = 1e-4)
