@@ -17,9 +17,9 @@ bedadapt_RC <- methods::setRefClass(
     # Same idea as in package phaverty/bigmemoryExtras
     address = function() {
       if (identical(.self$extptr, methods::new("externalptr"))) { # nil
-        .self$extptr <- bedadaptXPtr(.self$path,
-                                     .self$nIND,
-                                     .self$nSNP)
+        .self$extptr <- bedXPtr(.self$path,
+                                .self$nIND,
+                                .self$nSNP)
       }
       .self$extptr
     }

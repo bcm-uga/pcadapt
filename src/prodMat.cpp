@@ -56,7 +56,6 @@ NumericVector cpMatVec4(C macc, const NumericVector& x) {
   double tmp;
   int i, j;
   
-  
   // WARNING: do not use std::size_t because of `n - 4`
   for (j = 0; j < m; j++) {
     tmp = 0;

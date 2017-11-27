@@ -252,6 +252,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// nb_nona
+ListOf<NumericVector> nb_nona(SEXP obj, const NumericMatrix& lookup_scale, const IntegerMatrix& lookup_byte);
+RcppExport SEXP _pcadapt_nb_nona(SEXP objSEXP, SEXP lookup_scaleSEXP, SEXP lookup_byteSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type obj(objSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type lookup_scale(lookup_scaleSEXP);
+    Rcpp::traits::input_parameter< const IntegerMatrix& >::type lookup_byte(lookup_byteSEXP);
+    rcpp_result_gen = Rcpp::wrap(nb_nona(obj, lookup_scale, lookup_byte));
+    return rcpp_result_gen;
+END_RCPP
+}
 // covRob_cpp
 Rcpp::List covRob_cpp(arma::mat& x);
 RcppExport SEXP _pcadapt_covRob_cpp(SEXP xSEXP) {
@@ -311,6 +324,34 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type ploidy(ploidySEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type sample_size(sample_sizeSEXP);
     rcpp_result_gen = Rcpp::wrap(sample_geno_matrix(freq, ploidy, sample_size));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pMatVec4
+NumericVector pMatVec4(SEXP obj, const NumericVector& x, const NumericMatrix& lookup_scale, const IntegerMatrix& lookup_byte);
+RcppExport SEXP _pcadapt_pMatVec4(SEXP objSEXP, SEXP xSEXP, SEXP lookup_scaleSEXP, SEXP lookup_byteSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type obj(objSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type lookup_scale(lookup_scaleSEXP);
+    Rcpp::traits::input_parameter< const IntegerMatrix& >::type lookup_byte(lookup_byteSEXP);
+    rcpp_result_gen = Rcpp::wrap(pMatVec4(obj, x, lookup_scale, lookup_byte));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpMatVec4
+NumericVector cpMatVec4(SEXP obj, const NumericVector& x, const NumericMatrix& lookup_scale, const IntegerMatrix& lookup_byte);
+RcppExport SEXP _pcadapt_cpMatVec4(SEXP objSEXP, SEXP xSEXP, SEXP lookup_scaleSEXP, SEXP lookup_byteSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type obj(objSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type lookup_scale(lookup_scaleSEXP);
+    Rcpp::traits::input_parameter< const IntegerMatrix& >::type lookup_byte(lookup_byteSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpMatVec4(obj, x, lookup_scale, lookup_byte));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -541,11 +582,14 @@ static const R_CallMethodDef CallEntries[] = {
     {"_pcadapt_cmpt_af_matrix", (DL_FUNC) &_pcadapt_cmpt_af_matrix, 1},
     {"_pcadapt_prodGx_matrix", (DL_FUNC) &_pcadapt_prodGx_matrix, 5},
     {"_pcadapt_prodtGx_matrix", (DL_FUNC) &_pcadapt_prodtGx_matrix, 5},
+    {"_pcadapt_nb_nona", (DL_FUNC) &_pcadapt_nb_nona, 3},
     {"_pcadapt_covRob_cpp", (DL_FUNC) &_pcadapt_covRob_cpp, 1},
     {"_pcadapt_print_convert", (DL_FUNC) &_pcadapt_print_convert, 5},
     {"_pcadapt_ped2pcadapt", (DL_FUNC) &_pcadapt_ped2pcadapt, 2},
     {"_pcadapt_lfmm2pcadapt", (DL_FUNC) &_pcadapt_lfmm2pcadapt, 2},
     {"_pcadapt_sample_geno_matrix", (DL_FUNC) &_pcadapt_sample_geno_matrix, 3},
+    {"_pcadapt_pMatVec4", (DL_FUNC) &_pcadapt_pMatVec4, 4},
+    {"_pcadapt_cpMatVec4", (DL_FUNC) &_pcadapt_cpMatVec4, 4},
     {"_pcadapt_get_pop_size", (DL_FUNC) &_pcadapt_get_pop_size, 2},
     {"_pcadapt_slidingWindows_fast", (DL_FUNC) &_pcadapt_slidingWindows_fast, 9},
     {"_pcadapt_slidingWindows_new", (DL_FUNC) &_pcadapt_slidingWindows_new, 9},

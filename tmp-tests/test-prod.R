@@ -1,5 +1,6 @@
 popres_bed <- "tmp-data/testfile.bed"
 # popres_bed <- "../POPRES_data/POPRES_allchr_QC_norel.bed"
+popres_bed <- normalizePath("~/Downloads/plink_mac/POPRES_filtered_0.0001.bed")
 p <- nrow(data.table::fread(sub("\\.bed$", ".bim", popres_bed)))
 n <- nrow(data.table::fread(sub("\\.bed$", ".fam", popres_bed)))
 Rcpp::sourceCpp('src/bed-acc-xptr.cpp')

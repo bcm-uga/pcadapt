@@ -11,7 +11,6 @@ ListOf<NumericVector> nb_nona(C macc) {
   IntegerVector m_nona(n, m);
   int i, j;
   
-  
   // WARNING: do not use std::size_t because of `n - 4`
   for (j = 0; j < m; j++) {
     for (i = 0; i < n; i++) {
@@ -27,8 +26,8 @@ ListOf<NumericVector> nb_nona(C macc) {
 
 // [[Rcpp::export]]
 ListOf<NumericVector> nb_nona(SEXP obj,
-                            const NumericMatrix& lookup_scale,
-                            const IntegerMatrix& lookup_byte) {
+                              const NumericMatrix& lookup_scale,
+                              const IntegerMatrix& lookup_byte) {
   
   if (Rf_isMatrix(obj)) {
     matAcc macc(obj, lookup_scale);

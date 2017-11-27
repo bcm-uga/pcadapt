@@ -3,7 +3,7 @@ popres_bed <- "../POPRES_data/POPRES_allchr_QC_norel.bed"
 p <- nrow(data.table::fread(sub("\\.bed$", ".bim", popres_bed)))
 n <- nrow(data.table::fread(sub("\\.bed$", ".fam", popres_bed)))
 Rcpp::sourceCpp('src/bed-acc-xptr.cpp')
-test <- bedXPtr(popres_bed, n, p)
+test <- bedXPtr(normalizePath(popres_bed), n, p)
 
 getCode <- function(NA.VAL = 3L) {
   geno.raw <- as.logical(rawToBits(as.raw(0:255)))

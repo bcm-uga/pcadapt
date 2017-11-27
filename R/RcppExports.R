@@ -182,6 +182,10 @@ prodtGx_matrix <- function(G, x, m, s, pass) {
     .Call('_pcadapt_prodtGx_matrix', PACKAGE = 'pcadapt', G, x, m, s, pass)
 }
 
+nb_nona <- function(obj, lookup_scale, lookup_byte) {
+    .Call('_pcadapt_nb_nona', PACKAGE = 'pcadapt', obj, lookup_scale, lookup_byte)
+}
+
 #' Robust estimates for location and scatter
 #'
 #' \code{covRob_cpp} implements the Orthogonalized Gnanadesikan-Kettenring estimator
@@ -267,6 +271,14 @@ lfmm2pcadapt <- function(input, output) {
 #' 
 sample_geno_matrix <- function(freq, ploidy, sample_size) {
     .Call('_pcadapt_sample_geno_matrix', PACKAGE = 'pcadapt', freq, ploidy, sample_size)
+}
+
+pMatVec4 <- function(obj, x, lookup_scale, lookup_byte) {
+    .Call('_pcadapt_pMatVec4', PACKAGE = 'pcadapt', obj, x, lookup_scale, lookup_byte)
+}
+
+cpMatVec4 <- function(obj, x, lookup_scale, lookup_byte) {
+    .Call('_pcadapt_cpMatVec4', PACKAGE = 'pcadapt', obj, x, lookup_scale, lookup_byte)
 }
 
 #' Get population size
