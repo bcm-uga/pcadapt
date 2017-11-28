@@ -50,7 +50,7 @@ residuals_to_stat <- function(geno, obj.svd, K = 1, pop, admixed, window.size = 
 #'
 #' @export
 #'
-clumping = function(G, chr.info, size = 100, thr = 0.2) {
+clumping3 = function(G, chr.info, size = 100, thr = 0.2) {
   n <- ncol(G) # Number of individuals
   p <- nrow(G) # Number of SNPs
   S <- cmpt_minor_af(G, 2)
@@ -85,3 +85,43 @@ clumping = function(G, chr.info, size = 100, thr = 0.2) {
   }
   return(ind.keep)
 }
+
+clumping2 = function(input, size = 100, thr = 0.2) {
+  
+  lookup_byte <- getCode()
+  
+  if (class(input) == "character") {
+    path_to_bed <- normalizePath(input)
+    p <- nrow(data.table::fread(sub("\\.bed$", ".bim", path_to_bed)))
+    n <- nrow(data.table::fread(sub("\\.bed$", ".fam", path_to_bed)))
+    
+    ### File mapping
+    xptr <- bedXPtr(path_to_bed, n, p)
+    
+  } else if (class(input) == "matrix") {
+    # an input matrix has nIND rows and nSNP columns
+    xptr <- input
+    n <- nrow(xptr)
+    p <- ncol(xptr)
+  }
+  
+  tmp <- pcadapt:::af(xptr, rbind(rep(0, p), 1, 2, 3), lookup_byte)
+  S <- pmin(tmp, 1 - tmp)
+  sumX <- get_sumX(xptr, rbind(rep(0, p), 1, 2, 3), lookup_byte)
+  denoX <- get_denoX(xptr, rbind(rep(0, p), 1, 2, 3), lookup_byte, tmp)
+  
+  ord.chr <- order(S, decreasing = TRUE)
+  remain <- rep(TRUE, length(ord.chr))
+  ind.keep <- clumping(xptr,
+                       rbind(rep(0, p), 1, 2, 3),
+                       lookup_byte,
+                       ord.chr,
+                       remain,
+                       sumX,
+                       denoX,
+                       size, 
+                       thr)
+  
+  return(ind.keep)
+}
+

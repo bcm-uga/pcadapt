@@ -4,8 +4,8 @@
 \alias{pcadapt}
 \title{Principal Component Analysis for outlier detection}
 \usage{
-pcadapt(input, K = 5, method = "mahalanobis", data.type = "genotype",
-  min.maf = 0.05, ploidy = 2, output.filename, clean.files, transpose)
+pcadapt(input, K = 2, method = "mahalanobis", data.type = "genotype",
+  min.maf = 0.05)
 }
 \arguments{
 \item{input}{a genotype matrix or a character string specifying the name of 
@@ -17,32 +17,18 @@ the file to be processed with \code{pcadapt}.}
 the p-values. Three statistics are currently available, \code{"mahalanobis"},
 \code{"communality"} and \code{"componentwise"}.}
 
-\item{data.type}{a character string specifying the type of data being read, 
-either a \code{genotype} matrix (\code{data.type="genotype"}), or a matrix of 
-allele frequencies (\code{data.type="pool"}).}
-
 \item{min.maf}{a value between \code{0} and \code{0.45} specifying the 
 threshold of minor allele frequencies above which p-values are computed.}
-
-\item{ploidy}{an integer specifying the ploidy of the individuals.}
-
-\item{output.filename}{deprecated argument.}
-
-\item{clean.files}{deprecated argument.}
-
-\item{transpose}{deprecated argument.}
 }
 \value{
 The returned value \code{x} is an object of class \code{pcadapt}.
 }
 \description{
 \code{pcadapt} performs principal component analysis and computes p-values to
- test for outliers. The test for
-outliers is based on the correlations between genetic variation and the first 
-\code{K} principal components.
-\code{pcadapt} also handles Pool-seq data for which the statistical analysis 
-is performed on the genetic markers frequencies. Returns an object of class 
-\code{pcadapt}.
+test for outliers. The test for outliers is based on the correlations between
+genetic variation and the first \code{K} principal components. \code{pcadapt}
+also handles Pool-seq data for which the statistical analysis is performed on
+the genetic markers frequencies. Returns an object of class \code{pcadapt}.
 }
 \details{
 First, a principal component analysis is performed on the scaled and 
@@ -61,8 +47,8 @@ variance explained by the first \code{K} PCs.
 \code{componentwise}: returns a matrix of z-scores.
 
 To compute p-values, test statistics (\code{stat}) are divided by a genomic 
-inflation factor (\code{gif}) when \code{method="mahalanobis"}.
-When \code{method="communality"}, the test statistic is first multiplied by 
+inflation factor (\code{gif}) when \code{method="mahalanobis"}. When 
+\code{method="communality"}, the test statistic is first multiplied by 
 \code{K} and divided by the percentage of variance explained by the first 
 \code{K} PCs before accounting for genomic inflation factor. When using 
 \code{method="mahalanobis"} or \code{"communality"}, the scaled statistics 

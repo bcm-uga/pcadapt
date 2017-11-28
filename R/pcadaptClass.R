@@ -65,13 +65,9 @@ create.pcadapt = function(input, K, method, min.maf, ploidy, type){
                      sigma = xsvd$values,
                      type = 1)
   }
-  obj.stat <- cmpt.stat(x = lr$zscores, 
-                        sqrt(xsvd$values / (nIND - 1)),
-                        K = K,
-                        method = method,
-                        nSNP = nSNP,
-                        maf = lr$maf,
-                        min.maf = min.maf)
+  obj.stat <- get_statistics(lr$zscores,
+                             method = method,
+                             sqrt(xsvd$values / (nIND - 1)))
   return(list(scores = xsvd$vectors, 
               singular.values = sqrt(xsvd$values / (nIND - 1)), 
               zscores = lr$zscores, 

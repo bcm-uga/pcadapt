@@ -1,5 +1,3 @@
-#' @export
-#'
 getCode = function(NA.VAL = 3L) {
   geno.raw <- as.logical(rawToBits(as.raw(0:255)))
   s <- c(TRUE, FALSE)
@@ -13,7 +11,7 @@ getCode = function(NA.VAL = 3L) {
 
 #' @export
 #'
-iram = function(input, K = 2) {
+iram = function(input, K = 2, min.maf) {
   
   lookup_byte <- getCode()
   
@@ -38,6 +36,9 @@ iram = function(input, K = 2) {
   ### Get allele frequencies
   tmp <- pcadapt:::af(xptr, rbind(rep(0, p), 1, 2, 3), lookup_byte)
   
+  ### Filter
+  pass <- 1L * (pmin(tmp, 1 - tmp) >= min.maf)
+  
   ### Lookup table
   lookup_scale <- rbind(outer(0:2, tmp, function(g, p) {
     (g - 2 * p) / sqrt(2 * p * (1 - p))
@@ -47,17 +48,17 @@ iram = function(input, K = 2) {
   obj.svd <- RSpectra::svds(
     A = function(x, args) {
       cat(".")
-      pMatVec4(xptr, x, lookup_scale, lookup_byte) / nb_nona[[1]] * p
+      pMatVec4(xptr, x, lookup_scale, lookup_byte, pass) / nb_nona[[1]] * p
     }, 
     k = K, 
     Atrans = function(x, args) {
-      cpMatVec4(xptr, x, lookup_scale, lookup_byte) / nb_nona[[2]] * n
+      cpMatVec4(xptr, x, lookup_scale, lookup_byte, pass) / nb_nona[[2]] * n
     },
     dim = c(n, p),
     opts = list(tol = 1e-4)
   )
+  
   obj.svd$zscores <- multLinReg(xptr, lookup_scale, lookup_byte, obj.svd$u, obj.svd$d, obj.svd$v)
   obj.svd$d <- obj.svd$d^2 / p
   return(obj.svd)
-  
 }

@@ -29,6 +29,18 @@ linReg <- function(xp_, u, d, v, m) {
     .Call('_pcadapt_linReg', PACKAGE = 'pcadapt', xp_, u, d, v, m)
 }
 
+get_sumX <- function(obj, lookup_scale, lookup_byte) {
+    .Call('_pcadapt_get_sumX', PACKAGE = 'pcadapt', obj, lookup_scale, lookup_byte)
+}
+
+get_denoX <- function(obj, lookup_scale, lookup_byte, m) {
+    .Call('_pcadapt_get_denoX', PACKAGE = 'pcadapt', obj, lookup_scale, lookup_byte, m)
+}
+
+clumping <- function(obj, lookup, lookup_byte, ord, remain, sumX, denoX, size, thr) {
+    .Call('_pcadapt_clumping', PACKAGE = 'pcadapt', obj, lookup, lookup_byte, ord, remain, sumX, denoX, size, thr)
+}
+
 #' Covariance for loaded genotype data
 #' 
 #' \code{cmpt_cov_cpp} computes the covariance matrix of a genotype matrix.
@@ -277,12 +289,12 @@ sample_geno_matrix <- function(freq, ploidy, sample_size) {
     .Call('_pcadapt_sample_geno_matrix', PACKAGE = 'pcadapt', freq, ploidy, sample_size)
 }
 
-pMatVec4 <- function(obj, x, lookup_scale, lookup_byte) {
-    .Call('_pcadapt_pMatVec4', PACKAGE = 'pcadapt', obj, x, lookup_scale, lookup_byte)
+pMatVec4 <- function(obj, x, lookup_scale, lookup_byte, pass) {
+    .Call('_pcadapt_pMatVec4', PACKAGE = 'pcadapt', obj, x, lookup_scale, lookup_byte, pass)
 }
 
-cpMatVec4 <- function(obj, x, lookup_scale, lookup_byte) {
-    .Call('_pcadapt_cpMatVec4', PACKAGE = 'pcadapt', obj, x, lookup_scale, lookup_byte)
+cpMatVec4 <- function(obj, x, lookup_scale, lookup_byte, pass) {
+    .Call('_pcadapt_cpMatVec4', PACKAGE = 'pcadapt', obj, x, lookup_scale, lookup_byte, pass)
 }
 
 #' Get population size

@@ -1,12 +1,10 @@
 #' Principal Component Analysis for outlier detection
 #'
 #' \code{pcadapt} performs principal component analysis and computes p-values to
-#'  test for outliers. The test for
-#' outliers is based on the correlations between genetic variation and the first 
-#' \code{K} principal components.
-#' \code{pcadapt} also handles Pool-seq data for which the statistical analysis 
-#' is performed on the genetic markers frequencies. Returns an object of class 
-#' \code{pcadapt}.
+#' test for outliers. The test for outliers is based on the correlations between
+#' genetic variation and the first \code{K} principal components. \code{pcadapt}
+#' also handles Pool-seq data for which the statistical analysis is performed on
+#' the genetic markers frequencies. Returns an object of class \code{pcadapt}.
 #'
 #' @details First, a principal component analysis is performed on the scaled and 
 #' centered genotype data. To account for missing data, the correlation matrix 
@@ -24,8 +22,8 @@
 #' \code{componentwise}: returns a matrix of z-scores.
 #'
 #' To compute p-values, test statistics (\code{stat}) are divided by a genomic 
-#' inflation factor (\code{gif}) when \code{method="mahalanobis"}.
-#' When \code{method="communality"}, the test statistic is first multiplied by 
+#' inflation factor (\code{gif}) when \code{method="mahalanobis"}. When 
+#' \code{method="communality"}, the test statistic is first multiplied by 
 #' \code{K} and divided by the percentage of variance explained by the first 
 #' \code{K} PCs before accounting for genomic inflation factor. When using 
 #' \code{method="mahalanobis"} or \code{"communality"}, the scaled statistics 
@@ -41,15 +39,8 @@
 #' @param method a character string specifying the method to be used to compute
 #' the p-values. Three statistics are currently available, \code{"mahalanobis"},
 #' \code{"communality"} and \code{"componentwise"}.
-#' @param data.type a character string specifying the type of data being read, 
-#' either a \code{genotype} matrix (\code{data.type="genotype"}), or a matrix of 
-#' allele frequencies (\code{data.type="pool"}).
 #' @param min.maf a value between \code{0} and \code{0.45} specifying the 
 #' threshold of minor allele frequencies above which p-values are computed.
-#' @param ploidy an integer specifying the ploidy of the individuals.
-#' @param output.filename deprecated argument.
-#' @param clean.files deprecated argument.
-#' @param transpose deprecated argument.
 #' 
 #' @return The returned value \code{x} is an object of class \code{pcadapt}.
 #' 
@@ -58,20 +49,16 @@
 #' @export
 #'
 pcadapt = function(input, 
-                   K = 5, 
+                   K = 2, 
                    method = "mahalanobis", 
                    data.type = "genotype",
-                   min.maf = 0.05, 
-                   ploidy = 2,
-                   output.filename,
-                   clean.files,
-                   transpose){
+                   min.maf = 0.05) {
   
   #############################################
   ########## test arguments and init ##########
   #############################################
   
-  if (missing(input)){
+  if (missing(input)) {
     appDir = system.file("shiny-examples/app-pcadapt", package = "pcadapt")
     if (appDir == "") {
       stop("Could not find Shiny app in pcadapt.", call. = FALSE)
@@ -79,89 +66,42 @@ pcadapt = function(input,
     shiny::runApp(appDir, display.mode = "normal")  
   } else {
     
-    ## In version 3.1.0, argument output.filename has been removed ##
-    if (!missing(output.filename)){
-      warning("Argument output.filename is deprecated. Please refer to the 
-              latest vignette for further information.")
+    if (!(class(K) %in% c("numeric", "integer")) || K <= 0){
+      stop("K has to be a positive integer.")
     }
     
-    ## In version 3.1.0, argument clean.files has been removed ##
-    if (!missing(clean.files)){
-      warning("Argument clean.files is deprecated. Please refer to the latest 
-              vignette for further information.")
+    if (!(method %in% c("mahalanobis", "communality", "componentwise"))) {
+      warning("Unknown method. 'mahalanobis' will be used hence.")
+      method <- "mahalanobis"
     }
     
-    ## In version 3.0.3, argument transpose has been removed ##
-    if (!missing(transpose)){
-      stop("Argument transpose is deprecated. Please refer to the latest 
-           vignette for further information.")
-    }
-    
-    if (data.type == "genotype"){
-      if (!(class(K) %in% c("numeric", "integer")) || K <= 0){
-        stop("K has to be a positive integer.")
-      }
-      
-      if (!(method %in% c("mahalanobis", "communality", "componentwise"))){
-        warning("Unknown method. 'mahalanobis' will be used hence.")
-        method <- "mahalanobis"
-      }
-      
-      if (class(min.maf) != "numeric" || min.maf < 0 || min.maf > 0.45){
-        warning("min.maf has to be a real number between 0 and 0.45. Default 
+    if (class(min.maf) != "numeric" || min.maf < 0 || min.maf > 0.45) {
+      warning("min.maf has to be a real number between 0 and 0.45. Default 
                 value will be used hence.")
-        min.maf <- 0.05
-      }
-      
-      if (!(ploidy %in% c(1,2))){
-        stop("pcadapt only supports haploid and diploid data.")
-      }
-      
-      local <- NULL
-      if (is.character(input) && !file.exists(input)){
-        stop(paste0("File ", input, " does not exist."))
-      } else if (is.character(input) && file.exists(input)){
-        local <- FALSE
-      }
-      
-      if ((class(input) %in% c("matrix", "data.frame", "array"))){
-        local <- TRUE  
-      } 
-      
-      if (!is.null(local)){
-        if (local == FALSE){
-          abs.path <- normalizePath(input)
-          obj.pca <- create.pcadapt(input = abs.path, 
-                                    K = K,
-                                    method = method, 
-                                    min.maf = min.maf, 
-                                    ploidy = ploidy, 
-                                    type = 0)
-        } else if (local == TRUE){
-          obj.pca <- create.pcadapt(input = as.matrix(input), 
-                                    K = K, 
-                                    method = method, 
-                                    min.maf = min.maf, 
-                                    ploidy = ploidy, 
-                                    type = 1)
-        }
-        class(obj.pca) <- 'pcadapt'
-        attr(obj.pca, "K") <- K
-        attr(obj.pca, "data.type") <- "genotype"
-        attr(obj.pca, "method") <- method
-        attr(obj.pca, "min.maf") <- min.maf
-        return(obj.pca)
-      } else {
-        stop("Input class not supported.")
-      }
-    } else if (data.type == "pool"){
-      stop('Option data.type = "pool" is deprecated. Use the read.pcadapt 
-function instead. Usage:\n 
-         geno <- read.pcadapt(input, type = "pool", local.env = TRUE)\n
-         x <- pcadapt(input = geno, K = ...)')
-      stop('')
+      min.maf <- 0.05
     }
-  }
+    
+    if (is.character(input) && !file.exists(input)) {
+      stop(paste0("File ", input, " does not exist."))
+    } 
+    
+    obj.pca <- iram(input, K = K, min.maf = min.maf)
+    res <- get_statistics(as.matrix(obj.pca$zscores), 
+                          method = method, 
+                          values = obj.pca$d)
+    output <- list(scores = obj.pca$u,
+                   singular.values = sqrt(obj.pca$d * nrow(obj.pca$v) / (nrow(obj.pca$u) - 1)),
+                   loadings = obj.pca$v,
+                   zscores = obj.pca$zscores,
+                   chi2.stat = res$chi2.stat,
+                   gif = res$gif,
+                   pvalues = res$pvalues)
+    class(output) <- "pcadapt"
+    attr(output, "K") <- K
+    attr(output, "method") <- method
+    attr(output, "min.maf") <- min.maf
+    return(output)
+  } 
 }
 
 #' Shiny app
