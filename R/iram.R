@@ -11,7 +11,7 @@ getCode = function(NA.VAL = 3L) {
 
 #' @export
 #'
-iram = function(input, K = 2, min.maf) {
+iram = function(input, K = 2, min.maf = 0.01, size = 100, thr = 0.2) {
   
   lookup_byte <- getCode()
   
@@ -36,8 +36,12 @@ iram = function(input, K = 2, min.maf) {
   ### Get allele frequencies
   tmp <- pcadapt:::af(xptr, rbind(rep(0, p), 1, 2, 3), lookup_byte)
   
+  pass.LD <- clumping2(xptr, size = size, thr = thr)
+  
   ### Filter
-  pass <- 1L * (pmin(tmp, 1 - tmp) >= min.maf)
+  pass.af <- (pmin(tmp, 1 - tmp) >= min.maf)
+  
+  pass <- 1L * (pass.LD & pass.af)
   
   ### Lookup table
   lookup_scale <- rbind(outer(0:2, tmp, function(g, p) {

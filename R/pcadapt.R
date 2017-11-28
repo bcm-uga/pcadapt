@@ -71,18 +71,18 @@ pcadapt = function(input,
     }
     
     if (!(method %in% c("mahalanobis", "communality", "componentwise"))) {
-      warning("Unknown method. 'mahalanobis' will be used hence.")
+      warning("Unknown method. Default method will be used.")
       method <- "mahalanobis"
     }
     
     if (class(min.maf) != "numeric" || min.maf < 0 || min.maf > 0.45) {
       warning("min.maf has to be a real number between 0 and 0.45. Default 
-                value will be used hence.")
+                value will be used.")
       min.maf <- 0.05
     }
     
     if (is.character(input) && !file.exists(input)) {
-      stop(paste0("File ", input, " does not exist."))
+      stop(paste("File", input, "does not exist."))
     } 
     
     obj.pca <- iram(input, K = K, min.maf = min.maf)

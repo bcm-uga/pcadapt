@@ -13,9 +13,7 @@ NumericVector AF(C macc) {
   NumericVector af(p);
   
   for (j = 0; j < p; j++) {
-    
     n_available = n; // Counts the number of available values for SNP j
-    
     for (i = 0; i < n; i++) {
       x = macc(i, j);
       if (x == 3) { // Checking a 3 is much faster that checking a NA
@@ -24,10 +22,8 @@ NumericVector AF(C macc) {
         af[j] += x;
       }
     }
-    
     af[j] /= 2 * n_available;
   }
-  
   return af;
 }
 
