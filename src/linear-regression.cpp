@@ -1,7 +1,6 @@
 #include <pcadapt/bed-acc.h>
 #include <pcadapt/mat-acc.h>
 
-
 template <class C>
 NumericMatrix multLinReg(C macc, 
                          const NumericMatrix &u,
@@ -12,6 +11,18 @@ NumericMatrix multLinReg(C macc,
   size_t p = macc.ncol();
   size_t K = u.ncol();
   
+  NumericMatrix V(p, K);
+  
+  for (size_t j = 0; j < p; j++) {
+    for (size_t k = 0; k < K; k++) {
+      for (size_t i = 0; i < n; i++) {
+        if (macc(i, j) != 3) {
+          V(j, k) += macc(i, j) * u(i, k) / d[k];   
+        }
+      }
+    }
+  }
+  
   NumericMatrix Z(p, K);
   
   for (size_t j = 0; j < p; j++) {
@@ -21,7 +32,7 @@ NumericMatrix multLinReg(C macc,
     for (size_t i = 0; i < n; i++) {
       double y = 0;
       for (size_t k = 0; k < K; k++) {
-        y += u(i, k) * d[k] * v(j, k) ; // Y = UDV
+        y += u(i, k) * d[k] * V(j, k) ; // Y = UDV
       }
       if (macc(i, j) != 3) {
         residual += (y - macc(i, j)) * (y - macc(i, j)); // macc(i, j) is normalized
@@ -37,7 +48,7 @@ NumericMatrix multLinReg(C macc,
     /* t-score */
     for (size_t k = 0; k < K; k++) {
       if (residual > 0 && n_available > K) {
-        Z(j, k) = v(j, k) * d[k] / sqrt(residual / (n_available - K));
+        Z(j, k) = V(j, k) * d[k] / sqrt(residual / (n_available - K));
       }
       if (sum_squared_u[k] > 0) {
         // this should never happen
@@ -45,7 +56,9 @@ NumericMatrix multLinReg(C macc,
       }
     }
   }
+  
   return Z;
+  
 }
 
 // Dispatch function for multLinReg
@@ -65,4 +78,5 @@ NumericMatrix multLinReg(SEXP obj,
     bedAcc macc(xpMat, lookup_scale, lookup_byte);
     return multLinReg(macc, u, d, v);
   }
+  
 }

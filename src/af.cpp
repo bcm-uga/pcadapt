@@ -29,9 +29,9 @@ NumericVector AF(C macc) {
 
 // Dispatch function for af
 // [[Rcpp::export]]
-NumericVector af(SEXP obj,
-                 const NumericMatrix& lookup_scale,
-                 const IntegerMatrix& lookup_byte) {
+NumericVector get_af(SEXP obj,
+                     const NumericMatrix& lookup_scale,
+                     const IntegerMatrix& lookup_byte) {
   
   if (Rf_isMatrix(obj)) {
     matAcc macc(obj, lookup_scale);
@@ -41,4 +41,5 @@ NumericVector af(SEXP obj,
     bedAcc macc(xpMat, lookup_scale, lookup_byte);
     return AF(macc);
   }
+  
 }

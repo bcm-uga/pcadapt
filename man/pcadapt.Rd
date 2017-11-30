@@ -4,8 +4,8 @@
 \alias{pcadapt}
 \title{Principal Component Analysis for outlier detection}
 \usage{
-pcadapt(input, K = 2, method = "mahalanobis", data.type = "genotype",
-  min.maf = 0.05)
+pcadapt(input, K = 2, method = "mahalanobis", min.maf = 0.05,
+  LD.clumping = FALSE)
 }
 \arguments{
 \item{input}{a genotype matrix or a character string specifying the name of 

@@ -6,16 +6,16 @@
 
 using namespace Rcpp;
 
-// af
-NumericVector af(SEXP obj, const NumericMatrix& lookup_scale, const IntegerMatrix& lookup_byte);
-RcppExport SEXP _pcadapt_af(SEXP objSEXP, SEXP lookup_scaleSEXP, SEXP lookup_byteSEXP) {
+// get_af
+NumericVector get_af(SEXP obj, const NumericMatrix& lookup_scale, const IntegerMatrix& lookup_byte);
+RcppExport SEXP _pcadapt_get_af(SEXP objSEXP, SEXP lookup_scaleSEXP, SEXP lookup_byteSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type obj(objSEXP);
     Rcpp::traits::input_parameter< const NumericMatrix& >::type lookup_scale(lookup_scaleSEXP);
     Rcpp::traits::input_parameter< const IntegerMatrix& >::type lookup_byte(lookup_byteSEXP);
-    rcpp_result_gen = Rcpp::wrap(af(obj, lookup_scale, lookup_byte));
+    rcpp_result_gen = Rcpp::wrap(get_af(obj, lookup_scale, lookup_byte));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -253,7 +253,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_pcadapt_af", (DL_FUNC) &_pcadapt_af, 3},
+    {"_pcadapt_get_af", (DL_FUNC) &_pcadapt_get_af, 3},
     {"_pcadapt_bedXPtr", (DL_FUNC) &_pcadapt_bedXPtr, 3},
     {"_pcadapt_get_sumX", (DL_FUNC) &_pcadapt_get_sumX, 3},
     {"_pcadapt_get_denoX", (DL_FUNC) &_pcadapt_get_denoX, 4},

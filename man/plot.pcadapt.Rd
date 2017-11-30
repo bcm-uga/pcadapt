@@ -4,9 +4,8 @@
 \alias{plot.pcadapt}
 \title{pcadapt visualization tool}
 \usage{
-\method{plot}{pcadapt}(x, ..., option = "manhattan", K = NULL, i = 1,
-  j = 2, pop, gg.col, snp.info = NULL, chr.info = NULL, chr = 1,
-  threshold = NULL, by.step = 10, hline = 3, plt.pkg = "ggplot")
+\method{plot}{pcadapt}(x, ..., option = "manhattan", i = 1, j = 2, pop,
+  col, chr.info = NULL, snp.info = NULL, plt.pkg = "ggplot", K = NULL)
 }
 \arguments{
 \item{x}{an object of class "pcadapt" generated with \code{pcadapt}.}
@@ -15,9 +14,6 @@
 
 \item{option}{a character string specifying the figures to be displayed. If 
 \code{NULL} (the default), all three plots are printed.}
-
-\item{K}{an integer specifying the principal component of interest. \code{K} 
-has to be specified only when using the \code{loadings} option.}
 
 \item{i}{an integer indicating onto which principal component the individuals
 are projected when the "scores" option is chosen.
@@ -30,27 +26,19 @@ Default value is set to \code{2}.}
 \item{pop}{a list of integers or strings specifying which subpopulation the 
 individuals belong to.}
 
-\item{gg.col}{a list of colors to be used in the score plot.}
+\item{col}{a list of colors to be used in the score plot.}
+
+\item{chr.info}{a list containing the chromosome information for each marker.}
 
 \item{snp.info}{a list containing the names of all genetic markers present in
 the input.}
 
-\item{chr.info}{a list containing the chromosome information for each marker.}
-
-\item{chr}{an integer specifying the chromosome to display.}
-
-\item{threshold}{for the \code{"qqplot"} option, it displays an additional 
-bar which shows the \code{threshold} percent of SNPs with smallest p-values
-and separates them from SNPs with higher p-values.}
-
-\item{by.step}{an integer.}
-
-\item{hline}{a numeric value specifying the number of standard deviations 
-above which the z-scores are considered extreme.}
-
 \item{plt.pkg}{a character string specifying the package to be used to 
 display the graphical outputs. Use \code{"plotly"} for interactive plots, or 
 \code{"ggplot"} for static plots.}
+
+\item{K}{an integer specifying the principal component of interest. \code{K} 
+has to be specified only when using the \code{"componentwise"} method.}
 }
 \description{
 \code{plot.pcadapt} is a method designed for objects of class \code{pcadapt}.

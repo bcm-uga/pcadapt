@@ -4,7 +4,9 @@
 /******************************************************************************/
 
 template <class C>
-NumericVector pMatVec4(C macc, const NumericVector &x, const IntegerVector &pass) {
+NumericVector pMatVec4(C macc, 
+                       const NumericVector &x, 
+                       const IntegerVector &pass) {
   
   int n = macc.nrow();
   int m = macc.ncol();
@@ -47,7 +49,9 @@ NumericVector pMatVec4(SEXP obj, const NumericVector &x,
 /******************************************************************************/
 
 template <class C>
-NumericVector cpMatVec4(C macc, const NumericVector &x, const IntegerVector &pass) {
+NumericVector cpMatVec4(C macc, 
+                        const NumericVector &x, 
+                        const IntegerVector &pass) {
   
   int n = macc.nrow();
   int m = macc.ncol();
@@ -87,4 +91,5 @@ NumericVector cpMatVec4(SEXP obj, const NumericVector &x,
     bedAcc macc(xpMat, lookup_scale, lookup_byte);
     return cpMatVec4(macc, x, pass);
   }
+  
 }
