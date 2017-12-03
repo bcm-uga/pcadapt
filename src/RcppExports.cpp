@@ -119,8 +119,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // pMatVec4
-NumericVector pMatVec4(SEXP obj, const NumericVector& x, const NumericMatrix& lookup_scale, const IntegerMatrix& lookup_byte, const IntegerVector& pass);
-RcppExport SEXP _pcadapt_pMatVec4(SEXP objSEXP, SEXP xSEXP, SEXP lookup_scaleSEXP, SEXP lookup_byteSEXP, SEXP passSEXP) {
+NumericVector pMatVec4(SEXP obj, const NumericVector& x, const NumericMatrix& lookup_scale, const IntegerMatrix& lookup_byte);
+RcppExport SEXP _pcadapt_pMatVec4(SEXP objSEXP, SEXP xSEXP, SEXP lookup_scaleSEXP, SEXP lookup_byteSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -128,14 +128,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
     Rcpp::traits::input_parameter< const NumericMatrix& >::type lookup_scale(lookup_scaleSEXP);
     Rcpp::traits::input_parameter< const IntegerMatrix& >::type lookup_byte(lookup_byteSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type pass(passSEXP);
-    rcpp_result_gen = Rcpp::wrap(pMatVec4(obj, x, lookup_scale, lookup_byte, pass));
+    rcpp_result_gen = Rcpp::wrap(pMatVec4(obj, x, lookup_scale, lookup_byte));
     return rcpp_result_gen;
 END_RCPP
 }
 // cpMatVec4
-NumericVector cpMatVec4(SEXP obj, const NumericVector& x, const NumericMatrix& lookup_scale, const IntegerMatrix& lookup_byte, const IntegerVector& pass);
-RcppExport SEXP _pcadapt_cpMatVec4(SEXP objSEXP, SEXP xSEXP, SEXP lookup_scaleSEXP, SEXP lookup_byteSEXP, SEXP passSEXP) {
+NumericVector cpMatVec4(SEXP obj, const NumericVector& x, const NumericMatrix& lookup_scale, const IntegerMatrix& lookup_byte);
+RcppExport SEXP _pcadapt_cpMatVec4(SEXP objSEXP, SEXP xSEXP, SEXP lookup_scaleSEXP, SEXP lookup_byteSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -143,8 +142,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
     Rcpp::traits::input_parameter< const NumericMatrix& >::type lookup_scale(lookup_scaleSEXP);
     Rcpp::traits::input_parameter< const IntegerMatrix& >::type lookup_byte(lookup_byteSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type pass(passSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpMatVec4(obj, x, lookup_scale, lookup_byte, pass));
+    rcpp_result_gen = Rcpp::wrap(cpMatVec4(obj, x, lookup_scale, lookup_byte));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -261,8 +259,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_pcadapt_multLinReg", (DL_FUNC) &_pcadapt_multLinReg, 6},
     {"_pcadapt_nb_nona", (DL_FUNC) &_pcadapt_nb_nona, 3},
     {"_pcadapt_covRob_cpp", (DL_FUNC) &_pcadapt_covRob_cpp, 1},
-    {"_pcadapt_pMatVec4", (DL_FUNC) &_pcadapt_pMatVec4, 5},
-    {"_pcadapt_cpMatVec4", (DL_FUNC) &_pcadapt_cpMatVec4, 5},
+    {"_pcadapt_pMatVec4", (DL_FUNC) &_pcadapt_pMatVec4, 4},
+    {"_pcadapt_cpMatVec4", (DL_FUNC) &_pcadapt_cpMatVec4, 4},
     {"_pcadapt_get_size_cpp", (DL_FUNC) &_pcadapt_get_size_cpp, 1},
     {"_pcadapt_get_nb_ind", (DL_FUNC) &_pcadapt_get_nb_ind, 2},
     {"_pcadapt_cmpt_minor_af", (DL_FUNC) &_pcadapt_cmpt_minor_af, 2},

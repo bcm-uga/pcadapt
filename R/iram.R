@@ -40,11 +40,6 @@ iram = function(input,
   ### Get number of non-missing values per row and per column
   nb_nona <- nb_nona(xptr, lookup_geno, lookup_byte)
   
-  ### Lookup table
-  lookup_scale <- rbind(outer(0:2, tmp, function(g, p) {
-    (g - 2 * p) / sqrt(2 * p * (1 - p))
-  }), 0)
-  
   pass.af <- (pmin(tmp, 1 - tmp) >= min.maf)
   if (LD.clumping) {
     pass.LD <- clumping_r(xptr = xptr, 
@@ -58,15 +53,26 @@ iram = function(input,
   } else {
     pass.LD <- rep(TRUE, length(pass.af))
   }
-  pass <- 1L * (pass.LD & pass.af)
+  pass <- (pass.LD & pass.af)
+  
+  ### Lookup table
+  lookup_scale <- rbind(outer(0:2, tmp, function(g, p) {
+    if (p > 0 || p < 1) {
+      return((g - 2 * p) / sqrt(2 * p * (1 - p)))
+    } else {
+      return(0)
+    }
+  }), 0)
+  
+  lookup_scale[, !pass] <- 0
   
   ### SVD using RSpectra
   obj.svd <- RSpectra::svds(
     A = function(x, args) {
-      pMatVec4(xptr, x, lookup_scale, lookup_byte, pass) / nb_nona[[1]] * p
+      pMatVec4(xptr, x, lookup_scale, lookup_byte) / nb_nona[[1]] * sum(pass)
     }, 
     Atrans = function(x, args) {
-      cpMatVec4(xptr, x, lookup_scale, lookup_byte, pass) / nb_nona[[2]] * n
+      cpMatVec4(xptr, x, lookup_scale, lookup_byte) / nb_nona[[2]] * n
     },
     k = K, 
     dim = c(n, p),
@@ -79,6 +85,7 @@ iram = function(input,
                                 obj.svd$u, 
                                 obj.svd$d, 
                                 obj.svd$v)
+  obj.svd$pass <- pass
   obj.svd$d <- obj.svd$d^2 / p
   obj.svd$maf <- pmin(tmp, 1 - tmp)
   return(obj.svd)

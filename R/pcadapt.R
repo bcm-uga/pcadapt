@@ -41,6 +41,10 @@
 #' \code{"communality"} and \code{"componentwise"}.
 #' @param min.maf a value between \code{0} and \code{0.45} specifying the 
 #' threshold of minor allele frequencies above which p-values are computed.
+#' @param LD.clumping a logical value indicating whether LD clumping should be
+#' performed.
+#' @param pca.only a logical value indicating whether multiple linear regression
+#' should be performed.
 #' 
 #' @return The returned value \code{x} is an object of class \code{pcadapt}.
 #' 
@@ -52,7 +56,8 @@ pcadapt = function(input,
                    K = 2, 
                    method = "mahalanobis", 
                    min.maf = 0.05, 
-                   LD.clumping = FALSE) {
+                   LD.clumping = FALSE,
+                   pca.only = FALSE) {
   
   #############################################
   ########## test arguments and init ##########
@@ -82,7 +87,8 @@ pcadapt = function(input,
     obj.pca <- iram(input, K = K, min.maf = min.maf, LD.clumping = LD.clumping)
     res <- get_statistics(as.matrix(obj.pca$zscores), 
                           method = method, 
-                          values = obj.pca$d)
+                          values = obj.pca$d,
+                          pass = obj.pca$pass)
     output <- list(scores = obj.pca$u,
                    singular.values = sqrt(obj.pca$d * nrow(obj.pca$v) / (nrow(obj.pca$u) - 1)),
                    loadings = obj.pca$v,
@@ -90,7 +96,8 @@ pcadapt = function(input,
                    maf = obj.pca$maf,
                    chi2.stat = res$chi2.stat,
                    gif = res$gif,
-                   pvalues = res$pvalues)
+                   pvalues = res$pvalues,
+                   pass = obj.pca$pass)
     class(output) <- "pcadapt"
     attr(output, "K") <- K
     attr(output, "method") <- method
@@ -141,18 +148,18 @@ get_statistics = function(zscores,
                           method = c("mahalanobis", 
                                      "communality", 
                                      "componentwise"),
-                          values) {
+                          values, 
+                          pass = rep(TRUE, nrow(zscores))) {
   nSNP <- nrow(zscores)
   K <- ncol(zscores)
   if (method == "mahalanobis") {
     res <- rep(NA, nSNP)
-    not.NA <- which(!is.na(zscores[, 1]))
     if (K == 1) {
-      one.d.cov <- as.vector(MASS::cov.rob(zscores[not.NA])) 
+      one.d.cov <- as.vector(MASS::cov.rob(zscores[pass])) 
       res <- (zscores - one.d.cov$center)^2 / one.d.cov$cov[1]
     } else if (K > 1) {
-      ogk <- covRob_cpp(zscores[not.NA, ])
-      res[not.NA] <- ogk$dist
+      ogk <- covRob_cpp(zscores[pass, ])
+      res[pass] <- ogk$dist
     }
     gif <- median(res, na.rm = TRUE) / qchisq(0.5, df = K)
     res.gif <- res / gif
