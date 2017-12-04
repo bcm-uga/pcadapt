@@ -48,7 +48,8 @@ iram = function(input,
                        p = p, 
                        lookup_geno = lookup_geno, 
                        lookup_byte = lookup_byte, 
-                       af = af, 
+                       ind_col = which(pass.af),
+                       af = af[pass.af], 
                        size = size, 
                        thr = thr,
                        exclude = !pass.af)
@@ -56,9 +57,11 @@ iram = function(input,
     pass <- pass.af
   }
   
+  ind.pass <- which(pass)
+  
   # Get number of non-missing values per row and per column
   # Uses a non-scaled lookup table
-  nb_nona <- nb_nona(xptr, lookup_geno, lookup_byte, pass)
+  nb_nona <- nb_nona(xptr, lookup_geno, lookup_byte, ind.pass)
   
   # Scaled lookup table 
   lookup_geno <- rbind(outer(0:2, af, function(g, p) {
@@ -71,18 +74,20 @@ iram = function(input,
   
   # SNP filtering: we assign the value 0 to all SNPs that have a mAF lower
   # than min.maf or that have been clumped
-  lookup_geno[, !pass] <- 0
+  lookup_geno[, ind.pass] <- 0
   
   ### SVD using RSpectra
   obj.svd <- RSpectra::svds(
     A = function(x, args) {
       # When filtering, the actual number of SNPs that we have is actually
       # sum(pass) and not p anymore
-      pMatVec4(xptr, x, lookup_geno, lookup_byte) / nb_nona[[1]] * sum(pass)
+      pMatVec4(xptr, x, lookup_geno, lookup_byte, ind.pass) / 
+        nb_nona$p * length(ind.pass)
     }, 
     Atrans = function(x, args) {
-      # NB: nb_nona[[2]] depends on 'pass' as well
-      cpMatVec4(xptr, x, lookup_geno, lookup_byte) / nb_nona[[2]] * n
+      # NB: nb_nona$n depends on 'pass' as well
+      cpMatVec4(xptr, x, lookup_geno, lookup_byte, ind.pass) / 
+        nb_nona$n * n
     },
     k = K, 
     nv = 0,  
@@ -118,8 +123,8 @@ iram = function(input,
   obj.svd$pass <- pass.af
   obj.svd$d <- obj.svd$d^2 / sum(pass)
   obj.svd$maf <- pmin(af, 1 - af)
-  obj.svd$nona1 <- nb_nona[[1]]
-  obj.svd$nona2 <- nb_nona[[2]]
+  obj.svd$nona1 <- nb_nona$p
+  obj.svd$nona2 <- nb_nona$n
   
   obj.svd
 }

@@ -7,15 +7,16 @@
 using namespace Rcpp;
 
 // get_af
-NumericVector get_af(SEXP obj, const NumericMatrix& lookup_scale, const IntegerMatrix& lookup_byte);
-RcppExport SEXP _pcadapt_get_af(SEXP objSEXP, SEXP lookup_scaleSEXP, SEXP lookup_byteSEXP) {
+NumericVector get_af(SEXP obj, const NumericMatrix& lookup_scale, const IntegerMatrix& lookup_byte, const IntegerVector& ind_col);
+RcppExport SEXP _pcadapt_get_af(SEXP objSEXP, SEXP lookup_scaleSEXP, SEXP lookup_byteSEXP, SEXP ind_colSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type obj(objSEXP);
     Rcpp::traits::input_parameter< const NumericMatrix& >::type lookup_scale(lookup_scaleSEXP);
     Rcpp::traits::input_parameter< const IntegerMatrix& >::type lookup_byte(lookup_byteSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_af(obj, lookup_scale, lookup_byte));
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_af(obj, lookup_scale, lookup_byte, ind_col));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -32,49 +33,38 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// get_sumX
-NumericVector get_sumX(SEXP obj, const NumericMatrix& lookup_scale, const IntegerMatrix& lookup_byte);
-RcppExport SEXP _pcadapt_get_sumX(SEXP objSEXP, SEXP lookup_scaleSEXP, SEXP lookup_byteSEXP) {
+// get_sumX_denoX
+ListOf<NumericVector> get_sumX_denoX(SEXP obj, const NumericMatrix& lookup_scale, const IntegerMatrix& lookup_byte, const IntegerVector& ind_col, const NumericVector& af);
+RcppExport SEXP _pcadapt_get_sumX_denoX(SEXP objSEXP, SEXP lookup_scaleSEXP, SEXP lookup_byteSEXP, SEXP ind_colSEXP, SEXP afSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type obj(objSEXP);
     Rcpp::traits::input_parameter< const NumericMatrix& >::type lookup_scale(lookup_scaleSEXP);
     Rcpp::traits::input_parameter< const IntegerMatrix& >::type lookup_byte(lookup_byteSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_sumX(obj, lookup_scale, lookup_byte));
-    return rcpp_result_gen;
-END_RCPP
-}
-// get_denoX
-NumericVector get_denoX(SEXP obj, const NumericMatrix& lookup_scale, const IntegerMatrix& lookup_byte, const NumericVector& m);
-RcppExport SEXP _pcadapt_get_denoX(SEXP objSEXP, SEXP lookup_scaleSEXP, SEXP lookup_byteSEXP, SEXP mSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type obj(objSEXP);
-    Rcpp::traits::input_parameter< const NumericMatrix& >::type lookup_scale(lookup_scaleSEXP);
-    Rcpp::traits::input_parameter< const IntegerMatrix& >::type lookup_byte(lookup_byteSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type m(mSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_denoX(obj, lookup_scale, lookup_byte, m));
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type af(afSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_sumX_denoX(obj, lookup_scale, lookup_byte, ind_col, af));
     return rcpp_result_gen;
 END_RCPP
 }
 // clumping
-LogicalVector clumping(SEXP obj, const NumericMatrix& lookup, const IntegerMatrix& lookup_byte, const IntegerVector& ord, LogicalVector& remain, const NumericVector& sumX, const NumericVector& denoX, int size, double thr);
-RcppExport SEXP _pcadapt_clumping(SEXP objSEXP, SEXP lookupSEXP, SEXP lookup_byteSEXP, SEXP ordSEXP, SEXP remainSEXP, SEXP sumXSEXP, SEXP denoXSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
+LogicalVector clumping(SEXP obj, const NumericMatrix& lookup, const IntegerMatrix& lookup_byte, const IntegerVector& colInd, const IntegerVector& ord, LogicalVector& remain, const NumericVector& sumX, const NumericVector& denoX, int size, double thr);
+RcppExport SEXP _pcadapt_clumping(SEXP objSEXP, SEXP lookupSEXP, SEXP lookup_byteSEXP, SEXP colIndSEXP, SEXP ordSEXP, SEXP remainSEXP, SEXP sumXSEXP, SEXP denoXSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type obj(objSEXP);
     Rcpp::traits::input_parameter< const NumericMatrix& >::type lookup(lookupSEXP);
     Rcpp::traits::input_parameter< const IntegerMatrix& >::type lookup_byte(lookup_byteSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type colInd(colIndSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type ord(ordSEXP);
     Rcpp::traits::input_parameter< LogicalVector& >::type remain(remainSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type sumX(sumXSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type denoX(denoXSEXP);
     Rcpp::traits::input_parameter< int >::type size(sizeSEXP);
     Rcpp::traits::input_parameter< double >::type thr(thrSEXP);
-    rcpp_result_gen = Rcpp::wrap(clumping(obj, lookup, lookup_byte, ord, remain, sumX, denoX, size, thr));
+    rcpp_result_gen = Rcpp::wrap(clumping(obj, lookup, lookup_byte, colInd, ord, remain, sumX, denoX, size, thr));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -95,16 +85,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // nb_nona
-ListOf<NumericVector> nb_nona(SEXP obj, const NumericMatrix& lookup_scale, const IntegerMatrix& lookup_byte, const LogicalVector& pass);
-RcppExport SEXP _pcadapt_nb_nona(SEXP objSEXP, SEXP lookup_scaleSEXP, SEXP lookup_byteSEXP, SEXP passSEXP) {
+ListOf<NumericVector> nb_nona(SEXP obj, const NumericMatrix& lookup_scale, const IntegerMatrix& lookup_byte, const IntegerVector& ind_col);
+RcppExport SEXP _pcadapt_nb_nona(SEXP objSEXP, SEXP lookup_scaleSEXP, SEXP lookup_byteSEXP, SEXP ind_colSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type obj(objSEXP);
     Rcpp::traits::input_parameter< const NumericMatrix& >::type lookup_scale(lookup_scaleSEXP);
     Rcpp::traits::input_parameter< const IntegerMatrix& >::type lookup_byte(lookup_byteSEXP);
-    Rcpp::traits::input_parameter< const LogicalVector& >::type pass(passSEXP);
-    rcpp_result_gen = Rcpp::wrap(nb_nona(obj, lookup_scale, lookup_byte, pass));
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
+    rcpp_result_gen = Rcpp::wrap(nb_nona(obj, lookup_scale, lookup_byte, ind_col));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -120,8 +110,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // pMatVec4
-NumericVector pMatVec4(SEXP obj, const NumericVector& x, const NumericMatrix& lookup_scale, const IntegerMatrix& lookup_byte);
-RcppExport SEXP _pcadapt_pMatVec4(SEXP objSEXP, SEXP xSEXP, SEXP lookup_scaleSEXP, SEXP lookup_byteSEXP) {
+NumericVector pMatVec4(SEXP obj, const NumericVector& x, const NumericMatrix& lookup_scale, const IntegerMatrix& lookup_byte, const IntegerVector& ind_col);
+RcppExport SEXP _pcadapt_pMatVec4(SEXP objSEXP, SEXP xSEXP, SEXP lookup_scaleSEXP, SEXP lookup_byteSEXP, SEXP ind_colSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -129,13 +119,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
     Rcpp::traits::input_parameter< const NumericMatrix& >::type lookup_scale(lookup_scaleSEXP);
     Rcpp::traits::input_parameter< const IntegerMatrix& >::type lookup_byte(lookup_byteSEXP);
-    rcpp_result_gen = Rcpp::wrap(pMatVec4(obj, x, lookup_scale, lookup_byte));
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
+    rcpp_result_gen = Rcpp::wrap(pMatVec4(obj, x, lookup_scale, lookup_byte, ind_col));
     return rcpp_result_gen;
 END_RCPP
 }
 // cpMatVec4
-NumericVector cpMatVec4(SEXP obj, const NumericVector& x, const NumericMatrix& lookup_scale, const IntegerMatrix& lookup_byte);
-RcppExport SEXP _pcadapt_cpMatVec4(SEXP objSEXP, SEXP xSEXP, SEXP lookup_scaleSEXP, SEXP lookup_byteSEXP) {
+NumericVector cpMatVec4(SEXP obj, const NumericVector& x, const NumericMatrix& lookup_scale, const IntegerMatrix& lookup_byte, const IntegerVector& ind_col);
+RcppExport SEXP _pcadapt_cpMatVec4(SEXP objSEXP, SEXP xSEXP, SEXP lookup_scaleSEXP, SEXP lookup_byteSEXP, SEXP ind_colSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -143,7 +134,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
     Rcpp::traits::input_parameter< const NumericMatrix& >::type lookup_scale(lookup_scaleSEXP);
     Rcpp::traits::input_parameter< const IntegerMatrix& >::type lookup_byte(lookup_byteSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpMatVec4(obj, x, lookup_scale, lookup_byte));
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpMatVec4(obj, x, lookup_scale, lookup_byte, ind_col));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -170,6 +162,17 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type p(pSEXP);
     rcpp_result_gen = Rcpp::wrap(prodtGx(G, x, p));
+    return rcpp_result_gen;
+END_RCPP
+}
+// timesTwo
+IntegerVector timesTwo(NumericVector x);
+RcppExport SEXP _pcadapt_timesTwo(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(timesTwo(x));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -278,18 +281,18 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_pcadapt_get_af", (DL_FUNC) &_pcadapt_get_af, 3},
+    {"_pcadapt_get_af", (DL_FUNC) &_pcadapt_get_af, 4},
     {"_pcadapt_bedXPtr", (DL_FUNC) &_pcadapt_bedXPtr, 3},
-    {"_pcadapt_get_sumX", (DL_FUNC) &_pcadapt_get_sumX, 3},
-    {"_pcadapt_get_denoX", (DL_FUNC) &_pcadapt_get_denoX, 4},
-    {"_pcadapt_clumping", (DL_FUNC) &_pcadapt_clumping, 9},
+    {"_pcadapt_get_sumX_denoX", (DL_FUNC) &_pcadapt_get_sumX_denoX, 5},
+    {"_pcadapt_clumping", (DL_FUNC) &_pcadapt_clumping, 10},
     {"_pcadapt_multLinReg", (DL_FUNC) &_pcadapt_multLinReg, 6},
     {"_pcadapt_nb_nona", (DL_FUNC) &_pcadapt_nb_nona, 4},
     {"_pcadapt_covRob_cpp", (DL_FUNC) &_pcadapt_covRob_cpp, 1},
-    {"_pcadapt_pMatVec4", (DL_FUNC) &_pcadapt_pMatVec4, 4},
-    {"_pcadapt_cpMatVec4", (DL_FUNC) &_pcadapt_cpMatVec4, 4},
+    {"_pcadapt_pMatVec4", (DL_FUNC) &_pcadapt_pMatVec4, 5},
+    {"_pcadapt_cpMatVec4", (DL_FUNC) &_pcadapt_cpMatVec4, 5},
     {"_pcadapt_prodGx", (DL_FUNC) &_pcadapt_prodGx, 3},
     {"_pcadapt_prodtGx", (DL_FUNC) &_pcadapt_prodtGx, 3},
+    {"_pcadapt_timesTwo", (DL_FUNC) &_pcadapt_timesTwo, 1},
     {"_pcadapt_get_size_cpp", (DL_FUNC) &_pcadapt_get_size_cpp, 1},
     {"_pcadapt_get_nb_ind", (DL_FUNC) &_pcadapt_get_nb_ind, 2},
     {"_pcadapt_cmpt_minor_af", (DL_FUNC) &_pcadapt_cmpt_minor_af, 2},

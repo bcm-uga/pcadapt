@@ -67,12 +67,14 @@ NumericMatrix multLinReg(SEXP obj,
                          const NumericVector &d,
                          NumericMatrix &v) {
   
+  IntegerVector ind_col = seq_len(lookup_scale.ncol()) - 1;
+  
   if (Rf_isMatrix(obj)) {
-    matAcc macc(obj, lookup_scale);
+    matAcc macc(obj, lookup_scale, ind_col);
     return multLinReg(macc, u, d, v);
   } else {
     XPtr<bed> xpMat(obj);
-    bedAcc macc(xpMat, lookup_scale, lookup_byte);
+    bedAcc macc(xpMat, lookup_scale, lookup_byte, ind_col);
     return multLinReg(macc, u, d, v);
   }
   

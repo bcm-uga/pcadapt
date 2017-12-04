@@ -1,86 +1,56 @@
+/******************************************************************************/
+
 #include <pcadapt/bed-acc.h>
 #include <pcadapt/mat-acc.h>
 
+/******************************************************************************/
+
 template <class C>
-NumericVector get_sumX(C macc) {
+ListOf<NumericVector> get_sumX_denoX(C macc, const NumericVector& af) {
   
   size_t n = macc.nrow();
   size_t p = macc.ncol();
   size_t i, j;
   
   double x;
-  
   NumericVector sumX(p);
-  
-  for (j = 0; j < p; j++) {
-    for (i = 0; i < n; i++) {
-      x = macc(i, j);
-      if (x != 3) { // Checking a 3 is much faster that checking a NA
-        sumX[j] += x;
-      } 
-    }
-  }
-  
-  return sumX;
-}
-
-// Dispatch function for get_sumX
-// [[Rcpp::export]]
-NumericVector get_sumX(SEXP obj,
-                       const NumericMatrix& lookup_scale,
-                       const IntegerMatrix& lookup_byte) {
-  
-  if (Rf_isMatrix(obj)) {
-    matAcc macc(obj, lookup_scale);
-    return get_sumX(macc);
-  } else {
-    XPtr<bed> xpMat(obj);
-    bedAcc macc(xpMat, lookup_scale, lookup_byte);
-    return get_sumX(macc);
-  }
-}
-
-template <class C>
-NumericVector get_denoX(C macc, 
-                        const NumericVector &m) {
-  
-  size_t n = macc.nrow();
-  size_t p = macc.ncol();
-  size_t i, j;
-  
-  double x;
-  
   NumericVector denoX(p);
   
   for (j = 0; j < p; j++) {
     for (i = 0; i < n; i++) {
       x = macc(i, j);
       if (x != 3) { // Checking a 3 is much faster that checking a NA
-        denoX[j] += (x - 2 * m[j]) * (x - 2 * m[j]);
+        sumX[j]  += x;
+        // TODO: replace af with lookup_scale
+        denoX[j] += (x - 2 * af[j]) * (x - 2 * af[j]);
       } 
     }
-    // denoX[j] /= (n_available - 1); 
   }
   
-  return denoX;
+  return List::create(_["sumX"] = sumX, _["denoX"] = denoX);
 }
 
-// Dispatch function for get_denoX
+/******************************************************************************/
+
+// Dispatch function for get_sumX_denoX
 // [[Rcpp::export]]
-NumericVector get_denoX(SEXP obj,
-                        const NumericMatrix &lookup_scale,
-                        const IntegerMatrix &lookup_byte,
-                        const NumericVector &m) {
+ListOf<NumericVector> get_sumX_denoX(SEXP obj,
+                                     const NumericMatrix& lookup_scale,
+                                     const IntegerMatrix& lookup_byte,
+                                     const IntegerVector& ind_col,
+                                     const NumericVector& af) {
   
   if (Rf_isMatrix(obj)) {
-    matAcc macc(obj, lookup_scale);
-    return get_denoX(macc, m);
+    matAcc macc(obj, lookup_scale, ind_col);
+    return get_sumX_denoX(macc, af);
   } else {
     XPtr<bed> xpMat(obj);
-    bedAcc macc(xpMat, lookup_scale, lookup_byte);
-    return get_denoX(macc, m);
+    bedAcc macc(xpMat, lookup_scale, lookup_byte, ind_col);
+    return get_sumX_denoX(macc, af);
   }
 }
+
+/******************************************************************************/
 
 template <class C>
 LogicalVector clumping(C macc,
@@ -117,27 +87,33 @@ LogicalVector clumping(C macc,
       }
     }
   }
+  
   return(keep);
 }
+
+/******************************************************************************/
 
 // Dispatch function for clumping
 // [[Rcpp::export]]
 LogicalVector clumping(SEXP obj,
                        const NumericMatrix& lookup,
                        const IntegerMatrix& lookup_byte,
-                       const IntegerVector &ord,
-                       LogicalVector &remain,
-                       const NumericVector &sumX,
-                       const NumericVector &denoX,
+                       const IntegerVector& colInd,
+                       const IntegerVector& ord,
+                       LogicalVector& remain,
+                       const NumericVector& sumX,
+                       const NumericVector& denoX,
                        int size, 
                        double thr) {
   
   if (Rf_isMatrix(obj)) {
-    matAcc macc(obj, lookup);
+    matAcc macc(obj, lookup, colInd);
     return clumping(macc, ord, remain, sumX, denoX, size, thr);
   } else {
     XPtr<bed> xpMat(obj);
-    bedAcc macc(xpMat, lookup, lookup_byte);
+    bedAcc macc(xpMat, lookup, lookup_byte, colInd);
     return clumping(macc, ord, remain, sumX, denoX, size, thr);
   }
 }
+
+/******************************************************************************/

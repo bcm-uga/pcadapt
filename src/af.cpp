@@ -1,5 +1,9 @@
+/******************************************************************************/
+
 #include <pcadapt/bed-acc.h>
 #include <pcadapt/mat-acc.h>
+
+/******************************************************************************/
 
 template <class C>
 NumericVector AF(C macc) {
@@ -9,7 +13,6 @@ NumericVector AF(C macc) {
   size_t i, j, n_available;
   
   double x;
-  
   NumericVector af(p);
   
   for (j = 0; j < p; j++) {
@@ -24,22 +27,28 @@ NumericVector AF(C macc) {
     }
     af[j] /= 2 * n_available;
   }
+  
   return af;
 }
+
+/******************************************************************************/
 
 // Dispatch function for af
 // [[Rcpp::export]]
 NumericVector get_af(SEXP obj,
                      const NumericMatrix& lookup_scale,
-                     const IntegerMatrix& lookup_byte) {
+                     const IntegerMatrix& lookup_byte,
+                     const IntegerVector& ind_col) {
   
   if (Rf_isMatrix(obj)) {
-    matAcc macc(obj, lookup_scale);
+    matAcc macc(obj, lookup_scale, ind_col);
     return AF(macc);
   } else {
     XPtr<bed> xpMat(obj);
-    bedAcc macc(xpMat, lookup_scale, lookup_byte);
+    bedAcc macc(xpMat, lookup_scale, lookup_byte, ind_col);
     return AF(macc);
   }
   
 }
+
+/******************************************************************************/

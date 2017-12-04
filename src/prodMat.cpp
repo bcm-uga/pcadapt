@@ -6,8 +6,7 @@
 /******************************************************************************/
 
 template <class C>
-NumericVector pMatVec4(C macc, 
-                       const NumericVector &x) {
+NumericVector pMatVec4(C macc, const NumericVector& x) {
   
   int n = macc.nrow();
   int m = macc.ncol();
@@ -35,16 +34,17 @@ NumericVector pMatVec4(C macc,
 
 // [[Rcpp::export]]
 NumericVector pMatVec4(SEXP obj, 
-                       const NumericVector &x,
-                       const NumericMatrix &lookup_scale,
-                       const IntegerMatrix &lookup_byte) {
+                       const NumericVector& x,
+                       const NumericMatrix& lookup_scale,
+                       const IntegerMatrix& lookup_byte, 
+                       const IntegerVector& ind_col) {
   
   if (Rf_isMatrix(obj)) {
-    matAcc macc(obj, lookup_scale);
+    matAcc macc(obj, lookup_scale, ind_col);
     return pMatVec4(macc, x);
   } else {
     XPtr<bed> xpMat(obj);
-    bedAcc macc(xpMat, lookup_scale, lookup_byte);
+    bedAcc macc(xpMat, lookup_scale, lookup_byte, ind_col);
     return pMatVec4(macc, x);
   }
 }
@@ -52,8 +52,7 @@ NumericVector pMatVec4(SEXP obj,
 /******************************************************************************/
 
 template <class C>
-NumericVector cpMatVec4(C macc, 
-                        const NumericVector &x) {
+NumericVector cpMatVec4(C macc, const NumericVector& x) {
   
   int n = macc.nrow();
   int m = macc.ncol();
@@ -74,8 +73,8 @@ NumericVector cpMatVec4(C macc,
       tmp += macc(i, j) * x[i];
     }
     res[j] = tmp;
-    
   }
+  
   return res;
 }
 
@@ -83,19 +82,19 @@ NumericVector cpMatVec4(C macc,
 
 // [[Rcpp::export]]
 NumericVector cpMatVec4(SEXP obj, 
-                        const NumericVector &x,
-                        const NumericMatrix &lookup_scale,
-                        const IntegerMatrix &lookup_byte) {
+                        const NumericVector& x,
+                        const NumericMatrix& lookup_scale,
+                        const IntegerMatrix& lookup_byte, 
+                        const IntegerVector& ind_col) {
   
   if (Rf_isMatrix(obj)) {
-    matAcc macc(obj, lookup_scale);
+    matAcc macc(obj, lookup_scale, ind_col);
     return cpMatVec4(macc, x);
   } else {
     XPtr<bed> xpMat(obj);
-    bedAcc macc(xpMat, lookup_scale, lookup_byte);
+    bedAcc macc(xpMat, lookup_scale, lookup_byte, ind_col);
     return cpMatVec4(macc, x);
   }
-  
 }
 
 /******************************************************************************/
