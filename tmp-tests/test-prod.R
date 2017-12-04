@@ -77,3 +77,30 @@ abline(0, 1, col = "red")
 #   tmp6 <- big_randomSVD(G, snp_scaleBinom(), k = 5, ncores = 2)
 # )
 # plot(tmp6$u[, 1], tmp3$u[, 1])
+
+G <- as.matrix(read.table("~/Documents/thesis/datasets/mv_nunif_0.2.pcadapt"))
+G[G == 9] <- NA
+X <- runif(nrow(G))
+
+tmp <- apply(G, MARGIN = 1, FUN = function(x) {mean(x, na.rm = TRUE) / 2})
+
+lookup_byte <- pcadapt:::getCode()
+
+lookup_geno <- rbind(outer(0:2, tmp, function(g, p) {
+  if (p > 0 || p < 1) {
+    return((g - 2 * p) / sqrt(2 * p * (1 - p)))
+  } else {
+    return(0)
+  }
+}), 0)
+
+pass <- rep(TRUE, nrow(G))
+nb_nona <- pcadapt:::nb_nona(t(G), lookup_geno, lookup_byte, pass, sum(pass))
+
+x <- pcadapt:::pMatVec4(t(G), X, lookup_scale = lookup_geno, lookup_byte = lookup_byte) / nb_nona[[1]]
+y <- pcadapt:::prodtGx(G, X, tmp)
+all.equal(x, y)
+
+xx <- pcadapt:::prodGx(G, X[1:150], tmp)
+yy <- pcadapt:::cpMatVec4(t(G), X[1:150], lookup_scale = lookup_geno,lookup_byte = lookup_byte) / nb_nona[[2]]
+all.equal(xx, yy)

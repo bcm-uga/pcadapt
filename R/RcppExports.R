@@ -53,6 +53,14 @@ cpMatVec4 <- function(obj, x, lookup_scale, lookup_byte) {
     .Call('_pcadapt_cpMatVec4', PACKAGE = 'pcadapt', obj, x, lookup_scale, lookup_byte)
 }
 
+prodGx <- function(G, x, p) {
+    .Call('_pcadapt_prodGx', PACKAGE = 'pcadapt', G, x, p)
+}
+
+prodtGx <- function(G, x, p) {
+    .Call('_pcadapt_prodtGx', PACKAGE = 'pcadapt', G, x, p)
+}
+
 #' File size
 #' 
 #' \code{get_size_cpp} returns the number of genetic markers and the number of 

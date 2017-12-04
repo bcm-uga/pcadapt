@@ -11,6 +11,7 @@ ListOf<NumericVector> nb_nona(C macc,
   
   IntegerVector n_nona(m, n);
   IntegerVector m_nona(n, sum_pass);
+  //IntegerVector m_nona(n, m);
   int i, j;
   
   // WARNING: do not use std::size_t because of `n - 4`
@@ -19,7 +20,7 @@ ListOf<NumericVector> nb_nona(C macc,
       if (macc(i, j) == 3) {
         
         n_nona[j]--;
-        
+        //m_nona[i]--;  
         if (pass[j]) {
           m_nona[i]--;  
         }

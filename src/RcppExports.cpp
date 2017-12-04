@@ -148,6 +148,32 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// prodGx
+NumericVector prodGx(const NumericMatrix& G, const NumericVector& x, const NumericVector& p);
+RcppExport SEXP _pcadapt_prodGx(SEXP GSEXP, SEXP xSEXP, SEXP pSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type G(GSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type p(pSEXP);
+    rcpp_result_gen = Rcpp::wrap(prodGx(G, x, p));
+    return rcpp_result_gen;
+END_RCPP
+}
+// prodtGx
+NumericVector prodtGx(const NumericMatrix& G, const NumericVector& x, const NumericVector& p);
+RcppExport SEXP _pcadapt_prodtGx(SEXP GSEXP, SEXP xSEXP, SEXP pSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type G(GSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type p(pSEXP);
+    rcpp_result_gen = Rcpp::wrap(prodtGx(G, x, p));
+    return rcpp_result_gen;
+END_RCPP
+}
 // get_size_cpp
 NumericVector get_size_cpp(std::string filename);
 RcppExport SEXP _pcadapt_get_size_cpp(SEXP filenameSEXP) {
@@ -263,6 +289,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_pcadapt_covRob_cpp", (DL_FUNC) &_pcadapt_covRob_cpp, 1},
     {"_pcadapt_pMatVec4", (DL_FUNC) &_pcadapt_pMatVec4, 4},
     {"_pcadapt_cpMatVec4", (DL_FUNC) &_pcadapt_cpMatVec4, 4},
+    {"_pcadapt_prodGx", (DL_FUNC) &_pcadapt_prodGx, 3},
+    {"_pcadapt_prodtGx", (DL_FUNC) &_pcadapt_prodtGx, 3},
     {"_pcadapt_get_size_cpp", (DL_FUNC) &_pcadapt_get_size_cpp, 1},
     {"_pcadapt_get_nb_ind", (DL_FUNC) &_pcadapt_get_nb_ind, 2},
     {"_pcadapt_cmpt_minor_af", (DL_FUNC) &_pcadapt_cmpt_minor_af, 2},

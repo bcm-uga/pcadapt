@@ -89,14 +89,14 @@ iram = function(input,
     k = K, 
     nv = 0,  
     dim = c(n, p),
-    opts = list(tol = 1e-4)
+    opts = list(tol = 1e-4, maxitr = 100)
   )
   
   # We calculate the loadings even for the SNPs that have been clumped.
   # The loadings are passed by reference and are computed in the multLinReg
   # function (not in svds)
   obj.svd$v <- matrix(0, nrow = p, ncol = K)
-  
+
   # Lookup table
   lookup_geno <- rbind(outer(0:2, tmp, function(g, p) {
     if (p > 0 || p < 1) {
@@ -105,21 +105,39 @@ iram = function(input,
       return(0)
     }
   }), 0)
-  
+
   # Multiple Linear Regression is performed also on SNPs that have been clumped,
   # that is why we recompute the lookup table
   lookup_geno[, !pass.af] <- 0
-  
-  obj.svd$zscores <- multLinReg(xptr, 
-                                lookup_geno, 
-                                lookup_byte, 
-                                obj.svd$u, 
-                                obj.svd$d, 
+
+  obj.svd$zscores <- multLinReg(xptr,
+                                lookup_geno,
+                                lookup_byte,
+                                obj.svd$u,
+                                obj.svd$d,
                                 obj.svd$v)
   
   obj.svd$pass <- pass.af
-  obj.svd$d <- obj.svd$d^2 / p
+  obj.svd$d <- obj.svd$d^2 / sum(pass)
   obj.svd$maf <- pmin(tmp, 1 - tmp)
-  
+  obj.svd$nona1 <- nb_nona[[1]]
+  obj.svd$nona2 <- nb_nona[[2]]
   return(obj.svd)
+  
+}
+
+
+iram2 = function(X, k) {
+  p <- apply(X, MARGIN = 1, FUN = function(h) {mean(h, na.rm = TRUE) / 2})
+  A <- function(x, args) {
+    return(prodtGx(X, x, p)) # Input vector of length p
+  }
+  Atrans <- function(x, args) {
+    return(prodGx(G, x, p)) # Input vector of length n
+  }
+  res <- RSpectra::svds(A, k, nu = k, nv = 0, Atrans = Atrans,
+                        opts = list(tol = 1e-4, maxitr = 100),
+                        dim = c(ncol(X), nrow(X)))
+  res$maf <- pmin(p, 1 - p)
+  return(res)
 }
