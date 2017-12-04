@@ -36,34 +36,32 @@ iram = function(input,
   
   # Get allele frequencies
   # Uses a non-scaled lookup table
-  tmp <- get_af(xptr, lookup_geno, lookup_byte)
+  af <- get_af(xptr, lookup_geno, lookup_byte)
   
   # Create a logical vector to locate SNPs with mAF >= min.maf
-  pass.af <- (pmin(tmp, 1 - tmp) >= min.maf)
+  pass.af <- (pmin(af, 1 - af) >= min.maf)
   
   # Create a logical vector to locate SNPs that have been clumped
   if (LD.clumping) {
-    pass.LD <- clumping_r(xptr = xptr, 
-                          n = n, 
-                          p = p, 
-                          lookup_geno = lookup_geno, 
-                          lookup_byte = lookup_byte, 
-                          af = tmp, 
-                          size = size, 
-                          thr = thr)
+    pass <- clumping_r(xptr = xptr, 
+                       n = n, 
+                       p = p, 
+                       lookup_geno = lookup_geno, 
+                       lookup_byte = lookup_byte, 
+                       af = af, 
+                       size = size, 
+                       thr = thr,
+                       exclude = !pass.af)
   } else {
-    pass.LD <- rep(TRUE, length(pass.af))
+    pass <- pass.af
   }
-  
-  # Combine both previous logical vectors
-  pass <- (pass.LD & pass.af)
   
   # Get number of non-missing values per row and per column
   # Uses a non-scaled lookup table
   nb_nona <- nb_nona(xptr, lookup_geno, lookup_byte, pass)
   
   # Scaled lookup table 
-  lookup_geno <- rbind(outer(0:2, tmp, function(g, p) {
+  lookup_geno <- rbind(outer(0:2, af, function(g, p) {
     if (p > 0 || p < 1) {
       return((g - 2 * p) / sqrt(2 * p * (1 - p)))
     } else {
@@ -96,20 +94,20 @@ iram = function(input,
   # The loadings are passed by reference and are computed in the multLinReg
   # function (not in svds)
   obj.svd$v <- matrix(0, nrow = p, ncol = K)
-
+  
   # Lookup table
-  lookup_geno <- rbind(outer(0:2, tmp, function(g, p) {
+  lookup_geno <- rbind(outer(0:2, af, function(g, p) {
     if (p > 0 || p < 1) {
       return((g - 2 * p) / sqrt(2 * p * (1 - p)))
     } else {
       return(0)
     }
   }), 0)
-
+  
   # Multiple Linear Regression is performed also on SNPs that have been clumped,
   # that is why we recompute the lookup table
   lookup_geno[, !pass.af] <- 0
-
+  
   obj.svd$zscores <- multLinReg(xptr,
                                 lookup_geno,
                                 lookup_byte,
@@ -119,11 +117,11 @@ iram = function(input,
   
   obj.svd$pass <- pass.af
   obj.svd$d <- obj.svd$d^2 / sum(pass)
-  obj.svd$maf <- pmin(tmp, 1 - tmp)
+  obj.svd$maf <- pmin(af, 1 - af)
   obj.svd$nona1 <- nb_nona[[1]]
   obj.svd$nona2 <- nb_nona[[2]]
-  return(obj.svd)
   
+  obj.svd
 }
 
 
