@@ -13,6 +13,7 @@ public:
     p = mat.ncol();
     _lookup_scale = lookup_scale;
     _pMat = &(mat(0, 0));
+    _val_na = lookup_scale(3, 0);
   };
   
   size_t nrow() const { return n; }
@@ -20,7 +21,7 @@ public:
   
   inline double operator() (size_t i, size_t j) {
     int geno = _pMat[i + j * n];
-    return IntegerVector::is_na(geno) ? 3 : _lookup_scale(geno, j);
+    return IntegerVector::is_na(geno) ? _val_na : _lookup_scale(geno, j);
   }
   
 private:
@@ -28,6 +29,7 @@ private:
   size_t n;
   size_t p;
   NumericMatrix _lookup_scale;
+  double _val_na;
 };
 
 #endif // MAT_ACC_H

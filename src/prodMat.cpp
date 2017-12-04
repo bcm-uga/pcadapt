@@ -16,28 +16,13 @@ NumericVector pMatVec4(C macc,
   // WARNING: do not use std::size_t because of `m - 4`
   for (j = 0; j <= m - 4; j += 4) { // unrolling optimization
     for (i = 0; i < n; i++) {
-      // res[i] += (x[j] * macc(i, j) + x[j+1] * macc(i, j+1)) +
-      //   (x[j+2] * macc(i, j+2) + x[j+3] * macc(i, j+3));
-      if (macc(i, j) != 3) {
-        res[i] += x[j] * macc(i, j);  
-      }
-      if (macc(i, j+1) != 3) {
-        res[i] += x[j+1] * macc(i, j+1);  
-      }
-      if (macc(i, j+2) != 3) {
-        res[i] += x[j+2] * macc(i, j+2);  
-      }
-      if (macc(i, j+3) != 3) {
-        res[i] += x[j+3] * macc(i, j+3);  
-      }
+      res[i] += (x[j] * macc(i, j) + x[j+1] * macc(i, j+1)) +
+        (x[j+2] * macc(i, j+2) + x[j+3] * macc(i, j+3));
     } // The parentheses are somehow important.
   }
   for (; j < m; j++) {
     for (i = 0; i < n; i++) {
-      if (macc(i, j) != 3) {
-        res[i] += x[j] * macc(i, j);  
-      }
-      //res[i] += x[j] * macc(i, j);
+      res[i] += x[j] * macc(i, j);
     }
   }
   
@@ -78,26 +63,11 @@ NumericVector cpMatVec4(C macc,
     
     tmp = 0;
     for (i = 0; i <= n - 4; i += 4) { // unrolling optimization
-      // tmp += (macc(i, j) * x[i] + macc(i+1, j) * x[i+1]) +
-      //   (macc(i+2, j) * x[i+2] + macc(i+3, j) * x[i+3]);
-      if (macc(i, j) != 3) {
-        tmp += (macc(i, j) * x[i]);
-      }
-      if (macc(i+1, j) != 3) {
-        tmp += (macc(i+1, j) * x[i+1]);
-      }
-      if (macc(i+2, j) != 3) {
-        tmp += (macc(i+2, j) * x[i+2]);
-      }
-      if (macc(i+3, j) != 3) {
-        tmp += (macc(i+3, j) * x[i+3]);
-      }
+      tmp += (macc(i, j) * x[i] + macc(i+1, j) * x[i+1]) +
+        (macc(i+2, j) * x[i+2] + macc(i+3, j) * x[i+3]);
     }
     for (; i < n; i++) {
-      if (macc(i, j) != 3) {
-        tmp += (macc(i, j) * x[i]);
-      }
-      //tmp += macc(i, j) * x[i];
+      tmp += macc(i, j) * x[i];
     }
     res[j] = tmp;
     
