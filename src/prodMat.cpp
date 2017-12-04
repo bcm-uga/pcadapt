@@ -1,3 +1,5 @@
+/******************************************************************************/
+
 #include <pcadapt/bed-acc.h>
 #include <pcadapt/mat-acc.h>
 
@@ -28,6 +30,8 @@ NumericVector pMatVec4(C macc,
   
   return res;
 }
+
+/******************************************************************************/
 
 // [[Rcpp::export]]
 NumericVector pMatVec4(SEXP obj, 
@@ -75,6 +79,8 @@ NumericVector cpMatVec4(C macc,
   return res;
 }
 
+/******************************************************************************/
+
 // [[Rcpp::export]]
 NumericVector cpMatVec4(SEXP obj, 
                         const NumericVector &x,
@@ -91,3 +97,5 @@ NumericVector cpMatVec4(SEXP obj,
   }
   
 }
+
+/******************************************************************************/

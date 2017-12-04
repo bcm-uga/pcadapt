@@ -26,7 +26,7 @@ lookup_scale <- rbind(outer(0:2, tmp, function(g, p) {
 lookup_geno <- outer(0:3, seq_len(nrow(G)), function(g, p) g)
 
 pass <- rep(TRUE, nrow(G))
-nb_nona <- pcadapt:::nb_nona(t(G), lookup_geno, lookup_byte, pass, sum(pass))
+nb_nona <- pcadapt:::nb_nona(t(G), lookup_geno, lookup_byte, pass)
 
 x <- pcadapt:::pMatVec4(t(G), X, lookup_scale = lookup_scale, 
                         lookup_byte = lookup_byte) / nb_nona[[1]]

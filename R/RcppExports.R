@@ -25,8 +25,8 @@ multLinReg <- function(obj, lookup_scale, lookup_byte, u, d, v) {
     .Call('_pcadapt_multLinReg', PACKAGE = 'pcadapt', obj, lookup_scale, lookup_byte, u, d, v)
 }
 
-nb_nona <- function(obj, lookup_scale, lookup_byte, pass, sum_pass) {
-    .Call('_pcadapt_nb_nona', PACKAGE = 'pcadapt', obj, lookup_scale, lookup_byte, pass, sum_pass)
+nb_nona <- function(obj, lookup_scale, lookup_byte, pass) {
+    .Call('_pcadapt_nb_nona', PACKAGE = 'pcadapt', obj, lookup_scale, lookup_byte, pass)
 }
 
 #' Robust estimates for location and scatter

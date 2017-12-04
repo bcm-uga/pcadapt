@@ -60,7 +60,7 @@ iram = function(input,
   
   # Get number of non-missing values per row and per column
   # Uses a non-scaled lookup table
-  nb_nona <- nb_nona(xptr, lookup_geno, lookup_byte, pass, sum(pass))
+  nb_nona <- nb_nona(xptr, lookup_geno, lookup_byte, pass)
   
   # Scaled lookup table 
   lookup_geno <- rbind(outer(0:2, tmp, function(g, p) {
