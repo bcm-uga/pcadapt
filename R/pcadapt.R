@@ -136,7 +136,8 @@ run.pcadapt <- function() {
 #' \code{"communality"}, and \code{"componentwise"}.
 #' @param values a numeric vector containing the singular values.
 #' 
-#' @return The returned value is a list containing the test statistics and the associated p-values.
+#' @return The returned value is a list containing the test statistics and the 
+#' associated p-values.
 #' 
 #' @importFrom stats median na.omit pchisq qchisq
 #' @importFrom MASS cov.rob
@@ -150,6 +151,7 @@ get_statistics = function(zscores,
                                      "componentwise"),
                           values, 
                           pass = rep(TRUE, nrow(zscores))) {
+  
   nSNP <- nrow(zscores)
   K <- ncol(zscores)
   if (method == "mahalanobis") {
@@ -170,12 +172,12 @@ get_statistics = function(zscores,
     gif <- median(res * nSNP / c, na.rm = TRUE) / qchisq(0.5, df = K)
     res.gif <- res * nSNP / (c * gif)
     pval <- pchisq(res.gif, df = K, lower.tail = FALSE)
-  } else if (method == "componentwise"){
+  } else if (method == "componentwise") {
     res <- apply(zscores, MARGIN = 2, FUN = function(h) {h^2})
     gif <- sapply(1:K, FUN = function(h) {median(zscores[, h]^2, na.rm = TRUE) / qchisq(0.5, df = 1)})
     res.gif = res / gif
     pval <- NULL
-    for (k in 1:K){
+    for (k in 1:K) {
       pval <- cbind(pval, pchisq(res.gif[, k], df = 1, lower.tail = FALSE))
     }
   }

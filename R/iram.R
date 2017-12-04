@@ -21,7 +21,7 @@ iram = function(input,
     p <- nrow(data.table::fread(sub("\\.bed$", ".bim", path_to_bed)))
     n <- nrow(data.table::fread(sub("\\.bed$", ".fam", path_to_bed)))
     
-    ### File mapping
+    # File mapping
     xptr <- bedXPtr(path_to_bed, n, p)
     
   } else if (class(input) == "matrix") {
@@ -34,13 +34,14 @@ iram = function(input,
   lookup_byte <- getCode()
   lookup_geno <- rbind(rep(0, p), 1, 2, 3)
   
-  ### Get allele frequencies
+  # Get allele frequencies
+  # Uses a non-scaled lookup table
   tmp <- get_af(xptr, lookup_geno, lookup_byte)
   
-  ### Get number of non-missing values per row and per column
-  nb_nona <- nb_nona(xptr, lookup_geno, lookup_byte)
-  
+  # Create a logical vector to locate SNPs with mAF >= min.maf
   pass.af <- (pmin(tmp, 1 - tmp) >= min.maf)
+  
+  # Create a logical vector to locate SNPs that have been clumped
   if (LD.clumping) {
     pass.LD <- clumping_r(xptr = xptr, 
                           n = n, 
@@ -53,10 +54,16 @@ iram = function(input,
   } else {
     pass.LD <- rep(TRUE, length(pass.af))
   }
+  
+  # Combine both previous logical vectors
   pass <- (pass.LD & pass.af)
   
-  ### Lookup table
-  lookup_scale <- rbind(outer(0:2, tmp, function(g, p) {
+  # Get number of non-missing values per row and per column
+  # Uses a non-scaled lookup table
+  nb_nona <- nb_nona(xptr, lookup_geno, lookup_byte, pass, sum(pass))
+  
+  # Scaled lookup table 
+  lookup_geno <- rbind(outer(0:2, tmp, function(g, p) {
     if (p > 0 || p < 1) {
       return((g - 2 * p) / sqrt(2 * p * (1 - p)))
     } else {
@@ -64,29 +71,55 @@ iram = function(input,
     }
   }), 0)
   
-  lookup_scale[, !pass] <- 0
+  # SNP filtering: we assign the value 0 to all SNPs that have a mAF lower
+  # than min.maf or that have been clumped
+  lookup_geno[, !pass] <- 0
   
   ### SVD using RSpectra
   obj.svd <- RSpectra::svds(
     A = function(x, args) {
-      pMatVec4(xptr, x, lookup_scale, lookup_byte) / nb_nona[[1]] * sum(pass)
+      # When filtering, the actual number of SNPs that we have is actually
+      # sum(pass) and not p anymore
+      pMatVec4(xptr, x, lookup_geno, lookup_byte) / nb_nona[[1]] * sum(pass)
     }, 
     Atrans = function(x, args) {
-      cpMatVec4(xptr, x, lookup_scale, lookup_byte) / nb_nona[[2]] * n
+      # NB: nb_nona[[2]] depends on 'pass' as well
+      cpMatVec4(xptr, x, lookup_geno, lookup_byte) / nb_nona[[2]] * n
     },
     k = K, 
+    nv = 0,  
     dim = c(n, p),
     opts = list(tol = 1e-4)
   )
   
+  # We calculate the loadings even for the SNPs that have been clumped.
+  # The loadings are passed by reference and are computed in the multLinReg
+  # function (not in svds)
+  obj.svd$v <- matrix(0, nrow = p, ncol = K)
+  
+  # Lookup table
+  lookup_geno <- rbind(outer(0:2, tmp, function(g, p) {
+    if (p > 0 || p < 1) {
+      return((g - 2 * p) / sqrt(2 * p * (1 - p)))
+    } else {
+      return(0)
+    }
+  }), 0)
+  
+  # Multiple Linear Regression is performed also on SNPs that have been clumped,
+  # that is why we recompute the lookup table
+  lookup_geno[, !pass.af] <- 0
+  
   obj.svd$zscores <- multLinReg(xptr, 
-                                lookup_scale, 
+                                lookup_geno, 
                                 lookup_byte, 
                                 obj.svd$u, 
                                 obj.svd$d, 
                                 obj.svd$v)
-  obj.svd$pass <- pass
+  
+  obj.svd$pass <- pass.af
   obj.svd$d <- obj.svd$d^2 / p
   obj.svd$maf <- pmin(tmp, 1 - tmp)
+  
   return(obj.svd)
 }

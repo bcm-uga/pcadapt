@@ -79,7 +79,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // multLinReg
-NumericMatrix multLinReg(SEXP obj, const NumericMatrix& lookup_scale, const IntegerMatrix& lookup_byte, const NumericMatrix& u, const NumericVector& d, const NumericMatrix& v);
+NumericMatrix multLinReg(SEXP obj, const NumericMatrix& lookup_scale, const IntegerMatrix& lookup_byte, const NumericMatrix& u, const NumericVector& d, NumericMatrix& v);
 RcppExport SEXP _pcadapt_multLinReg(SEXP objSEXP, SEXP lookup_scaleSEXP, SEXP lookup_byteSEXP, SEXP uSEXP, SEXP dSEXP, SEXP vSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -89,21 +89,23 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const IntegerMatrix& >::type lookup_byte(lookup_byteSEXP);
     Rcpp::traits::input_parameter< const NumericMatrix& >::type u(uSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type d(dSEXP);
-    Rcpp::traits::input_parameter< const NumericMatrix& >::type v(vSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix& >::type v(vSEXP);
     rcpp_result_gen = Rcpp::wrap(multLinReg(obj, lookup_scale, lookup_byte, u, d, v));
     return rcpp_result_gen;
 END_RCPP
 }
 // nb_nona
-ListOf<NumericVector> nb_nona(SEXP obj, const NumericMatrix& lookup_scale, const IntegerMatrix& lookup_byte);
-RcppExport SEXP _pcadapt_nb_nona(SEXP objSEXP, SEXP lookup_scaleSEXP, SEXP lookup_byteSEXP) {
+ListOf<NumericVector> nb_nona(SEXP obj, const NumericMatrix& lookup_scale, const IntegerMatrix& lookup_byte, const LogicalVector& pass, int sum_pass);
+RcppExport SEXP _pcadapt_nb_nona(SEXP objSEXP, SEXP lookup_scaleSEXP, SEXP lookup_byteSEXP, SEXP passSEXP, SEXP sum_passSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type obj(objSEXP);
     Rcpp::traits::input_parameter< const NumericMatrix& >::type lookup_scale(lookup_scaleSEXP);
     Rcpp::traits::input_parameter< const IntegerMatrix& >::type lookup_byte(lookup_byteSEXP);
-    rcpp_result_gen = Rcpp::wrap(nb_nona(obj, lookup_scale, lookup_byte));
+    Rcpp::traits::input_parameter< const LogicalVector& >::type pass(passSEXP);
+    Rcpp::traits::input_parameter< int >::type sum_pass(sum_passSEXP);
+    rcpp_result_gen = Rcpp::wrap(nb_nona(obj, lookup_scale, lookup_byte, pass, sum_pass));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -257,7 +259,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_pcadapt_get_denoX", (DL_FUNC) &_pcadapt_get_denoX, 4},
     {"_pcadapt_clumping", (DL_FUNC) &_pcadapt_clumping, 9},
     {"_pcadapt_multLinReg", (DL_FUNC) &_pcadapt_multLinReg, 6},
-    {"_pcadapt_nb_nona", (DL_FUNC) &_pcadapt_nb_nona, 3},
+    {"_pcadapt_nb_nona", (DL_FUNC) &_pcadapt_nb_nona, 5},
     {"_pcadapt_covRob_cpp", (DL_FUNC) &_pcadapt_covRob_cpp, 1},
     {"_pcadapt_pMatVec4", (DL_FUNC) &_pcadapt_pMatVec4, 4},
     {"_pcadapt_cpMatVec4", (DL_FUNC) &_pcadapt_cpMatVec4, 4},
