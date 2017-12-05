@@ -28,9 +28,8 @@ Imports:
     RSpectra,
     data.table,
     plotly,
-    RcppRoll,
     Matrix
-LinkingTo: Rcpp, RcppArmadillo, BH
+LinkingTo: Rcpp, RcppEigen, BH
 LazyData: TRUE
 Suggests: knitr, rmarkdown, testthat, shiny, geometry
 SystemRequirements: C++11

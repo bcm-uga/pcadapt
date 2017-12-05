@@ -2,6 +2,7 @@
 // Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 #include <RcppArmadillo.h>
+#include <RcppEigen.h>
 #include <Rcpp.h>
 
 using namespace Rcpp;
@@ -98,6 +99,53 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// colMedian_cpp
+NumericVector colMedian_cpp(arma::mat& x);
+RcppExport SEXP _pcadapt_colMedian_cpp(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(colMedian_cpp(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// covGK_cpp
+double covGK_cpp(arma::vec x, arma::vec y);
+RcppExport SEXP _pcadapt_covGK_cpp(SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec >::type x(xSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(covGK_cpp(x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// ogk_step
+Rcpp::List ogk_step(arma::mat& x);
+RcppExport SEXP _pcadapt_ogk_step(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(ogk_step(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// getDistance_cpp
+arma::vec getDistance_cpp(arma::mat& x, arma::rowvec center, arma::mat cov);
+RcppExport SEXP _pcadapt_getDistance_cpp(SEXP xSEXP, SEXP centerSEXP, SEXP covSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< arma::rowvec >::type center(centerSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type cov(covSEXP);
+    rcpp_result_gen = Rcpp::wrap(getDistance_cpp(x, center, cov));
+    return rcpp_result_gen;
+END_RCPP
+}
 // covRob_cpp
 Rcpp::List covRob_cpp(arma::mat& x);
 RcppExport SEXP _pcadapt_covRob_cpp(SEXP xSEXP) {
@@ -106,6 +154,75 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::mat& >::type x(xSEXP);
     rcpp_result_gen = Rcpp::wrap(covRob_cpp(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// colMedian_rcpp
+NumericVector colMedian_rcpp(NumericMatrix& x);
+RcppExport SEXP _pcadapt_colMedian_rcpp(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix& >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(colMedian_rcpp(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// covGK_rcpp
+double covGK_rcpp(NumericVector& x, NumericVector& y);
+RcppExport SEXP _pcadapt_covGK_rcpp(SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< NumericVector& >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(covGK_rcpp(x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// getEigenValues
+Eigen::MatrixXd getEigenValues(NumericMatrix M);
+RcppExport SEXP _pcadapt_getEigenValues(SEXP MSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type M(MSEXP);
+    rcpp_result_gen = Rcpp::wrap(getEigenValues(M));
+    return rcpp_result_gen;
+END_RCPP
+}
+// ogk_step_rcpp
+Rcpp::List ogk_step_rcpp(NumericMatrix& x);
+RcppExport SEXP _pcadapt_ogk_step_rcpp(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix& >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(ogk_step_rcpp(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// getDistance_rcpp
+Eigen::VectorXd getDistance_rcpp(NumericMatrix& x, NumericVector& center, NumericMatrix& cov);
+RcppExport SEXP _pcadapt_getDistance_rcpp(SEXP xSEXP, SEXP centerSEXP, SEXP covSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< NumericVector& >::type center(centerSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix& >::type cov(covSEXP);
+    rcpp_result_gen = Rcpp::wrap(getDistance_rcpp(x, center, cov));
+    return rcpp_result_gen;
+END_RCPP
+}
+// covRob_rcpp
+Rcpp::List covRob_rcpp(NumericMatrix& x);
+RcppExport SEXP _pcadapt_covRob_rcpp(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix& >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(covRob_rcpp(x));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -276,7 +393,17 @@ static const R_CallMethodDef CallEntries[] = {
     {"_pcadapt_clumping", (DL_FUNC) &_pcadapt_clumping, 10},
     {"_pcadapt_multLinReg", (DL_FUNC) &_pcadapt_multLinReg, 6},
     {"_pcadapt_nb_nona", (DL_FUNC) &_pcadapt_nb_nona, 4},
+    {"_pcadapt_colMedian_cpp", (DL_FUNC) &_pcadapt_colMedian_cpp, 1},
+    {"_pcadapt_covGK_cpp", (DL_FUNC) &_pcadapt_covGK_cpp, 2},
+    {"_pcadapt_ogk_step", (DL_FUNC) &_pcadapt_ogk_step, 1},
+    {"_pcadapt_getDistance_cpp", (DL_FUNC) &_pcadapt_getDistance_cpp, 3},
     {"_pcadapt_covRob_cpp", (DL_FUNC) &_pcadapt_covRob_cpp, 1},
+    {"_pcadapt_colMedian_rcpp", (DL_FUNC) &_pcadapt_colMedian_rcpp, 1},
+    {"_pcadapt_covGK_rcpp", (DL_FUNC) &_pcadapt_covGK_rcpp, 2},
+    {"_pcadapt_getEigenValues", (DL_FUNC) &_pcadapt_getEigenValues, 1},
+    {"_pcadapt_ogk_step_rcpp", (DL_FUNC) &_pcadapt_ogk_step_rcpp, 1},
+    {"_pcadapt_getDistance_rcpp", (DL_FUNC) &_pcadapt_getDistance_rcpp, 3},
+    {"_pcadapt_covRob_rcpp", (DL_FUNC) &_pcadapt_covRob_rcpp, 1},
     {"_pcadapt_pMatVec4", (DL_FUNC) &_pcadapt_pMatVec4, 5},
     {"_pcadapt_cpMatVec4", (DL_FUNC) &_pcadapt_cpMatVec4, 5},
     {"_pcadapt_prodGx", (DL_FUNC) &_pcadapt_prodGx, 3},

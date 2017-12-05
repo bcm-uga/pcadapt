@@ -25,6 +25,22 @@ nb_nona <- function(obj, lookup_scale, lookup_byte, ind_col) {
     .Call('_pcadapt_nb_nona', PACKAGE = 'pcadapt', obj, lookup_scale, lookup_byte, ind_col)
 }
 
+colMedian_cpp <- function(x) {
+    .Call('_pcadapt_colMedian_cpp', PACKAGE = 'pcadapt', x)
+}
+
+covGK_cpp <- function(x, y) {
+    .Call('_pcadapt_covGK_cpp', PACKAGE = 'pcadapt', x, y)
+}
+
+ogk_step <- function(x) {
+    .Call('_pcadapt_ogk_step', PACKAGE = 'pcadapt', x)
+}
+
+getDistance_cpp <- function(x, center, cov) {
+    .Call('_pcadapt_getDistance_cpp', PACKAGE = 'pcadapt', x, center, cov)
+}
+
 #' Robust estimates for location and scatter
 #'
 #' \code{covRob_cpp} implements the Orthogonalized Gnanadesikan-Kettenring estimator
@@ -39,6 +55,30 @@ nb_nona <- function(obj, lookup_scale, lookup_byte, ind_col) {
 #'
 covRob_cpp <- function(x) {
     .Call('_pcadapt_covRob_cpp', PACKAGE = 'pcadapt', x)
+}
+
+colMedian_rcpp <- function(x) {
+    .Call('_pcadapt_colMedian_rcpp', PACKAGE = 'pcadapt', x)
+}
+
+covGK_rcpp <- function(x, y) {
+    .Call('_pcadapt_covGK_rcpp', PACKAGE = 'pcadapt', x, y)
+}
+
+getEigenValues <- function(M) {
+    .Call('_pcadapt_getEigenValues', PACKAGE = 'pcadapt', M)
+}
+
+ogk_step_rcpp <- function(x) {
+    .Call('_pcadapt_ogk_step_rcpp', PACKAGE = 'pcadapt', x)
+}
+
+getDistance_rcpp <- function(x, center, cov) {
+    .Call('_pcadapt_getDistance_rcpp', PACKAGE = 'pcadapt', x, center, cov)
+}
+
+covRob_rcpp <- function(x) {
+    .Call('_pcadapt_covRob_rcpp', PACKAGE = 'pcadapt', x)
 }
 
 pMatVec4 <- function(obj, x, lookup_scale, lookup_byte, ind_col) {
