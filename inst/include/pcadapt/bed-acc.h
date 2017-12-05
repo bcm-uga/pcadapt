@@ -31,7 +31,7 @@ private:
 
 class bedAcc {
 public:
-  bedAcc(const bed * bedPtr,  // lookups must be corresponding to 'col_ind'
+  bedAcc(const bed * bedPtr,   // lookups must be corresponding to 'col_ind'
          const NumericMatrix& lookup_scale,
          const IntegerMatrix& lookup_byte,
          const IntegerVector& col_ind) {
@@ -45,7 +45,8 @@ public:
     
     std::vector<size_t> col_ind2(p);
     for (size_t j = 0; j < p; j++) {
-      col_ind2[j] = static_cast<size_t>(col_ind[j]);;
+      // 'col_ind' indices comes from R, so begins at 1
+      col_ind2[j] = static_cast<size_t>(col_ind[j] - 1);;
     }
     _col_ind = col_ind2;
   };

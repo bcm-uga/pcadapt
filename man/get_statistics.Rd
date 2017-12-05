@@ -5,7 +5,7 @@
 \title{pcadapt statistics}
 \usage{
 get_statistics(zscores, method = c("mahalanobis", "communality",
-  "componentwise"), values)
+  "componentwise"), values, pass = rep(TRUE, nrow(zscores)))
 }
 \arguments{
 \item{zscores}{a numeric matrix containing the z-scores.}
@@ -17,7 +17,8 @@ the p-values. Three statistics are currently available, \code{"mahalanobis"},
 \item{values}{a numeric vector containing the singular values.}
 }
 \value{
-The returned value is a list containing the test statistics and the associated p-values.
+The returned value is a list containing the test statistics and the 
+associated p-values.
 }
 \description{
 \code{get_statistics} returns chi-squared distributed statistics.

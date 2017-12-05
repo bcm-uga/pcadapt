@@ -1,4 +1,6 @@
-getCode = function(NA.VAL = 3L) {
+################################################################################
+
+getCode <- function(NA.VAL = 3L) {
   geno.raw <- as.logical(rawToBits(as.raw(0:255)))
   s <- c(TRUE, FALSE)
   geno1 <- geno.raw[s]
@@ -9,12 +11,14 @@ getCode = function(NA.VAL = 3L) {
   return(geno)
 }
 
-iram = function(input, 
-                K = 2, 
-                min.maf = 0.05, 
-                LD.clumping = FALSE, 
-                size = 100, 
-                thr = 0.2) {
+################################################################################
+
+iram <- function(input, 
+                 K = 2, 
+                 min.maf = 0.05, 
+                 LD.clumping = FALSE, 
+                 size = 100, 
+                 thr = 0.2) {  # TODO: add exclude parameter
   
   if (class(input) == "character") {
     path_to_bed <- normalizePath(input)
@@ -51,8 +55,7 @@ iram = function(input,
                        ind_col = which(pass.af),
                        af = af[pass.af], 
                        size = size, 
-                       thr = thr,
-                       exclude = !pass.af)
+                       thr = thr)
   } else {
     pass <- pass.af
   }
@@ -64,34 +67,35 @@ iram = function(input,
   nb_nona <- nb_nona(xptr, lookup_geno, lookup_byte, ind.pass)
   
   # Scaled lookup table 
-  lookup_geno <- rbind(outer(0:2, af, function(g, p) {
-    if (p > 0 || p < 1) {
-      return((g - 2 * p) / sqrt(2 * p * (1 - p)))
-    } else {
-      return(0)
-    }
-  }), 0)
+  lookup_scale <- rbind(
+    outer(0:2, af[ind.pass], function(g, p) {
+      (g - 2 * p) / sqrt(2 * p * (1 - p))
+    }), 
+    0
+  )
   
   # SNP filtering: we assign the value 0 to all SNPs that have a mAF lower
   # than min.maf or that have been clumped
-  lookup_geno[, ind.pass] <- 0
+  lookup_scale[, ind.pass] <- 0
+  
+  p2 <- length(ind.pass)
   
   ### SVD using RSpectra
   obj.svd <- RSpectra::svds(
     A = function(x, args) {
       # When filtering, the actual number of SNPs that we have is actually
       # sum(pass) and not p anymore
-      pMatVec4(xptr, x, lookup_geno, lookup_byte, ind.pass) / 
-        nb_nona$p * length(ind.pass)
+      pMatVec4(xptr, x, lookup_scale, lookup_byte, ind.pass) / 
+        nb_nona$p * p2
     }, 
     Atrans = function(x, args) {
       # NB: nb_nona$n depends on 'pass' as well
-      cpMatVec4(xptr, x, lookup_geno, lookup_byte, ind.pass) / 
+      cpMatVec4(xptr, x, lookup_scale, lookup_byte, ind.pass) / 
         nb_nona$n * n
     },
     k = K, 
     nv = 0,  
-    dim = c(n, p),
+    dim = c(n, p2),
     opts = list(tol = 1e-4, maxitr = 100)
   )
   
@@ -101,21 +105,20 @@ iram = function(input,
   obj.svd$v <- matrix(0, nrow = p, ncol = K)
   
   # Lookup table
-  lookup_geno <- rbind(outer(0:2, af, function(g, p) {
-    if (p > 0 || p < 1) {
-      return((g - 2 * p) / sqrt(2 * p * (1 - p)))
-    } else {
-      return(0)
-    }
-  }), 0)
+  lookup_scale2 <- rbind(
+    outer(0:2, af[pass.af], function(g, p) {
+      (g - 2 * p) / sqrt(2 * p * (1 - p))
+    }), 
+    0
+  )
   
   # Multiple Linear Regression is performed also on SNPs that have been clumped,
   # that is why we recompute the lookup table
-  lookup_geno[, !pass.af] <- 0
   
   obj.svd$zscores <- multLinReg(xptr,
-                                lookup_geno,
+                                lookup_scale2,
                                 lookup_byte,
+                                which(pass.af),
                                 obj.svd$u,
                                 obj.svd$d,
                                 obj.svd$v)
@@ -129,6 +132,7 @@ iram = function(input,
   obj.svd
 }
 
+################################################################################
 
 iram2 = function(X, k) {
   p <- apply(X, MARGIN = 1, FUN = function(h) {mean(h, na.rm = TRUE) / 2})
@@ -144,3 +148,5 @@ iram2 = function(X, k) {
   res$maf <- pmin(p, 1 - p)
   return(res)
 }
+
+################################################################################

@@ -57,10 +57,6 @@ prodtGx <- function(G, x, p) {
     .Call('_pcadapt_prodtGx', PACKAGE = 'pcadapt', G, x, p)
 }
 
-timesTwo <- function(x) {
-    .Call('_pcadapt_timesTwo', PACKAGE = 'pcadapt', x)
-}
-
 #' File size
 #' 
 #' \code{get_size_cpp} returns the number of genetic markers and the number of 

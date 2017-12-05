@@ -5,7 +5,7 @@
 \title{Principal Component Analysis for outlier detection}
 \usage{
 pcadapt(input, K = 2, method = "mahalanobis", min.maf = 0.05,
-  LD.clumping = FALSE)
+  LD.clumping = FALSE, pca.only = FALSE)
 }
 \arguments{
 \item{input}{a genotype matrix or a character string specifying the name of 
@@ -19,6 +19,12 @@ the p-values. Three statistics are currently available, \code{"mahalanobis"},
 
 \item{min.maf}{a value between \code{0} and \code{0.45} specifying the 
 threshold of minor allele frequencies above which p-values are computed.}
+
+\item{LD.clumping}{a logical value indicating whether LD clumping should be
+performed.}
+
+\item{pca.only}{a logical value indicating whether multiple linear regression
+should be performed.}
 }
 \value{
 The returned value \code{x} is an object of class \code{pcadapt}.

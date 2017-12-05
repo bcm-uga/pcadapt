@@ -165,17 +165,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// timesTwo
-IntegerVector timesTwo(NumericVector x);
-RcppExport SEXP _pcadapt_timesTwo(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(timesTwo(x));
-    return rcpp_result_gen;
-END_RCPP
-}
 // get_size_cpp
 NumericVector get_size_cpp(std::string filename);
 RcppExport SEXP _pcadapt_get_size_cpp(SEXP filenameSEXP) {
@@ -292,7 +281,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_pcadapt_cpMatVec4", (DL_FUNC) &_pcadapt_cpMatVec4, 5},
     {"_pcadapt_prodGx", (DL_FUNC) &_pcadapt_prodGx, 3},
     {"_pcadapt_prodtGx", (DL_FUNC) &_pcadapt_prodtGx, 3},
-    {"_pcadapt_timesTwo", (DL_FUNC) &_pcadapt_timesTwo, 1},
     {"_pcadapt_get_size_cpp", (DL_FUNC) &_pcadapt_get_size_cpp, 1},
     {"_pcadapt_get_nb_ind", (DL_FUNC) &_pcadapt_get_nb_ind, 2},
     {"_pcadapt_cmpt_minor_af", (DL_FUNC) &_pcadapt_cmpt_minor_af, 2},
