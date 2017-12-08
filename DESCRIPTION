@@ -28,8 +28,10 @@ Imports:
     RSpectra,
     data.table,
     plotly,
-    Matrix
-LinkingTo: Rcpp, RcppEigen, BH
+    Matrix,
+    mmapcharr
+LinkingTo: Rcpp, RcppEigen, BH, mmapcharr
+Remotes: privefl/mmapcharr
 LazyData: TRUE
 Suggests: knitr, rmarkdown, testthat, shiny, geometry
 SystemRequirements: C++11

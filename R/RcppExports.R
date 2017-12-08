@@ -45,3 +45,7 @@ prodtGx <- function(G, x, p) {
     .Call('_pcadapt_prodtGx', PACKAGE = 'pcadapt', G, x, p)
 }
 
+writebed <- function(filename, e, tab, is_pcadapt) {
+    invisible(.Call('_pcadapt_writebed', PACKAGE = 'pcadapt', filename, e, tab, is_pcadapt))
+}
+

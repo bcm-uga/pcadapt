@@ -165,6 +165,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// writebed
+void writebed(const char * filename, Environment e, const RawVector& tab, bool is_pcadapt);
+RcppExport SEXP _pcadapt_writebed(SEXP filenameSEXP, SEXP eSEXP, SEXP tabSEXP, SEXP is_pcadaptSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const char * >::type filename(filenameSEXP);
+    Rcpp::traits::input_parameter< Environment >::type e(eSEXP);
+    Rcpp::traits::input_parameter< const RawVector& >::type tab(tabSEXP);
+    Rcpp::traits::input_parameter< bool >::type is_pcadapt(is_pcadaptSEXP);
+    writebed(filename, e, tab, is_pcadapt);
+    return R_NilValue;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_pcadapt_get_af", (DL_FUNC) &_pcadapt_get_af, 4},
@@ -178,6 +191,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_pcadapt_cpMatVec4", (DL_FUNC) &_pcadapt_cpMatVec4, 5},
     {"_pcadapt_prodGx", (DL_FUNC) &_pcadapt_prodGx, 3},
     {"_pcadapt_prodtGx", (DL_FUNC) &_pcadapt_prodtGx, 3},
+    {"_pcadapt_writebed", (DL_FUNC) &_pcadapt_writebed, 4},
     {NULL, NULL, 0}
 };
 
