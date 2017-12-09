@@ -63,11 +63,10 @@ NumericMatrix multLinReg(C macc,
 NumericMatrix multLinReg(SEXP obj,
                          const NumericMatrix &lookup_scale,
                          const IntegerMatrix &lookup_byte,
+                         const IntegerVector& ind_col,
                          const NumericMatrix &u,
                          const NumericVector &d,
                          NumericMatrix &v) {
-  
-  IntegerVector ind_col = seq_len(lookup_scale.ncol());
   
   if (Rf_isMatrix(obj)) {
     matAcc macc(obj, lookup_scale, ind_col);

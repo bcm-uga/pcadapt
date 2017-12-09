@@ -9,16 +9,12 @@ bedXPtr <- function(path, n, p) {
     .Call('_pcadapt_bedXPtr', PACKAGE = 'pcadapt', path, n, p)
 }
 
-get_sumX_denoX <- function(obj, lookup_scale, lookup_byte, ind_col, af) {
-    .Call('_pcadapt_get_sumX_denoX', PACKAGE = 'pcadapt', obj, lookup_scale, lookup_byte, ind_col, af)
+clumping <- function(obj, lookup, lookup_byte, colInd, ord, remain, size, thr) {
+    .Call('_pcadapt_clumping', PACKAGE = 'pcadapt', obj, lookup, lookup_byte, colInd, ord, remain, size, thr)
 }
 
-clumping <- function(obj, lookup, lookup_byte, colInd, ord, remain, sumX, denoX, size, thr) {
-    .Call('_pcadapt_clumping', PACKAGE = 'pcadapt', obj, lookup, lookup_byte, colInd, ord, remain, sumX, denoX, size, thr)
-}
-
-multLinReg <- function(obj, lookup_scale, lookup_byte, u, d, v) {
-    .Call('_pcadapt_multLinReg', PACKAGE = 'pcadapt', obj, lookup_scale, lookup_byte, u, d, v)
+multLinReg <- function(obj, lookup_scale, lookup_byte, ind_col, u, d, v) {
+    .Call('_pcadapt_multLinReg', PACKAGE = 'pcadapt', obj, lookup_scale, lookup_byte, ind_col, u, d, v)
 }
 
 nb_nona <- function(obj, lookup_scale, lookup_byte, ind_col) {

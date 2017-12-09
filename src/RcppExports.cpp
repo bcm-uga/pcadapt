@@ -33,24 +33,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// get_sumX_denoX
-ListOf<NumericVector> get_sumX_denoX(SEXP obj, const NumericMatrix& lookup_scale, const IntegerMatrix& lookup_byte, const IntegerVector& ind_col, const NumericVector& af);
-RcppExport SEXP _pcadapt_get_sumX_denoX(SEXP objSEXP, SEXP lookup_scaleSEXP, SEXP lookup_byteSEXP, SEXP ind_colSEXP, SEXP afSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type obj(objSEXP);
-    Rcpp::traits::input_parameter< const NumericMatrix& >::type lookup_scale(lookup_scaleSEXP);
-    Rcpp::traits::input_parameter< const IntegerMatrix& >::type lookup_byte(lookup_byteSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type af(afSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_sumX_denoX(obj, lookup_scale, lookup_byte, ind_col, af));
-    return rcpp_result_gen;
-END_RCPP
-}
 // clumping
-LogicalVector clumping(SEXP obj, const NumericMatrix& lookup, const IntegerMatrix& lookup_byte, const IntegerVector& colInd, const IntegerVector& ord, LogicalVector& remain, const NumericVector& sumX, const NumericVector& denoX, int size, double thr);
-RcppExport SEXP _pcadapt_clumping(SEXP objSEXP, SEXP lookupSEXP, SEXP lookup_byteSEXP, SEXP colIndSEXP, SEXP ordSEXP, SEXP remainSEXP, SEXP sumXSEXP, SEXP denoXSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
+LogicalVector clumping(SEXP obj, const NumericMatrix& lookup, const IntegerMatrix& lookup_byte, const IntegerVector& colInd, const IntegerVector& ord, LogicalVector& remain, int size, double thr);
+RcppExport SEXP _pcadapt_clumping(SEXP objSEXP, SEXP lookupSEXP, SEXP lookup_byteSEXP, SEXP colIndSEXP, SEXP ordSEXP, SEXP remainSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -60,27 +45,26 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const IntegerVector& >::type colInd(colIndSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type ord(ordSEXP);
     Rcpp::traits::input_parameter< LogicalVector& >::type remain(remainSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type sumX(sumXSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type denoX(denoXSEXP);
     Rcpp::traits::input_parameter< int >::type size(sizeSEXP);
     Rcpp::traits::input_parameter< double >::type thr(thrSEXP);
-    rcpp_result_gen = Rcpp::wrap(clumping(obj, lookup, lookup_byte, colInd, ord, remain, sumX, denoX, size, thr));
+    rcpp_result_gen = Rcpp::wrap(clumping(obj, lookup, lookup_byte, colInd, ord, remain, size, thr));
     return rcpp_result_gen;
 END_RCPP
 }
 // multLinReg
-NumericMatrix multLinReg(SEXP obj, const NumericMatrix& lookup_scale, const IntegerMatrix& lookup_byte, const NumericMatrix& u, const NumericVector& d, NumericMatrix& v);
-RcppExport SEXP _pcadapt_multLinReg(SEXP objSEXP, SEXP lookup_scaleSEXP, SEXP lookup_byteSEXP, SEXP uSEXP, SEXP dSEXP, SEXP vSEXP) {
+NumericMatrix multLinReg(SEXP obj, const NumericMatrix& lookup_scale, const IntegerMatrix& lookup_byte, const IntegerVector& ind_col, const NumericMatrix& u, const NumericVector& d, NumericMatrix& v);
+RcppExport SEXP _pcadapt_multLinReg(SEXP objSEXP, SEXP lookup_scaleSEXP, SEXP lookup_byteSEXP, SEXP ind_colSEXP, SEXP uSEXP, SEXP dSEXP, SEXP vSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type obj(objSEXP);
     Rcpp::traits::input_parameter< const NumericMatrix& >::type lookup_scale(lookup_scaleSEXP);
     Rcpp::traits::input_parameter< const IntegerMatrix& >::type lookup_byte(lookup_byteSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
     Rcpp::traits::input_parameter< const NumericMatrix& >::type u(uSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type d(dSEXP);
     Rcpp::traits::input_parameter< NumericMatrix& >::type v(vSEXP);
-    rcpp_result_gen = Rcpp::wrap(multLinReg(obj, lookup_scale, lookup_byte, u, d, v));
+    rcpp_result_gen = Rcpp::wrap(multLinReg(obj, lookup_scale, lookup_byte, ind_col, u, d, v));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -182,9 +166,8 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_pcadapt_get_af", (DL_FUNC) &_pcadapt_get_af, 4},
     {"_pcadapt_bedXPtr", (DL_FUNC) &_pcadapt_bedXPtr, 3},
-    {"_pcadapt_get_sumX_denoX", (DL_FUNC) &_pcadapt_get_sumX_denoX, 5},
-    {"_pcadapt_clumping", (DL_FUNC) &_pcadapt_clumping, 10},
-    {"_pcadapt_multLinReg", (DL_FUNC) &_pcadapt_multLinReg, 6},
+    {"_pcadapt_clumping", (DL_FUNC) &_pcadapt_clumping, 8},
+    {"_pcadapt_multLinReg", (DL_FUNC) &_pcadapt_multLinReg, 7},
     {"_pcadapt_nb_nona", (DL_FUNC) &_pcadapt_nb_nona, 4},
     {"_pcadapt_covRob_rcpp", (DL_FUNC) &_pcadapt_covRob_rcpp, 1},
     {"_pcadapt_pMatVec4", (DL_FUNC) &_pcadapt_pMatVec4, 5},

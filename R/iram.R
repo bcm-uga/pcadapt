@@ -40,20 +40,19 @@ iram <- function(input,
   
   # Get allele frequencies
   # Uses a non-scaled lookup table
-  af <- get_af(xptr, lookup_geno, lookup_byte)
+  af <- get_af(xptr, lookup_geno, lookup_byte, 1:p)
   
   # Create a logical vector to locate SNPs with mAF >= min.maf
-  pass.af <- (pmin(af, 1 - af) >= min.maf)
+  maf <- pmin(af, 1 - af)
+  pass.af <- (maf >= min.maf)
   
   # Create a logical vector to locate SNPs that have been clumped
   if (LD.clumping) {
     pass <- clumping_r(xptr = xptr, 
-                       n = n, 
-                       p = p, 
                        lookup_geno = lookup_geno, 
                        lookup_byte = lookup_byte, 
                        ind_col = which(pass.af),
-                       af = af[pass.af], 
+                       maf = maf[pass.af], 
                        size = size, 
                        thr = thr)
   } else {
@@ -61,6 +60,7 @@ iram <- function(input,
   }
   
   ind.pass <- which(pass)
+  p2 <- length(ind.pass)
   
   # Get number of non-missing values per row and per column
   # Uses a non-scaled lookup table
@@ -73,12 +73,6 @@ iram <- function(input,
     }), 
     0
   )
-  
-  # SNP filtering: we assign the value 0 to all SNPs that have a mAF lower
-  # than min.maf or that have been clumped
-  lookup_scale[, ind.pass] <- 0
-  
-  p2 <- length(ind.pass)
   
   ### SVD using RSpectra
   obj.svd <- RSpectra::svds(
@@ -94,7 +88,6 @@ iram <- function(input,
         nb_nona$n * n
     },
     k = K, 
-    nv = 0,  
     dim = c(n, p2),
     opts = list(tol = 1e-4, maxitr = 100)
   )
@@ -114,7 +107,6 @@ iram <- function(input,
   
   # Multiple Linear Regression is performed also on SNPs that have been clumped,
   # that is why we recompute the lookup table
-  
   obj.svd$zscores <- multLinReg(xptr,
                                 lookup_scale2,
                                 lookup_byte,
@@ -124,8 +116,8 @@ iram <- function(input,
                                 obj.svd$v)
   
   obj.svd$pass <- pass.af
-  obj.svd$d <- obj.svd$d^2 / sum(pass)
-  obj.svd$maf <- pmin(af, 1 - af)
+  obj.svd$d <- obj.svd$d^2 / length(ind.pass)
+  obj.svd$maf <- maf
   obj.svd$nona1 <- nb_nona$p
   obj.svd$nona2 <- nb_nona$n
   
