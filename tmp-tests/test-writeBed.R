@@ -2,7 +2,7 @@ lfmm <- "inst/extdata/geno3pops.lfmm"
 lfmm.xptr <- mmapcharr::mmapchar(lfmm, code = mmapcharr:::CODE_012)
 
 lfmm.xptr[, 1:5]
-bedfile <- writeBed(lfmm.xptr)
+bedfile <- writeBed(lfmm.xptr, is.pcadapt = FALSE)
 
 library(bigsnpr)
 test <- snp_attach(snp_readBed(bedfile, tempfile()))
@@ -14,7 +14,7 @@ pcadapt <- "inst/extdata/geno3pops.pcadapt"
 pcadapt.xptr <- mmapcharr::mmapchar(pcadapt, code = mmapcharr:::CODE_012)
 
 pcadapt.xptr[1:5, ]
-bedfile2 <- writeBed(pcadapt.xptr)
+bedfile2 <- writeBed(pcadapt.xptr, is.pcadapt = TRUE)
 
 test2 <- snp_attach(snp_readBed(bedfile2, tempfile()))
 test2$genotypes[, 1:5]

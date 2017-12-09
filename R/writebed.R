@@ -48,33 +48,26 @@ write_fake_bim_fam <- function(n, m, bedfile) {
 #'
 #' @param x A [mmapchar][mmapchar-class] object associated 
 #'   with a pcadapt or lfmm file.
+#' @param is.pcadapt
 #'
 #' @return The input `bedfile` path.
 #' 
 #' @export
 #' 
-writeBed <- function(x) {
+writeBed <- function(x, is.pcadapt) {
   
+  # Get path to new bed file
   file <- x$backingfile
   bedfile <- paste0(file, ".bed")
   if (file.exists(bedfile)) stop2("The bed file already exists!")
-  
-  ext <- tools::file_ext(file)
-  if (ext == "pcadapt") {
-    is.pcadapt <- TRUE
-    n <- ncol(x)
-    m <- nrow(x)
-  } else if (ext == "lfmm") {
-    is.pcadapt <- FALSE
-    n <- nrow(x)
-    m <- ncol(x)
-  }
   
   # Write files
   ## Write bed file
   writebed(bedfile, x$copy(code = CODE_0123), getInverseCode(), is.pcadapt)
   ## Write other files
-  write_fake_bim_fam(n, m, bedfile)
+  write_fake_bim_fam(n = `if`(is.pcadapt, ncol(x), nrow(x)), 
+                     m = `if`(is.pcadapt, nrow(x), ncol(x)), 
+                     bedfile = bedfile)
   
   bedfile
 }
