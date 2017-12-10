@@ -99,30 +99,60 @@ lookup_scale2 <- rbind(
   outer(0:2, af[pass.af], function(g, p) {
     (g - 2 * p) / sqrt(2 * p * (1 - p))
   }), 
-  0
+  3
 )
 
 # Multiple Linear Regression is performed also on SNPs that have been clumped,
 # that is why we recompute the lookup table
 
 ind.pass.af <- which(pass.af)
-obj.svd$zscores <- pcadapt:::multLinReg(xptr,
-                              lookup_scale2,
+obj.svd$zscores <- multLinReg(xptr,
+                              lookup_scale,
                               lookup_byte,
                               ind.pass.af,
-                              obj.svd$u,
-                              obj.svd$d,
-                              obj.svd$v)
+                              obj.svd$u)
+
 
 
 test2 <- matrix(NA_real_, length(ind.pass.af), K) 
+test3 <- matrix(NA_real_, length(ind.pass.af), K) 
 for (j in seq_along(ind.pass.af)) {
   print(j)
-  for (k in seq_len(K)) {
-    test2[j, k] <- 
-      summary(lm(G[, ind.pass.af[j]] ~ obj.svd$u[, k]))$coefficients[2, 3]
-  }
+  coefs <- summary(lm(G[, ind.pass.af[j]] ~ obj.svd$u - 1))$coefficients
+  test2[j, ] <- coefs[, 3]
+  test3[j, ] <- coefs[, 4]
 }
+j <- 3
+y <- G[, ind.pass.af[j]]
+y <- lookup_scale2[y + 1, 1]
+coefs <- summary(lm(y ~ obj.svd$u - 1))$coefficients
+nona <- !is.na(y)
+y2 <- y[nona]
+x <- obj.svd$u[nona, ]   
+
+crossprod(x)             ## not orthogonal anymore :-(
+sd <- solve(crossprod(x))
+coefs[, 2] / sqrt(diag(sd))         ## OK if no intercept
+# sd2 <- solve(crossprod(cbind(1, x)))
+# coefs[-1, 2] / sqrt(diag(sd2)[-1])    ## OK
+# coefs[-1, 2] / sqrt(diag(sd2)[-1]) / sd(y2)
+
+(beta <- sd %*% crossprod(x, y2))
+coefs[, 1]
+eps <- y2 - x %*% beta
+tmp <- sqrt(sum(eps * eps) * diag(sd) / (length(eps) - K))
+coefs[, 2] / tmp
+
+cbind(res <- beta / tmp, coefs[, 3])
+cbind(pval <- 2 * pt(abs(res), df = length(eps) - K, lower.tail = FALSE),
+      coefs[, 4])
+
+
+
+res2 <- beta / sqrt(diag(sd))
+plot(res, res2); abline(0, 1, col = "red")
+
+
 
 obj.svd$pass <- pass.af
 obj.svd$d <- obj.svd$d^2 / sum(pass)
