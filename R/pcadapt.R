@@ -104,7 +104,7 @@ pcadapt = function(input,
     attr(output, "min.maf") <- min.maf
     return(output)
   } else {
-    appDir = system.file("shiny-examples/app-pcadapt", package = "pcadapt")
+    appDir <- system.file("shiny-examples/app-pcadapt", package = "pcadapt")
     if (appDir == "") {
       stop("Could not find Shiny app in pcadapt.", call. = FALSE)
     }

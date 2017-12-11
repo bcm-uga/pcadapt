@@ -6,3 +6,4 @@ docs/*
 ^_pkgdown\.yml$
 tmp-tests
 tmp-data
+tmp-save

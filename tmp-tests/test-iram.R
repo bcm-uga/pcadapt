@@ -58,6 +58,7 @@ corr <- cor(G[], use = "pairwise.complete.obs")
 tmp <- which(corr^2 > 0.2, arr.ind = TRUE)
 tmp[tmp[, 1] > tmp[, 2] & (tmp[, 1] - size) <= tmp[, 2], ]
 no.pass
+stopifnot(all(no.pass %in% tmp[tmp[, 1] > tmp[, 2] & (tmp[, 1] - size) <= tmp[, 2], ]))
 
 ind.pass <- which(pass)
 p2 <- length(ind.pass)
@@ -106,7 +107,7 @@ lookup_scale2 <- rbind(
 # that is why we recompute the lookup table
 
 ind.pass.af <- which(pass.af)
-obj.svd$zscores <- multLinReg(xptr,
+obj.svd$zscores <- pcadapt:::multLinReg(xptr,
                               lookup_scale,
                               lookup_byte,
                               ind.pass.af,

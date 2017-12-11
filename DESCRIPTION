@@ -30,7 +30,7 @@ Imports:
     plotly,
     Matrix,
     mmapcharr
-LinkingTo: Rcpp, RcppEigen, BH, mmapcharr
+LinkingTo: RcppArmadillo, Rcpp, RcppEigen, BH, mmapcharr 
 Remotes: privefl/mmapcharr
 LazyData: TRUE
 Suggests: knitr, rmarkdown, testthat, shiny, geometry

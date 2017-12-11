@@ -13,8 +13,8 @@ clumping <- function(obj, lookup, lookup_byte, colInd, ord, remain, size, thr) {
     .Call('_pcadapt_clumping', PACKAGE = 'pcadapt', obj, lookup, lookup_byte, colInd, ord, remain, size, thr)
 }
 
-multLinReg <- function(obj, lookup_scale, lookup_byte, ind_col, u, d, v) {
-    .Call('_pcadapt_multLinReg', PACKAGE = 'pcadapt', obj, lookup_scale, lookup_byte, ind_col, u, d, v)
+multLinReg <- function(obj, lookup_scale, lookup_byte, ind_col, u) {
+    .Call('_pcadapt_multLinReg', PACKAGE = 'pcadapt', obj, lookup_scale, lookup_byte, ind_col, u)
 }
 
 nb_nona <- function(obj, lookup_scale, lookup_byte, ind_col) {
@@ -31,14 +31,6 @@ pMatVec4 <- function(obj, x, lookup_scale, lookup_byte, ind_col) {
 
 cpMatVec4 <- function(obj, x, lookup_scale, lookup_byte, ind_col) {
     .Call('_pcadapt_cpMatVec4', PACKAGE = 'pcadapt', obj, x, lookup_scale, lookup_byte, ind_col)
-}
-
-prodGx <- function(G, x, p) {
-    .Call('_pcadapt_prodGx', PACKAGE = 'pcadapt', G, x, p)
-}
-
-prodtGx <- function(G, x, p) {
-    .Call('_pcadapt_prodtGx', PACKAGE = 'pcadapt', G, x, p)
 }
 
 writebed <- function(filename, e, tab, is_pcadapt) {
