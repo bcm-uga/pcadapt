@@ -15,8 +15,8 @@ CODE_0123 <- mmapcharr:::CODE_012; CODE_0123[is.na(CODE_0123)] <- 3L
 
 ################################################################################
 
-write.table2 <- function(x, file) {
-  utils::write.table(x = x, file = file, sep = "\t", quote = FALSE,  
+write.table2 <- function(x, file, sep = "\t") {
+  utils::write.table(x = x, file = file, sep = sep, quote = FALSE,  
                      row.names = FALSE, col.names = FALSE)
 }
 
@@ -59,7 +59,7 @@ writeBed <- function(x, is.pcadapt) {
   # Get path to new bed file
   file <- x$backingfile
   bedfile <- paste0(file, ".bed")
-  if (file.exists(bedfile)) stop2("The bed file already exists!")
+  if (file.exists(bedfile)) stop("The bed file already exists!", call. = FALSE)
   
   # Write files
   ## Write bed file
