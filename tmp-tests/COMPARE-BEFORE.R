@@ -82,3 +82,6 @@ microbenchmark::microbenchmark(
   bigsnpr:::getD(zscores_rep),
   times = 10
 )
+
+## CLEAN
+unlink(list.files("inst/testdata", "to-compare.pcadapt.", full.names = TRUE))
