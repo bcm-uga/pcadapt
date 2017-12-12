@@ -33,18 +33,17 @@ NumericVector pMatVec4(C macc, const NumericVector& x) {
 /******************************************************************************/
 
 // [[Rcpp::export]]
-NumericVector pMatVec4(SEXP obj, 
-                       const NumericVector& x,
-                       const NumericMatrix& lookup_scale,
-                       const IntegerMatrix& lookup_byte, 
-                       const IntegerVector& ind_col) {
+NumericVector pMatVec4(SEXP obj,          // af should be ALL allele frequencies
+                       const IntegerVector& ind_col,
+                       const NumericVector& af,
+                       const NumericVector& x) {
   
   if (Rf_isMatrix(obj)) {
-    matAcc macc(obj, lookup_scale, ind_col);
+    matAccScaled macc(obj, ind_col, af, 0);
     return pMatVec4(macc, x);
   } else {
     XPtr<bed> xpMat(obj);
-    bedAcc macc(xpMat, lookup_scale, lookup_byte, ind_col);
+    bedAccScaled macc(xpMat, ind_col, af, 0);
     return pMatVec4(macc, x);
   }
 }
@@ -81,18 +80,17 @@ NumericVector cpMatVec4(C macc, const NumericVector& x) {
 /******************************************************************************/
 
 // [[Rcpp::export]]
-NumericVector cpMatVec4(SEXP obj, 
-                        const NumericVector& x,
-                        const NumericMatrix& lookup_scale,
-                        const IntegerMatrix& lookup_byte, 
-                        const IntegerVector& ind_col) {
+NumericVector cpMatVec4(SEXP obj,         // af should be ALL allele frequencies
+                        const IntegerVector& ind_col,
+                        const NumericVector& af,
+                        const NumericVector& x) {
   
   if (Rf_isMatrix(obj)) {
-    matAcc macc(obj, lookup_scale, ind_col);
+    matAccScaled macc(obj, ind_col, af, 0);
     return cpMatVec4(macc, x);
   } else {
     XPtr<bed> xpMat(obj);
-    bedAcc macc(xpMat, lookup_scale, lookup_byte, ind_col);
+    bedAccScaled macc(xpMat, ind_col, af, 0);
     return cpMatVec4(macc, x);
   }
 }

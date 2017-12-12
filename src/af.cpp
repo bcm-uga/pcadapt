@@ -10,10 +10,11 @@ NumericVector AF(C macc) {
   
   size_t n = macc.nrow();
   size_t p = macc.ncol();
-  size_t i, j, n_available;
+  size_t i, j;
+  int n_available;
   
-  double x;
   NumericVector af(p);
+  double x;
   
   for (j = 0; j < p; j++) {
     n_available = n; // Counts the number of available values for SNP j
@@ -33,22 +34,19 @@ NumericVector AF(C macc) {
 
 /******************************************************************************/
 
-// Dispatch function for af
+// Dispatch function for get_af
 // [[Rcpp::export]]
-NumericVector get_af(SEXP obj,
-                     const NumericMatrix& lookup_scale,
-                     const IntegerMatrix& lookup_byte,
-                     const IntegerVector& ind_col) {
+NumericVector get_af(SEXP obj) {
   
   if (Rf_isMatrix(obj)) {
-    matAcc macc(obj, lookup_scale, ind_col);
+    IntegerMatrix mat(obj);
+    matAcc macc(mat, seq_len(mat.ncol()));
     return AF(macc);
   } else {
     XPtr<bed> xpMat(obj);
-    bedAcc macc(xpMat, lookup_scale, lookup_byte, ind_col);
+    bedAcc macc(xpMat, seq_len(xpMat->ncol()));
     return AF(macc);
   }
-  
 }
 
 /******************************************************************************/

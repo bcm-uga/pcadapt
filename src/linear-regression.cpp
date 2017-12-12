@@ -1,6 +1,7 @@
 /******************************************************************************/
 
 // [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
 #include <pcadapt/bed-acc.h>
 #include <pcadapt/mat-acc.h>
 
@@ -44,6 +45,7 @@ NumericMatrix multLinReg(C macc,
     
     arma::mat u2 = u.rows(ind_row2);
     
+    // Maybe no need to inverse if approximation by diagonal matrix?
     K_inv = invCrossprodArma(u2);
     betas = K_inv * (u2.t() * x2);
     arma::colvec eps = x2 - u2 * betas;
@@ -61,18 +63,17 @@ NumericMatrix multLinReg(C macc,
 
 // Dispatch function for multLinReg
 // [[Rcpp::export]]
-NumericMatrix multLinReg(SEXP obj,
-                         const NumericMatrix& lookup_scale,
-                         const IntegerMatrix& lookup_byte,
+NumericMatrix multLinReg(SEXP obj,        // af should be ALL allele frequencies
                          const IntegerVector& ind_col,
+                         const NumericVector& af,
                          const arma::mat& u) {
   
   if (Rf_isMatrix(obj)) {
-    matAcc macc(obj, lookup_scale, ind_col);
+    matAccScaled macc(obj, ind_col, af, 3);
     return multLinReg(macc, u);
   } else {
     XPtr<bed> xpMat(obj);
-    bedAcc macc(xpMat, lookup_scale, lookup_byte, ind_col);
+    bedAccScaled macc(xpMat, ind_col, af, 3);
     return multLinReg(macc, u);
   }
 }

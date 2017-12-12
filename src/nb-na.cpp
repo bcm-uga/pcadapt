@@ -31,17 +31,15 @@ ListOf<NumericVector> nb_nona(C macc) {
 
 // [[Rcpp::export]]
 ListOf<NumericVector> nb_nona(SEXP obj,
-                              const NumericMatrix& lookup_scale,
-                              const IntegerMatrix& lookup_byte,
                               const IntegerVector& ind_col) {
 
   // Need access NA as 3
   if (Rf_isMatrix(obj)) {
-    matAcc macc(obj, lookup_scale, ind_col);
+    matAcc macc(obj, ind_col);
     return nb_nona(macc);
   } else {
     XPtr<bed> xpMat(obj);
-    bedAcc macc(xpMat, lookup_scale, lookup_byte, ind_col);
+    bedAcc macc(xpMat, ind_col);
     return nb_nona(macc);
   }
 }

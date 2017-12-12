@@ -95,28 +95,25 @@ LogicalVector clumping(C macc,
     }
   }
   
-  return(keep);
+  return keep;
 }
 
 /******************************************************************************/
 
 // Dispatch function for clumping
 // [[Rcpp::export]]
-LogicalVector clumping(SEXP obj,
-                       const NumericMatrix& lookup,
-                       const IntegerMatrix& lookup_byte,
-                       const IntegerVector& colInd,
-                       const IntegerVector& ord,
+LogicalVector clumping(SEXP obj,    // ord & remain should correspond to ind_col
+                       const IntegerVector& ind_col,
+                       const IntegerVector& ord, 
                        LogicalVector& remain,
-                       int size, 
-                       double thr) {
+                       int size, double thr) {
   
   if (Rf_isMatrix(obj)) {
-    matAcc macc(obj, lookup, colInd);
+    matAcc macc(obj, ind_col);
     return clumping(macc, ord, remain, size, thr);
   } else {
     XPtr<bed> xpMat(obj);
-    bedAcc macc(xpMat, lookup, lookup_byte, colInd);
+    bedAcc macc(xpMat, ind_col);
     return clumping(macc, ord, remain, size, thr);
   }
 }

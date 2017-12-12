@@ -1,6 +1,8 @@
 #ifndef BED_ACC_H
 #define BED_ACC_H
 
+/******************************************************************************/
+
 #include <boost/interprocess/file_mapping.hpp>
 #include <boost/interprocess/mapped_region.hpp>
 #include <boost/noncopyable.hpp>
@@ -10,9 +12,29 @@ using namespace boost::interprocess;
 using namespace Rcpp;
 using std::size_t;
 
+/******************************************************************************/
+
 class bed : private boost::noncopyable {
 public:
   bed(const std::string path, int n, int p);
+  
+  IntegerMatrix get_code(int NA_VAL = 3) const {
+    
+    IntegerVector num = IntegerVector::create(0, NA_VAL, 1, 2);
+    IntegerMatrix code(4, 256);
+    
+    int i, k, k2;
+    int coeff = 1;
+    for (i = 0; i < 4; i++) {
+      for (k = 0; k < 256; k++) {
+        k2 = k / coeff;
+        code(i, k) = num[k2 % 4];
+      }
+      coeff *= 4;
+    }
+    
+    return code;
+  }
   
   const unsigned char* matrix() const { return file_data; }
   size_t nrow() const { return n; }
@@ -28,20 +50,19 @@ private:
   size_t n_byte;
 };
 
+/******************************************************************************/
 
 class bedAcc {
 public:
-  bedAcc(const bed * bedPtr,   // lookups must be corresponding to 'col_ind'
-         const NumericMatrix& lookup_scale,
-         const IntegerMatrix& lookup_byte,
+  bedAcc(const bed * bedPtr,
          const IntegerVector& col_ind) {
     
     n = bedPtr->nrow();
     p = col_ind.size();
     n_byte = bedPtr->nbyte(); 
-    _lookup_scale = lookup_scale;
-    _lookup_byte = lookup_byte;
     _pMat = bedPtr->matrix();
+    
+    _lookup_byte = bedPtr->get_code();
     
     std::vector<size_t> col_ind2(p);
     for (size_t j = 0; j < p; j++) {
@@ -54,20 +75,49 @@ public:
   size_t nrow() const { return n; }
   size_t ncol() const { return p; }
   
-  inline double operator() (size_t i, size_t j) {
+  inline int operator() (size_t i, size_t j) {
     const unsigned char byte = _pMat[i / 4 + _col_ind[j] * n_byte];
-    int geno = _lookup_byte(i % 4, byte);
-    return _lookup_scale(geno, j);
+    return _lookup_byte(i % 4, byte);
   }
   
-private:
+protected:
   const unsigned char* _pMat;
   size_t n;
   size_t p;
   size_t n_byte;
-  NumericMatrix _lookup_scale;
   IntegerMatrix _lookup_byte;
   std::vector<size_t> _col_ind;
 };
+
+/******************************************************************************/
+
+class bedAccScaled : public bedAcc {
+public:
+  bedAccScaled(const bed * bedPtr,
+               const IntegerVector& col_ind,
+               // af should be ALL allele frequencies
+               const NumericVector& af,
+               double NA_VAL) : bedAcc(bedPtr, col_ind) {
+    
+    _lookup_scale = NumericMatrix(4, p);
+    for (size_t j = 0; j < p; j++) {
+      double af_j = af[_col_ind[j]];
+      for (size_t i = 0; i < 3; i++) {
+        _lookup_scale(i, j) = (i - 2 * af_j) / sqrt(2 * af_j * (1 - af_j));
+      }
+      _lookup_scale(3, j) = NA_VAL;
+    }
+  };
+  
+  inline double operator() (size_t i, size_t j) {
+    int geno = bedAcc::operator()(i, j);
+    return _lookup_scale(geno, j);
+  }
+  
+protected:
+  NumericMatrix _lookup_scale;
+};
+
+/******************************************************************************/
 
 #endif // BED_ACC_H
