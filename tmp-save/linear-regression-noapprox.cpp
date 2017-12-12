@@ -1,60 +1,59 @@
 /******************************************************************************/
 
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
 #include <pcadapt/bed-acc.h>
 #include <pcadapt/mat-acc.h>
 
 /******************************************************************************/
 
+// // [[Rcpp::export]]
+// void test(arma::uvec x) {
+//   Rcout << x.subvec(0, 2) << std::endl;
+// }
+
+arma::mat invCrossprodArma(const arma::mat& x) {
+  return inv_sympd(x.t() * x);
+}
+
+/******************************************************************************/
+
 template <class C>
 NumericMatrix multLinReg(C macc, 
-                         const NumericMatrix& u) {
+                         const arma::mat& u) {
   
   size_t n = macc.nrow();
   size_t p = macc.ncol();
-  int K = u.ncol();
+  int K = u.n_cols;
   
+  arma::mat K_inv(K, K);
+  arma::colvec betas(K);
   NumericMatrix Z(p, K);
-  NumericMatrix x(n);
-  double eps;
+  arma::colvec x(n);
+  arma::uvec ind_row(n);
   int k, nona;
   
   for (size_t j = 0; j < p; j++) {
     
-    LogicalVector not_missing(n);
-    
-    // counting NAs and Z = U^T G (x)
-    nona = n;
-    NumericVector z(K);              // all 0s
+    nona = 0;
     for (size_t i = 0; i < n; i++) {
       x[i] = macc(i, j);
-      not_missing[i] = (x[i] != 3);
-      if (not_missing[i]) {
-        for (k = 0; k < K; k++) {
-          z[k] += u(i, k) * x[i]; 
-        }
-      } else {
-        nona--;
-      }
+      if (x[i] != 3) ind_row[nona++] = i;
     }
+    arma::uvec ind_row2 = ind_row.subvec(0, nona - 1); 
+    arma::colvec x2 = x.elem(ind_row2);
     
-    // G* (y) = U Z
-    NumericMatrix y(n);              // all 0s
-    NumericVector sum_scores_sq(K);  // all 0s
-    double sum_resid_sq = 0;
-    for (size_t i = 0; i < n; i++) {
-      if (not_missing[i]) {
-        for (k = 0; k < K; k++) {
-          y[i] += u(i, k) * z[k]; 
-          sum_scores_sq[k] += u(i, k) * u(i, k);  // can't precompute
-        }
-        eps = x[i] - y[i];
-        sum_resid_sq += eps * eps;
-      }
-    }
+    arma::mat u2 = u.rows(ind_row2);
+    
+    // Maybe no need to inverse if approximation by diagonal matrix?
+    K_inv = invCrossprodArma(u2);
+    betas = K_inv * (u2.t() * x2);
+    arma::colvec eps = x2 - u2 * betas;
+    double tmp = dot(eps, eps) / (nona - K);
     
     for (k = 0; k < K; k++) {
-      Z(j, k) = z[k] / sqrt(sum_scores_sq[k] * sum_resid_sq / (nona - K)); 
-    } 
+      Z(j, k) = betas(k) / sqrt(K_inv(k, k) * tmp);
+    }
   }
   
   return Z;
@@ -67,7 +66,7 @@ NumericMatrix multLinReg(C macc,
 NumericMatrix multLinReg(SEXP obj,        // af should be ALL allele frequencies
                          const IntegerVector& ind_col,
                          const NumericVector& af,
-                         const NumericMatrix& u) {
+                         const arma::mat& u) {
   
   if (Rf_isMatrix(obj)) {
     matAccScaled macc(obj, ind_col, af, 3);

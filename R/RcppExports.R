@@ -21,10 +21,6 @@ nb_nona <- function(obj, ind_col) {
     .Call('_pcadapt_nb_nona', PACKAGE = 'pcadapt', obj, ind_col)
 }
 
-covRob_rcpp <- function(x) {
-    .Call('_pcadapt_covRob_rcpp', PACKAGE = 'pcadapt', x)
-}
-
 pMatVec4 <- function(obj, ind_col, af, x) {
     .Call('_pcadapt_pMatVec4', PACKAGE = 'pcadapt', obj, ind_col, af, x)
 }

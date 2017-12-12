@@ -160,7 +160,9 @@ get_statistics = function(zscores,
       one.d.cov <- as.vector(MASS::cov.rob(zscores[pass])) 
       res <- (zscores - one.d.cov$center)^2 / one.d.cov$cov[1]
     } else if (K > 1) {
-      ogk <- covRob_cpp(zscores[pass, ])
+      # covRob_cpp(zscores[pass, ])
+      ogk <- robust::covRob(zscores, na.action = na.omit, 
+                            estim = "pairwiseGK")$dist 
       res[pass] <- ogk$dist
     }
     gif <- median(res, na.rm = TRUE) / qchisq(0.5, df = K)
