@@ -16,8 +16,11 @@ str(res)
 saveRDS(res, file = sub("\\.pcadapt$", ".rds", FILE))
 
 # New version
-bedfile <- writeBed(mmapcharr::mmapchar(FILE, mmapcharr:::CODE_012), 
-                    is.pcadapt = TRUE)
+file.copy(FILE, TMP_FILE <- tempfile(fileext = ".pcadapt"))
+bedfile <- writeBed(
+  mmapcharr::mmapchar(TMP_FILE, mmapcharr:::CODE_012), 
+  is.pcadapt = TRUE
+)
 obj.svd <- pcadapt:::iram(bedfile, K = 10, min.maf = 0.05)
 str(obj.svd)
 
@@ -59,7 +62,8 @@ apply(zscores2, 2, function(x) shapiro.test(x)$p.value)
 
 
 # CovRob
-d <- pcadapt:::covRob_rcpp(zscores)$dist
+Rcpp::sourceCpp('tmp-save/ogk.cpp')
+d <- covRob_rcpp(zscores)$dist
 gif <- median(d) / qchisq(0.5, df = 10)
 all.equal(gif, res$gif)
 all.equal(d, as.numeric(res$stat[ind.pass.af]))
@@ -70,18 +74,15 @@ plot(bigsnpr:::getD(zscores), d)
 all.equal(robust::covRob(zscores, estim="pairwiseGK")$dist, d)
 all.equal(bigsnpr:::getD(zscores), d)
 microbenchmark::microbenchmark(
-  pcadapt:::covRob_rcpp(zscores)$dist,
+  covRob_rcpp(zscores)$dist,
   robust::covRob(zscores, estim="pairwiseGK")$dist,
   bigsnpr:::getD(zscores)
 ) # 16 vs 41 ms
 
 dim(zscores_rep <- zscores[rep(seq_len(nrow(zscores)), 100), ])
 microbenchmark::microbenchmark(
-  pcadapt:::covRob_rcpp(zscores_rep)$dist,
+  covRob_rcpp(zscores_rep)$dist,
   robust::covRob(zscores_rep, estim="pairwiseGK")$dist,
   bigsnpr:::getD(zscores_rep),
   times = 10
 )
-
-## CLEAN
-unlink(list.files("inst/testdata", "to-compare.pcadapt.", full.names = TRUE))
