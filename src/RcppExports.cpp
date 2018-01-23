@@ -71,6 +71,44 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// print_convert
+void print_convert(std::string input, std::string output, int M, int N, int pool);
+RcppExport SEXP _pcadapt_print_convert(SEXP inputSEXP, SEXP outputSEXP, SEXP MSEXP, SEXP NSEXP, SEXP poolSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type input(inputSEXP);
+    Rcpp::traits::input_parameter< std::string >::type output(outputSEXP);
+    Rcpp::traits::input_parameter< int >::type M(MSEXP);
+    Rcpp::traits::input_parameter< int >::type N(NSEXP);
+    Rcpp::traits::input_parameter< int >::type pool(poolSEXP);
+    print_convert(input, output, M, N, pool);
+    return R_NilValue;
+END_RCPP
+}
+// ped2pcadapt
+int ped2pcadapt(std::string input, std::string output);
+RcppExport SEXP _pcadapt_ped2pcadapt(SEXP inputSEXP, SEXP outputSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type input(inputSEXP);
+    Rcpp::traits::input_parameter< std::string >::type output(outputSEXP);
+    rcpp_result_gen = Rcpp::wrap(ped2pcadapt(input, output));
+    return rcpp_result_gen;
+END_RCPP
+}
+// lfmm2pcadapt
+int lfmm2pcadapt(std::string input, std::string output);
+RcppExport SEXP _pcadapt_lfmm2pcadapt(SEXP inputSEXP, SEXP outputSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type input(inputSEXP);
+    Rcpp::traits::input_parameter< std::string >::type output(outputSEXP);
+    rcpp_result_gen = Rcpp::wrap(lfmm2pcadapt(input, output));
+    return rcpp_result_gen;
+END_RCPP
+}
 // pMatVec4
 NumericVector pMatVec4(SEXP obj, const IntegerVector& ind_col, const NumericVector& af, const NumericVector& x);
 RcppExport SEXP _pcadapt_pMatVec4(SEXP objSEXP, SEXP ind_colSEXP, SEXP afSEXP, SEXP xSEXP) {
@@ -99,6 +137,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// vcf_convert
+IntegerVector vcf_convert(CharacterMatrix string_geno, std::string output, CharacterVector allele_sep);
+RcppExport SEXP _pcadapt_vcf_convert(SEXP string_genoSEXP, SEXP outputSEXP, SEXP allele_sepSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterMatrix >::type string_geno(string_genoSEXP);
+    Rcpp::traits::input_parameter< std::string >::type output(outputSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type allele_sep(allele_sepSEXP);
+    rcpp_result_gen = Rcpp::wrap(vcf_convert(string_geno, output, allele_sep));
+    return rcpp_result_gen;
+END_RCPP
+}
 // writebed
 void writebed(const char * filename, Environment e, const RawVector& tab, bool is_pcadapt);
 RcppExport SEXP _pcadapt_writebed(SEXP filenameSEXP, SEXP eSEXP, SEXP tabSEXP, SEXP is_pcadaptSEXP) {
@@ -119,8 +170,12 @@ static const R_CallMethodDef CallEntries[] = {
     {"_pcadapt_clumping", (DL_FUNC) &_pcadapt_clumping, 6},
     {"_pcadapt_multLinReg", (DL_FUNC) &_pcadapt_multLinReg, 4},
     {"_pcadapt_nb_nona", (DL_FUNC) &_pcadapt_nb_nona, 2},
+    {"_pcadapt_print_convert", (DL_FUNC) &_pcadapt_print_convert, 5},
+    {"_pcadapt_ped2pcadapt", (DL_FUNC) &_pcadapt_ped2pcadapt, 2},
+    {"_pcadapt_lfmm2pcadapt", (DL_FUNC) &_pcadapt_lfmm2pcadapt, 2},
     {"_pcadapt_pMatVec4", (DL_FUNC) &_pcadapt_pMatVec4, 4},
     {"_pcadapt_cpMatVec4", (DL_FUNC) &_pcadapt_cpMatVec4, 4},
+    {"_pcadapt_vcf_convert", (DL_FUNC) &_pcadapt_vcf_convert, 3},
     {"_pcadapt_writebed", (DL_FUNC) &_pcadapt_writebed, 4},
     {NULL, NULL, 0}
 };

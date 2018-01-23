@@ -14,11 +14,11 @@ getCode <- function(NA.VAL = 3L) {
 ################################################################################
 
 iram_and_reg <- function(input, 
-                 K = 2, 
-                 min.maf = 0.05, 
-                 LD.clumping = FALSE, 
-                 size = 100, 
-                 thr = 0.2) {  # TODO: add exclude parameter
+                         K = 2, 
+                         min.maf = 0.05, 
+                         LD.clumping = FALSE, 
+                         size = 100, 
+                         thr = 0.2) {  # TODO: add exclude parameter
   
   if (class(input) == "character") {
     path_to_bed <- normalizePath(input)
@@ -89,8 +89,9 @@ iram_and_reg <- function(input,
   # obj.svd$nona1 <- nb_nona$p
   # obj.svd$nona2 <- nb_nona$n
   
+  obj.svd$pass <- ind.pass.af
+  
   obj.svd
 }
 
 ################################################################################
-

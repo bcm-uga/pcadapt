@@ -93,6 +93,11 @@ read.pcadapt <- function(input,
       aux <- get.output.name(name = tmp.aux)
       otpt <- lfmm2pcadapt(input = tmp.aux, output = aux)
     }
+    
+    if (type != "pool") {
+      pcadapt.xptr <- mmapcharr::mmapchar(aux, code = mmapcharr:::CODE_012)
+      aux <- writeBed(pcadapt.xptr, is.pcadapt = TRUE)  ## bed path
+    }
   } else if ((class(input) %in% c("matrix", "data.frame", "array"))){
     if (!(ncol(input) > 0) || !(nrow(input) > 0)){
       stop("Invalid input genotype matrix.")

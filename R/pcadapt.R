@@ -82,15 +82,14 @@ pcadapt = function(input,
     } 
 ##Compute PCs and z-scores    
     obj.pca <- iram_and_reg(input, K = K, min.maf = min.maf, LD.clumping = LD.clumping)
-    res <- get_statistics(as.matrix(obj.pca$zscores), 
+    res <- get_statistics(obj.pca$zscores, 
                           method = method, 
-                          values = obj.pca$d,
                           pass = obj.pca$pass)
     output <- list(scores = obj.pca$u,
                    singular.values = sqrt(obj.pca$d * nrow(obj.pca$v) / (nrow(obj.pca$u) - 1)),
                    loadings = obj.pca$v,
                    zscores = obj.pca$zscores,
-                   maf = obj.pca$maf,
+                   maf = pmin(obj.pca$af, 1 - obj.pca$af),
                    chi2.stat = res$chi2.stat,
                    gif = res$gif,
                    pvalues = res$pvalues,
@@ -141,10 +140,7 @@ run.pcadapt <- function() {
 #' @importFrom utils head
 #' 
 #'
-get_statistics = function(zscores, 
-                          method,
-                          values, 
-                          pass) {
+get_statistics = function(zscores, method, pass) {
   
   nSNP <- nrow(zscores)
   K <- ncol(zscores)
@@ -154,9 +150,8 @@ get_statistics = function(zscores,
       res[pass] <- (zscores - median(zscores[pass]))^2 
     } else if (K > 1) {
       # covRob_cpp(zscores[pass, ])
-      ogk <- robust::covRob(zscores, na.action = na.omit, 
-                            estim = "pairwiseGK")$dist
-      res[pass] <- ogk$dist
+      res[pass] <- robust::covRob(zscores, na.action = na.omit, 
+                                  estim = "pairwiseGK")$dist
     }
     gif <- median(res, na.rm = TRUE) / qchisq(0.5, df = K)
     res.gif <- res / gif

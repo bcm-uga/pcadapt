@@ -21,12 +21,88 @@ nb_nona <- function(obj, ind_col) {
     .Call('_pcadapt_nb_nona', PACKAGE = 'pcadapt', obj, ind_col)
 }
 
+#' Summary
+#'
+#' \code{print_convert} prints out a summary of the file conversion.
+#'
+#' @param input a genotype matrix or a character string specifying the name of the file to be converted.
+#' @param output a character string specifying the name of the output file.
+#' @param M an integer specifying the number of genetic markers present in the data.
+#' @param N an integer specifying the number of individuals present in the data.
+#' @param pool an integer specifying the type of data. `0` for genotype data, `1` for pooled data.
+#'
+#' @examples
+#' ## see also ?pcadapt for examples
+#'
+#' @export
+#'
+print_convert <- function(input, output, M, N, pool) {
+    invisible(.Call('_pcadapt_print_convert', PACKAGE = 'pcadapt', input, output, M, N, pool))
+}
+
+#' Convert ped files
+#'
+#' \code{ped2pcadapt} converts \code{ped} files to the format \code{pcadapt}.
+#'
+#' @param input a character string specifying the name of the file to be converted.
+#' @param output a character string specifying the name of the output file.
+#' 
+#' @examples
+#' ## see also ?pcadapt for examples
+#'
+#' @keywords internal
+#'
+#' @export
+#'
+ped2pcadapt <- function(input, output) {
+    .Call('_pcadapt_ped2pcadapt', PACKAGE = 'pcadapt', input, output)
+}
+
+#' Convert lfmm files
+#'
+#' \code{lfmm2pcadapt} converts \code{lfmm} files to the format \code{pcadapt}.
+#'
+#' @param input a character string specifying the name of the file to be converted.
+#' @param output a character string specifying the name of the output file.
+#' 
+#' @examples
+#' ## see also ?pcadapt for examples
+#'
+#' @keywords internal
+#'
+#' @export
+#'
+lfmm2pcadapt <- function(input, output) {
+    .Call('_pcadapt_lfmm2pcadapt', PACKAGE = 'pcadapt', input, output)
+}
+
 pMatVec4 <- function(obj, ind_col, af, x) {
     .Call('_pcadapt_pMatVec4', PACKAGE = 'pcadapt', obj, ind_col, af, x)
 }
 
 cpMatVec4 <- function(obj, ind_col, af, x) {
     .Call('_pcadapt_cpMatVec4', PACKAGE = 'pcadapt', obj, ind_col, af, x)
+}
+
+#' Convert vcfR genotype matrices
+#'
+#' \code{vcf_convert} converts outputs of \code{extract.gt} to the format 
+#' \code{pcadapt}.
+#'
+#' @param string_geno a genotype matrix extracted from a VCF file with `vcfR`. 
+#' @param output a character string indicating the name of the output file.
+#' @param allele.sep a vector of characters indicating what delimiters are used 
+#' to separate alleles.
+#'
+#' @examples
+#' ## see also ?pcadapt for examples
+#'
+#' @keywords internal
+#'
+#' @export
+#'
+vcf_convert <- function(string_geno, output, allele_sep) {
+    .Call('_pcadapt_vcf_convert', PACKAGE = 'pcadapt', string_geno, output, allele_sep)
 }
 
 writebed <- function(filename, e, tab, is_pcadapt) {
