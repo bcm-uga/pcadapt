@@ -17,16 +17,13 @@
 #' matrix between the \code{K} vectors of z-scores.
 #'
 #' \code{communality}: the communality statistic measures the proportion of 
-#' variance explained by the first \code{K} PCs.
+#' variance explained by the first \code{K} PCs. Deprecated in version 4.0.0.
 #'
 #' \code{componentwise}: returns a matrix of z-scores.
 #'
 #' To compute p-values, test statistics (\code{stat}) are divided by a genomic 
-#' inflation factor (\code{gif}) when \code{method="mahalanobis"}. When 
-#' \code{method="communality"}, the test statistic is first multiplied by 
-#' \code{K} and divided by the percentage of variance explained by the first 
-#' \code{K} PCs before accounting for genomic inflation factor. When using 
-#' \code{method="mahalanobis"} or \code{"communality"}, the scaled statistics 
+#' inflation factor (\code{gif}) when \code{method="mahalanobis"}. When using 
+#' \code{method="mahalanobis"}, the scaled statistics 
 #' (\code{chi2_stat}) should follow a chi-squared distribution with \code{K} 
 #' degrees of freedom. When using \code{method="componentwise"}, the z-scores 
 #' should follow a chi-squared distribution with \code{1} degree of freedom. For 
@@ -37,8 +34,8 @@
 #' the file to be processed with \code{pcadapt}.
 #' @param K an integer specifying the number of principal components to retain.
 #' @param method a character string specifying the method to be used to compute
-#' the p-values. Three statistics are currently available, \code{"mahalanobis"},
-#' \code{"communality"} and \code{"componentwise"}.
+#' the p-values. Two statistics are currently available, \code{"mahalanobis"},
+#' and \code{"componentwise"}.
 #' @param min.maf a value between \code{0} and \code{0.45} specifying the 
 #' threshold of minor allele frequencies above which p-values are computed.
 #' @param LD.clumping a logical value indicating whether LD clumping should be
@@ -69,7 +66,7 @@ pcadapt = function(input,
       stop("K has to be a positive integer.")
     }
     
-    if (!(method %in% c("mahalanobis", "communality", "componentwise"))) {
+    if (!(method %in% c("mahalanobis", "componentwise"))) {
       warning("Unknown method. Default method will be used.")
       method <- "mahalanobis"
     }
@@ -83,8 +80,8 @@ pcadapt = function(input,
     if (is.character(input) && !file.exists(input)) {
       stop(paste("File", input, "does not exist."))
     } 
-    
-    obj.pca <- iram(input, K = K, min.maf = min.maf, LD.clumping = LD.clumping)
+##Compute PCs and z-scores    
+    obj.pca <- iram_and_reg(input, K = K, min.maf = min.maf, LD.clumping = LD.clumping)
     res <- get_statistics(as.matrix(obj.pca$zscores), 
                           method = method, 
                           values = obj.pca$d,
@@ -132,8 +129,8 @@ run.pcadapt <- function() {
 #'
 #' @param zscores a numeric matrix containing the z-scores.
 #' @param method a character string specifying the method to be used to compute
-#' the p-values. Three statistics are currently available, \code{"mahalanobis"},
-#' \code{"communality"}, and \code{"componentwise"}.
+#' the p-values. Two statistics are currently available, \code{"mahalanobis"},
+#' and \code{"componentwise"}.
 #' @param values a numeric vector containing the singular values.
 #' 
 #' @return The returned value is a list containing the test statistics and the 
@@ -143,37 +140,33 @@ run.pcadapt <- function() {
 #' @importFrom MASS cov.rob
 #' @importFrom utils head
 #' 
-#' @export
 #'
 get_statistics = function(zscores, 
-                          method = c("mahalanobis", 
-                                     "communality", 
-                                     "componentwise"),
+                          method,
                           values, 
-                          pass = rep(TRUE, nrow(zscores))) {
+                          pass) {
   
   nSNP <- nrow(zscores)
   K <- ncol(zscores)
   if (method == "mahalanobis") {
     res <- rep(NA, nSNP)
     if (K == 1) {
-      one.d.cov <- as.vector(MASS::cov.rob(zscores[pass])) 
-      res <- (zscores - one.d.cov$center)^2 / one.d.cov$cov[1]
+      res[pass] <- (zscores - median(zscores[pass]))^2 
     } else if (K > 1) {
       # covRob_cpp(zscores[pass, ])
       ogk <- robust::covRob(zscores, na.action = na.omit, 
-                            estim = "pairwiseGK")$dist 
+                            estim = "pairwiseGK")$dist
       res[pass] <- ogk$dist
     }
     gif <- median(res, na.rm = TRUE) / qchisq(0.5, df = K)
     res.gif <- res / gif
     pval <- as.numeric(pchisq(res.gif, df = K, lower.tail = FALSE))
   } else if (method == "communality") {
-    res <- sapply(1:nSNP, FUN = function(h) {sum(zscores[h, ]^2 * values^2 / nSNP)})
-    c <- sum(values^2) / K
-    gif <- median(res * nSNP / c, na.rm = TRUE) / qchisq(0.5, df = K)
-    res.gif <- res * nSNP / (c * gif)
-    pval <- pchisq(res.gif, df = K, lower.tail = FALSE)
+    # res <- sapply(1:nSNP, FUN = function(h) {sum(zscores[h, ]^2 * values^2 / nSNP)})
+    # c <- sum(values^2) / K
+    # gif <- median(res * nSNP / c, na.rm = TRUE) / qchisq(0.5, df = K)
+    # res.gif <- res * nSNP / (c * gif)
+    # pval <- pchisq(res.gif, df = K, lower.tail = FALSE)
   } else if (method == "componentwise") {
     res <- apply(zscores, MARGIN = 2, FUN = function(h) {h^2})
     gif <- sapply(1:K, FUN = function(h) {median(zscores[, h]^2, na.rm = TRUE) / qchisq(0.5, df = 1)})

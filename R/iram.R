@@ -13,7 +13,7 @@ getCode <- function(NA.VAL = 3L) {
 
 ################################################################################
 
-iram <- function(input, 
+iram_and_reg <- function(input, 
                  K = 2, 
                  min.maf = 0.05, 
                  LD.clumping = FALSE, 
@@ -77,7 +77,7 @@ iram <- function(input,
   
   # Multiple Linear Regression is performed also on SNPs that have been clumped,
   # that is why we recompute the lookup table
-  # obj.svd$zscores <- multLinReg(xptr, ind.pass.af, af, obj.svd$u)
+  obj.svd$zscores <- multLinReg(xptr, ind.pass.af, af, obj.svd$u)
   
   V <- matrix(NA_real_, p, K)
   V[ind.pass, ] <- obj.svd$v
@@ -94,19 +94,3 @@ iram <- function(input,
 
 ################################################################################
 
-iram2 = function(X, k) {
-  p <- apply(X, MARGIN = 1, FUN = function(h) {mean(h, na.rm = TRUE) / 2})
-  A <- function(x, args) {
-    return(prodtGx(X, x, p)) # Input vector of length p
-  }
-  Atrans <- function(x, args) {
-    return(prodGx(G, x, p)) # Input vector of length n
-  }
-  res <- RSpectra::svds(A, k, nu = k, nv = 0, Atrans = Atrans,
-                        opts = list(tol = 1e-4, maxitr = 100),
-                        dim = c(ncol(X), nrow(X)))
-  res$maf <- pmin(p, 1 - p)
-  return(res)
-}
-
-################################################################################
