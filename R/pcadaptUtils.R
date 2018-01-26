@@ -1,3 +1,5 @@
+################################################################################
+
 #' File Converter
 #'
 #' \code{read.pcadapt} converts genotype matrices or files to an appropriate
@@ -6,7 +8,7 @@
 #'
 #' @param input a genotype matrix or a character string specifying the name of the file to be
 #' converted.
-#' @param type a character string specifying the type of data to be converted to the
+#' @param type.input a character string specifying the type of data to be converted to the
 #' \code{pcadapt} format. Supported formats are: \code{ped}, \code{vcf}, \code{lfmm}.
 #' Deprecated argument.
 #' @param local.env deprecated argument.
@@ -21,124 +23,154 @@
 #' @export
 #'
 read.pcadapt <- function(input, 
-                         type, 
-                         local.env, 
-                         ploidy, 
+                         type.input = c("pcadapt", "lfmm", "vcf", 
+                                        "ped", "pool", "example"), 
+                         type.output = c("bed", "matrix"),
                          pop.sizes = NULL,
                          allele.sep = c("/", "|"), 
+                         ploidy = 2, 
+                         local.env, 
                          blocksize){
   
   ## In version 3.1.0, argument local.env has been removed ##
-  if (!missing(local.env)){
+  if (!missing(local.env)) {
     warning("Argument local.env is deprecated. Please refer to the latest vignette for further information.")
   }
   
   ## In version 3.1.0, argument local.env has been removed ##
-  if (!missing(blocksize)){
+  if (!missing(blocksize)) {
     warning("Argument blocksize is deprecated. Please refer to the latest vignette for further information.")
   }
   
-  if (class(input) == "character"){
-    ## Check if input exists ##    
-    if (!file.exists(input) &&  (type != "example")){
-      stop(paste0("File ", input, " does not exist."))
-    } 
-    ## Check if argument type is missing ##
-    if (missing(type)){
-      stop("Argument type is missing.")
-    }
-    ## Check if file type is supported ##
-    if (class(type) != "character" || (!(type %in% c("vcf", "ped", "lfmm", "pcadapt", "pool", "example")))){
-      stop("Incorrect type.")
-    }
+  if (type.input == "pool") {
+    return(read.pcadapt.pool(input, type.output, pop.sizes, ploidy))
+  } 
+  
+  if (class(input) == "character") {
     
-    ## x.type to x.pcadapt ##
-    aux <- get.output.name(name = input)
+    ## Check if input exists ##    
+    if ((type.input != "example") && !file.exists(input)) 
+      stop(paste("File", input, "does not exist."))
     
     ## File converter ##
-    if (type == "ped"){
-      otpt <- ped2pcadapt(input = input, output = aux)
-    } else if (type == "vcf"){
-      vcf2pcadapt(input = input, output = aux, allele.sep = allele.sep)
-    } else if (type == "lfmm"){
-      otpt <- lfmm2pcadapt(input = input, output = aux)
-    } else if (type == "pcadapt"){
-      aux <- input
-    } else if (type == "example"){
-      if (input == "geno3pops"){
-        aux <- system.file("extdata", "geno3pops.pcadapt", package = "pcadapt")  
-      }
-    } else if (type == "pool"){
-      fs <- get_size_cpp(input)
-      nPOOL <- fs[1]
-      if (missing(ploidy)){
-        warning("Argument ploidy is missing, proceeding with 'ploidy = 2'...")
-        p <- 2
-      } else {
-        p <- ploidy
-      }
-      if (missing(pop.sizes)){
-        warning("Argument pop.sizes is missing, proceeding with 100 individuals per pool.")
-        s <- as.vector(rep(100, nPOOL))
-      } else {
-        if (length(pop.sizes) == nPOOL){
-          s <- as.vector(pop.sizes)
-        } else {
-          warning("Argument pop.sizes must be of length n where n is the number of pools, proceeding with 100 individuals per pool.")  
-          s <- as.vector(rep(100, nPOOL))
-        }
-      }
-      tmp.aux <- get.output.name(name = input, ext = "lfmm")
-      sample_geno_file(input = input, output = tmp.aux, ploidy = p, sample_size = s)
-      aux <- get.output.name(name = tmp.aux)
-      otpt <- lfmm2pcadapt(input = tmp.aux, output = aux)
+    is.pcadapt <- TRUE
+    if (type.input == "ped") {
+      check_file_size(input)
+      tmp <- tempfile(fileext = ".pcadapt")
+      ped2pcadapt(input = input, output = tmp)
+      input <- tmp
+    } else if (type.input == "vcf") {
+      check_file_size(input)
+      tmp <- tempfile(fileext = ".pcadapt")
+      vcf2pcadapt(input = input, output = tmp, allele.sep = allele.sep)
+      input <- tmp
+    } else if (type.input == "lfmm") {
+      is.pcadapt <- FALSE
+    } else if (type.input == "example") {
+      input <- system.file("extdata", "geno3pops.pcadapt", package = "pcadapt")
     }
     
-    if (type != "pool") {
-      pcadapt.xptr <- mmapcharr::mmapchar(aux, code = mmapcharr:::CODE_012)
-      aux <- writeBed(pcadapt.xptr, is.pcadapt = TRUE)  ## bed path
-    }
-  } else if ((class(input) %in% c("matrix", "data.frame", "array"))){
+    return(pcadapt2other(input, is.pcadapt, type.output))
+    
+  } else if (class(input) %in% c("matrix", "data.frame", "array")) {
+    
     if (!(ncol(input) > 0) || !(nrow(input) > 0)){
       stop("Invalid input genotype matrix.")
     }
-    if (type == "lfmm"){
+    if (type.input == "lfmm") {
       tmp <- t(as.matrix(input))
-      tmp[which(is.na(tmp))] <- 9
-    } else if (type == "pcadapt"){
+      storage.mode(tmp) <- "integer"
+      # tmp[which(is.na(tmp))] <- 9
+    } else if (type.input == "pcadapt") {
       tmp <- as.matrix(input)
-      tmp[which(is.na(tmp))] <- 9
-    } else if (type == "vcf"){
-      stop("Incorrect type.")
-    } else if (type == "ped"){
-      stop("Incorrect type.")
-    } else if (type == "pool"){
-      if (missing(ploidy)){
-        warning("Argument ploidy is missing, proceeding with 'ploidy = 2'...")
-        p <- 2
-      } else {
-        p <- ploidy
-      }
-      if (missing(pop.sizes)){
-        warning("Argument pop.sizes is missing, proceeding with 100 individuals per pool.")
-        nPOOL <- nrow(input)
-        s <- as.vector(rep(100, nPOOL))
-      } else {
-        nPOOL <- nrow(input)
-        if (length(pop.sizes) == nPOOL){
-          s <- as.vector(pop.sizes)
-        } else {
-          warning("Argument pop.sizes must be of length n where n is the number of pools, proceeding with 100 individuals per pool.")  
-          s <- as.vector(rep(100, nPOOL))
-        }
-      }
-      tmp <- sample_geno_matrix(freq = as.matrix(input), ploidy = p, sample_size = s)
-      tmp[which(is.na(tmp))] <- 9
-    } 
+      storage.mode(tmp) <- "integer"
+      # tmp[which(is.na(tmp))] <- 9
+    } else {
+      stop("Incorrect type.input for matrices.")
+    }
     aux <- tmp
+  } else {
+    stop("Input should be a file path or a matrix-like object.")
   }
-  return(aux)
+  
+  aux
 }
+
+################################################################################
+
+check_file_size <- function(file) {
+  if (file.size(file) > 2e9) {
+    stop(paste0("It seems that the input file is quite large.\n",
+                "For large 'vcf' or 'ped' files, ", 
+                "please use PLINK to convert them in 'bed'."))
+  }
+}
+
+################################################################################
+
+pcadapt2other <- function(file, is.pcadapt = TRUE, type.return = "bed") {
+  
+  if (type.return == "matrix") {
+    mmap <- mmapcharr::mmapchar(file, code = mmapcharr:::CODE_012)
+    `if`(is.pcadapt, t(mmap[]), mmap[])
+  } else { # bed
+    writeBed(file, is.pcadapt)
+  }
+}
+
+################################################################################
+
+read.pcadapt.pool <- function(input, pop.sizes, ploidy) {
+  
+  if (class(input) == "character") {
+    
+    fs <- get_size_cpp(input)
+    nPOOL <- fs[1]
+    if (length(pop.sizes) == nPOOL) {
+      s <- as.vector(pop.sizes)
+    } else {
+      p <- ploidy
+    }
+    if (missing(pop.sizes)) {
+      warning("Argument pop.sizes is missing, proceeding with 100 individuals per pool.")
+      s <- as.vector(rep(100, nPOOL))
+    } else {
+      if (length(pop.sizes) == nPOOL) {
+        s <- as.vector(pop.sizes)
+      } else {
+        warning("Argument pop.sizes must be of length n where n is the number of pools, proceeding with 100 individuals per pool.")  
+        s <- as.vector(rep(100, nPOOL))
+      }
+    }
+    tmp.aux <- get.output.name(name = input, ext = "lfmm")
+    sample_geno_file(input = input, output = tmp.aux, ploidy = p, sample_size = s)
+    aux <- get.output.name(name = tmp.aux)
+    otpt <- lfmm2pcadapt(input = tmp.aux, output = aux)
+    
+  } else if (class(input) %in% c("matrix", "data.frame", "array")) {
+    
+    if (is.null(pop.sizes)) {
+      warning("Argument pop.sizes is missing, proceeding with 100 individuals per pool.")
+      nPOOL <- nrow(input)
+      s <- as.vector(rep(100, nPOOL))
+    } else {
+      nPOOL <- nrow(input)
+      if (length(pop.sizes) == nPOOL){
+        s <- as.vector(pop.sizes)
+      } else {
+        warning("Argument pop.sizes must be of length n where n is the number of pools, proceeding with 100 individuals per pool.")  
+        s <- as.vector(rep(100, nPOOL))
+      }
+    }
+    tmp <- sample_geno_matrix(freq = as.matrix(input), ploidy = p, sample_size = s)
+    # tmp[which(is.na(tmp))] <- 9
+    
+  } else {
+    stop("Input should be a file path or a matrix-like object.")
+  }
+}
+
+################################################################################
 
 #' Population colorization
 #'

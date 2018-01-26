@@ -54,20 +54,23 @@ write_fake_bim_fam <- function(n, m, bedfile) {
 #' 
 #' @export
 #' 
-writeBed <- function(x, is.pcadapt) {
+writeBed <- function(file, is.pcadapt) {
   
   # Get path to new bed file
-  file <- x$backingfile
   bedfile <- paste0(file, ".bed")
-  if (file.exists(bedfile)) stop("The bed file already exists!", call. = FALSE)
-  
-  # Write files
-  ## Write bed file
-  writebed(bedfile, x$copy(code = CODE_0123), getInverseCode(), is.pcadapt)
-  ## Write other files
-  write_fake_bim_fam(n = `if`(is.pcadapt, ncol(x), nrow(x)), 
-                     m = `if`(is.pcadapt, nrow(x), ncol(x)), 
-                     bedfile = bedfile)
+  if (file.exists(bedfile)) {
+    message("The bed file already exists. Returning it..")
+  } else {
+    # Map file
+    mmap <- mmapcharr::mmapchar(file, code = CODE_0123)
+    # Write files
+    ## Write bed file
+    writebed(bedfile, mmap, getInverseCode(), is.pcadapt)
+    ## Write other files
+    write_fake_bim_fam(n = `if`(is.pcadapt, ncol(mmap), nrow(mmap)), 
+                       m = `if`(is.pcadapt, nrow(mmap), ncol(mmap)), 
+                       bedfile = bedfile)
+  }
   
   bedfile
 }
