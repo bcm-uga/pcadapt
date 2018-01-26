@@ -76,6 +76,38 @@ lfmm2pcadapt <- function(input, output) {
     .Call('_pcadapt_lfmm2pcadapt', PACKAGE = 'pcadapt', input, output)
 }
 
+#' Sample genotype matrix from pooled samples
+#' 
+#' \code{sample_geno_matrix} sample genotypes based on observed allelic frequencies.
+#' 
+#' @param freq a matrix containing allele frequencies.
+#' @param ploidy an integer specifying the ploidy of the sampled individuals.
+#' @param sample_size a vector specifying the number of individuals to be 
+#'   sampled for each pool.
+#' 
+#' @return The returned value is a numeric vector of length 2.
+#' 
+sample_geno_matrix <- function(freq, ploidy, sample_size) {
+    .Call('_pcadapt_sample_geno_matrix', PACKAGE = 'pcadapt', freq, ploidy, sample_size)
+}
+
+#' Sample genotype matrix from pooled samples
+#' 
+#' \code{sample_geno_file} sample genotypes based on observed allelic frequencies.
+#' 
+#' @param input a character string specifying the name of the file containing 
+#'   the allele frequencies.
+#' @param output a character string specifying the name of the output file.
+#' @param ploidy an integer specifying the ploidy of the sampled individuals.
+#' @param sample_size a vector specifying the number of individuals to be 
+#'   sampled for each pool.
+#' 
+#' @return The returned value is a numeric vector of length 2.
+#' 
+sample_geno_file <- function(input, output, ploidy, sample_size) {
+    .Call('_pcadapt_sample_geno_file', PACKAGE = 'pcadapt', input, output, ploidy, sample_size)
+}
+
 pMatVec4 <- function(obj, ind_col, af, x) {
     .Call('_pcadapt_pMatVec4', PACKAGE = 'pcadapt', obj, ind_col, af, x)
 }

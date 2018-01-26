@@ -54,10 +54,9 @@ write_fake_bim_fam <- function(n, m, bedfile) {
 #' 
 #' @export
 #' 
-writeBed <- function(file, is.pcadapt) {
+writeBed <- function(file, is.pcadapt, bedfile = paste0(file, ".bed")) {
   
   # Get path to new bed file
-  bedfile <- paste0(file, ".bed")
   if (file.exists(bedfile)) {
     message("The bed file already exists. Returning it..")
   } else {
