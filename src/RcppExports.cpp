@@ -109,33 +109,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// sample_geno_matrix
-NumericMatrix sample_geno_matrix(const NumericMatrix& freq, double ploidy, const IntegerVector& sample_size);
-RcppExport SEXP _pcadapt_sample_geno_matrix(SEXP freqSEXP, SEXP ploidySEXP, SEXP sample_sizeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const NumericMatrix& >::type freq(freqSEXP);
-    Rcpp::traits::input_parameter< double >::type ploidy(ploidySEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type sample_size(sample_sizeSEXP);
-    rcpp_result_gen = Rcpp::wrap(sample_geno_matrix(freq, ploidy, sample_size));
-    return rcpp_result_gen;
-END_RCPP
-}
-// sample_geno_file
-NumericVector sample_geno_file(std::string input, std::string output, double ploidy, const IntegerVector& sample_size);
-RcppExport SEXP _pcadapt_sample_geno_file(SEXP inputSEXP, SEXP outputSEXP, SEXP ploidySEXP, SEXP sample_sizeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type input(inputSEXP);
-    Rcpp::traits::input_parameter< std::string >::type output(outputSEXP);
-    Rcpp::traits::input_parameter< double >::type ploidy(ploidySEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type sample_size(sample_sizeSEXP);
-    rcpp_result_gen = Rcpp::wrap(sample_geno_file(input, output, ploidy, sample_size));
-    return rcpp_result_gen;
-END_RCPP
-}
 // pMatVec4
 NumericVector pMatVec4(SEXP obj, const IntegerVector& ind_col, const NumericVector& af, const NumericVector& x);
 RcppExport SEXP _pcadapt_pMatVec4(SEXP objSEXP, SEXP ind_colSEXP, SEXP afSEXP, SEXP xSEXP) {
@@ -200,8 +173,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_pcadapt_print_convert", (DL_FUNC) &_pcadapt_print_convert, 5},
     {"_pcadapt_ped2pcadapt", (DL_FUNC) &_pcadapt_ped2pcadapt, 2},
     {"_pcadapt_lfmm2pcadapt", (DL_FUNC) &_pcadapt_lfmm2pcadapt, 2},
-    {"_pcadapt_sample_geno_matrix", (DL_FUNC) &_pcadapt_sample_geno_matrix, 3},
-    {"_pcadapt_sample_geno_file", (DL_FUNC) &_pcadapt_sample_geno_file, 4},
     {"_pcadapt_pMatVec4", (DL_FUNC) &_pcadapt_pMatVec4, 4},
     {"_pcadapt_cpMatVec4", (DL_FUNC) &_pcadapt_cpMatVec4, 4},
     {"_pcadapt_vcf_convert", (DL_FUNC) &_pcadapt_vcf_convert, 3},

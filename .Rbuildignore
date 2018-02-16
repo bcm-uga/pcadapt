@@ -7,3 +7,4 @@ docs/*
 tmp-tests
 tmp-data
 tmp-save
+^TODO\.md$

@@ -1,3 +1,5 @@
+################################################################################
+
 #' Principal Component Analysis for outlier detection
 #'
 #' \code{pcadapt} performs principal component analysis and computes p-values to
@@ -46,81 +48,78 @@
 #' @return The returned value \code{x} is an object of class \code{pcadapt}.
 #' 
 #' @useDynLib pcadapt
+#' 
+#' @name pcadapt
 #'
 #' @export
 #'
-pcadapt = function(input, 
-                   K = 2, 
-                   method = "mahalanobis", 
-                   min.maf = 0.05, 
-                   LD.clumping = FALSE,
-                   pca.only = FALSE) {
+pcadapt <- function(input, 
+                    K = 2, 
+                    method = "mahalanobis", 
+                    min.maf = 0.05, 
+                    LD.clumping = FALSE,
+                    pca.only = FALSE) {
   
-  #############################################
-  ########## test arguments and init ##########
-  #############################################
-  
-  if (!missing(input)) {
-    
-    if (!(class(K) %in% c("numeric", "integer")) || K <= 0){
-      stop("K has to be a positive integer.")
-    }
-    
-    if (!(method %in% c("mahalanobis", "componentwise"))) {
-      warning("Unknown method. Default method will be used.")
-      method <- "mahalanobis"
-    }
-    
-    if (class(min.maf) != "numeric" || min.maf < 0 || min.maf > 0.45) {
-      warning("min.maf has to be a real number between 0 and 0.45. Default 
-              value will be used.")
-      min.maf <- 0.05
-    }
-    
-    if (is.character(input) && !file.exists(input)) {
-      stop(paste("File", input, "does not exist."))
-    } 
-##Compute PCs and z-scores    
-    obj.pca <- iram_and_reg(input, K = K, min.maf = min.maf, LD.clumping = LD.clumping)
-    res <- get_statistics(obj.pca$zscores, 
-                          method = method, 
-                          pass = obj.pca$pass)
-    output <- list(scores = obj.pca$u,
-                   singular.values = sqrt(obj.pca$d * nrow(obj.pca$v) / (nrow(obj.pca$u) - 1)),
-                   loadings = obj.pca$v,
-                   zscores = obj.pca$zscores,
-                   maf = pmin(obj.pca$af, 1 - obj.pca$af),
-                   chi2.stat = res$chi2.stat,
-                   gif = res$gif,
-                   pvalues = res$pvalues,
-                   pass = obj.pca$pass)
-    class(output) <- "pcadapt"
-    attr(output, "K") <- K
-    attr(output, "method") <- method
-    attr(output, "min.maf") <- min.maf
-    return(output)
-  } else {
+  if (missing(input)) {
     appDir <- system.file("shiny-examples/app-pcadapt", package = "pcadapt")
     if (appDir == "") {
       stop("Could not find Shiny app in pcadapt.", call. = FALSE)
     }
     shiny::runApp(appDir, display.mode = "normal")  
-  } 
+  } else {
+    UseMethod("pcadapt")
+  }
 }
 
-#' Shiny app
-#'
-#' \code{pcadapt} comes with a Shiny interface.
-#'
+#' @rdname pcadapt
 #' @export
-run.pcadapt <- function() {
-  appDir <- system.file("shiny-examples", "app-pcadapt", package = "pcadapt")
-  if (appDir == "") {
-    stop("Could not find example directory. Try re-installing `pcadapt`.", 
-         call. = FALSE)
-  }
-  shiny::runApp(appDir, launch.browser = TRUE)
+pcadapt.pcadapt_matrix <- function(input, 
+                                   K = 2, 
+                                   method = c("mahalanobis", "componentwise"), 
+                                   min.maf = 0.05, 
+                                   LD.clumping = FALSE,
+                                   pca.only = FALSE) {
+  
+  pcadapt0(input, K, match.arg(method), min.maf, LD.clumping, pca.only)
 }
+
+#' @rdname pcadapt
+#' @export
+pcadapt.pcadapt_bed <- function(input, 
+                                K = 2, 
+                                method = c("mahalanobis", "componentwise"), 
+                                min.maf = 0.05, 
+                                LD.clumping = FALSE,
+                                pca.only = FALSE) {
+  
+  # File mapping
+  n <- attr(input, "n")
+  p <- attr(input, "p")
+  xptr <- structure(bedXPtr(input, n, p), n = n, p = p, class = "xptr_bed")
+  
+  pcadapt0(xptr, K, match.arg(method), min.maf, LD.clumping, pca.only)
+}
+
+#' @rdname pcadapt
+#' @export
+pcadapt.pcadapt_pool <- function(input) {
+  
+  tmat <- t(scale(test, center = TRUE, scale = FALSE))
+  npop <- ncol(tmat)
+  if (npop < 2) stop("There need to be at least 2 populations in your data")
+  
+  stat <- robust::covRob(tmat[, -1])$dist
+  gif <- median(stat) / qchisq(0.5, df = npop - 1)
+  stat.gif <- stat / gif
+  
+  list(
+    chi2.stat = stat.gif, 
+    gif = gif,
+    pvalues = pchisq(stat.gif, df = npop - 1, lower.tail = FALSE)
+  )
+}
+
+################################################################################
 
 #' pcadapt statistics
 #'
@@ -136,8 +135,6 @@ run.pcadapt <- function() {
 #' associated p-values.
 #' 
 #' @importFrom stats median na.omit pchisq qchisq
-#' @importFrom MASS cov.rob
-#' @importFrom utils head
 #' 
 #'
 get_statistics = function(zscores, method, pass) {
@@ -164,7 +161,9 @@ get_statistics = function(zscores, method, pass) {
     # pval <- pchisq(res.gif, df = K, lower.tail = FALSE)
   } else if (method == "componentwise") {
     res <- apply(zscores, MARGIN = 2, FUN = function(h) {h^2})
-    gif <- sapply(1:K, FUN = function(h) {median(zscores[, h]^2, na.rm = TRUE) / qchisq(0.5, df = 1)})
+    gif <- sapply(1:K, FUN = function(h) {
+      median(zscores[, h]^2, na.rm = TRUE) / qchisq(0.5, df = 1)
+    })
     res.gif = res / gif
     pval <- NULL
     for (k in 1:K) {
@@ -174,3 +173,57 @@ get_statistics = function(zscores, method, pass) {
   return(list(stat = res, gif = gif, chi2.stat = res.gif, pvalues = pval))
 }
 
+################################################################################
+
+pcadapt0 <- function(input, K, method, min.maf, LD.clumping, pca.only) {
+  
+  # Test arguments and init
+  if (!(class(K) %in% c("numeric", "integer")) || K <= 0)
+    stop("K has to be a positive integer.")
+  
+  if (class(min.maf) != "numeric" || min.maf < 0 || min.maf > 0.45) 
+    stop("min.maf has to be a real number between 0 and 0.45.")
+  
+  # Compute PCs and z-scores    
+  obj.pca <- iram_and_reg(input, K = K, min.maf = min.maf, 
+                          LD.clumping = LD.clumping)
+  if (pca.only) return(obj.pca)
+  
+  res <- get_statistics(obj.pca$zscores, 
+                        method = method, 
+                        pass = obj.pca$pass)
+  
+  structure(
+    list(
+      scores = obj.pca$u,
+      singular.values = sqrt(obj.pca$d * nrow(obj.pca$v) / (nrow(obj.pca$u) - 1)),
+      loadings = obj.pca$v,
+      zscores = obj.pca$zscores,
+      af = obj.pca$af,
+      maf = pmin(obj.pca$af, 1 - obj.pca$af),
+      chi2.stat = res$chi2.stat,
+      gif = res$gif,
+      pvalues = res$pvalues,
+      pass = obj.pca$pass
+    ),
+    K = K, method = method, min.maf = min.maf, class = "pcadapt"
+  )
+}
+
+################################################################################
+
+#' Shiny app
+#'
+#' \code{pcadapt} comes with a Shiny interface.
+#'
+#' @export
+run.pcadapt <- function() {
+  appDir <- system.file("shiny-examples", "app-pcadapt", package = "pcadapt")
+  if (appDir == "") {
+    stop("Could not find example directory. Try re-installing `pcadapt`.", 
+         call. = FALSE)
+  }
+  shiny::runApp(appDir, launch.browser = TRUE)
+}
+
+################################################################################

@@ -4,15 +4,14 @@
 \alias{get_statistics}
 \title{pcadapt statistics}
 \usage{
-get_statistics(zscores, method = c("mahalanobis", "communality",
-  "componentwise"), values, pass = rep(TRUE, nrow(zscores)))
+get_statistics(zscores, method, pass)
 }
 \arguments{
 \item{zscores}{a numeric matrix containing the z-scores.}
 
 \item{method}{a character string specifying the method to be used to compute
-the p-values. Three statistics are currently available, \code{"mahalanobis"},
-\code{"communality"}, and \code{"componentwise"}.}
+the p-values. Two statistics are currently available, \code{"mahalanobis"},
+and \code{"componentwise"}.}
 
 \item{values}{a numeric vector containing the singular values.}
 }

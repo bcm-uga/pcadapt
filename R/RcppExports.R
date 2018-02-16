@@ -34,8 +34,6 @@ nb_nona <- function(obj, ind_col) {
 #' @examples
 #' ## see also ?pcadapt for examples
 #'
-#' @export
-#'
 print_convert <- function(input, output, M, N, pool) {
     invisible(.Call('_pcadapt_print_convert', PACKAGE = 'pcadapt', input, output, M, N, pool))
 }
@@ -51,8 +49,6 @@ print_convert <- function(input, output, M, N, pool) {
 #' ## see also ?pcadapt for examples
 #'
 #' @keywords internal
-#'
-#' @export
 #'
 ped2pcadapt <- function(input, output) {
     .Call('_pcadapt_ped2pcadapt', PACKAGE = 'pcadapt', input, output)
@@ -70,42 +66,8 @@ ped2pcadapt <- function(input, output) {
 #'
 #' @keywords internal
 #'
-#' @export
-#'
 lfmm2pcadapt <- function(input, output) {
     .Call('_pcadapt_lfmm2pcadapt', PACKAGE = 'pcadapt', input, output)
-}
-
-#' Sample genotype matrix from pooled samples
-#' 
-#' \code{sample_geno_matrix} sample genotypes based on observed allelic frequencies.
-#' 
-#' @param freq a matrix containing allele frequencies.
-#' @param ploidy an integer specifying the ploidy of the sampled individuals.
-#' @param sample_size a vector specifying the number of individuals to be 
-#'   sampled for each pool.
-#' 
-#' @return The returned value is a numeric vector of length 2.
-#' 
-sample_geno_matrix <- function(freq, ploidy, sample_size) {
-    .Call('_pcadapt_sample_geno_matrix', PACKAGE = 'pcadapt', freq, ploidy, sample_size)
-}
-
-#' Sample genotype matrix from pooled samples
-#' 
-#' \code{sample_geno_file} sample genotypes based on observed allelic frequencies.
-#' 
-#' @param input a character string specifying the name of the file containing 
-#'   the allele frequencies.
-#' @param output a character string specifying the name of the output file.
-#' @param ploidy an integer specifying the ploidy of the sampled individuals.
-#' @param sample_size a vector specifying the number of individuals to be 
-#'   sampled for each pool.
-#' 
-#' @return The returned value is a numeric vector of length 2.
-#' 
-sample_geno_file <- function(input, output, ploidy, sample_size) {
-    .Call('_pcadapt_sample_geno_file', PACKAGE = 'pcadapt', input, output, ploidy, sample_size)
 }
 
 pMatVec4 <- function(obj, ind_col, af, x) {
@@ -130,8 +92,6 @@ cpMatVec4 <- function(obj, ind_col, af, x) {
 #' ## see also ?pcadapt for examples
 #'
 #' @keywords internal
-#'
-#' @export
 #'
 vcf_convert <- function(string_geno, output, allele_sep) {
     .Call('_pcadapt_vcf_convert', PACKAGE = 'pcadapt', string_geno, output, allele_sep)

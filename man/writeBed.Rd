@@ -4,13 +4,13 @@
 \alias{writeBed}
 \title{Write PLINK files}
 \usage{
-writeBed(x, is.pcadapt)
+writeBed(file, is.pcadapt)
 }
 \arguments{
+\item{is.pcadapt}{}
+
 \item{x}{A [mmapchar][mmapchar-class] object associated 
 with a pcadapt or lfmm file.}
-
-\item{is.pcadapt}{}
 }
 \value{
 The input `bedfile` path.

@@ -13,6 +13,8 @@ getCode <- function(NA.VAL = 3L) {
 
 ################################################################################
 
+dim.xptr_bed <- function(x) c(attr(x, "n"), attr(x, "p"))
+
 iram_and_reg <- function(input, 
                          K = 2, 
                          min.maf = 0.05, 
@@ -20,24 +22,13 @@ iram_and_reg <- function(input,
                          size = 100, 
                          thr = 0.2) {  # TODO: add exclude parameter
   
-  if (class(input) == "character") {
-    path_to_bed <- normalizePath(input)
-    p <- nrow(data.table::fread(sub("\\.bed$", ".bim", path_to_bed)))
-    n <- nrow(data.table::fread(sub("\\.bed$", ".fam", path_to_bed)))
-    
-    # File mapping
-    xptr <- bedXPtr(path_to_bed, n, p)
-    
-  } else if (class(input) == "matrix") {
-    # an input matrix has nIND rows and nSNP columns
-    xptr <- input
-    n <- nrow(xptr)
-    p <- ncol(xptr)
-  }
+  # Get dimensions
+  n <- dim(input)[1]  # can't use nrow()
+  p <- dim(input)[2]  # can't use ncol()
   
   # Get allele frequencies
   # Uses a non-scaled lookup table
-  af <- get_af(xptr)
+  af <- get_af(input)
   
   # Create a logical vector to locate SNPs with mAF >= min.maf
   maf <- pmin(af, 1 - af)
@@ -47,7 +38,7 @@ iram_and_reg <- function(input,
   if (LD.clumping) {
     # Take also number of NAs into account?
     ord <- order(maf[ind.pass.af], decreasing = TRUE)
-    pass <- clumping(xptr, ind.pass.af, 
+    pass <- clumping(input, ind.pass.af, 
                      ord, rep(TRUE, length(ord)), 
                      size, thr)
     ind.pass <- ind.pass.af[pass]
@@ -57,18 +48,18 @@ iram_and_reg <- function(input,
   p2 <- length(ind.pass)
   
   # Get number of non-missing values per row and per column
-  nb_nona <- nb_nona(xptr, ind.pass)
+  nb_nona <- nb_nona(input, ind.pass)
   
   ### SVD using RSpectra
   obj.svd <- RSpectra::svds(
     A = function(x, args) {
       # When filtering, the actual number of SNPs that we have is actually
       # sum(pass) and not p anymore
-      pMatVec4(xptr, ind.pass, af, x) / nb_nona$p * p2
+      pMatVec4(input, ind.pass, af, x) / nb_nona$p * p2
     }, 
     Atrans = function(x, args) {
       # NB: nb_nona$n depends on 'pass' as well
-      cpMatVec4(xptr, ind.pass, af, x) / nb_nona$n * n
+      cpMatVec4(input, ind.pass, af, x) / nb_nona$n * n
     },
     k = K, 
     dim = c(n, p2),
@@ -77,7 +68,7 @@ iram_and_reg <- function(input,
   
   # Multiple Linear Regression is performed also on SNPs that have been clumped,
   # that is why we recompute the lookup table
-  obj.svd$zscores <- multLinReg(xptr, ind.pass.af, af, obj.svd$u)
+  obj.svd$zscores <- multLinReg(input, ind.pass.af, af, obj.svd$u)
   
   V <- matrix(NA_real_, p, K)
   V[ind.pass, ] <- obj.svd$v

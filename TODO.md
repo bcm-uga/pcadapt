@@ -1,0 +1,4 @@
+- ploidy != 2
+- method
+- test (all types)
+- don't export everything

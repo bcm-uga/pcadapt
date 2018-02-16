@@ -22,22 +22,22 @@ write.table2 <- function(x, file, sep = "\t") {
 
 ################################################################################
 
-write_fake_bim_fam <- function(n, m, bedfile) {
-  
-  # fam
-  fam <- data.frame(0L, paste0("ind_", 1:n), 0L, 0L, 0L, -9L,
-                    stringsAsFactors = FALSE)
-  famfile <- sub("\\.bed$", ".fam", bedfile)
-  write.table2(fam, famfile)
-  
-  # map
-  map <- data.frame(1L, paste0("snp_", 1:m), 0L, 0L,
-                    ifelse(cond <- (stats::runif(m) > 0.5), "A", "T"),
-                    ifelse(!cond, "A", "T"),
-                    stringsAsFactors = FALSE)
-  bimfile <- sub("\\.bed$", ".bim", bedfile)
-  write.table2(map, bimfile)
-}
+# write_fake_bim_fam <- function(n, m, bedfile) {
+#   
+#   # fam
+#   fam <- data.frame(0L, paste0("ind_", 1:n), 0L, 0L, 0L, -9L,
+#                     stringsAsFactors = FALSE)
+#   famfile <- sub("\\.bed$", ".fam", bedfile)
+#   write.table2(fam, famfile)
+#   
+#   # map
+#   map <- data.frame(1L, paste0("snp_", 1:m), 0L, 0L,
+#                     ifelse(cond <- (stats::runif(m) > 0.5), "A", "T"),
+#                     ifelse(!cond, "A", "T"),
+#                     stringsAsFactors = FALSE)
+#   bimfile <- sub("\\.bed$", ".bim", bedfile)
+#   write.table2(map, bimfile)
+# }
 
 ################################################################################
 
@@ -54,24 +54,23 @@ write_fake_bim_fam <- function(n, m, bedfile) {
 #' 
 #' @export
 #' 
-writeBed <- function(file, is.pcadapt, bedfile = paste0(file, ".bed")) {
+writeBed <- function(file, is.pcadapt) {
+  
+  # Map file
+  mmap <- mmapcharr::mmapchar(file, code = CODE_0123)
+  ## Get dimensions
+  n <- `if`(is.pcadapt, ncol(mmap), nrow(mmap))
+  p <- `if`(is.pcadapt, nrow(mmap), ncol(mmap))
   
   # Get path to new bed file
+  bedfile <- paste0(file, ".bed")
   if (file.exists(bedfile)) {
-    message("The bed file already exists. Returning it..")
+    message("The bed file already exists. Returning..")
   } else {
-    # Map file
-    mmap <- mmapcharr::mmapchar(file, code = CODE_0123)
-    # Write files
-    ## Write bed file
     writebed(bedfile, mmap, getInverseCode(), is.pcadapt)
-    ## Write other files
-    write_fake_bim_fam(n = `if`(is.pcadapt, ncol(mmap), nrow(mmap)), 
-                       m = `if`(is.pcadapt, nrow(mmap), ncol(mmap)), 
-                       bedfile = bedfile)
   }
   
-  bedfile
+  structure(normalizePath(bedfile), n = n, p = p, class = "pcadapt_bed")
 }
 
 ################################################################################

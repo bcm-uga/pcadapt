@@ -2,10 +2,21 @@
 % Please edit documentation in R/pcadapt.R
 \name{pcadapt}
 \alias{pcadapt}
+\alias{pcadapt.pcadapt_matrix}
+\alias{pcadapt.pcadapt_bed}
+\alias{pcadapt.pcadapt_pool}
 \title{Principal Component Analysis for outlier detection}
 \usage{
 pcadapt(input, K = 2, method = "mahalanobis", min.maf = 0.05,
   LD.clumping = FALSE, pca.only = FALSE)
+
+\method{pcadapt}{pcadapt_matrix}(input, K = 2, method = c("mahalanobis",
+  "componentwise"), min.maf = 0.05, LD.clumping = FALSE, pca.only = FALSE)
+
+\method{pcadapt}{pcadapt_bed}(input, K = 2, method = c("mahalanobis",
+  "componentwise"), min.maf = 0.05, LD.clumping = FALSE, pca.only = FALSE)
+
+\method{pcadapt}{pcadapt_pool}(input)
 }
 \arguments{
 \item{input}{a genotype matrix or a character string specifying the name of 
@@ -14,8 +25,8 @@ the file to be processed with \code{pcadapt}.}
 \item{K}{an integer specifying the number of principal components to retain.}
 
 \item{method}{a character string specifying the method to be used to compute
-the p-values. Three statistics are currently available, \code{"mahalanobis"},
-\code{"communality"} and \code{"componentwise"}.}
+the p-values. Two statistics are currently available, \code{"mahalanobis"},
+and \code{"componentwise"}.}
 
 \item{min.maf}{a value between \code{0} and \code{0.45} specifying the 
 threshold of minor allele frequencies above which p-values are computed.}
@@ -48,16 +59,13 @@ each genetic marker using a robust estimate of both mean and covariance
 matrix between the \code{K} vectors of z-scores.
 
 \code{communality}: the communality statistic measures the proportion of 
-variance explained by the first \code{K} PCs.
+variance explained by the first \code{K} PCs. Deprecated in version 4.0.0.
 
 \code{componentwise}: returns a matrix of z-scores.
 
 To compute p-values, test statistics (\code{stat}) are divided by a genomic 
-inflation factor (\code{gif}) when \code{method="mahalanobis"}. When 
-\code{method="communality"}, the test statistic is first multiplied by 
-\code{K} and divided by the percentage of variance explained by the first 
-\code{K} PCs before accounting for genomic inflation factor. When using 
-\code{method="mahalanobis"} or \code{"communality"}, the scaled statistics 
+inflation factor (\code{gif}) when \code{method="mahalanobis"}. When using 
+\code{method="mahalanobis"}, the scaled statistics 
 (\code{chi2_stat}) should follow a chi-squared distribution with \code{K} 
 degrees of freedom. When using \code{method="componentwise"}, the z-scores 
 should follow a chi-squared distribution with \code{1} degree of freedom. For 
