@@ -29,6 +29,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// bed2mat
+IntegerMatrix bed2mat(SEXP xptr);
+RcppExport SEXP _pcadapt_bed2mat(SEXP xptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type xptr(xptrSEXP);
+    rcpp_result_gen = Rcpp::wrap(bed2mat(xptr));
+    return rcpp_result_gen;
+END_RCPP
+}
 // clumping
 LogicalVector clumping(SEXP obj, const IntegerVector& ind_col, const IntegerVector& ord, LogicalVector& remain, int size, double thr);
 RcppExport SEXP _pcadapt_clumping(SEXP objSEXP, SEXP ind_colSEXP, SEXP ordSEXP, SEXP remainSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
@@ -167,6 +178,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_pcadapt_get_af", (DL_FUNC) &_pcadapt_get_af, 1},
     {"_pcadapt_bedXPtr", (DL_FUNC) &_pcadapt_bedXPtr, 3},
+    {"_pcadapt_bed2mat", (DL_FUNC) &_pcadapt_bed2mat, 1},
     {"_pcadapt_clumping", (DL_FUNC) &_pcadapt_clumping, 6},
     {"_pcadapt_multLinReg", (DL_FUNC) &_pcadapt_multLinReg, 4},
     {"_pcadapt_nb_nona", (DL_FUNC) &_pcadapt_nb_nona, 2},

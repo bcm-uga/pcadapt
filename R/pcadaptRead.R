@@ -10,14 +10,16 @@
 #' @param input a genotype matrix or a character string specifying the name of 
 #'   the file to be converted.
 #' @param type a character string specifying the type of data to be converted 
-#'   from. 
-#' @param type.out Either a bed file or a standard R matrix. If the input is
-#'   a matrix, then the output is automatically a matrix (so that you don't need
-#'   to specify this parameter). If the input is a bed file, then the output is 
-#'   also a bed file.
+#'   from. Converters from 'vcf' and 'ped' formats are not maintained anymore;
+#'   if you have any issue with those, please use PLINK 1.9 to convert them
+#'   to the 'bed' format.
+#' @param type.out Either a bed file or a standard R matrix. 
+#'   If the input is a matrix, then the output is automatically a matrix 
+#'   (so that you don't need to specify this parameter). 
+#'   If the input is a bed file, then the output is also a bed file.
 #' @param allele.sep a vector of characters indicating what delimiters are used 
 #'   in VCF files. By default, only "|" and "/" are recognized. 
-#'   So, this argument is only useful for \code{type.in = "vcf"}.
+#'   So, this argument is only useful for \code{type = "vcf"}.
 #' @param local.env deprecated argument.
 #' @param ploidy    deprecated argument.
 #' @param pop.sizes deprecated argument.
@@ -26,8 +28,8 @@
 #' @export
 #'
 read.pcadapt <- function(input, 
-                         type = c("pcadapt", "lfmm", "vcf", 
-                                  "ped", "pool", "example"), 
+                         type = c("pcadapt", "lfmm", "vcf", "bed", "ped",
+                                  "pool", "example"), 
                          ## only when input is a file path
                          type.out = c("bed", "matrix"),
                          ## only when type == "vcf"

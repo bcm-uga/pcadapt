@@ -15,10 +15,10 @@ CODE_0123 <- mmapcharr:::CODE_012; CODE_0123[is.na(CODE_0123)] <- 3L
 
 ################################################################################
 
-write.table2 <- function(x, file, sep = "\t") {
-  utils::write.table(x = x, file = file, sep = sep, quote = FALSE,  
-                     row.names = FALSE, col.names = FALSE)
-}
+# write.table2 <- function(x, file, sep = "\t") {
+#   utils::write.table(x = x, file = file, sep = sep, quote = FALSE,  
+#                      row.names = FALSE, col.names = FALSE)
+# }
 
 ################################################################################
 

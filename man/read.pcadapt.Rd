@@ -4,7 +4,7 @@
 \alias{read.pcadapt}
 \title{File Converter}
 \usage{
-read.pcadapt(input, type = c("pcadapt", "lfmm", "vcf", "ped", "pool",
+read.pcadapt(input, type = c("pcadapt", "lfmm", "vcf", "bed", "ped", "pool",
   "example"), type.out = c("bed", "matrix"), allele.sep = c("/", "|"),
   pop.sizes, ploidy, local.env, blocksize)
 }
@@ -13,16 +13,18 @@ read.pcadapt(input, type = c("pcadapt", "lfmm", "vcf", "ped", "pool",
 the file to be converted.}
 
 \item{type}{a character string specifying the type of data to be converted 
-from.}
+from. Converters from 'vcf' and 'ped' formats are not maintained anymore;
+if you have any issue with those, please use PLINK 1.9 to convert them
+to the 'bed' format.}
 
-\item{type.out}{Either a bed file or a standard R matrix. If the input is
-a matrix, then the output is automatically a matrix (so that you don't need
-to specify this parameter). If the input is a bed file, then the output is 
-also a bed file.}
+\item{type.out}{Either a bed file or a standard R matrix. 
+If the input is a matrix, then the output is automatically a matrix 
+(so that you don't need to specify this parameter). 
+If the input is a bed file, then the output is also a bed file.}
 
 \item{allele.sep}{a vector of characters indicating what delimiters are used 
 in VCF files. By default, only "|" and "/" are recognized. 
-So, this argument is only useful for \code{type.in = "vcf"}.}
+So, this argument is only useful for \code{type = "vcf"}.}
 
 \item{pop.sizes}{deprecated argument.}
 

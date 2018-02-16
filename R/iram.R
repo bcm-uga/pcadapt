@@ -23,8 +23,8 @@ iram_and_reg <- function(input,
                          thr = 0.2) {  # TODO: add exclude parameter
   
   # Get dimensions
-  n <- dim(input)[1]  # can't use nrow()
-  p <- dim(input)[2]  # can't use ncol()
+  n <- dim(input)[1]  ## can't use nrow()
+  p <- dim(input)[2]  ## can't use ncol()
   
   # Get allele frequencies
   # Uses a non-scaled lookup table

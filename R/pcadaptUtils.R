@@ -1,3 +1,5 @@
+################################################################################
+
 #' Population colorization
 #'
 #' \code{get.score.color} allows the user to display individuals of the same
@@ -34,6 +36,8 @@ get.score.color = function(pop){
   return(color.individuals)
 }
 
+################################################################################
+
 #' Retrieve population names
 #'
 #' \code{get.pop.names} retrieves the population names from the population file.
@@ -62,6 +66,8 @@ get.pop.names = function(pop){
   return(aux)
 }
 
+################################################################################
+
 #' Get the principal component the most associated with a genetic marker
 #'
 #' \code{get.pc} returns a data frame such that each row contains the index of
@@ -83,32 +89,4 @@ get.pc = function(x, list){
   return(df)
 }
 
-#' Replace the file extension with the .pcadapt extension
-#'
-#' \code{get.output.name} returns a character string specifying the name of the output file.
-#'
-#' @param name a character string specifying the name of the file to be converted.
-#' @param ext a character string specifying the extension of the output file.
-#'
-#' @examples
-#' ## see also ?pcadapt for examples
-#'
-#' @export
-#'
-get.output.name = function(name, ext = "pcadapt"){
-  split.name <- unlist(unlist(strsplit(name,"[.]")))  
-  if (length(split.name) > 1){
-    aux <- NULL
-    for (k in 1:(length(split.name) - 1)){
-      aux <- paste0(aux, split.name[k], ".")
-    }
-    if (tail(split.name, n = 1) %in% c("ped", "vcf", "lfmm")){
-      aux <- paste0(aux, ext)    
-    } else {
-      aux <- paste0(aux, tail(split.name, n = 1), ".", ext)
-    }
-  } else {
-    aux <- paste0(split.name[1], ".", ext) 
-  }
-  return(aux)
-}
+################################################################################
