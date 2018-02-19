@@ -38,7 +38,7 @@ NumericMatrix multLinReg(C macc,
     }
     
     // G* (y) = U Z
-    NumericMatrix y(n);              // all 0s
+    NumericVector y(n);              // all 0s
     NumericVector sum_scores_sq(K);  // all 0s
     double sum_resid_sq = 0;
     for (size_t i = 0; i < n; i++) {
