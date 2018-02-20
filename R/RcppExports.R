@@ -17,8 +17,8 @@ clumping <- function(obj, ind_col, ord, remain, size, thr) {
     .Call('_pcadapt_clumping', PACKAGE = 'pcadapt', obj, ind_col, ord, remain, size, thr)
 }
 
-multLinReg <- function(obj, ind_col, af, u) {
-    .Call('_pcadapt_multLinReg', PACKAGE = 'pcadapt', obj, ind_col, af, u)
+multLinReg <- function(obj, ind_col, af, ploidy, u) {
+    .Call('_pcadapt_multLinReg', PACKAGE = 'pcadapt', obj, ind_col, af, ploidy, u)
 }
 
 nb_nona <- function(obj, ind_col) {
@@ -74,12 +74,12 @@ lfmm2pcadapt <- function(input, output) {
     .Call('_pcadapt_lfmm2pcadapt', PACKAGE = 'pcadapt', input, output)
 }
 
-pMatVec4 <- function(obj, ind_col, af, x) {
-    .Call('_pcadapt_pMatVec4', PACKAGE = 'pcadapt', obj, ind_col, af, x)
+pMatVec4 <- function(obj, ind_col, af, ploidy, x) {
+    .Call('_pcadapt_pMatVec4', PACKAGE = 'pcadapt', obj, ind_col, af, ploidy, x)
 }
 
-cpMatVec4 <- function(obj, ind_col, af, x) {
-    .Call('_pcadapt_cpMatVec4', PACKAGE = 'pcadapt', obj, ind_col, af, x)
+cpMatVec4 <- function(obj, ind_col, af, ploidy, x) {
+    .Call('_pcadapt_cpMatVec4', PACKAGE = 'pcadapt', obj, ind_col, af, ploidy, x)
 }
 
 #' Convert vcfR genotype matrices

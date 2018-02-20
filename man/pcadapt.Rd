@@ -8,13 +8,15 @@
 \title{Principal Component Analysis for outlier detection}
 \usage{
 pcadapt(input, K = 2, method = "mahalanobis", min.maf = 0.05,
-  LD.clumping = FALSE, pca.only = FALSE)
+  ploidy = 2, LD.clumping = FALSE, pca.only = FALSE)
 
 \method{pcadapt}{pcadapt_matrix}(input, K = 2, method = c("mahalanobis",
-  "componentwise"), min.maf = 0.05, LD.clumping = FALSE, pca.only = FALSE)
+  "componentwise"), min.maf = 0.05, ploidy = 2, LD.clumping = FALSE,
+  pca.only = FALSE)
 
 \method{pcadapt}{pcadapt_bed}(input, K = 2, method = c("mahalanobis",
-  "componentwise"), min.maf = 0.05, LD.clumping = FALSE, pca.only = FALSE)
+  "componentwise"), min.maf = 0.05, ploidy = 2, LD.clumping = FALSE,
+  pca.only = FALSE)
 
 \method{pcadapt}{pcadapt_pool}(input)
 }
@@ -30,6 +32,9 @@ and \code{"componentwise"}.}
 
 \item{min.maf}{a value between \code{0} and \code{0.45} specifying the 
 threshold of minor allele frequencies above which p-values are computed.}
+
+\item{ploidy}{Number of trials, parameter of the binomial distribution. 
+Default is 2, which corresponds to diploidy, such as for the human genome.}
 
 \item{LD.clumping}{a logical value indicating whether LD clumping should be
 performed.}

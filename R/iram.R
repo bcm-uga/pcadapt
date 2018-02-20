@@ -18,6 +18,7 @@ dim.xptr_bed <- function(x) c(attr(x, "n"), attr(x, "p"))
 iram_and_reg <- function(input, 
                          K = 2, 
                          min.maf = 0.05, 
+                         ploidy = 2,
                          LD.clumping = FALSE, 
                          size = 100, 
                          thr = 0.2) {  # TODO: add exclude parameter
@@ -28,9 +29,9 @@ iram_and_reg <- function(input,
   
   # Get allele frequencies
   # Uses a non-scaled lookup table
-  af <- get_af(input)
+  af <- get_af(input) * (2 / ploidy)
   
-  # Create a logical vector to locate SNPs with mAF >= min.maf
+  # Create a logical vector to locate SNPs with MAF >= min.maf
   maf <- pmin(af, 1 - af)
   ind.pass.af <- which(maf >= min.maf)
   
@@ -55,11 +56,11 @@ iram_and_reg <- function(input,
     A = function(x, args) {
       # When filtering, the actual number of SNPs that we have is actually
       # sum(pass) and not p anymore
-      pMatVec4(input, ind.pass, af, x) / nb_nona$p * p2
+      pMatVec4(input, ind.pass, af, ploidy, x) / nb_nona$p * p2
     }, 
     Atrans = function(x, args) {
       # NB: nb_nona$n depends on 'pass' as well
-      cpMatVec4(input, ind.pass, af, x) / nb_nona$n * n
+      cpMatVec4(input, ind.pass, af, ploidy, x) / nb_nona$n * n
     },
     k = K, 
     dim = c(n, p2),
@@ -68,7 +69,7 @@ iram_and_reg <- function(input,
   
   # Multiple Linear Regression is performed also on SNPs that have been clumped,
   # that is why we recompute the lookup table
-  obj.svd$zscores <- multLinReg(input, ind.pass.af, af, obj.svd$u)
+  obj.svd$zscores <- multLinReg(input, ind.pass.af, af, ploidy, obj.svd$u)
   
   V <- matrix(NA_real_, p, K)
   V[ind.pass, ] <- obj.svd$v

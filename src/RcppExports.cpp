@@ -57,16 +57,17 @@ BEGIN_RCPP
 END_RCPP
 }
 // multLinReg
-NumericMatrix multLinReg(SEXP obj, const IntegerVector& ind_col, const NumericVector& af, const NumericMatrix& u);
-RcppExport SEXP _pcadapt_multLinReg(SEXP objSEXP, SEXP ind_colSEXP, SEXP afSEXP, SEXP uSEXP) {
+NumericMatrix multLinReg(SEXP obj, const IntegerVector& ind_col, const NumericVector& af, double ploidy, const NumericMatrix& u);
+RcppExport SEXP _pcadapt_multLinReg(SEXP objSEXP, SEXP ind_colSEXP, SEXP afSEXP, SEXP ploidySEXP, SEXP uSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type obj(objSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type af(afSEXP);
+    Rcpp::traits::input_parameter< double >::type ploidy(ploidySEXP);
     Rcpp::traits::input_parameter< const NumericMatrix& >::type u(uSEXP);
-    rcpp_result_gen = Rcpp::wrap(multLinReg(obj, ind_col, af, u));
+    rcpp_result_gen = Rcpp::wrap(multLinReg(obj, ind_col, af, ploidy, u));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -121,30 +122,32 @@ BEGIN_RCPP
 END_RCPP
 }
 // pMatVec4
-NumericVector pMatVec4(SEXP obj, const IntegerVector& ind_col, const NumericVector& af, const NumericVector& x);
-RcppExport SEXP _pcadapt_pMatVec4(SEXP objSEXP, SEXP ind_colSEXP, SEXP afSEXP, SEXP xSEXP) {
+NumericVector pMatVec4(SEXP obj, const IntegerVector& ind_col, const NumericVector& af, double ploidy, const NumericVector& x);
+RcppExport SEXP _pcadapt_pMatVec4(SEXP objSEXP, SEXP ind_colSEXP, SEXP afSEXP, SEXP ploidySEXP, SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type obj(objSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type af(afSEXP);
+    Rcpp::traits::input_parameter< double >::type ploidy(ploidySEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(pMatVec4(obj, ind_col, af, x));
+    rcpp_result_gen = Rcpp::wrap(pMatVec4(obj, ind_col, af, ploidy, x));
     return rcpp_result_gen;
 END_RCPP
 }
 // cpMatVec4
-NumericVector cpMatVec4(SEXP obj, const IntegerVector& ind_col, const NumericVector& af, const NumericVector& x);
-RcppExport SEXP _pcadapt_cpMatVec4(SEXP objSEXP, SEXP ind_colSEXP, SEXP afSEXP, SEXP xSEXP) {
+NumericVector cpMatVec4(SEXP obj, const IntegerVector& ind_col, const NumericVector& af, double ploidy, const NumericVector& x);
+RcppExport SEXP _pcadapt_cpMatVec4(SEXP objSEXP, SEXP ind_colSEXP, SEXP afSEXP, SEXP ploidySEXP, SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type obj(objSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type af(afSEXP);
+    Rcpp::traits::input_parameter< double >::type ploidy(ploidySEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpMatVec4(obj, ind_col, af, x));
+    rcpp_result_gen = Rcpp::wrap(cpMatVec4(obj, ind_col, af, ploidy, x));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -180,13 +183,13 @@ static const R_CallMethodDef CallEntries[] = {
     {"_pcadapt_bedXPtr", (DL_FUNC) &_pcadapt_bedXPtr, 3},
     {"_pcadapt_bed2mat", (DL_FUNC) &_pcadapt_bed2mat, 1},
     {"_pcadapt_clumping", (DL_FUNC) &_pcadapt_clumping, 6},
-    {"_pcadapt_multLinReg", (DL_FUNC) &_pcadapt_multLinReg, 4},
+    {"_pcadapt_multLinReg", (DL_FUNC) &_pcadapt_multLinReg, 5},
     {"_pcadapt_nb_nona", (DL_FUNC) &_pcadapt_nb_nona, 2},
     {"_pcadapt_print_convert", (DL_FUNC) &_pcadapt_print_convert, 5},
     {"_pcadapt_ped2pcadapt", (DL_FUNC) &_pcadapt_ped2pcadapt, 2},
     {"_pcadapt_lfmm2pcadapt", (DL_FUNC) &_pcadapt_lfmm2pcadapt, 2},
-    {"_pcadapt_pMatVec4", (DL_FUNC) &_pcadapt_pMatVec4, 4},
-    {"_pcadapt_cpMatVec4", (DL_FUNC) &_pcadapt_cpMatVec4, 4},
+    {"_pcadapt_pMatVec4", (DL_FUNC) &_pcadapt_pMatVec4, 5},
+    {"_pcadapt_cpMatVec4", (DL_FUNC) &_pcadapt_cpMatVec4, 5},
     {"_pcadapt_vcf_convert", (DL_FUNC) &_pcadapt_vcf_convert, 3},
     {"_pcadapt_writebed", (DL_FUNC) &_pcadapt_writebed, 4},
     {NULL, NULL, 0}

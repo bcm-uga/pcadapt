@@ -67,14 +67,15 @@ NumericMatrix multLinReg(C macc,
 NumericMatrix multLinReg(SEXP obj,        // af should be ALL allele frequencies
                          const IntegerVector& ind_col,
                          const NumericVector& af,
+                         double ploidy,
                          const NumericMatrix& u) {
   
   if (Rf_isMatrix(obj)) {
-    matAccScaled macc(obj, ind_col, af, 3);
+    matAccScaled macc(obj, ind_col, af, ploidy, 3);
     return multLinReg(macc, u);
   } else {
     XPtr<bed> xpMat(obj);
-    bedAccScaled macc(xpMat, ind_col, af, 3);
+    bedAccScaled macc(xpMat, ind_col, af, ploidy, 3);
     return multLinReg(macc, u);
   }
 }

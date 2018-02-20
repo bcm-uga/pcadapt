@@ -44,6 +44,8 @@
 #' performed.
 #' @param pca.only a logical value indicating whether multiple linear regression
 #' should be performed.
+#' @param ploidy Number of trials, parameter of the binomial distribution. 
+#'   Default is 2, which corresponds to diploidy, such as for the human genome.
 #' 
 #' @return The returned value \code{x} is an object of class \code{pcadapt}.
 #' 
@@ -57,6 +59,7 @@ pcadapt <- function(input,
                     K = 2, 
                     method = "mahalanobis", 
                     min.maf = 0.05, 
+                    ploidy = 2,
                     LD.clumping = FALSE,
                     pca.only = FALSE) {
   
@@ -77,10 +80,11 @@ pcadapt.pcadapt_matrix <- function(input,
                                    K = 2, 
                                    method = c("mahalanobis", "componentwise"), 
                                    min.maf = 0.05, 
+                                   ploidy = 2,
                                    LD.clumping = FALSE,
                                    pca.only = FALSE) {
   
-  pcadapt0(input, K, match.arg(method), min.maf, LD.clumping, pca.only)
+  pcadapt0(input, K, match.arg(method), min.maf, ploidy, LD.clumping, pca.only)
 }
 
 #' @rdname pcadapt
@@ -89,6 +93,7 @@ pcadapt.pcadapt_bed <- function(input,
                                 K = 2, 
                                 method = c("mahalanobis", "componentwise"), 
                                 min.maf = 0.05, 
+                                ploidy = 2,
                                 LD.clumping = FALSE,
                                 pca.only = FALSE) {
   
@@ -97,7 +102,7 @@ pcadapt.pcadapt_bed <- function(input,
   p <- attr(input, "p")
   xptr <- structure(bedXPtr(input, n, p), n = n, p = p, class = "xptr_bed")
   
-  pcadapt0(xptr, K, match.arg(method), min.maf, LD.clumping, pca.only)
+  pcadapt0(xptr, K, match.arg(method), min.maf, ploidy, LD.clumping, pca.only)
 }
 
 #' @rdname pcadapt
@@ -175,7 +180,7 @@ get_statistics = function(zscores, method, pass) {
 
 ################################################################################
 
-pcadapt0 <- function(input, K, method, min.maf, LD.clumping, pca.only) {
+pcadapt0 <- function(input, K, method, min.maf, ploidy, LD.clumping, pca.only) {
   
   # Test arguments and init
   if (!(class(K) %in% c("numeric", "integer")) || K <= 0)
@@ -185,7 +190,9 @@ pcadapt0 <- function(input, K, method, min.maf, LD.clumping, pca.only) {
     stop("min.maf has to be a real number between 0 and 0.45.")
   
   # Compute PCs and z-scores    
-  obj.pca <- iram_and_reg(input, K = K, min.maf = min.maf, 
+  obj.pca <- iram_and_reg(input, K = K, 
+                          min.maf = min.maf, 
+                          ploidy = ploidy,
                           LD.clumping = LD.clumping)
   if (pca.only) return(obj.pca)
   

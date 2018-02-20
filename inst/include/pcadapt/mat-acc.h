@@ -50,13 +50,15 @@ public:
                const IntegerVector& col_ind,
                // af should be ALL allele frequencies
                const NumericVector& af,
+               double ploidy,
                double NA_VAL) : matAcc(mat, col_ind) {
     
     _lookup_scale = NumericMatrix(4, p);
     for (size_t j = 0; j < p; j++) {
       double af_j = af[_col_ind[j]];
       for (size_t i = 0; i < 3; i++) {
-        _lookup_scale(i, j) = (i - 2 * af_j) / sqrt(2 * af_j * (1 - af_j));
+        _lookup_scale(i, j) = 
+          (i - ploidy * af_j) / sqrt(ploidy * af_j * (1 - af_j));
       }
       _lookup_scale(3, j) = NA_VAL;
     }

@@ -36,14 +36,15 @@ NumericVector pMatVec4(C macc, const NumericVector& x) {
 NumericVector pMatVec4(SEXP obj,          // af should be ALL allele frequencies
                        const IntegerVector& ind_col,
                        const NumericVector& af,
+                       double ploidy,
                        const NumericVector& x) {
   
   if (Rf_isMatrix(obj)) {
-    matAccScaled macc(obj, ind_col, af, 0);
+    matAccScaled macc(obj, ind_col, af, ploidy, 0);
     return pMatVec4(macc, x);
   } else {
     XPtr<bed> xpMat(obj);
-    bedAccScaled macc(xpMat, ind_col, af, 0);
+    bedAccScaled macc(xpMat, ind_col, af, ploidy, 0);
     return pMatVec4(macc, x);
   }
 }
@@ -83,14 +84,15 @@ NumericVector cpMatVec4(C macc, const NumericVector& x) {
 NumericVector cpMatVec4(SEXP obj,         // af should be ALL allele frequencies
                         const IntegerVector& ind_col,
                         const NumericVector& af,
+                        double ploidy,
                         const NumericVector& x) {
   
   if (Rf_isMatrix(obj)) {
-    matAccScaled macc(obj, ind_col, af, 0);
+    matAccScaled macc(obj, ind_col, af, ploidy, 0);
     return cpMatVec4(macc, x);
   } else {
     XPtr<bed> xpMat(obj);
-    bedAccScaled macc(xpMat, ind_col, af, 0);
+    bedAccScaled macc(xpMat, ind_col, af, ploidy, 0);
     return cpMatVec4(macc, x);
   }
 }
