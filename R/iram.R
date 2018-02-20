@@ -15,13 +15,7 @@ getCode <- function(NA.VAL = 3L) {
 
 dim.xptr_bed <- function(x) c(attr(x, "n"), attr(x, "p"))
 
-iram_and_reg <- function(input, 
-                         K = 2, 
-                         min.maf = 0.05, 
-                         ploidy = 2,
-                         LD.clumping = FALSE, 
-                         size = 100, 
-                         thr = 0.2) {  # TODO: add exclude parameter
+iram_and_reg <- function(input, K, min.maf, ploidy, LD.clumping) {
   
   # Get dimensions
   n <- dim(input)[1]  ## can't use nrow()
@@ -35,8 +29,13 @@ iram_and_reg <- function(input,
   maf <- pmin(af, 1 - af)
   ind.pass.af <- which(maf >= min.maf)
   
-  # Create a logical vector to locate SNPs that have been clumped
-  if (LD.clumping) {
+  if (!is.null(LD.clumping)) {
+    size <- LD.clumping$size
+    thr  <- LD.clumping$thr
+    if (is.null(size) || is.null(thr))
+      stop("Incorrect parameter 'LD.clumping'.")
+    
+    # Create a logical vector to locate SNPs that have been clumped
     # Take also number of NAs into account?
     ord <- order(maf[ind.pass.af], decreasing = TRUE)
     pass <- clumping(input, ind.pass.af, 

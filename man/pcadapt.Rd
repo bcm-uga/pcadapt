@@ -8,14 +8,14 @@
 \title{Principal Component Analysis for outlier detection}
 \usage{
 pcadapt(input, K = 2, method = "mahalanobis", min.maf = 0.05,
-  ploidy = 2, LD.clumping = FALSE, pca.only = FALSE)
+  ploidy = 2, LD.clumping = NULL, pca.only = FALSE)
 
 \method{pcadapt}{pcadapt_matrix}(input, K = 2, method = c("mahalanobis",
-  "componentwise"), min.maf = 0.05, ploidy = 2, LD.clumping = FALSE,
+  "componentwise"), min.maf = 0.05, ploidy = 2, LD.clumping = NULL,
   pca.only = FALSE)
 
 \method{pcadapt}{pcadapt_bed}(input, K = 2, method = c("mahalanobis",
-  "componentwise"), min.maf = 0.05, ploidy = 2, LD.clumping = FALSE,
+  "componentwise"), min.maf = 0.05, ploidy = 2, LD.clumping = NULL,
   pca.only = FALSE)
 
 \method{pcadapt}{pcadapt_pool}(input)
@@ -36,11 +36,14 @@ threshold of minor allele frequencies above which p-values are computed.}
 \item{ploidy}{Number of trials, parameter of the binomial distribution. 
 Default is 2, which corresponds to diploidy, such as for the human genome.}
 
-\item{LD.clumping}{a logical value indicating whether LD clumping should be
-performed.}
+\item{LD.clumping}{Default is \code{NULL} and doesn't use any SNP thinning.
+If you want to use SNP thinning, provide a named list with parameters 
+\code{size} and \code{thr} which corresponds respectively to the window 
+radius and the squared correlation threshold. A good default value would 
+be \code{list(size = 200, thr = 0.1)}.}
 
-\item{pca.only}{a logical value indicating whether multiple linear regression
-should be performed.}
+\item{pca.only}{a logical value indicating whether PCA results should be 
+returned (before computing any statistic).}
 }
 \value{
 The returned value \code{x} is an object of class \code{pcadapt}.

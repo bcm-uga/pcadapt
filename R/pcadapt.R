@@ -40,10 +40,13 @@
 #' and \code{"componentwise"}.
 #' @param min.maf a value between \code{0} and \code{0.45} specifying the 
 #' threshold of minor allele frequencies above which p-values are computed.
-#' @param LD.clumping a logical value indicating whether LD clumping should be
-#' performed.
-#' @param pca.only a logical value indicating whether multiple linear regression
-#' should be performed.
+#' @param LD.clumping Default is \code{NULL} and doesn't use any SNP thinning.
+#'   If you want to use SNP thinning, provide a named list with parameters 
+#'   \code{size} and \code{thr} which corresponds respectively to the window 
+#'   radius and the squared correlation threshold. A good default value would 
+#'   be \code{list(size = 200, thr = 0.1)}.
+#' @param pca.only a logical value indicating whether PCA results should be 
+#'   returned (before computing any statistic).
 #' @param ploidy Number of trials, parameter of the binomial distribution. 
 #'   Default is 2, which corresponds to diploidy, such as for the human genome.
 #' 
@@ -60,7 +63,7 @@ pcadapt <- function(input,
                     method = "mahalanobis", 
                     min.maf = 0.05, 
                     ploidy = 2,
-                    LD.clumping = FALSE,
+                    LD.clumping = NULL,
                     pca.only = FALSE) {
   
   if (missing(input)) {
@@ -81,7 +84,7 @@ pcadapt.pcadapt_matrix <- function(input,
                                    method = c("mahalanobis", "componentwise"), 
                                    min.maf = 0.05, 
                                    ploidy = 2,
-                                   LD.clumping = FALSE,
+                                   LD.clumping = NULL,
                                    pca.only = FALSE) {
   
   pcadapt0(input, K, match.arg(method), min.maf, ploidy, LD.clumping, pca.only)
@@ -94,7 +97,7 @@ pcadapt.pcadapt_bed <- function(input,
                                 method = c("mahalanobis", "componentwise"), 
                                 min.maf = 0.05, 
                                 ploidy = 2,
-                                LD.clumping = FALSE,
+                                LD.clumping = NULL,
                                 pca.only = FALSE) {
   
   # File mapping
