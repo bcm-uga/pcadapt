@@ -112,7 +112,7 @@ pcadapt.pcadapt_bed <- function(input,
 #' @export
 pcadapt.pcadapt_pool <- function(input) {
   
-  tmat <- t(scale(test, center = TRUE, scale = FALSE))
+  tmat <- t(scale(input, center = TRUE, scale = FALSE))
   npop <- ncol(tmat)
   if (npop < 2) stop("There need to be at least 2 populations in your data")
   
@@ -212,6 +212,7 @@ pcadapt0 <- function(input, K, method, min.maf, ploidy, LD.clumping, pca.only) {
       af = obj.pca$af,
       maf = pmin(obj.pca$af, 1 - obj.pca$af),
       chi2.stat = res$chi2.stat,
+      stat=res$stat,
       gif = res$gif,
       pvalues = res$pvalues,
       pass = obj.pca$pass

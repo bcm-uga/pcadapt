@@ -257,9 +257,9 @@ Because the data have ben simulated, we know that outliers do not correspond to 
 
 To evaluate if LD might be an issue for your dataset, we recommend to display the loadings (contributions of each SNP to the PC) and to evaluate if the loadings are clustered in a single or several genomic regions.
 ```{r}
-par(mfrow=c(2,2))
+par(mfrow = c(2, 2))
 for (i in 1:4)
-{plot(res$loadings[,i],pch=19,cex=.3,ylab=paste0("Loadings PC",i))}
+  plot(res$loadings[, i], pch = 19, cex = .3, ylab = paste0("Loadings PC", i))
 ```
 
 Here, the top-left figure shows that PC1 is determined by a single genomic region, which is likely to be a region of strong LD.
@@ -267,17 +267,17 @@ Here, the top-left figure shows that PC1 is determined by a single genomic regio
 We should therefore thin SNPs in order to compute the PCS.
 
 ```{r}
-res<-pcadapt(matrix,K=20,LD.clumping=list(size = 200, thr = 0.1))
-plot(res,option="screeplot")
+res <- pcadapt(matrix, K = 20, LD.clumping = list(size = 200, thr = 0.1))
+plot(res, option = "screeplot")
 ```
 
 After SNP thinning, we choose $K=2$. 
 
 ```{r}
-res<-pcadapt(matrix,K=2,LD.clumping=list(size = 200, thr = 0.1))
-par(mfrow=c(1,2))
+res <- pcadapt(matrix, K = 2, LD.clumping = list(size = 200, thr = 0.1))
+par(mfrow = c(1, 2))
 for (i in 1:2)
-{plot(res$loadings[,i],pch=19,cex=.3,ylab=paste0("Loadings PC",i))}
+  plot(res$loadings[, i], pch = 19, cex = .3, ylab = paste0("Loadings PC", i))
 ```
 
 The distribution of the loadings is now evenly distributed, so we can have a look at the genome scan, which correctly identifies regions involved in adaptation.
@@ -287,7 +287,7 @@ plot(res)
 ```
 
 
-### F. Detecting local adaptation with pooled sequencing data
+# G. Detecting local adaptation with pooled sequencing data
 
 For pooled samples, the package also uses the `read.pcadapt` function. 
 
@@ -321,18 +321,34 @@ summary(res)
 
 - `pvalues` is a vector containing `L` p-values.
 
+A Manhattan plot and a list of outliers can then be obtained 
 ```{r,  eval = TRUE}
-plot()
+plot(-log10(res$pvalues),pch=19,cex=.5)
+padj <- p.adjust(x$pvalues,method="BH")
+alpha <- 0.1
+outliers <- which(padj < alpha)
+length(outliers)
 ```
 
 # H. Miscellaneous
 
 ### H.1. Missing values
  
-Computation of PCs and of P-values accounts for missing values. Missing values should be encoded by a single character (e.g. 9) different from 0, 1 or 2.
+The package accepts missing values. Computation of PCs and of P-values accounts for missing values. Missing values should be encoded by a single character (e.g. 9) different from 0, 1 or 2.
 
+### H.2. Run `pcadapt` on matrices load in memory
+ 
+`pcadapt` can be called on matrices load in memory instead of using a file.  When calling the function `read.pcadapt`, users should specify if individuals are in columns, and SNPs in lines (type = "pcadapt") or if individuals are in lines, and SNPs in columns (type = `lfmm`).
+```{r, eval=FALSE}
+path_to_file <- system.file("extdata", "SSMPG2017.rds", package = "pcadapt")
+genotypes<-readRDS(path_to_file)
+print(dim(genotypes))
+matrix<- read.pcadapt(genotypes, type = "pcadapt")
+res<-pcadapt(matrix,K=20)
+plot(res,option="screeplot")
+```
 
-### H.2. Association between PCs and outliers
+### H.3. Association between PCs and outliers
 
 It may be interesting to associate outliers with one of the `K` principal component to have indication about evolutionary pressure. The function `get.pc` allows to achieve that:
 
@@ -340,11 +356,13 @@ It may be interesting to associate outliers with one of the `K` principal compon
 snp_pc <- get.pc(x, outliers)
 ```
 
-### H.3 Component-wise genome scan
+### H.4 Component-wise genome scans
 
 Another possibility is to perform one genome scan for each principal component (component-wise p-values). The test statistics are the loadings, which correspond to the correlations between each PC and each SNP. P-values are computed by making a Gaussian approximation for each PC and by estimating the standard deviation of the null distribution.
 
 ```{r}
+path_to_file <- system.file("extdata", "geno3pops.lfmm", package = "pcadapt")
+filename <- read.pcadapt(path_to_file, type = "lfmm")
 x_cw <- pcadapt(filename, K = 2, method = "componentwise")
 summary(x_cw$pvalues)
 ```
@@ -367,7 +385,8 @@ plot(x_cw, option = "stat.distribution", K = 2)
 |           |                  | - Computation of PCA is based on the packages `Rspectra`.|
 |           |                  | - Missing values are handled by specifying vector-matrix operation in `Rspectra` that accounts for missing values.|
 |           |                  | - Includes LD thinning to compute PCs.|
-|           |                  | - No more dependency to RcppArmadillo
+|           |                  | - No more dependency to RcppArmadillo|
+|           |                  | - For Pooled-seq data, use Mahalanobis distances directly on the vector of frequencies, no more simulations of individuals genotypes, no more PCA for Pooled-Seq data|
 |01-15-2017 | 3.1.0            | - Switch from C/Lapack to Rcpp/RcppArmadillo.|
 |           |                  | - `pcadapt` can take genotype matrices as input.|
 |           |                  | - Modified code for binomial sampling.|
