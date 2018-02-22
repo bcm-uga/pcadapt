@@ -301,7 +301,7 @@ filename <- read.pcadapt(pool.data, type = "pool")
 A Pool-seq example is provided in the package, and can be loaded as follows:
 
 ```{r,  eval = TRUE}
-pool.data <- read.table(system.file("extdata", "pool3pops", package = "pcadapt"))
+pool.data <- system.file("extdata", "pool3pops", package = "pcadapt")
 filename <- read.pcadapt(pool.data, type = "pool")
 ```
 
@@ -324,7 +324,7 @@ summary(res)
 A Manhattan plot and a list of outliers can then be obtained 
 ```{r,  eval = TRUE}
 plot(-log10(res$pvalues),pch=19,cex=.5)
-padj <- p.adjust(x$pvalues,method="BH")
+padj <- p.adjust(res$pvalues,method="BH")
 alpha <- 0.1
 outliers <- which(padj < alpha)
 length(outliers)
