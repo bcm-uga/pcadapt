@@ -24,6 +24,8 @@
 #' @param ploidy    deprecated argument.
 #' @param pop.sizes deprecated argument.
 #' @param blocksize deprecated argument.
+#' 
+#' @importFrom utils read.table
 #'
 #' @export
 #'

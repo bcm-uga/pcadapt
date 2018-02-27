@@ -20,6 +20,7 @@ Imports:
     MASS,
     Matrix,
     methods,
+    magrittr,
     mmapcharr,
     plotly,
     Rcpp (>= 0.12.8),  
@@ -28,6 +29,7 @@ Imports:
     vcfR
 LinkingTo: Rcpp, BH, mmapcharr
 LazyData: TRUE
-Suggests: knitr, rmarkdown, testthat, shiny, geometry
+Suggests: knitr, rmarkdown, testthat, shiny
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr
+Encoding: UTF-8
