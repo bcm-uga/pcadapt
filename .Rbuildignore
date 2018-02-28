@@ -4,8 +4,8 @@
 _pkgdown.yml
 docs/*
 ^_pkgdown\.yml$
-tmp-tests
-tmp-data
-tmp-save
+^tmp-tests$
+^tmp-save$
 ^TODO\.md$
 ^tmp-data$
+^hapmap_data$

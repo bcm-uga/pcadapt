@@ -2,22 +2,15 @@
 #  install.packages("pcadapt")
 #  library(pcadapt)
 
-## ---- echo = TRUE, include = FALSE---------------------------------------
+## ---- include = FALSE----------------------------------------------------
 library(pcadapt)#Comment
 
-## ---- eval = FALSE-------------------------------------------------------
-#  path_to_file <- system.file("extdata", "geno3pops.lfmm", package = "pcadapt")
-#  filename <- read.pcadapt(path_to_file, type = "lfmm")
-
-## ---- echo = FALSE-------------------------------------------------------
-filename <- system.file("extdata", "geno3pops.pcadapt", package = "pcadapt")
-
-## ----  eval = FALSE------------------------------------------------------
-#  pool.data <- read.table(system.file("extdata", "pool3pops", package = "pcadapt"))
-#  filename <- read.pcadapt(pool.data, type = "pool")
+## ------------------------------------------------------------------------
+path_to_file <- system.file("extdata", "geno3pops.lfmm", package = "pcadapt")
+filename <- read.pcadapt(path_to_file, type = "lfmm")
 
 ## ------------------------------------------------------------------------
-x <- pcadapt(input = filename, K = 20) #or x <- pcadapt(input = matrix, K = 20)
+x <- pcadapt(input = filename, K = 20) 
 
 ## ---- fig.width = 7, fig.height = 5, fig.align = 'center'----------------
 plot(x, option = "screeplot")
@@ -52,7 +45,7 @@ x <- pcadapt(filename, K = 2)
 plot(x , option = "manhattan")
 
 ## ---- fig.width = 7, fig.height = 5, fig.align = 'center'----------------
-plot(x, option = "qqplot", threshold = 0.1)
+plot(x, option = "qqplot")
 
 ## ---- fig.width = 7, fig.height = 5, fig.align = 'center'----------------
 hist(x$pvalues, xlab = "p-values", main = NULL, breaks = 50, col = "orange")
@@ -61,12 +54,60 @@ hist(x$pvalues, xlab = "p-values", main = NULL, breaks = 50, col = "orange")
 plot(x, option = "stat.distribution")
 
 ## ------------------------------------------------------------------------
-x_com <- pcadapt(filename, K = 2, method = "communality")
-
-## ---- fig.width = 7, fig.height = 5, fig.align = 'center'----------------
-plot(x_com, option = "stat.distribution")
+path_to_file <- system.file("extdata", "SSMPG2017.rds", package = "pcadapt")
+genotypes<-readRDS(path_to_file)
+matrix<- read.pcadapt(genotypes, type = "pcadapt")
+res<-pcadapt(matrix,K=20)
+plot(res,option="screeplot")
 
 ## ------------------------------------------------------------------------
+res<-pcadapt(matrix,K=4)
+plot(res)
+
+## ------------------------------------------------------------------------
+par(mfrow = c(2, 2))
+for (i in 1:4)
+  plot(res$loadings[, i], pch = 19, cex = .3, ylab = paste0("Loadings PC", i))
+
+## ------------------------------------------------------------------------
+res <- pcadapt(matrix, K = 20, LD.clumping = list(size = 200, thr = 0.1))
+plot(res, option = "screeplot")
+
+## ------------------------------------------------------------------------
+res <- pcadapt(matrix, K = 2, LD.clumping = list(size = 200, thr = 0.1))
+par(mfrow = c(1, 2))
+for (i in 1:2)
+  plot(res$loadings[, i], pch = 19, cex = .3, ylab = paste0("Loadings PC", i))
+
+## ------------------------------------------------------------------------
+plot(res)
+
+## ----  eval = TRUE-------------------------------------------------------
+pool.data <- system.file("extdata", "pool3pops", package = "pcadapt")
+filename <- read.pcadapt(pool.data, type = "pool")
+
+## ----  eval = TRUE-------------------------------------------------------
+res<-pcadapt(filename)
+summary(res)
+
+## ----  eval = TRUE-------------------------------------------------------
+plot(-log10(res$pvalues),pch=19,cex=.5)
+padj <- p.adjust(res$pvalues,method="BH")
+alpha <- 0.1
+outliers <- which(padj < alpha)
+length(outliers)
+
+## ---- eval=FALSE---------------------------------------------------------
+#  path_to_file <- system.file("extdata", "SSMPG2017.rds", package = "pcadapt")
+#  genotypes<-readRDS(path_to_file)
+#  print(dim(genotypes))
+#  matrix<- read.pcadapt(genotypes, type = "pcadapt")
+#  res<-pcadapt(matrix,K=20)
+#  plot(res,option="screeplot")
+
+## ------------------------------------------------------------------------
+path_to_file <- system.file("extdata", "geno3pops.lfmm", package = "pcadapt")
+filename <- read.pcadapt(path_to_file, type = "lfmm")
 x_cw <- pcadapt(filename, K = 2, method = "componentwise")
 summary(x_cw$pvalues)
 

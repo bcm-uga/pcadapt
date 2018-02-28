@@ -16,17 +16,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// bed2mat
-IntegerMatrix bed2mat(SEXP xptr);
-RcppExport SEXP _pcadapt_bed2mat(SEXP xptrSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type xptr(xptrSEXP);
-    rcpp_result_gen = Rcpp::wrap(bed2mat(xptr));
-    return rcpp_result_gen;
-END_RCPP
-}
 // bedXPtr
 SEXP bedXPtr(std::string path, int n, int p);
 RcppExport SEXP _pcadapt_bedXPtr(SEXP pathSEXP, SEXP nSEXP, SEXP pSEXP) {
@@ -37,6 +26,17 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type n(nSEXP);
     Rcpp::traits::input_parameter< int >::type p(pSEXP);
     rcpp_result_gen = Rcpp::wrap(bedXPtr(path, n, p));
+    return rcpp_result_gen;
+END_RCPP
+}
+// bed2mat
+IntegerMatrix bed2mat(SEXP xptr);
+RcppExport SEXP _pcadapt_bed2mat(SEXP xptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type xptr(xptrSEXP);
+    rcpp_result_gen = Rcpp::wrap(bed2mat(xptr));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -180,8 +180,8 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_pcadapt_get_af", (DL_FUNC) &_pcadapt_get_af, 1},
-    {"_pcadapt_bed2mat", (DL_FUNC) &_pcadapt_bed2mat, 1},
     {"_pcadapt_bedXPtr", (DL_FUNC) &_pcadapt_bedXPtr, 3},
+    {"_pcadapt_bed2mat", (DL_FUNC) &_pcadapt_bed2mat, 1},
     {"_pcadapt_clumping", (DL_FUNC) &_pcadapt_clumping, 6},
     {"_pcadapt_multLinReg", (DL_FUNC) &_pcadapt_multLinReg, 5},
     {"_pcadapt_nb_nona", (DL_FUNC) &_pcadapt_nb_nona, 2},
