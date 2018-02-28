@@ -1,4 +1,3 @@
-- ploidy != 2
-- method
 - test (all types)
-- don't export everything
+- add percmaxNA
+- bug: ped in tempfile (same with vcf?)

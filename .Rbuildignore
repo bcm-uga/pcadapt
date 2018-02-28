@@ -8,3 +8,4 @@ tmp-tests
 tmp-data
 tmp-save
 ^TODO\.md$
+^tmp-data$
