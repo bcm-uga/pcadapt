@@ -44,7 +44,7 @@ manhattan_plot = function(x, chr.info, snp.info, plt.pkg, K = 1) {
                                               lower.tail = FALSE, 
                                               log.p = TRUE) / log(10)),
                        chr = chr.int[notNA.idx])
-      res.plot <- ggplot2::ggplot(df, aes(x, y)) + 
+      res.plot <- ggplot2::ggplot(df, aes_string("x", "y")) + 
         ggplot2::geom_point(aes(colour = factor(df$chr))) + 
         ggplot2::guides(colour = FALSE) +
         ggplot2::scale_color_manual(values = c("black", "grey"))
@@ -54,7 +54,7 @@ manhattan_plot = function(x, chr.info, snp.info, plt.pkg, K = 1) {
                                               df = attr(x, "K"), 
                                               lower.tail = FALSE, 
                                               log.p = TRUE) / log(10)))
-      res.plot <- ggplot2::ggplot(df, aes(x, y)) + ggplot2::geom_point()
+      res.plot <- ggplot2::ggplot(df, aes_string("x", "y")) + ggplot2::geom_point()
     }
     res.plot <- res.plot + ggplot2::ggtitle("Manhattan Plot") +
       ggplot2::labs(x = paste0("SNP (with mAF>", attr(x, "min.maf"), ")"), 

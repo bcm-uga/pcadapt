@@ -13,7 +13,7 @@
 #' @keywords internal
 #'
 #' @importFrom stats dchisq
-#' @importFrom ggplot2 ggplot geom_histogram geom_line aes ggtitle
+#' @importFrom ggplot2 ggplot geom_histogram geom_line aes aes_string ggtitle
 #'
 #' @export
 hist_plot = function(x, K) {
@@ -41,12 +41,13 @@ hist_plot = function(x, K) {
              ord = dchisq(t, df = k), 
              chi2 = z) %>%
     ggplot() + 
-    geom_histogram(aes(x = chi2, y = ..density..), 
+    geom_histogram(aes_string(x = "chi2", 
+                              y = "..density.."), 
                    binwidth = 0.5, 
                    fill = "#B0E2FF", 
                    alpha = 0.6, 
                    colour = "black") + 
-    geom_line(aes(x = abs, y = ord), 
+    geom_line(aes_string(x = "abs", y = "ord"), 
               col = "#4F94CD", 
               size = 1) + 
     ggplot2::ggtitle("Statistics distribution")
