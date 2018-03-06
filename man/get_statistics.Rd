@@ -13,7 +13,7 @@ get_statistics(zscores, method, pass)
 the p-values. Two statistics are currently available, \code{"mahalanobis"},
 and \code{"componentwise"}.}
 
-\item{values}{a numeric vector containing the singular values.}
+\item{pass}{a boolean vector.}
 }
 \value{
 The returned value is a list containing the test statistics and the 

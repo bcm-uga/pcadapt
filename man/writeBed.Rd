@@ -7,10 +7,10 @@
 writeBed(file, is.pcadapt)
 }
 \arguments{
-\item{is.pcadapt}{}
-
-\item{x}{A [mmapchar][mmapchar-class] object associated 
+\item{file}{A [mmapchar][mmapchar-class] object associated 
 with a pcadapt or lfmm file.}
+
+\item{is.pcadapt}{a boolean value.}
 }
 \value{
 The input `bedfile` path.

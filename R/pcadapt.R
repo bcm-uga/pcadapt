@@ -110,7 +110,13 @@ pcadapt.pcadapt_bed <- function(input,
 
 #' @rdname pcadapt
 #' @export
-pcadapt.pcadapt_pool <- function(input) {
+pcadapt.pcadapt_pool <- function(input, 
+                                 K = (nrow(input) - 1),
+                                 method = "mahalanobis",
+                                 min.maf = 0.05,
+                                 ploidy = NULL,
+                                 LD.clumping = NULL,
+                                 pca.only = FALSE) {
   
   tmat <- t(scale(input, center = TRUE, scale = FALSE))
   npop <- ncol(tmat)
@@ -137,7 +143,7 @@ pcadapt.pcadapt_pool <- function(input) {
 #' @param method a character string specifying the method to be used to compute
 #' the p-values. Two statistics are currently available, \code{"mahalanobis"},
 #' and \code{"componentwise"}.
-#' @param values a numeric vector containing the singular values.
+#' @param pass a boolean vector.
 #' 
 #' @return The returned value is a list containing the test statistics and the 
 #' associated p-values.

@@ -46,9 +46,9 @@ CODE_0123 <- mmapcharr:::CODE_012; CODE_0123[is.na(CODE_0123)] <- 3L
 #' Function to write bed/bim/fam files from a pcadapt or an lfmm file.
 #' Files shouldn't already exists.
 #'
-#' @param x A [mmapchar][mmapchar-class] object associated 
+#' @param file A [mmapchar][mmapchar-class] object associated 
 #'   with a pcadapt or lfmm file.
-#' @param is.pcadapt
+#' @param is.pcadapt a boolean value.
 #'
 #' @return The input `bedfile` path.
 #' 

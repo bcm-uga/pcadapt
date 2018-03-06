@@ -18,7 +18,9 @@ pcadapt(input, K = 2, method = "mahalanobis", min.maf = 0.05,
   "componentwise"), min.maf = 0.05, ploidy = 2, LD.clumping = NULL,
   pca.only = FALSE)
 
-\method{pcadapt}{pcadapt_pool}(input)
+\method{pcadapt}{pcadapt_pool}(input, K = (nrow(input) - 1),
+  method = "mahalanobis", min.maf = 0.05, ploidy = NULL,
+  LD.clumping = NULL, pca.only = FALSE)
 }
 \arguments{
 \item{input}{a genotype matrix or a character string specifying the name of 
