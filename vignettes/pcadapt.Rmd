@@ -337,16 +337,17 @@ length(outliers)
  
 The package accepts missing values. Computation of PCs and of P-values accounts for missing values. Missing values should be encoded by a single character (e.g. 9) different from 0, 1 or 2.
 
-### H.2. Run `pcadapt` on matrices load in memory
+### H.2. Run `pcadapt` on matrices loaded in memory
  
-`pcadapt` can be called on matrices load in memory instead of using a file.  When calling the function `read.pcadapt`, users should specify if individuals are in columns, and SNPs in lines (type = "pcadapt") or if individuals are in lines, and SNPs in columns (type = `lfmm`).
+`pcadapt` can be called on matrices loaded in memory instead of using a file. When calling the function `read.pcadapt`, users should specify if individuals are in columns, and SNPs in lines (type = "pcadapt") or if individuals are in lines, and SNPs in columns (type = `lfmm`).
+
 ```{r, eval=FALSE}
 path_to_file <- system.file("extdata", "SSMPG2017.rds", package = "pcadapt")
-genotypes<-readRDS(path_to_file)
+genotypes <- readRDS(path_to_file)
 print(dim(genotypes))
-matrix<- read.pcadapt(genotypes, type = "pcadapt")
-res<-pcadapt(matrix,K=20)
-plot(res,option="screeplot")
+matrix <- read.pcadapt(genotypes, type = "pcadapt")
+res <- pcadapt(matrix, K = 20)
+plot(res, option = "screeplot")
 ```
 
 ### H.3. Association between PCs and outliers
@@ -383,8 +384,8 @@ plot(x_cw, option = "stat.distribution", K = 2)
 |Date       | Version          | Changes|
 |--------   | ----   | -------------------------------------------------------|
 |02-21-2018 | 4.0              | - `read.pcadapt` generates `bed` files instead of `pcadapt` files.|
-|           |                  | - Computation of PCA is based on the packages `Rspectra`.|
-|           |                  | - Missing values are handled by specifying vector-matrix operation in `Rspectra` that accounts for missing values.|
+|           |                  | - Computation of PCA is based on the package `RSpectra`.|
+|           |                  | - Missing values are handled by specifying vector-matrix operation in `RSpectra` that accounts for missing values.|
 |           |                  | - Includes LD thinning to compute PCs.|
 |           |                  | - No more dependency to RcppArmadillo|
 |           |                  | - For Pooled-seq data, use Mahalanobis distances directly on the vector of frequencies, no more simulations of individuals genotypes, no more PCA for Pooled-Seq data|

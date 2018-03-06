@@ -1,5 +1,7 @@
 ################################################################################
 
+CODE_012 <- rep(NA_integer_, 256); CODE_012[49:51] <- 0:2
+
 #' Population colorization
 #'
 #' \code{get.score.color} allows the user to display individuals of the same
