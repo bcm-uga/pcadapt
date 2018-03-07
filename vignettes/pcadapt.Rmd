@@ -241,16 +241,16 @@ In pcadapt, there is an option to compute PCs after SNP thinning. SNP thinning m
 We provide below an example of data analysis using simulated data where there is a LD. Genotype data are stored in a matrix (individuals in columns and SNPs in lines). An analysis without SNP thinning can be performed as follows
 ```{r}
 path_to_file <- system.file("extdata", "SSMPG2017.rds", package = "pcadapt")
-genotypes<-readRDS(path_to_file)
-matrix<- read.pcadapt(genotypes, type = "pcadapt")
-res<-pcadapt(matrix,K=20)
-plot(res,option="screeplot")
+genotypes <- readRDS(path_to_file)
+matrix <- read.pcadapt(genotypes, type = "pcadapt")
+res <- pcadapt(matrix, K = 20)
+plot(res, option = "screeplot")
 ```
 
 Catell's rule indicates $K=4$.
 
 ```{r}
-res<-pcadapt(matrix,K=4)
+res <- pcadapt(matrix, K = 4)
 plot(res)
 ```
 
@@ -313,7 +313,7 @@ $$D_j^2 = (f^j - \bar{f})\Sigma^{-1}(f^j - \bar{f})$$
 where $\bar{z}$ and $\Sigma$ are robust estimates of the mean and of the covariance matrix of allele frequencies. Dividing again the squared Mahalanobis distance by a genomic inflation factor provides a test statistic that should distributed as a chi-square distribution with $K$ degrees of freedom. Computation of the Mahalanobis distance is performed as follows
 
 ```{r,  eval = TRUE}
-res<-pcadapt(filename)
+res <- pcadapt(filename)
 summary(res)
 ```
 - `chi2.stat` is a vector of size `L` containing the rescaled statistics that follow a chi-squared distribution with `K` degrees of freedom.
@@ -323,9 +323,9 @@ summary(res)
 - `pvalues` is a vector containing `L` p-values.
 
 A Manhattan plot and a list of outliers can then be obtained 
-```{r,  eval = TRUE}
-plot(-log10(res$pvalues),pch=19,cex=.5)
-padj <- p.adjust(res$pvalues,method="BH")
+```{r, eval = TRUE}
+plot(res, option = "manhattan")
+padj <- p.adjust(res$pvalues, method = "BH")
 alpha <- 0.1
 outliers <- which(padj < alpha)
 length(outliers)

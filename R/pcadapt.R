@@ -118,18 +118,36 @@ pcadapt.pcadapt_pool <- function(input,
                                  LD.clumping = NULL,
                                  pca.only = FALSE) {
   
-  tmat <- t(scale(input, center = TRUE, scale = FALSE))
-  npop <- ncol(tmat)
-  if (npop < 2) stop("There need to be at least 2 populations in your data")
+  w <- matrix(NA, nrow = ncol(input), ncol = K)
+  tmat <- t(input)
+  mean_freq <- apply(tmat, 1, FUN = function(x) {mean(x, na.rm = TRUE)})
+  tmat <- tmat - mean_freq
+  tmat[is.na(tmat)] <- 0 # mean imputation
+  pass <- mean_freq > min.maf
+  tmat <- tmat[pass, ]
   
-  stat <- robust::covRob(tmat[, -1])$dist
-  gif <- median(stat) / qchisq(0.5, df = npop - 1)
-  stat.gif <- stat / gif
+  obj.pca <- RSpectra::svds(t(tmat), k = K)
+  w[pass, ] <- obj.pca$v
   
-  list(
-    chi2.stat = stat.gif, 
-    gif = gif,
-    pvalues = pchisq(stat.gif, df = npop - 1, lower.tail = FALSE)
+  res <- get_statistics(w, 
+                        method = method, 
+                        pass = pass)
+  
+  structure(
+    list(
+      scores = obj.pca$u,
+      singular.values = sqrt(obj.pca$d * nrow(w) / (nrow(obj.pca$u) - 1)),
+      loadings = w,
+      zscores = w,
+      af = mean_freq,
+      maf = pmin(mean_freq, 1 - mean_freq),
+      chi2.stat = res$chi2.stat,
+      stat = res$stat,
+      gif = res$gif,
+      pvalues = res$pvalues,
+      pass = pass
+    ),
+    K = K, method = method, min.maf = min.maf, class = "pcadapt"
   )
 }
 
