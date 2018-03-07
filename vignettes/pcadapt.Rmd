@@ -290,9 +290,9 @@ plot(res)
 
 # G. Detecting local adaptation with pooled sequencing data
 
-For pooled samples, the package also uses the `read.pcadapt` function. 
+For Pool-seq samples, the package also uses the `read.pcadapt` function. 
 
-We assume that the user provides a frequency matrix with `n` rows and `L` columns (where `n` is the number of populations and `L` is the number of genetic markers). Assume your frequency file is called "foo" and is located in the directory "path_to_directory", use the following command lines:
+We assume that the user provides a matrix of relative frequencies with `n` rows and `L` columns (where `n` is the number of populations and `L` is the number of genetic markers). Assume your frequency file is called "foo" and is located in the directory "path_to_directory", use the following command lines:
 
 ```
 pool.data <- read.table("path_to_directory/foo")
@@ -306,30 +306,42 @@ pool.data <- system.file("extdata", "pool3pops", package = "pcadapt")
 filename <- read.pcadapt(pool.data, type = "pool")
 ```
 
-With Pool-Seq data, the package computes a Mahalanobis distance to search for **outlier vector of allele frequencies**. Computing PCs, as for genotype data, is not needed anymore.  Denoting by $f^j = (f_1^j, \dots, f_K^j)$ the vector of allele frequencies in the `K` populations for the $j$-th SNP, the squared Mahalanobis distance for pool-seq data is defined as
+With Pool-Seq data, the package computes again a Mahalanobis distance based on PCA loadings. 
 
-$$D_j^2 = (f^j - \bar{f})\Sigma^{-1}(f^j - \bar{f})$$
-
-where $\bar{z}$ and $\Sigma$ are robust estimates of the mean and of the covariance matrix of allele frequencies. Dividing again the squared Mahalanobis distance by a genomic inflation factor provides a test statistic that should distributed as a chi-square distribution with $K$ degrees of freedom. Computation of the Mahalanobis distance is performed as follows
+By default, `pcadapt` function assumes that $K=n-1$. Smaller values of `K` can be provided by using argument `K`. Computation of Mahalanobis distances is performed as follows
 
 ```{r,  eval = TRUE}
 res <- pcadapt(filename)
+#The same as res <- pcadapt(filename,K=2)
 summary(res)
 ```
-- `chi2.stat` is a vector of size `L` containing the rescaled statistics that follow a chi-squared distribution with `K` degrees of freedom.
+`res' is a list containing the same elements than when using individual genotype data.
 
-- `gif` is a numerical value corresponding to the genomic inflation factor estimated from Mahalanobis distances.
+A scree plot can be obtained and be possibly used to reduce `K`. If the number of populations `n` is too small, it is impossible to use the scree plot to choose `K` and the default value of $K=n-1$ should be used.
 
-- `pvalues` is a vector containing `L` p-values.
+```{r, eval = TRUE}
+plot(res,option="screeplot")
+```
 
-A Manhattan plot and a list of outliers can then be obtained 
+A Manhattan plot can be displayed.
 ```{r, eval = TRUE}
 plot(res, option = "manhattan")
+```
+
+A list of outliers can be obtained as for individual genotype data
+```{r, eval = TRUE}
 padj <- p.adjust(res$pvalues, method = "BH")
 alpha <- 0.1
 outliers <- which(padj < alpha)
 length(outliers)
 ```
+The function `get.pc`is also available for pooled-seq data (see H.3).
+
+```{r, eval = TRUE}
+get.pc(res,1:150)->aux
+print(aux[,2])
+```
+Most of the 75 first SNPs are more related to the differentiation corresponding to the 1st PC whereas the following 75 SNPs are mostly related to the differentiation corresponding to the 2nd PC (in the simulations, these 2 sets of SNPs have been involved in adaptation occurring in different parts of the population divergence tree).
 
 # H. Miscellaneous
 
@@ -388,7 +400,7 @@ plot(x_cw, option = "stat.distribution", K = 2)
 |           |                  | - Missing values are handled by specifying vector-matrix operation in `RSpectra` that accounts for missing values.|
 |           |                  | - Includes LD thinning to compute PCs.|
 |           |                  | - No more dependency to RcppArmadillo|
-|           |                  | - For Pooled-seq data, use Mahalanobis distances directly on the vector of frequencies, no more simulations of individuals genotypes, no more PCA for Pooled-Seq data|
+|           |                  | - For Pooled-seq data, use Mahalanobis distances based on PCA loadings, no more simulations of individuals genotypes|
 |01-15-2017 | 3.1.0            | - Switch from C/Lapack to Rcpp/RcppArmadillo.|
 |           |                  | - `pcadapt` can take genotype matrices as input.|
 |           |                  | - Modified code for binomial sampling.|
