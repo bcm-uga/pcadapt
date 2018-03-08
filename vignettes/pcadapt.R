@@ -55,13 +55,13 @@ plot(x, option = "stat.distribution")
 
 ## ------------------------------------------------------------------------
 path_to_file <- system.file("extdata", "SSMPG2017.rds", package = "pcadapt")
-genotypes<-readRDS(path_to_file)
-matrix<- read.pcadapt(genotypes, type = "pcadapt")
-res<-pcadapt(matrix,K=20)
-plot(res,option="screeplot")
+genotypes <- readRDS(path_to_file)
+matrix <- read.pcadapt(genotypes, type = "pcadapt")
+res <- pcadapt(matrix, K = 20)
+plot(res, option = "screeplot")
 
 ## ------------------------------------------------------------------------
-res<-pcadapt(matrix,K=4)
+res <- pcadapt(matrix, K = 4)
 plot(res)
 
 ## ------------------------------------------------------------------------
@@ -87,23 +87,23 @@ pool.data <- system.file("extdata", "pool3pops", package = "pcadapt")
 filename <- read.pcadapt(pool.data, type = "pool")
 
 ## ----  eval = TRUE-------------------------------------------------------
-res<-pcadapt(filename)
+res <- pcadapt(filename)
 summary(res)
 
-## ----  eval = TRUE-------------------------------------------------------
-plot(-log10(res$pvalues),pch=19,cex=.5)
-padj <- p.adjust(res$pvalues,method="BH")
+## ---- eval = TRUE--------------------------------------------------------
+plot(res, option = "manhattan")
+padj <- p.adjust(res$pvalues, method = "BH")
 alpha <- 0.1
 outliers <- which(padj < alpha)
 length(outliers)
 
 ## ---- eval=FALSE---------------------------------------------------------
 #  path_to_file <- system.file("extdata", "SSMPG2017.rds", package = "pcadapt")
-#  genotypes<-readRDS(path_to_file)
+#  genotypes <- readRDS(path_to_file)
 #  print(dim(genotypes))
-#  matrix<- read.pcadapt(genotypes, type = "pcadapt")
-#  res<-pcadapt(matrix,K=20)
-#  plot(res,option="screeplot")
+#  matrix <- read.pcadapt(genotypes, type = "pcadapt")
+#  res <- pcadapt(matrix, K = 20)
+#  plot(res, option = "screeplot")
 
 ## ------------------------------------------------------------------------
 path_to_file <- system.file("extdata", "geno3pops.lfmm", package = "pcadapt")

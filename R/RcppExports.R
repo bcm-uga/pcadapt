@@ -74,10 +74,6 @@ lfmm2pcadapt <- function(input, output) {
     .Call('_pcadapt_lfmm2pcadapt', PACKAGE = 'pcadapt', input, output)
 }
 
-poolCov <- function(m) {
-    .Call('_pcadapt_poolCov', PACKAGE = 'pcadapt', m)
-}
-
 pMatVec4 <- function(obj, ind_col, af, ploidy, x) {
     .Call('_pcadapt_pMatVec4', PACKAGE = 'pcadapt', obj, ind_col, af, ploidy, x)
 }

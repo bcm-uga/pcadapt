@@ -121,17 +121,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// poolCov
-NumericMatrix poolCov(NumericMatrix& m);
-RcppExport SEXP _pcadapt_poolCov(SEXP mSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix& >::type m(mSEXP);
-    rcpp_result_gen = Rcpp::wrap(poolCov(m));
-    return rcpp_result_gen;
-END_RCPP
-}
 // pMatVec4
 NumericVector pMatVec4(SEXP obj, const IntegerVector& ind_col, const NumericVector& af, double ploidy, const NumericVector& x);
 RcppExport SEXP _pcadapt_pMatVec4(SEXP objSEXP, SEXP ind_colSEXP, SEXP afSEXP, SEXP ploidySEXP, SEXP xSEXP) {
@@ -199,7 +188,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_pcadapt_print_convert", (DL_FUNC) &_pcadapt_print_convert, 5},
     {"_pcadapt_ped2pcadapt", (DL_FUNC) &_pcadapt_ped2pcadapt, 2},
     {"_pcadapt_lfmm2pcadapt", (DL_FUNC) &_pcadapt_lfmm2pcadapt, 2},
-    {"_pcadapt_poolCov", (DL_FUNC) &_pcadapt_poolCov, 1},
     {"_pcadapt_pMatVec4", (DL_FUNC) &_pcadapt_pMatVec4, 5},
     {"_pcadapt_cpMatVec4", (DL_FUNC) &_pcadapt_cpMatVec4, 5},
     {"_pcadapt_vcf_convert", (DL_FUNC) &_pcadapt_vcf_convert, 3},

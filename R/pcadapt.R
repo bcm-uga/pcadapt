@@ -119,16 +119,25 @@ pcadapt.pcadapt_pool <- function(input,
                                  pca.only = FALSE) {
   
   w <- matrix(NA, nrow = ncol(input), ncol = K)
-  tmat <- t(input)
-  mean_freq <- apply(tmat, 1, FUN = function(x) {mean(x, na.rm = TRUE)})
-  tmat <- tmat - mean_freq
+  
+  tmat <- scale(input, center = TRUE, scale = FALSE) 
   tmat[is.na(tmat)] <- 0 # mean imputation
+  
+  mean_freq <- attr(tmat, "scaled:center")
+  mean_freq <- pmin(mean_freq, 1 - mean_freq)
+
   pass <- mean_freq > min.maf
-  tmat <- tmat[pass, ]
   
-  obj.pca <- RSpectra::svds(t(tmat), k = K)
-  w[pass, ] <- obj.pca$v
+  if (nrow(input) == 2) {
+    obj.pca <- list()
+    obj.pca$u <- matrix(0, nrow = 1, ncol = 2)
+    obj.pca$v <- tmat[1, pass, drop = FALSE]
+    obj.pca$d <- 1
+  } else {
+    obj.pca <- RSpectra::svds(tmat[, pass, drop = FALSE], k = K)
+  }
   
+  w[pass, ] <- obj.pca$v 
   res <- get_statistics(w, 
                         method = method, 
                         pass = pass)
@@ -139,8 +148,8 @@ pcadapt.pcadapt_pool <- function(input,
       singular.values = sqrt(obj.pca$d * nrow(w) / (nrow(obj.pca$u) - 1)),
       loadings = w,
       zscores = w,
-      af = mean_freq,
-      maf = pmin(mean_freq, 1 - mean_freq),
+      af = attr(tmat, "scaled:center"),
+      maf = mean_freq,
       chi2.stat = res$chi2.stat,
       stat = res$stat,
       gif = res$gif,

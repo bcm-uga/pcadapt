@@ -25,17 +25,15 @@ scree_plot = function(x, K) {
   }
   
   if (m < 2) {
-    warning("K = 1, the scree plot is composed of a unique point.")
+    warning("the scree plot is not available.")
+  } else {
+    p0 <- ggplot2::qplot(x = 1:m, 
+                         y = (x$singular.values[1:m]) ^ 2 / length(x$maf), 
+                         col = "red", 
+                         xlab = "PC", 
+                         ylab = "Proportion of explained variance") + 
+      ggplot2::geom_line() + ggplot2::guides(colour = FALSE) +
+      ggplot2::ggtitle(paste("Scree Plot - K =", m))
+    print(p0)
   }
-  
-  p0 <- ggplot2::qplot(x = 1:m, 
-                       y = (x$singular.values[1:m]) ^ 2 / length(x$maf), 
-                       col = "red", 
-                       xlab = "PC", 
-                       ylab = "Proportion of explained variance") + 
-    ggplot2::geom_line() + ggplot2::guides(colour = FALSE) +
-    ggplot2::ggtitle(paste("Scree Plot - K =", m))
-  
-  print(p0)
-  
 }
