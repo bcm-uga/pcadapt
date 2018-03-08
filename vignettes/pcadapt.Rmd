@@ -120,8 +120,6 @@ x <- pcadapt(filename, K = 2)
 
 In addition to the number `K` of principal components to work with, the user can also set the parameter `min.maf` that corresponds to a threshold of minor allele frequency. By default, the parameter `min.maf` is set to `5%`. P-values of SNPs with a minor allele frequency smaller than the threshold are not computed (`NA` is returned).
 
-Missing data???
-
 The object `x` returned by the function `pcadapt` contains numerical quantities obtained after performing a PCA on the genotype matrix.
 
 ```{r ,eval=FALSE}
