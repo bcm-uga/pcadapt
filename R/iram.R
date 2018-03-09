@@ -68,7 +68,9 @@ iram_and_reg <- function(input, K, min.maf, ploidy, LD.clumping) {
   
   # Multiple Linear Regression is performed also on SNPs that have been clumped,
   # that is why we recompute the lookup table
-  obj.svd$zscores <- multLinReg(input, ind.pass.af, af, ploidy, obj.svd$u)
+  Z <- matrix(NA_real_, p, K)
+  Z[ind.pass.af, ] <- multLinReg(input, ind.pass.af, af, ploidy, obj.svd$u)
+  obj.svd$zscores <- Z
   
   V <- matrix(NA_real_, p, K)
   V[ind.pass, ] <- obj.svd$v

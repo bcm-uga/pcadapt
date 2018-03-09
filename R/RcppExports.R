@@ -5,12 +5,12 @@ get_af <- function(obj) {
     .Call('_pcadapt_get_af', PACKAGE = 'pcadapt', obj)
 }
 
-bed2mat <- function(xptr) {
-    .Call('_pcadapt_bed2mat', PACKAGE = 'pcadapt', xptr)
-}
-
 bedXPtr <- function(path, n, p) {
     .Call('_pcadapt_bedXPtr', PACKAGE = 'pcadapt', path, n, p)
+}
+
+bed2mat <- function(xptr) {
+    .Call('_pcadapt_bed2mat', PACKAGE = 'pcadapt', xptr)
 }
 
 clumping <- function(obj, ind_col, ord, remain, size, thr) {

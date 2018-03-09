@@ -185,7 +185,7 @@ get_statistics = function(zscores, method, pass) {
   if (method == "mahalanobis") {
     res <- rep(NA, nSNP)
     if (K == 1) {
-      res[pass] <- (zscores - median(zscores[pass]))^2 
+      res[pass] <- (zscores[pass] - median(zscores[pass]))^2 
     } else if (K > 1) {
       # covRob_cpp(zscores[pass, ])
       res[pass] <- robust::covRob(zscores, na.action = na.omit, 
