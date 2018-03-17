@@ -1,5 +1,9 @@
 ################################################################################
 
+#' @useDynLib pcadapt, .registration = TRUE
+#' @importFrom Rcpp sourceCpp
+NULL
+
 #' Principal Component Analysis for outlier detection
 #'
 #' \code{pcadapt} performs principal component analysis and computes p-values to
@@ -176,7 +180,6 @@ pcadapt.pcadapt_pool <- function(input,
 #' associated p-values.
 #' 
 #' @importFrom stats median na.omit pchisq qchisq
-#' 
 #'
 get_statistics = function(zscores, method, pass) {
   

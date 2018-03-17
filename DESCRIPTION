@@ -17,9 +17,6 @@ License: GPL (>= 2)
 Imports:
     data.table,
     ggplot2, 
-    MASS,
-    Matrix,
-    methods,
     magrittr,
     mmapcharr,
     plotly,

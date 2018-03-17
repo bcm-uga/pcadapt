@@ -2,27 +2,27 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 get_af <- function(obj) {
-    .Call('_pcadapt_get_af', PACKAGE = 'pcadapt', obj)
+    .Call(`_pcadapt_get_af`, obj)
 }
 
 bedXPtr <- function(path, n, p) {
-    .Call('_pcadapt_bedXPtr', PACKAGE = 'pcadapt', path, n, p)
+    .Call(`_pcadapt_bedXPtr`, path, n, p)
 }
 
 bed2mat <- function(xptr) {
-    .Call('_pcadapt_bed2mat', PACKAGE = 'pcadapt', xptr)
+    .Call(`_pcadapt_bed2mat`, xptr)
 }
 
 clumping <- function(obj, ind_col, ord, remain, size, thr) {
-    .Call('_pcadapt_clumping', PACKAGE = 'pcadapt', obj, ind_col, ord, remain, size, thr)
+    .Call(`_pcadapt_clumping`, obj, ind_col, ord, remain, size, thr)
 }
 
 multLinReg <- function(obj, ind_col, af, ploidy, u) {
-    .Call('_pcadapt_multLinReg', PACKAGE = 'pcadapt', obj, ind_col, af, ploidy, u)
+    .Call(`_pcadapt_multLinReg`, obj, ind_col, af, ploidy, u)
 }
 
 nb_nona <- function(obj, ind_col) {
-    .Call('_pcadapt_nb_nona', PACKAGE = 'pcadapt', obj, ind_col)
+    .Call(`_pcadapt_nb_nona`, obj, ind_col)
 }
 
 #' Summary
@@ -39,7 +39,7 @@ nb_nona <- function(obj, ind_col) {
 #' ## see also ?pcadapt for examples
 #'
 print_convert <- function(input, output, M, N, pool) {
-    invisible(.Call('_pcadapt_print_convert', PACKAGE = 'pcadapt', input, output, M, N, pool))
+    invisible(.Call(`_pcadapt_print_convert`, input, output, M, N, pool))
 }
 
 #' Convert ped files
@@ -55,7 +55,7 @@ print_convert <- function(input, output, M, N, pool) {
 #' @keywords internal
 #'
 ped2pcadapt <- function(input, output) {
-    .Call('_pcadapt_ped2pcadapt', PACKAGE = 'pcadapt', input, output)
+    .Call(`_pcadapt_ped2pcadapt`, input, output)
 }
 
 #' Convert lfmm files
@@ -71,15 +71,15 @@ ped2pcadapt <- function(input, output) {
 #' @keywords internal
 #'
 lfmm2pcadapt <- function(input, output) {
-    .Call('_pcadapt_lfmm2pcadapt', PACKAGE = 'pcadapt', input, output)
+    .Call(`_pcadapt_lfmm2pcadapt`, input, output)
 }
 
 pMatVec4 <- function(obj, ind_col, af, ploidy, x) {
-    .Call('_pcadapt_pMatVec4', PACKAGE = 'pcadapt', obj, ind_col, af, ploidy, x)
+    .Call(`_pcadapt_pMatVec4`, obj, ind_col, af, ploidy, x)
 }
 
 cpMatVec4 <- function(obj, ind_col, af, ploidy, x) {
-    .Call('_pcadapt_cpMatVec4', PACKAGE = 'pcadapt', obj, ind_col, af, ploidy, x)
+    .Call(`_pcadapt_cpMatVec4`, obj, ind_col, af, ploidy, x)
 }
 
 #' Convert vcfR genotype matrices
@@ -98,10 +98,10 @@ cpMatVec4 <- function(obj, ind_col, af, ploidy, x) {
 #' @keywords internal
 #'
 vcf_convert <- function(string_geno, output, allele_sep) {
-    .Call('_pcadapt_vcf_convert', PACKAGE = 'pcadapt', string_geno, output, allele_sep)
+    .Call(`_pcadapt_vcf_convert`, string_geno, output, allele_sep)
 }
 
 writebed <- function(filename, e, tab, is_pcadapt) {
-    invisible(.Call('_pcadapt_writebed', PACKAGE = 'pcadapt', filename, e, tab, is_pcadapt))
+    invisible(.Call(`_pcadapt_writebed`, filename, e, tab, is_pcadapt))
 }
 
