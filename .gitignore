@@ -5,3 +5,6 @@
 *.o
 *.dll
 vignettes/tuto_ingrogression.Rmd
+tmp-data
+tmp-data/
+hapmap_data/

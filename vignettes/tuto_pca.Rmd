@@ -1,7 +1,13 @@
 ---
 title: Display PCA with pcadapt
 output: 
-  html_document
+  rmarkdown::html_document:
+    css: style.css
+vignette: >
+  %\VignetteIndexEntry{pcadapt}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\usepackage[utf8]{inputenc}
 ---
 
 

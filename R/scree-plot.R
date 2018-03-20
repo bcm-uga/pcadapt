@@ -1,6 +1,6 @@
 #' Principal Components Analysis Scree Plot
 #'
-#' \code{scree.plotting} plots the scee plot associated with the principal components analysis performed on the dataset.
+#' \code{scree_plot} plots the scee plot associated with the principal components analysis performed on the dataset.
 #' NB : \code{pcadapt} has to be run on the dataset in order to get an output readable by \code{plot.screePlot}
 #'
 #' @param x an output from \code{pcadapt} containing the singular values.
@@ -16,21 +16,24 @@
 #' 
 #' @export
 #'
-scree.plotting = function(x, K){
-  if (is.null(K)){
+scree_plot = function(x, K) {
+  
+  if (is.null(K)) {
     m <- attr(x, "K")
   } else {
     m <- K
   }
-  if (m < 2){
-    warning("K = 1, the scree plot is thus composed of a unique point.")
+  
+  if (m < 2) {
+    warning("the scree plot is not available.")
+  } else {
+    p0 <- ggplot2::qplot(x = 1:m, 
+                         y = (x$singular.values[1:m]) ^ 2 / length(x$maf), 
+                         col = "red", 
+                         xlab = "PC", 
+                         ylab = "Proportion of explained variance") + 
+      ggplot2::geom_line() + ggplot2::guides(colour = FALSE) +
+      ggplot2::ggtitle(paste("Scree Plot - K =", m))
+    print(p0)
   }
-  nSNP <- length(x$maf)
-  p0 <- ggplot2::qplot(x = 1:m, 
-                       y = (x$singular.values[1:m]) ^ 2 / nSNP, 
-                       col = "red", xlab = "PC", 
-                       ylab = "Proportion of explained variance") + 
-    ggplot2::geom_line() + ggplot2::guides(colour = FALSE) +
-    ggplot2::ggtitle(paste("Scree Plot - K =", m))
-  print(p0)
 }

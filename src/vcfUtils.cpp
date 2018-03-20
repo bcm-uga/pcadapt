@@ -68,8 +68,6 @@ int check_line_na(CharacterVector string_geno_row, CharacterVector geno_char){
 //'
 //' @keywords internal
 //'
-//' @export
-//'
 // [[Rcpp::export]]
 IntegerVector vcf_convert(CharacterMatrix string_geno, 
                           std::string output, 

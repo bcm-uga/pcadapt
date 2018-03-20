@@ -306,8 +306,6 @@ void lfmm2geno(char *input_file, char* output_file, int *N, int *M){
 //' @examples
 //' ## see also ?pcadapt for examples
 //'
-//' @export
-//'
 // [[Rcpp::export]]
 void print_convert(std::string input, std::string output, int M, int N, int pool){
   char *writable_in = new char[input.size() + 1];
@@ -343,8 +341,6 @@ void print_convert(std::string input, std::string output, int M, int N, int pool
 //'
 //' @keywords internal
 //'
-//' @export
-//'
 // [[Rcpp::export]]
 int ped2pcadapt(std::string input, std::string output){
   int M;
@@ -373,8 +369,6 @@ int ped2pcadapt(std::string input, std::string output){
 //' ## see also ?pcadapt for examples
 //'
 //' @keywords internal
-//'
-//' @export
 //'
 // [[Rcpp::export]]
 int lfmm2pcadapt(std::string input, std::string output){
