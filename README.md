@@ -1,6 +1,6 @@
 # pcadapt
 [![Build Status](https://travis-ci.org/bcm-uga/pcadapt.svg?branch=master)](https://travis-ci.org/bcm-uga/pcadapt)
-[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/privefl/pcadapt?branch=master&svg=true)](https://ci.appveyor.com/project/privefl/pcadapt)
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/bcm-uga/pcadapt?branch=master&svg=true)](https://ci.appveyor.com/project/bcm-uga/pcadapt)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/pcadapt)](https://cran.r-project.org/package=pcadapt)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/pcadapt)](https://cran.r-project.org/package=pcadapt)
 [![Rdoc](http://www.rdocumentation.org/badges/version/pcadapt)](http://www.rdocumentation.org/packages/pcadapt)
