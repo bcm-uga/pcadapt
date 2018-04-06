@@ -37,11 +37,11 @@ path_to_file <- "path_to_directory/foo.lfmm"
 filename <- read.pcadapt(path_to_file, type = "lfmm")
 ```
 
-To run the provided example, we retrieve the file location of the example and we use `read.pcadapt` to convert the `lfmm` example to the `pcadapt` format.
+To run the provided example, we retrieve the file location of the example and we use `read.pcadapt` to convert the `bed` example to the `pcadapt` format.
 
 ```{r}
-path_to_file <- system.file("extdata", "geno3pops.lfmm", package = "pcadapt")
-filename <- read.pcadapt(path_to_file, type = "lfmm")
+path_to_file <- system.file("extdata", "geno3pops.bed", package = "pcadapt")
+filename <- read.pcadapt(path_to_file, type = "bed")
 ```
 
 When working with genotype matrices already loaded in the `R` session, users have to run the `read.pcadapt` function and to specify the `type`argument, which can be `pcadapt` (individuals in columns, SNPs in lines) or `lfmm` (individuals in lines, SNPs in columns).
@@ -373,8 +373,8 @@ snp_pc <- get.pc(x, outliers)
 Another possibility is to perform one genome scan for each principal component (component-wise p-values). The test statistics are the loadings, which correspond to the correlations between each PC and each SNP. P-values are computed by making a Gaussian approximation for each PC and by estimating the standard deviation of the null distribution.
 
 ```{r}
-path_to_file <- system.file("extdata", "geno3pops.lfmm", package = "pcadapt")
-filename <- read.pcadapt(path_to_file, type = "lfmm")
+path_to_file <- system.file("extdata", "geno3pops.bed", package = "pcadapt")
+filename <- read.pcadapt(path_to_file, type = "bed")
 x_cw <- pcadapt(filename, K = 2, method = "componentwise")
 summary(x_cw$pvalues)
 ```

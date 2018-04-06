@@ -6,10 +6,18 @@ res <- list()
 tol <- 1e-5
 
 for (ext in c("bed", "lfmm", "pcadapt")) {
+  
   file_path <- system.file("extdata", 
                            paste0("missing.", ext), 
                            package = "pcadapt") 
-  x <- read.pcadapt(file_path, type = ext)
+  if (ext == "bed") {
+    tmp_file <- file_path
+  } else {
+    tmp_file <- tempfile(fileext = paste0(".", ext))
+    file.copy(file_path, tmp_file)
+  }
+  
+  x <- read.pcadapt(tmp_file, type = ext)
   res[[ext]] <- pcadapt(x, K = 5)
 }
 
