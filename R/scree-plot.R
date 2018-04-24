@@ -28,7 +28,7 @@ scree_plot = function(x, K) {
     warning("the scree plot is not available.")
   } else {
     p0 <- ggplot2::qplot(x = 1:m, 
-                         y = (x$singular.values[1:m]) ^ 2 / length(x$maf), 
+                         y = (x$singular.values[1:m]) ^ 2, 
                          col = "red", 
                          xlab = "PC", 
                          ylab = "Proportion of explained variance") + 

@@ -138,18 +138,19 @@ pcadapt.pcadapt_pool <- function(input,
     obj.pca$v <- tmat[1, pass, drop = FALSE]
     obj.pca$d <- 1
   } else {
-    obj.pca <- RSpectra::svds(tmat[, pass, drop = FALSE], k = K)
+    obj.pca <- svd(tmat[, pass, drop = FALSE])
+    #obj.pca <- RSpectra::svds(tmat[, pass, drop = FALSE], k = K)
   }
   
-  w[pass, ] <- obj.pca$v 
+  w[pass, ] <- obj.pca$v[, 1:K, drop = FALSE]
   res <- get_statistics(w, 
                         method = method, 
                         pass = pass)
-  
+
   structure(
     list(
-      scores = obj.pca$u,
-      singular.values = sqrt(obj.pca$d * nrow(w) / (nrow(obj.pca$u) - 1)),
+      scores = obj.pca$u[, 1:K, drop = FALSE],
+      singular.values = sqrt(obj.pca$d[1:K]^2 / sum(obj.pca$d^2)) ,
       loadings = w,
       zscores = w,
       af = attr(tmat, "scaled:center"),
@@ -158,7 +159,7 @@ pcadapt.pcadapt_pool <- function(input,
       stat = res$stat,
       gif = res$gif,
       pvalues = res$pvalues,
-      pass = pass
+      pass = which(pass)
     ),
     K = K, method = method, min.maf = min.maf, class = "pcadapt"
   )
@@ -242,7 +243,7 @@ pcadapt0 <- function(input, K, method, min.maf, ploidy, LD.clumping, pca.only) {
   structure(
     list(
       scores = obj.pca$u,
-      singular.values = sqrt(obj.pca$d * nrow(obj.pca$v) / (nrow(obj.pca$u) - 1)),
+      singular.values = obj.pca$d / sqrt((nrow(obj.pca$u) - 1) * length(obj.pca$pass)),
       loadings = obj.pca$v,
       zscores = obj.pca$zscores,
       af = obj.pca$af,
