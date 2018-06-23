@@ -122,7 +122,7 @@ pcadapt.pcadapt_pool <- function(input,
                                  LD.clumping = NULL,
                                  pca.only = FALSE) {
   
-  w <- matrix(NA, nrow = ncol(input), ncol = K)
+  w <- matrix(NA_real_, nrow = ncol(input), ncol = K)
   
   tmat <- scale(input, center = TRUE, scale = FALSE) 
   tmat[is.na(tmat)] <- 0 # mean imputation
@@ -133,10 +133,11 @@ pcadapt.pcadapt_pool <- function(input,
   pass <- mean_freq > min.maf
   
   if (nrow(input) == 2) {
-    obj.pca <- list()
-    obj.pca$u <- matrix(0, nrow = 1, ncol = 2)
-    obj.pca$v <- tmat[1, pass, drop = FALSE]
-    obj.pca$d <- 1
+    obj.pca <- list(
+      u = matrix(NA_real_, nrow = 2, ncol = 1),
+      v = t(tmat[1, pass, drop = FALSE]),
+      d = 1
+    )
   } else {
     obj.pca <- svd(tmat[, pass, drop = FALSE])
     #obj.pca <- RSpectra::svds(tmat[, pass, drop = FALSE], k = K)
