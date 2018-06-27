@@ -1,7 +1,7 @@
 Package: pcadapt
 Type: Package
 Title: Fast Principal Component Analysis for Outlier Detection
-Version: 4.0.2
+Version: 4.0.3
 Date: 2018-06-12
 Authors@R: c(person("Keurcien", "Luu", role = c("aut"), email = "keurcien.luu@univ-grenoble-alpes.fr"), 
           person("Michael", "Blum", role = c("aut", "cre"), email = "michael.blum@univ-grenoble-alpes.fr"),
