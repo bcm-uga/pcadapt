@@ -69,7 +69,13 @@ iram_and_reg <- function(input, K, min.maf, ploidy, LD.clumping) {
   # Multiple Linear Regression is performed also on SNPs that have been clumped,
   # that is why we recompute the lookup table
   Z <- matrix(NA_real_, p, K)
-  Z[ind.pass.af, ] <- multLinReg(input, ind.pass.af, af, ploidy, obj.svd$u)
+  auxreg <- multLinReg(input, ind.pass.af, af, ploidy, obj.svd$u)
+
+  #New subsetting because of possible zscores equal to NaN when 
+  #there are monomorphic sites
+  theNaN<-rowSums(is.na(auxreg))!=0
+  Z[ind.pass.af[!theNaN], ] <- auxreg[!theNaN]
+  ind.pass.af <- ind.pass.af[!theNaN]
   obj.svd$zscores <- Z
   
   V <- matrix(NA_real_, p, K)
