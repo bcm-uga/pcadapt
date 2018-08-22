@@ -62,6 +62,12 @@ writeBed <- function(file, is.pcadapt) {
   n <- `if`(is.pcadapt, ncol(mmap), nrow(mmap))
   p <- `if`(is.pcadapt, nrow(mmap), ncol(mmap))
   
+  if (n > p) {
+    warning(sprintf("%s\n  %s",
+                    "You have more individuals than SNPs.",
+                    "Are you sure of the type of your file? (pcadapt/lfmm)"))
+  }
+  
   # Get path to new bed file
   bedfile <- paste0(file, ".bed")
   if (file.exists(bedfile)) {

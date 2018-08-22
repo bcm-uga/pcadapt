@@ -26,6 +26,6 @@ Imports:
 LinkingTo: Rcpp, BH, mmapcharr
 LazyData: TRUE
 Suggests: knitr, rmarkdown, testthat, shiny
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 VignetteBuilder: knitr
 Encoding: UTF-8

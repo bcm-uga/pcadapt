@@ -14,6 +14,11 @@
 #' table(mat)
 bed2matrix <- function(bedfile, n = NULL, p = NULL) {
   
+  if (class(bedfile) == "pcadapt_bed") {
+    n <- attr(bedfile, "n")
+    p <- attr(bedfile, "p")
+  }
+  
   if (is.null(n) || is.null(p)) {
     bed <- read.pcadapt(bedfile, type = "bed")
     n <- attr(bed, "n")
@@ -22,6 +27,6 @@ bed2matrix <- function(bedfile, n = NULL, p = NULL) {
   
   xptr <- bedXPtr(bedfile, n, p)
   mat <- bed2mat(xptr)
-  mat[is.na(mat)] <- NA
+  mat[mat == 3] <- NA
   mat
 }

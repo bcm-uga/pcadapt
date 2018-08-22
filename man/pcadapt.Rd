@@ -10,9 +10,9 @@
 pcadapt(input, K = 2, method = "mahalanobis", min.maf = 0.05,
   ploidy = 2, LD.clumping = NULL, pca.only = FALSE)
 
-\method{pcadapt}{pcadapt_matrix}(input, K = 2, method = c("mahalanobis",
-  "componentwise"), min.maf = 0.05, ploidy = 2, LD.clumping = NULL,
-  pca.only = FALSE)
+\method{pcadapt}{pcadapt_matrix}(input, K = 2,
+  method = c("mahalanobis", "componentwise"), min.maf = 0.05,
+  ploidy = 2, LD.clumping = NULL, pca.only = FALSE)
 
 \method{pcadapt}{pcadapt_bed}(input, K = 2, method = c("mahalanobis",
   "componentwise"), min.maf = 0.05, ploidy = 2, LD.clumping = NULL,

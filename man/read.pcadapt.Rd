@@ -4,9 +4,9 @@
 \alias{read.pcadapt}
 \title{File Converter}
 \usage{
-read.pcadapt(input, type = c("pcadapt", "lfmm", "vcf", "bed", "ped", "pool",
-  "example"), type.out = c("bed", "matrix"), allele.sep = c("/", "|"),
-  pop.sizes, ploidy, local.env, blocksize)
+read.pcadapt(input, type = c("pcadapt", "lfmm", "vcf", "bed", "ped",
+  "pool", "example"), type.out = c("bed", "matrix"),
+  allele.sep = c("/", "|"), pop.sizes, ploidy, local.env, blocksize)
 }
 \arguments{
 \item{input}{a genotype matrix or a character string specifying the name of 
