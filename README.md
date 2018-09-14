@@ -36,3 +36,7 @@ devtools::install_github("bcm-uga/pcadapt")
 [2] Duforet-Frebourg, N., Luu, K., Laval, G., Bazin, E., & Blum, M. G. (2015). [Detecting genomic signatures of natural selection with principal component analysis: application to the 1000 Genomes data.](http://mbe.oxfordjournals.org/content/33/4/1082) Molecular biology and evolution, msv334.
 
 
+## Common errors
+
+- `TridiagEigen: eigen decomposition failed`: if you get this error it often means that you have either a row or a column with no variation at all. This can be the case if you have missing values only (for one individual or one SNP), or if the non-missing data are all Os, all 1s or all 2s (for one individual or one SNP).
+
