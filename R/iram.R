@@ -23,7 +23,7 @@ iram_and_reg <- function(input, K, min.maf, ploidy, LD.clumping) {
   
   # Get allele frequencies
   # Uses a non-scaled lookup table
-  af <- get_af(input) * (2 / ploidy)
+  af <- get_af(input) / ploidy
   
   # Create a logical vector to locate SNPs with MAF >= min.maf
   maf <- pmin(af, 1 - af)
@@ -51,19 +51,27 @@ iram_and_reg <- function(input, K, min.maf, ploidy, LD.clumping) {
   nb_nona <- nb_nona(input, ind.pass)
   
   ### SVD using RSpectra
-  obj.svd <- RSpectra::svds(
-    A = function(x, args) {
-      # When filtering, the actual number of SNPs that we have is actually
-      # sum(pass) and not p anymore
-      pMatVec4(input, ind.pass, af, ploidy, x) / nb_nona$p * p2
-    }, 
-    Atrans = function(x, args) {
-      # NB: nb_nona$n depends on 'pass' as well
-      cpMatVec4(input, ind.pass, af, ploidy, x) / nb_nona$n * n
-    },
-    k = K, 
-    dim = c(n, p2),
-    opts = list(tol = 1e-4, maxitr = 100)
+  tryCatch(
+    obj.svd <- RSpectra::svds(
+      A = function(x, args) {
+        # When filtering, the actual number of SNPs that we have is actually
+        # sum(pass) and not p anymore
+        pMatVec4(input, ind.pass, af, ploidy, x) / nb_nona$p * p2
+      }, 
+      Atrans = function(x, args) {
+        # NB: nb_nona$n depends on 'pass' as well
+        cpMatVec4(input, ind.pass, af, ploidy, x) / nb_nona$n * n
+      },
+      k = K, 
+      dim = c(n, p2),
+      opts = list(tol = 1e-4, maxitr = 100)
+    ),
+    error = function(e) {
+      stop(paste(
+        "Can't compute SVD.", sep = "\n",
+        "Are there SNPs or individuals with missing values only?",
+        "You should use PLINK for proper data quality control."))
+    }
   )
   
   # Multiple Linear Regression is performed also on SNPs that have been clumped,

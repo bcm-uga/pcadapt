@@ -26,7 +26,7 @@ NumericVector AF(C macc) {
         af[j] += x;
       }
     }
-    af[j] /= 2 * n_available;
+    af[j] /= n_available;
   }
   
   return af;
