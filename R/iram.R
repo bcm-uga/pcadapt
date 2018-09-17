@@ -67,7 +67,7 @@ iram_and_reg <- function(input, K, min.maf, ploidy, LD.clumping) {
       opts = list(tol = 1e-4, maxitr = 100)
     ),
     error = function(e) {
-      stop(paste(
+      stop(call. = FALSE, paste(
         "Can't compute SVD.", sep = "\n",
         "Are there SNPs or individuals with missing values only?",
         "You should use PLINK for proper data quality control."))
