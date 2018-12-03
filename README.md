@@ -4,7 +4,7 @@
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/pcadapt)](https://cran.r-project.org/package=pcadapt)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/pcadapt)](https://cran.r-project.org/package=pcadapt)
 [![Rdoc](http://www.rdocumentation.org/badges/version/pcadapt)](http://www.rdocumentation.org/packages/pcadapt)
-[![Coverage Status](https://img.shields.io/codecov/c/github/keurcien/pcadapt/master.svg)](https://codecov.io/github/keurcien/pcadapt?branch=master)
+[![codecov](https://codecov.io/gh/bcm-uga/pcadapt/branch/master/graph/badge.svg)](https://codecov.io/gh/bcm-uga/pcadapt)
 
 **pcadapt** has been developed to detect genetic markers involved in biological adaptation. **pcadapt** provides statistical tools for outlier detection based on Principal Component Analysis (PCA).
 
