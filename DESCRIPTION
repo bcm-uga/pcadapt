@@ -17,14 +17,14 @@ Imports:
     data.table,
     ggplot2, 
     magrittr,
-    mmapcharr,
+    mmapcharr (>= 0.3),
     plotly,
     Rcpp (>= 0.12.8),  
     robust,
     RSpectra,
     vcfR
 LinkingTo: Rcpp, rmio, mmapcharr
-Remotes: privefl/rmio
+Remotes: privefl/mmapcharr
 LazyData: TRUE
 Suggests: knitr, rmarkdown, testthat, shiny
 RoxygenNote: 6.1.0
