@@ -1,8 +1,8 @@
 Package: pcadapt
 Type: Package
 Title: Fast Principal Component Analysis for Outlier Detection
-Version: 4.0.4
-Date: 2018-09-17
+Version: 4.1.0
+Date: 2019-02-02
 Authors@R: c(person("Keurcien", "Luu", role = c("aut"), email = "keurcien.luu@univ-grenoble-alpes.fr"), 
           person("Michael", "Blum", role = c("aut", "cre"), email = "michael.blum@univ-grenoble-alpes.fr"),
           person("Florian", "Privé", role = c("aut"), email = "florian.prive.21@gmail.com"),
@@ -23,7 +23,8 @@ Imports:
     robust,
     RSpectra,
     vcfR
-LinkingTo: Rcpp, BH, mmapcharr
+LinkingTo: Rcpp, rmio, mmapcharr
+Remotes: privefl/rmio
 LazyData: TRUE
 Suggests: knitr, rmarkdown, testthat, shiny
 RoxygenNote: 6.1.0

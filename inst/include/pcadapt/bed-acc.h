@@ -3,18 +3,16 @@
 
 /******************************************************************************/
 
-#include <boost/interprocess/file_mapping.hpp>
-#include <boost/interprocess/mapped_region.hpp>
-#include <boost/noncopyable.hpp>
+#include <mio/mmap.hpp>
+#include <system_error> // for std::error_code
 #include <Rcpp.h>
 
-using namespace boost::interprocess;
 using namespace Rcpp;
 using std::size_t;
 
 /******************************************************************************/
 
-class bed : private boost::noncopyable {
+class bed {
 public:
   bed(const std::string path, int n, int p);
   
@@ -36,18 +34,15 @@ public:
     return code;
   }
   
-  const unsigned char* matrix() const { return file_data; }
-  size_t nrow() const { return n; }
-  size_t ncol() const { return p; }
+  const unsigned char* matrix() const { return ro_ummap.data(); }
+  
+  size_t nrow()  const { return n; }
+  size_t ncol()  const { return p; }
   size_t nbyte() const { return n_byte; }
   
 private:
-  boost::interprocess::file_mapping file;
-  boost::interprocess::mapped_region file_region;
-  const unsigned char* file_data;
-  size_t n;
-  size_t p;
-  size_t n_byte;
+  mio::ummap_source ro_ummap;
+  size_t n, p, n_byte;
 };
 
 /******************************************************************************/
