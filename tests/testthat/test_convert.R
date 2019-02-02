@@ -25,7 +25,8 @@ expect_message(writeBed(tmpfile, is.pcadapt = FALSE),
 
 # Consider it is a PCADAPT file
 file.copy(tmpfile, tmpfile2 <- tempfile())
-bedfile2 <- writeBed(tmpfile2, is.pcadapt = TRUE)
+expect_warning(bedfile2 <- writeBed(tmpfile2, is.pcadapt = TRUE),
+               "Are you sure of the type of your file?", fixed = TRUE)
 expect_equal(attr(bedfile2, "n"), P)
 expect_equal(attr(bedfile2, "p"), N)
 

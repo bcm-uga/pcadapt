@@ -13,38 +13,28 @@ inline size_t ceil4(size_t n) {
 bed::bed(std::string path, int n, int p) : 
   n(n), p(p), n_byte(ceil4(n)) {
   
-  // Rcout << this->n << " ; " << this->p << " ; " << this->n_byte << std::endl;
+  std::error_code error;
+  mio::ummap_source magic_number;
+  magic_number.map(path, 0, 3, error);
+  if (error) Rcpp::stop("Error when mapping file:\n  %s.\n", error.message());
   
-  try {
-    this->file = file_mapping(path.c_str(), read_only);
-  } catch(interprocess_exception& e) {
-    throw std::runtime_error("File not found.");
-  }
-  
-  this->file_region = mapped_region(this->file, read_only);
-  this->file_data = 
-    static_cast<const unsigned char*>(this->file_region.get_address());
-  
-  if (!(this->file_data[0] == '\x6C' && this->file_data[1] == '\x1B')) {
-    throw std::runtime_error("File is not a binary PED file.");
-  }
+  if (!(magic_number[0] == '\x6C' && magic_number[1] == '\x1B')) 
+    Rcpp::stop("File is not a binary PED file.");
   
   /* Check mode: 00000001 indicates the default variant-major mode (i.e.
    list all samples for first variant, all samples for second variant,
    etc), 00000000 indicates the unsupported sample-major mode (i.e. list
    all variants for the first sample, list all variants for the second
    sample, etc */
-  if (this->file_data[2] != '\x01') {
-    throw std::runtime_error("Sample-major mode is not supported.");
-  }
+  if (magic_number[2] != '\x01') Rcpp::stop("Sample-major mode is not supported.");
   
-  // Point after this magic number
-  this->file_data += 3;
+  // Map after this magic number
+  this->ro_ummap.map(path, 3, mio::map_entire_file, error);
+  if (error) Rcpp::stop("Error when mapping file:\n  %s.\n", error.message());
   
   // Check if given dimensions match the file
-  if ((3 + this->n_byte * this->p) != this->file_region.get_size()) {
-    throw std::runtime_error("n or p does not match the dimensions of the file.");
-  }
+  if ((this->n_byte * this->p) != this->ro_ummap.size())
+    Rcpp::stop("n or p does not match the dimensions of the file.");
 }
 
 /******************************************************************************/
@@ -54,7 +44,7 @@ SEXP bedXPtr(std::string path, int n, int p) {
   
   // http://gallery.rcpp.org/articles/intro-to-exceptions/
   try {
-    /* Create a pointer to a bedAcc object and wrap it as an external pointer
+    /* Create a pointer to a bed object and wrap it as an external pointer
      http://dirk.eddelbuettel.com/code/rcpp/Rcpp-modules.pdf */
     XPtr<bed> ptr(new bed(path, n, p), true);
     // Return the external pointer to the R side
