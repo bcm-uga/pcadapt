@@ -81,52 +81,92 @@
 \item \url{florian.prive.21@gmail.com}
 \end{itemize}
 
-\newpage
+\clearpage
 
 \abstract{
 
 }
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newpage
+\clearpage
+
+\section{TODO} 
+
+On a changé \\
+Le format vers PLINK pour que ce soit plus rapide et plus facile de qc.\\
+L'algo de PCA pour que ce soit linéaire.\\
+La façon de gérer les valeurs manquantes.\\
+L'option pour le LD.\\
+Et j'aimerais parler de Maha qu'il faut faire que sur les variants non corrélés et projeter après.\\
+Rappeler l'algo initial ? (non changé)
 
 \section{Introduction}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Material and Methods}
+\section{Method pcadapt reexplained}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section{Results}
-
-To compare performance of newest version of R package pcadapt (v4.1.0) with previously published versions 2 and 3 (we use v3.0.4 here), we use public data of 4342 domestic dogs genotyped at 144,474 variants after quality control \cite[]{hayward2016complex}.
-Previous versions of R package pcadapt used to compute the eigen decomposition of the Genetic Relationship Matrix (GRM). 
-Deriving PCs for this data takes 2111 seconds with pcadapt v3.0.4. Most of the time is taken to compute the GRM, therefore this timing is independent of the number of PCs computed.
-With pcadapt v4.1.0, it takes 35, 60 and 102 seconds to compute K=5, 10 and 20 PCs, respectively. This represents a 60, 35 and 20 folds improvement in computation time.
+In version 4, the statistical methods behind pcadapt have not changed as compared to versions 2 and 3, but we recall the statistical methods involved here for convenience[REWORD?]. Please see the original paper for details \cite[]{luu2017pcadapt}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Discussion}
+\section{File formats}
+
+Previous versions of package pcadapt used the format `pcadapt', which is a text file of characters where each line is storing all individuals' genotypes for one variant (0, 1, 2, and 9 for missing values) separated by spaces.
+It also supported file format `lfmm', which is basically format `pcadapt' transposed (i.e.\ storing each individual as a line, instead of each variant).
+It was also able to convert from `ped' and `vcf' files to format `pcadapt'.
+
+Now, the preferred format of R package pcadapt is `bed', i.e.\ binary PLINK `ped' files. Format `bed' is very compact; it stores each genotype using only 2 bits, making it 8 times smaller than a corresponding `pcadapt' file.
+And it is convenient format to be memory-mapped to be used in both R and C++ almost as a standard R(cpp) matrix; see e.g.\ package BEDMatrix that provides matrix-like accessors to `bed' files \cite[]{grueneberg2019bgdata}.
+Moreover, you can use the widely-used piece of software PLINK to convert from `ped' and `vcf' files to `bed' files, as well as performing some quality control \cite[]{chang2015second}.
+We also developed R package mmapcharr to easily and efficiently read from `pcadapt' and `lfmm' files and convert them to `bed' files.
+For example, if someone already has a `pcadapt' file, function \texttt{read.pcadapt} creates a new file with extension `pcadapt.bed' to be used by main function \texttt{pcadapt}. This is seamless to the user.
+
+
+\section{Computation time}
+
+In R package pcadapt, computation time is mainly driven by the computation of first Principal Components (PCs).
+Previous versions of pcadapt used to compute the eigen decomposition of the Genetic Relationship Matrix (GRM).
+Deriving the GRM is quadratic with the number of individuals and linear with the number of variants used.
+
+In new versions of pcadapt, we use an algorithm based on randomized projections named the implicitly restarted Arnoldi method (IRAM), which has proven to be very fast and accurate to compute first PCs \cite[]{Lehoucq1996,abraham2017flashpca2,prive2017efficient}. 
+This method makes derivation of first PCs linear with both dimensions of the genotype matrix, making this operation remarkably fast.
+
+To compare performance of newest version of R package pcadapt (v4.1.0 here) with previously published versions 2 and 3 (v3.0.4 here), we use publicly available data of 4342 domestic dogs genotyped at 144,474 variants after quality control \cite[]{hayward2016complex}. 
+Deriving PCs for this data takes 2111 seconds with pcadapt v3.0.4. 
+Most of the time is taken to compute the GRM, therefore this timing is independent of the number of PCs computed.
+With pcadapt v4.1.0, it takes only 35, 60 and 102 seconds to compute K=5, 10 and 20 PCs, respectively. This represents a 60, 35 and 20 folds improvement in computation time.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\vspace*{5em}
+\section{Beware of Linkage Disequilibrium}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Conclusion}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
 
 \section*{Software and code availability}
 
+R package pcadapt is available on CRAN. 
+It also has a GitHub repository where you can open issues (\url{https://github.com/bcm-uga/pcadapt/issues}).
+A tutorial on using pcadapt to detect local adaptation is available at \url{https://bcm-uga.github.io/pcadapt/articles/pcadapt.html}.
+Code used in this paper is available at \url{https://github.com/bcm-uga/pcadapt/tree/master/new-paper/code}.
 
 \section*{Acknowledgements}
 
-Authors thank Rounak Dey and Seunggeun Lee for helpful discussions about PCA projection.
-This research has been conducted using the UK Biobank Resource under Application Number 25589.
-
-F.P., J.M.\ and B.V.\ are supported by the Danish National Research Foundation (Niels Bohr Professorship to J.M.), and also acknowledge the Lundbeck Foundation Initiative for Integrative Psychiatric Research, iPSYCH (R248-2017-2003).
+F.P., J.M.\ and B.V.\ are supported by the Danish National Research Foundation (Niels Bohr Professorship to J.M.).
 
 \section*{Declaraction of Interests}
 
@@ -135,14 +175,14 @@ The other authors declare no competing interests.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newpage
+\clearpage
 
 \bibliographystyle{natbib}
 \bibliography{refs}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newpage
+\clearpage
 \section*{Supplementary Materials}
 
 \renewcommand{\thefigure}{S\arabic{figure}}
@@ -151,32 +191,9 @@ The other authors declare no competing interests.
 \setcounter{table}{0}
 
 
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \clearpage
-
-\subsection*{Supplementary figures}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{figure}[htbp]
-\centering
-\begin{subfigure}[b]{0.5\textwidth}
-%\includegraphics[width=\textwidth]{}
-\caption{Distribution of statistics and default threshold (6, in red)}
-\end{subfigure}
-\\~\\
-\begin{subfigure}[b]{0.45\textwidth}
-%\includegraphics[width=\textwidth]{}
-\caption{Principal Component (PC) scores 13 to 20 of 1000G, colored by statistic used to detect outliers (maximum number of SDs from the mean, log-scale).}
-\end{subfigure}
-\end{figure}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\newpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

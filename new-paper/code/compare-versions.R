@@ -11,22 +11,26 @@ prefix <- "tmp-data/cornell_canine"
 system(glue::glue(
   "{plink} --bfile {prefix} --dog",
   " --maf 0.05 --mind 0.1 --geno 0.1 --hwe 1e-10 --autosome",
-  " --recode --out {prefix}"
+  " --recode --out {prefix}_qc"
 ))
 
 library(pcadapt)
-input <- read.pcadapt(paste0(prefix, ".ped"), type = "ped")
+input <- read.pcadapt(paste0(prefix, "_qc.ped"), type = "ped")
+(nlines <- bigreadr::nlines(input)) # 144474
+file.size(input) / 1024^2  # 1197 MB
+file.size(input) / nlines # 8685 (~ 4342 * 2)
+
 obj.pcadapt <- runonce::save_run({
   pcadapt(input, K = 20)
 }, file = "tmp-data/canine-pcadapt-old.rds") # 2111 sec
 
-pcadapt::scree.plotting(obj.pcadapt, K = 20)
+scree.plotting(obj.pcadapt, K = 20)
 
 str(obj.pcadapt)
 plot(obj.pcadapt) +
   geom_hline(yintercept = -log10(0.05 / length(obj.pcadapt$pvalues)), linetype = 2)
 
-pcadapt::score.plotting(obj.pcadapt, 19, 20)
+score.plotting(obj.pcadapt, 19, 20)
 
 ################################################################################
 
@@ -44,14 +48,18 @@ system(glue::glue(
 
 library(pcadapt)
 input <- read.pcadapt(paste0(prefix, "_qc.bed"), type = "bed")
+file.size(input) / 1024^2  # 150 MB (~ 1197 / 8)
+
 obj.pcadapt <- runonce::save_run({
   pcadapt(input, K = 20)
 }, file = "tmp-data/canine-pcadapt-new.rds")  # 102 sec
 system.time(pcadapt(input, K = 5))            #  35 sec
 system.time(pcadapt(input, K = 10))           #  60 sec
 
-pcadapt::scree_plot(obj.pcadapt, K = 20)
-pcadapt::score_plot(obj.pcadapt)
+scree_plot(obj.pcadapt, K = 20)
+score_plot(obj.pcadapt)
 
 obj.pcadapt.old <- readRDS("tmp-data/canine-pcadapt-old.rds")
-round(100 * cor(obj.pcadapt$scores, obj.pcadapt.old$scores), 1)
+diag(round(100 * cor(obj.pcadapt$scores, obj.pcadapt.old$scores), 2))
+#  [1]  100 -100  100 -100  100 -100  100  100  100  100 -100  100  100
+# [14]  100 -100 -100 -100 -100  100  100
