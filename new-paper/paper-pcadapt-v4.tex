@@ -63,23 +63,22 @@
 \begin{document}
 
 
-\title{Efficient toolkit implementing best practices for principal component analysis of population genetic data}
-\author{Florian Priv\'e,$^{\text{1,5,}*}$ Keurcien Luu$^{\text{5}}$, Michael G.B. Blum,$^{\text{4,5}}$ John J. McGrath,$^{\text{1,2,3}}$ and Bjarni J. Vilhj\'almsson$^{\text{1,}*}$}
+\title{Performing highly efficient genome scans for selection with R package pcadapt version 4}
+\author{Florian Priv\'e,$^{\text{1,2,}*}$ Keurcien Luu,$^{\text{2}}$  John J. McGrath,$^{\text{1,4,5}}$ Bjarni J. Vilhj\'almsson$^{\text{1}}$ and Michael G.B. Blum$^{\text{3,2}}$}
 
 \date{~ }
 \maketitle
 
-\noindent$^{\text{\sf 1}}$National Centre for Register-Based Research, Aarhus University, Aarhus, 8210, Denmark. \\
-\noindent$^{\text{\sf 2}}$Queensland Brain Institute, University of Queensland, St. Lucia, 4072, Queensland, Australia. \\
-\noindent$^{\text{\sf 3}}$Queensland Centre for Mental Health Research, The Park Centre for Mental Health, Wacol, 4076, Queensland, Australia. \\
-\noindent$^{\text{\sf 4}}$OWKIN France, Paris, 75010, France. \\
-\noindent$^{\text{\sf 5}}$Laboratoire TIMC-IMAG, UMR 5525, Univ.\ Grenoble Alpes, La Tronche, 38700, France. \\
+\noindent$^{\text{\sf 1}}$National Centre for Register-based Research, Aarhus University, Aarhus, 8210, Denmark. \\
+\noindent$^{\text{\sf 2}}$Laboratoire TIMC-IMAG, UMR 5525, Univ.\ Grenoble Alpes, La Tronche, 38700, France. \\
+\noindent$^{\text{\sf 3}}$OWKIN France, Paris, 75010, France. \\
+\noindent$^{\text{\sf 4}}$Queensland Brain Institute, University of Queensland, St. Lucia, 4072, Queensland, Australia. \\
+\noindent$^{\text{\sf 5}}$Queensland Centre for Mental Health Research, The Park Centre for Mental Health, Wacol, 4076, Queensland, Australia. \\
 \noindent$^\ast$To whom correspondence should be addressed.\\
 
 \noindent Contacts:
 \begin{itemize}
 \item \url{florian.prive.21@gmail.com}
-\item \url{bjv@econ.au.dk}
 \end{itemize}
 
 \newpage
@@ -103,6 +102,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Results}
+
+To compare performance of newest version of R package pcadapt (v4.1.0) with previously published versions 2 and 3 (we use v3.0.4 here), we use public data of 4342 domestic dogs genotyped at 144,474 variants after quality control \cite[]{hayward2016complex}.
+Previous versions of R package pcadapt used to compute the eigen decomposition of the Genetic Relationship Matrix (GRM). 
+Deriving PCs for this data takes 2111 seconds with pcadapt v3.0.4. Most of the time is taken to compute the GRM, therefore this timing is independent of the number of PCs computed.
+With pcadapt v4.1.0, it takes 35, 60 and 102 seconds to compute K=5, 10 and 20 PCs, respectively. This represents a 60, 35 and 20 folds improvement in computation time.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
