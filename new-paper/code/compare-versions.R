@@ -63,3 +63,17 @@ obj.pcadapt.old <- readRDS("tmp-data/canine-pcadapt-old.rds")
 diag(round(100 * cor(obj.pcadapt$scores, obj.pcadapt.old$scores), 2))
 #  [1]  100 -100  100 -100  100 -100  100  100  100  100 -100  100  100
 # [14]  100 -100 -100 -100 -100  100  100
+
+################################################################################
+
+library(ggplot2)
+ggplot(data.frame(K = c(5, 10, 20), t = c(35, 60, 102) / 60), aes(K, t)) +
+  bigstatsr::theme_bigstatsr() +
+  geom_point(size = 3) +
+  geom_line(size = 1.5) +
+  geom_hline(yintercept = 2111 / 60, linetype = 2, color = "blue", size = 1.5) +
+  labs(x = "Number of PCs used (K)", y = "Computation time (in minutes)") +
+  scale_y_continuous(breaks = seq(0, 60, by = 10),
+                     minor_breaks = seq(0, 60, by = 2))
+
+ggsave("timings.pdf", width = 6, height = 5)

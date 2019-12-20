@@ -94,6 +94,17 @@ Overall, while these changes should to be seamless to the numerous users of pcad
 
 \clearpage
 
+[TO SAY IN THIS PAPER:] On a changé \\
+(DONE) Le format vers PLINK pour que ce soit plus rapide et plus facile de qc.\\
+(DONE) L'algo de PCA pour que ce soit linéaire.\\
+(SKIP?) La façon de gérer les valeurs manquantes.\\
+(DONE) L'option pour le LD.\\
+(SKIP?) Et j'aimerais parler de Maha qu'il faut faire que sur les variants non corrélés et projeter après.\\
+(DONE) Rappeler l'algo initial ? (non changé)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Introduction to previous versions of pcadapt}
 
 Since version 2, pcadapt has been a relatively efficient R package to perform genome scans for selection in continuous populations. 
@@ -103,9 +114,10 @@ In version 4, the main statistical methods behind pcadapt have not changed as co
 
 The pcadapt method first relies on computing the Principal Component Analysis (PCA) of a scaled genotype matrix.
 It then regresses all variants onto the resulting PCs to get a matrix of Z-scores (i.e.\ one Z-score for each variant and each PC).
-Then, it computes robust Mahalanobis distances of these Z-scores to integrate all PCA dimensions in one multivariate distance for each variant.
+Then, it computes robust Mahalanobis distances of these Z-scores in order to summarise all dimensions (i.e.\ all PCs) in one multivariate distance for each variant.
 These distances approximately follow a Chi-squared distribution, which enables to derive one p-value for each genetic variant.
 Method pcadapt basically tests how much each variant contributes to population structure, assuming that outlier variants are indicative of selection.
+One advantage of pcadapt over other proposed methods such as the one from \cite{galinsky2016fast} is that it combines the information of all PCs at once, without having to merge different p-values at the end [REWORD?].
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -113,29 +125,30 @@ Method pcadapt basically tests how much each variant contributes to population s
 \section{File formats}
 
 Previous versions of package pcadapt used the format `pcadapt', which is a text file of characters where each line is storing all individuals' genotypes for one variant (0, 1, 2, and 9 for missing values) separated by spaces.
+It also supported file format `lfmm', which is basically the format `pcadapt' transposed (i.e.\ each line stores an individual, instead of a variant).
 It was also able to convert from `ped' and `vcf' files to format `pcadapt'.
 
-Now, the preferred format of R package pcadapt is PLINK `bed' format. Format `bed' is very compact; it stores each genotype using only 2 bits, making it 8 times smaller than a corresponding `pcadapt' file.
-Moreover, format `bed' can be memory-mapped to be used in both R and C++ almost as a standard R(cpp) matrix; see e.g.\ R package BEDMatrix that provides matrix-like accessors to `bed' files \cite[]{grueneberg2019bgdata}.
+Now, the preferred format of R package pcadapt is `bed', i.e.\ binary `ped' PLINK files. Format `bed' is very compact; it stores each genotype using only 2 bits, making it 8 times smaller than a corresponding `pcadapt' file.
+Moreover, format `bed' can be memory-mapped to be used in both R and C++ almost as a standard R(cpp) matrix; see e.g.\ package BEDMatrix that provides matrix-like accessors to `bed' files \cite[]{grueneberg2019bgdata}.
 Another advantage of this format is that you can use the widely-used piece of software PLINK to convert from `ped' and `vcf' files to `bed' files, as well as performing some quality control \cite[]{chang2015second}.
-If someone already has a `pcadapt' file, function \texttt{read.pcadapt} creates a new file with extension `pcadapt.bed' to be used by main function \texttt{pcadapt}. This is seamless to the user.
+We also developed R package mmapcharr to easily and efficiently read from `pcadapt' and `lfmm' files and convert them to `bed' files.
+For example, if someone already has a `pcadapt' file, function \texttt{read.pcadapt} creates a new file with extension `pcadapt.bed' to be used by main function \texttt{pcadapt}. This is seamless to the user.
 
 
 \section{Computation time}
 
-Previous versions of pcadapt used to compute the eigen decomposition of the Genetic Relationship Matrix (GRM), a time-consuming step.
-In new versions of pcadapt, we use an algorithm based on randomised projections named the implicitly restarted Arnoldi method (IRAM), which has proven to be both very fast and very accurate to compute first PCs \cite[]{Lehoucq1996,abraham2017flashpca2,prive2017efficient}.
+In R package pcadapt, computation time is mainly driven by the computation of first Principal Components (PCs).
+Previous versions of pcadapt used to compute the eigen decomposition of the Genetic Relationship Matrix (GRM).
+Deriving the GRM is quadratic with the number of individuals and linear with the number of variants used.
+
+In new versions of pcadapt, we use an algorithm based on randomised projections named the implicitly restarted Arnoldi method (IRAM), which has proven to be both very fast and very accurate to compute first PCs \cite[]{Lehoucq1996,abraham2017flashpca2,prive2017efficient}. 
+This method makes derivation of first PCs linear with both dimensions of the genotype matrix, making this operation remarkably fast.
 
 To compare performance of newest version of R package pcadapt (v4.1.0 here) with previously published versions 2 and 3 (v3.0.4 here), we use publicly available data of 4342 domestic dogs genotyped at 144,474 variants after quality control \cite[]{hayward2016complex}. 
-Function \texttt{pcadapt} v3.0.4 takes 2111 seconds (35 minutes) for this data, which is mainly driven by the computation of the GRM, therefore this timing is independent of the number of PCs used.
-With pcadapt v4.1.0, it takes only 35, 60 and 102 seconds for K=5, 10 and 20 PCs respectively (Figure \ref{fig:timings}).
-This represents a 60, 35 and 20 folds improvement in computation time. 
+Deriving PCs for this data takes 2111 seconds (35 minutes) with pcadapt v3.0.4. 
+Computing the GRM takes most of the time in computing PCs, therefore this timing is independent of the number of PCs computed.
+With pcadapt v4.1.0, it takes only 35, 60 and 102 seconds to compute K=5, 10 and 20 PCs, respectively. This represents a 60, 35 and 20 folds improvement in computation time. 
 It is very uncommon to use more than 20 PCs in pcadapt.
-
-\begin{figure}[!htpb]
-\centerline{\includegraphics[width=0.6\textwidth]{timings.pdf}}
-\caption{Computation times of \texttt{pcadapt} as a function of the number of PCs used. Black points represent timings with pcadapt v4, and the dashed blue line represents the timing with v3, which is mostly independent of the number of PC used. \label{fig:timings}}
-\end{figure}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -143,12 +156,12 @@ It is very uncommon to use more than 20 PCs in pcadapt.
 \section{Beware of Linkage Disequilibrium}
 
 Linkage disequilibrium can confound genome scans in admixed populations \cite[]{price2008long,abdellaoui2013population,galinsky2016fast}.
-In previous versions of pcadapt, there was only one way to deal with this problem: reduce K, the number of principal components (PCs) used by pcadapt, to include PCs capturing population structure only.
+In previous versions of pcadapt, there was only one way to deal with this problem: reduce K, the number of principal components used by pcadapt, in order to include PCs that capture population structure only.
 In version 4, we have added the possibility to perform LD clumping. 
 LD pruning, a very similar procedure, is generally used, but LD clumping should be preferred \cite[]{prive2017efficient}.
 The LD clumping procedure we implement in pcadapt chooses the first variant with the highest minor allele frequency (MAF), compute the squared correlation of this variant with neighbouring variants, and remove all variants that are too much correlated with this first index variant.
 Then, it chooses the next index variant with the highest MAF (that has not been removed yet) and continue until all variants are either kept or discarded.
-This procedure effectively removes most of the LD problem and enables to use more PCs capturing population structure instead of LD structure.
+This procedure effectively removes most of the LD problem and enables the user to use more PCs that capture population structure instead of LD structure.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -157,10 +170,10 @@ This procedure effectively removes most of the LD problem and enables to use mor
 
 Version 4 of R package pcadapt is much more efficient in terms of disk space, memory and time requirements as compared to its previous versions.
 This enables the analysis of large genotype datasets using a personal laptop.
-Moreover, using the `bed' PLINK format instead of format `pcadapt' makes pcadapt easier to use along with other software, e.g.\ using PLINK for quality control and conversion.
+Moreover, using the `bed' PLINK format instead of our previous custom format `pcadapt' makes pcadapt easier to use along with other software such as using PLINK for quality control and conversion.
 Overall, pcadapt v4 supports all formats that can be converted to the `bed' format, such as `vcf' and `ped'. 
-For the users who have already some existing code using the `pcadapt' format, a seamless conversion to format `bed' is performed when using function \texttt{read.pcadapt}, which makes the code backward compatible.
-It is very much possible that most users are not even aware of the changes in version 4.
+For the users who have already some existing code using the `pcadapt' or `lfmm' format, a seamless conversion to format `bed' is performed when using function \texttt{read.pcadapt}, which makes the code backward compatible.
+It is very much possible that most existing users are not even aware of the changes in version 4.
 This paper aimed at describing what have been improved under the hood.
 
 

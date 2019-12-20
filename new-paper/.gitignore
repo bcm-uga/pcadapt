@@ -6,3 +6,4 @@ tmp-data
 *.out
 *.pdf
 *.synctex.gz
+!timings.pdf
