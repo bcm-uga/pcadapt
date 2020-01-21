@@ -4,9 +4,19 @@
 \alias{plot.pcadapt}
 \title{pcadapt visualization tool}
 \usage{
-\method{plot}{pcadapt}(x, ..., option = "manhattan", i = 1, j = 2,
-  pop, col, chr.info = NULL, snp.info = NULL, plt.pkg = "ggplot",
-  K = NULL)
+\method{plot}{pcadapt}(
+  x,
+  ...,
+  option = "manhattan",
+  i = 1,
+  j = 2,
+  pop,
+  col,
+  chr.info = NULL,
+  snp.info = NULL,
+  plt.pkg = "ggplot",
+  K = NULL
+)
 }
 \arguments{
 \item{x}{an object of class "pcadapt" generated with \code{pcadapt}.}

@@ -16,17 +16,14 @@
 #' display the graphical outputs. Use \code{"plotly"} for interactive plots, or 
 #' \code{"ggplot"} for static plots.
 #' 
-#' @examples
-#' ## see ?pcadapt for examples
-#'
 #' @keywords internal
 #'
-#' @importFrom ggplot2 ggplot ggtitle labs geom_point guides aes aes_string geom_point scale_color_hue
+#' @import ggplot2
 #' @importFrom magrittr "%>%"
 #'
 #' @export
 #'
-score_plot = function(x, i = 1, j = 2, pop, col, plt.pkg = "ggplot"){
+score_plot = function(x, i = 1, j = 2, pop, col, plt.pkg = "ggplot") {
   
   if (attr(x, "K") == 1) {
     j <- 1
@@ -42,21 +39,19 @@ score_plot = function(x, i = 1, j = 2, pop, col, plt.pkg = "ggplot"){
   
   df <- data.frame(PC_i = x$scores[, i], PC_j = x$scores[, j])    
   
-  if (!missing(pop)) {
-    df$Pop <- pop
-  }
+  if (!missing(pop)) df$Pop <- pop
   
   if (plt.pkg == "ggplot") {
-    res.plot <- ggplot2::ggplot(df, aes_string("PC_i", "PC_j")) + 
-      ggplot2::geom_point() + 
-      ggplot2::ggtitle(paste0("Projection onto PC", i, " and PC", j)) +
-      ggplot2::labs(x = paste0("PC", i), y = paste0("PC", j))
+    res.plot <- ggplot(df, aes_string("PC_i", "PC_j")) + 
+      geom_point() + 
+      ggtitle(paste0("Projection onto PC", i, " and PC", j)) +
+      labs(x = paste0("PC", i), y = paste0("PC", j))
     
     if (!missing(pop)) {
       res.plot <- res.plot + 
-        ggplot2::geom_point(aes(colour = factor(df$Pop)))
+        geom_point(aes(colour = factor(df$Pop)))
       if (missing(col)) {
-        res.plot <- res.plot + ggplot2::scale_color_hue(name = "")
+        res.plot <- res.plot + scale_color_hue(name = "")
       } else {
         if (length(col) < length(unique(pop))) {
           pers.col <- c(col, rainbow(length(unique(pop)) - length(col)))
@@ -66,11 +61,15 @@ score_plot = function(x, i = 1, j = 2, pop, col, plt.pkg = "ggplot"){
           pers.col <- col[1:length(unique(pop))]
         }
         res.plot <- res.plot + 
-          ggplot2::scale_color_manual(name = "", values = pers.col)
+          scale_color_manual(name = "", values = pers.col)
       }
     }
     print(res.plot)
   } else if (plt.pkg == "plotly") {
+    
+    if (!requireNamespace("plotly", quietly = TRUE))
+      stop("Please install package 'plotly'.")
+    
     if (missing(pop)) {
       p0 <- plotly::plot_ly(df, 
                             x = ~PC_i, 
@@ -80,7 +79,7 @@ score_plot = function(x, i = 1, j = 2, pop, col, plt.pkg = "ggplot"){
                             type = "scatter", 
                             hoverinfo = "text") %>%
         plotly::layout(title = paste0("Projection onto PC", i, " and PC", j), 
-                       xaxis = list(title = paste0("PC", i), showgrid = F),      
+                       xaxis = list(title = paste0("PC", i), showgrid = FALSE),      
                        yaxis = list(title = paste0("PC", j)))
     } else if (!missing(pop)) {
       p0 <- plotly::plot_ly(df, 
@@ -92,7 +91,7 @@ score_plot = function(x, i = 1, j = 2, pop, col, plt.pkg = "ggplot"){
                             type = "scatter", 
                             hoverinfo = "text") %>%
         plotly::layout(title = paste0("Projection onto PC", i, " and PC", j), 
-                       xaxis = list(title = paste0("PC", i), showgrid = F),      
+                       xaxis = list(title = paste0("PC", i), showgrid = FALSE),      
                        yaxis = list(title = paste0("PC", j)))  
     }
     print(p0)

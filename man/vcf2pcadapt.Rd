@@ -7,18 +7,15 @@
 vcf2pcadapt(input, output = "tmp.pcadapt", allele.sep = c("/", "|"))
 }
 \arguments{
-\item{input}{a character string specifying the name of the file to be
-converted.}
+\item{input}{a character string specifying the name of the file to be converted.}
 
 \item{output}{a character string indicating the name of the output file.}
 
-\item{allele.sep}{a vector of characters indicating what delimiters are used to separate alleles.}
+\item{allele.sep}{a vector of characters indicating what delimiters are used
+to separate alleles.}
 }
 \description{
-\code{vcf2pcadapt} uses the package \code{vcfR} to extract the genotype information from a vcf file and exports it
-under the format required by \code{pcadapt}.
-}
-\examples{
-## see also ?pcadapt for examples
-
+\code{vcf2pcadapt} uses the package \code{vcfR} to extract the genotype information 
+from a vcf file and exports it under the format required by \code{pcadapt}.
+Note that this VCF converter is not maintained anymore. Please use PLINK.
 }

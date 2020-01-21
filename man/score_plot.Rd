@@ -28,8 +28,4 @@ display the graphical outputs. Use \code{"plotly"} for interactive plots, or
 \code{"score_plot"} plots the projection of the individuals onto the 
 first two principal components.
 }
-\examples{
-## see ?pcadapt for examples
-
-}
 \keyword{internal}

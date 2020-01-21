@@ -16,8 +16,4 @@ be associated with.}
 \code{hist_plot} plots the histogram of the chi-squared statistics, as well 
 as the estimated null distribution.
 }
-\examples{
-## see ?pcadapt for examples
-
-}
 \keyword{internal}

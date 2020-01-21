@@ -4,7 +4,7 @@
 \alias{manhattan_plot}
 \title{Manhattan Plot}
 \usage{
-manhattan_plot(x, chr.info, snp.info, plt.pkg, K = 1)
+manhattan_plot(x, chr.info, snp.info, plt.pkg = "ggplot", K = 1)
 }
 \arguments{
 \item{x}{an object of class "pcadapt" generated with \code{pcadapt} 
@@ -25,9 +25,5 @@ display the graphical outputs. Use \code{"plotly"} for interactive plots, or
 \description{
 \code{manhattan_plot} displays a Manhattan plot which represents the p-values 
 for each SNP for a particular test statistic.
-}
-\examples{
-## see ?pcadapt for examples
-
 }
 \keyword{internal}

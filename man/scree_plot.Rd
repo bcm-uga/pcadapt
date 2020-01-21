@@ -4,19 +4,16 @@
 \alias{scree_plot}
 \title{Principal Components Analysis Scree Plot}
 \usage{
-scree_plot(x, K)
+scree_plot(x, K = NULL)
 }
 \arguments{
 \item{x}{an output from \code{pcadapt} containing the singular values.}
 
-\item{K}{an integer specifying the number of components to take into account in the scree plot.}
+\item{K}{an integer specifying the number of components to plot.}
 }
 \description{
-\code{scree_plot} plots the scee plot associated with the principal components analysis performed on the dataset.
-NB : \code{pcadapt} has to be run on the dataset in order to get an output readable by \code{plot.screePlot}
-}
-\examples{
-## see ?fastpcadapt for examples
-
+\code{scree_plot} plots the scee plot associated with the principal components 
+analysis performed on the dataset. NB : \code{pcadapt} has to be run on the
+dataset in order to get an output readable by \code{plot.screePlot}
 }
 \keyword{internal}

@@ -14,8 +14,4 @@ qq_plot(x, K = 1)
 \description{
 \code{qq_plot} plots a Q-Q plot of the p-values computed.
 }
-\examples{
-## see ?pcadapt for examples
-
-}
 \keyword{internal}

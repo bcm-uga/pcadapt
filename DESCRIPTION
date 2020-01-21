@@ -1,13 +1,15 @@
 Package: pcadapt
 Type: Package
 Title: Fast Principal Component Analysis for Outlier Detection
-Version: 4.1.0
-Date: 2019-02-26
-Authors@R: c(person("Keurcien", "Luu", role = c("aut"), email = "keurcien.luu@univ-grenoble-alpes.fr"), 
-          person("Michael", "Blum", role = c("aut", "cre"), email = "michael.blum@univ-grenoble-alpes.fr"),
-          person("Florian", "Privé", role = c("aut"), email = "florian.prive.21@gmail.com"),
-          person("Eric", "Bazin", role = c("ctb"), email = "eric.bazin@univ-grenoble-alpes.fr"),
-          person("Nicolas", "Duforet-Frebourg", role = c("ctb")))
+Version: 4.2.0
+Date: 2020-01-21
+Authors@R: c(
+    person("Keurcien", "Luu", role = c("aut")), 
+    person("Michael", "Blum", role = c("aut")),
+    person("Florian", "Privé", role = c("aut", "cre"), 
+           email = "florian.prive.21@gmail.com"),
+    person("Eric", "Bazin", role = c("ctb")),
+    person("Nicolas", "Duforet-Frebourg", role = c("ctb")))
 Description: Methods to detect genetic markers involved in biological
     adaptation. 'pcadapt' provides statistical tools for outlier detection based on
     Principal Component Analysis. Implements the method described in (Luu, 2016)
@@ -18,19 +20,19 @@ Imports:
     ggplot2, 
     magrittr,
     mmapcharr (>= 0.3),
-    plotly,
     Rcpp (>= 0.12.8),  
     robust,
-    RSpectra,
-    vcfR
+    RSpectra
 LinkingTo: Rcpp, rmio, mmapcharr
 LazyData: TRUE
 Suggests: 
+    covr,
     knitr,
+    plotly,
     rmarkdown,
-    testthat,
     shiny,
-    covr
-RoxygenNote: 6.1.0
+    testthat,
+    vcfR
+RoxygenNote: 7.0.2
 VignetteBuilder: knitr
 Encoding: UTF-8
