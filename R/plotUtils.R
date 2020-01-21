@@ -1,3 +1,322 @@
+################################################################################
+
+#' Principal Components Analysis Scree Plot
+#'
+#' \code{scree_plot} plots the scee plot associated with the principal components 
+#' analysis performed on the dataset. NB : \code{pcadapt} has to be run on the
+#' dataset in order to get an output readable by \code{plot.screePlot}
+#'
+#' @param x an output from \code{pcadapt} containing the singular values.
+#' @param K an integer specifying the number of components to plot.
+#'
+#' @keywords internal
+#' 
+#' @import ggplot2
+#' 
+#' @export
+#'
+scree_plot = function(x, K = NULL) {
+  
+  if (is.null(K)) K <- attr(x, "K")
+  
+  if (K < 2) {
+    warning("The scree plot is not available for K=1.")
+  } else {
+    p0 <- qplot(x = 1:K, y = (x$singular.values[1:K]) ^ 2, col = "red", 
+                xlab = "PC", ylab = "Proportion of explained variance") + 
+      geom_line() + guides(colour = FALSE) +
+      ggtitle(paste("Scree Plot - K =", K))
+    print(p0)
+  }
+}
+
+################################################################################
+
+#' Principal Components Analysis Scores Plot
+#'
+#' \code{"score_plot"} plots the projection of the individuals onto the 
+#' first two principal components.
+#'
+#' @param x an output from \code{pcadapt} containing the scores.
+#' @param i an integer indicating onto which principal component the individuals
+#'  are projected when the "scores" option is chosen.
+#' Default value is set to \code{1}.
+#' @param j an integer indicating onto which principal component the individuals 
+#' are projected when the "scores" option is chosen.
+#' Default value is set to \code{2}.
+#' @param pop a list of integers or strings specifying which subpopulation the 
+#' individuals belong to.
+#' @param plt.pkg a character string specifying the package to be used to 
+#' display the graphical outputs. Use \code{"plotly"} for interactive plots, or 
+#' \code{"ggplot"} for static plots.
+#' 
+#' @keywords internal
+#'
+#' @import ggplot2
+#' @importFrom magrittr "%>%"
+#'
+#' @export
+#'
+score_plot = function(x, i = 1, j = 2, pop, col, plt.pkg = "ggplot") {
+  
+  if (attr(x, "K") == 1) {
+    j <- 1
+  }
+  
+  if (i > attr(x, "K")) {
+    stop(paste0("i can't exceed ", attr(x, "K"), "."))
+  }
+  
+  if (j > attr(x, "K")) {
+    stop(paste0("j can't exceed ", attr(x, "K"), "."))
+  }
+  
+  df <- data.frame(PC_i = x$scores[, i], PC_j = x$scores[, j])    
+  
+  if (!missing(pop)) df$Pop <- pop
+  
+  if (plt.pkg == "ggplot") {
+    res.plot <- ggplot(df, aes_string("PC_i", "PC_j")) + 
+      geom_point() + 
+      ggtitle(paste0("Projection onto PC", i, " and PC", j)) +
+      labs(x = paste0("PC", i), y = paste0("PC", j))
+    
+    if (!missing(pop)) {
+      res.plot <- res.plot + 
+        geom_point(aes(colour = factor(df$Pop)))
+      if (missing(col)) {
+        res.plot <- res.plot + scale_color_hue(name = "")
+      } else {
+        if (length(col) < length(unique(pop))) {
+          pers.col <- c(col, rainbow(length(unique(pop)) - length(col)))
+        } else if (length(col) == length(unique(pop))) {
+          pers.col <- col
+        } else if (length(col) > length(unique(pop))) {
+          pers.col <- col[1:length(unique(pop))]
+        }
+        res.plot <- res.plot + 
+          scale_color_manual(name = "", values = pers.col)
+      }
+    }
+    print(res.plot)
+  } else if (plt.pkg == "plotly") {
+    
+    if (!requireNamespace("plotly", quietly = TRUE))
+      stop("Please install package 'plotly'.")
+    
+    if (missing(pop)) {
+      p0 <- plotly::plot_ly(df, 
+                            x = ~PC_i, 
+                            y = ~PC_j, 
+                            text = ~paste('Ind: ', 1:nrow(x$scores)),
+                            mode = "markers", 
+                            type = "scatter", 
+                            hoverinfo = "text") %>%
+        plotly::layout(title = paste0("Projection onto PC", i, " and PC", j), 
+                       xaxis = list(title = paste0("PC", i), showgrid = FALSE),      
+                       yaxis = list(title = paste0("PC", j)))
+    } else if (!missing(pop)) {
+      p0 <- plotly::plot_ly(df, 
+                            x = ~PC_i, 
+                            y = ~PC_j, 
+                            color = pop, 
+                            text = ~paste('Ind: ', 1:nrow(x$scores)),
+                            mode = "markers", 
+                            type = "scatter", 
+                            hoverinfo = "text") %>%
+        plotly::layout(title = paste0("Projection onto PC", i, " and PC", j), 
+                       xaxis = list(title = paste0("PC", i), showgrid = FALSE),      
+                       yaxis = list(title = paste0("PC", j)))  
+    }
+    print(p0)
+  }
+}
+
+################################################################################
+
+#' Neutral Distribution Estimation
+#'
+#' \code{hist_plot} plots the histogram of the chi-squared statistics, as well 
+#' as the estimated null distribution.
+#'
+#' @param x an output from \code{outlier} containing the chi-squared statistics.
+#' @param K an integer indicating which principal component the histogram will 
+#' be associated with.
+#' 
+#' @keywords internal
+#'
+#' @import ggplot2
+#'
+#' @export
+#' 
+hist_plot = function(x, K) {
+  
+  maf.idx <- (x$maf >= attr(x, "min.maf"))
+  
+  if (attr(x, "method") == "componentwise") {
+    k <- K
+    z <- x$chi2.stat[maf.idx, k]
+  } else if (attr(x, "method") != "componentwise") {
+    k <- attr(x, "K")
+    z <- x$chi2.stat[maf.idx]
+  }
+  
+  min.z <- floor  (min(z, na.rm = TRUE))
+  max.z <- ceiling(max(z, na.rm = TRUE))
+  
+  if (max.z > 1e5)
+    stop("Can't display the histogram as the values are too high.")
+  
+  t <- seq(min.z, max.z, length = length(z))
+  
+  ggplot(data.frame(abs = t, ord = stats::dchisq(t, df = k), chi2 = z)) + 
+    geom_histogram(aes_string(x = "chi2", y = "..density.."), binwidth = 0.5, 
+                   fill = "#B0E2FF", alpha = 0.6, colour = "black") + 
+    geom_line(aes_string(x = "abs", y = "ord"), col = "#4F94CD", size = 1) + 
+    ggtitle("Statistics distribution")
+}
+
+################################################################################
+
+#' Manhattan Plot
+#'
+#' \code{manhattan_plot} displays a Manhattan plot which represents the p-values 
+#' for each SNP for a particular test statistic.
+#'
+#' @param x an object of class "pcadapt" generated with \code{pcadapt} 
+#' containing the p-values of interest.
+#' @param chr.info a list containing the chromosome information for each marker.
+#' @param snp.info a list containing the names of all genetic markers present in
+#' the input.
+#' @param K an integer specifying which principal component to display when 
+#' \code{method="componentwise"}.
+#' @param plt.pkg a character string specifying the package to be used to 
+#' display the graphical outputs. Use \code{"plotly"} for interactive plots, or 
+#' \code{"ggplot"} for static plots.
+#' 
+#' @keywords internal
+#'
+#' @import ggplot2
+#'
+#' @export
+#'
+manhattan_plot = function(x, chr.info, snp.info, plt.pkg = "ggplot", K = 1) {
+  
+  if (attr(x, "method") == "componentwise") {
+    if (K > attr(x, "K")) {
+      stop(paste0("K can't exceed ", attr(x, "K")), ".")
+    }
+    notNA.idx <- !is.na(x$pvalues[, K])
+  } else {
+    notNA.idx <- !is.na(x$pvalues)
+  }
+  
+  if (plt.pkg == "ggplot") {
+    if (!is.null(chr.info)) {
+      chr.int <- chr.info %% 2
+      df <- data.frame(x = which(notNA.idx), 
+                       y = -as.numeric(pchisq(x$chi2.stat[notNA.idx], 
+                                              df = attr(x, "K"), 
+                                              lower.tail = FALSE, 
+                                              log.p = TRUE) / log(10)),
+                       chr = chr.int[notNA.idx])
+      res.plot <- ggplot(df, aes_string("x", "y")) + 
+        geom_point(aes(colour = factor(df$chr))) + 
+        guides(colour = FALSE) +
+        scale_color_manual(values = c("black", "grey"))
+    } else {
+      df <- data.frame(x = which(notNA.idx), 
+                       y = -as.numeric(pchisq(x$chi2.stat[notNA.idx], 
+                                              df = attr(x, "K"), 
+                                              lower.tail = FALSE, 
+                                              log.p = TRUE) / log(10)))
+      res.plot <- ggplot(df, aes_string("x", "y")) + geom_point()
+    }
+    res.plot <- res.plot + ggtitle("Manhattan Plot") +
+      labs(x = paste0("SNP (with mAF>", attr(x, "min.maf"), ")"), 
+           y = "-log10(p-values)")
+    print(res.plot)
+  } else if (plt.pkg == "plotly") {
+    
+    if (!requireNamespace("plotly", quietly = TRUE))
+      stop("Please install package 'plotly'.")
+    
+    df <- data.frame(xx = seq_along(x$pvalues)[notNA.idx], 
+                     yy = -as.numeric(pchisq(x$chi2.stat[notNA.idx], 
+                                             df = attr(x, "K"), 
+                                             lower.tail = FALSE, 
+                                             log.p = TRUE) / log(10))[notNA.idx])
+    if (is.null(snp.info)) {
+      txt <- seq_along(x$pvalues)[notNA.idx]
+    } else {
+      txt <- snp.info[notNA.idx]
+    }
+    
+    if (is.null(chr.info)) {
+      p0 <- plotly::plot_ly(df, 
+                            x = ~xx, y = ~yy,
+                            text = ~paste('SNP: ', txt),
+                            marker = list(color = "#132B43"),
+                            mode = "markers", 
+                            type = "scatter", 
+                            hoverinfo = "text")
+      p1 <- plotly::layout(p0, title = "Manhattan Plot", 
+                           xaxis = list(title = "Index", showgrid = FALSE),      
+                           yaxis = list(title = "-log10(p-values)"),
+                           showlegend = FALSE)
+    } else {
+      chr <- chr.info[notNA.idx] %% 2
+      p0 <- plotly::plot_ly(df, x = ~xx, y = ~yy,
+                            text = ~paste(paste0("Chr: ", chr.info[notNA.idx]), 
+                                          sep = "<br>", 
+                                          paste0("SNP: ", txt)),
+                            color = as.character(chr),
+                            colors = c("#56B1F7", "#132B43"),
+                            mode = "markers", 
+                            type = "scatter", 
+                            hoverinfo = "text")
+      p1 <- plotly::layout(p0, title = "Manhattan Plot", 
+                           xaxis = list(title = "Index", showgrid = FALSE),      
+                           yaxis = list(title = "-log10(p-values)"),
+                           showlegend = FALSE)
+    }
+    print(p1)
+  }
+}
+
+################################################################################
+
+#' p-values Q-Q Plot
+#'
+#' \code{qq_plot} plots a Q-Q plot of the p-values computed.
+#'
+#' @param x an output from \code{outlier} containing the p-values of interest.
+#' @param K an integer specifying which principal component to display when \code{method="componentwise"}.
+#'
+#' @keywords internal
+#'
+#' @import ggplot2
+#'
+#' @export
+#'
+qq_plot = function(x, K = 1) {
+  
+  if (attr(x, "method") == "componentwise") {
+    sorted.pval <- sort(x$pvalues[x$maf >= attr(x, "min.maf"), K])
+  } else {
+    sorted.pval <- sort(x$pvalues[x$maf >= attr(x, "min.maf")])
+  }
+  expected.p <- stats::ppoints(length(sorted.pval))
+  qplot(-log10(expected.p), -log10(sorted.pval), col = "red", 
+        xlab = "Expected -log10(p-values)", 
+        ylab = "Observed -log10(p-values)") + 
+    geom_abline() +
+    ggtitle("Q-Q plot") + 
+    guides(colour = FALSE)
+}
+
+################################################################################
+
 #' pcadapt visualization tool
 #'
 #' \code{plot.pcadapt} is a method designed for objects of class \code{pcadapt}.
@@ -116,3 +435,5 @@ plot.pcadapt = function(x,
     }
   }
 }
+
+################################################################################
