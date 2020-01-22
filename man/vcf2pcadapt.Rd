@@ -19,3 +19,4 @@ to separate alleles.}
 from a vcf file and exports it under the format required by \code{pcadapt}.
 Note that this VCF converter is not maintained anymore. Please use PLINK.
 }
+\keyword{internal}

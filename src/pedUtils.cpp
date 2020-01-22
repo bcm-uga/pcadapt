@@ -1,9 +1,12 @@
+/******************************************************************************/
+
 #include <Rcpp.h>
-#include <R.h>
 
 using namespace Rcpp;
 
 #define SEP " \t\n"
+
+/******************************************************************************/
 
 void print_error_global(const char *msg, char *file, int n){
   Rprintf("\n");
@@ -137,6 +140,8 @@ char* next_token(char* input_file, int i, int j){
   return token;
 }
 
+/******************************************************************************/
+
 void test_token_ped(char token, int j, int i, char* input_file){
   if (!(token == '0' || token == '1' || token == '2' || token == 'A' || token == 'C' || token == 'T' || token == 'G')){
     Rprintf("Error: in file %s, line %d, one allele of SNP %d is '%c' and not 0, 1, 2, A, C, T, or G.\n", input_file, i, j, token);
@@ -144,12 +149,7 @@ void test_token_ped(char token, int j, int i, char* input_file){
   }
 }
 
-void test_token_lfmm(char token, int j, int i, char* input_file){
-  if (!(token == '0' || token == '1' || token == '2' || token == '9')){
-    Rprintf("Error: in file %s, line %d, one allele of SNP %d is '%c' and not 0, 1, 2 or 9.\n", input_file, i, j, token);
-    stop("File conversion aborted.");
-  }
-}
+/******************************************************************************/
 
 void fill_line_ped(int *data, char* szbuff, int M, int i, char* input_file, FILE *File, char *ref){
   char *token1, *token2;
@@ -206,29 +206,7 @@ void fill_line_ped(int *data, char* szbuff, int M, int i, char* input_file, FILE
   test_column(input_file, File, j, i + 1, M, token1);
 }
 
-void fill_line_lfmm(int *data, char* szbuff, int M, int i, char* input_file, FILE *File, char *ref){
-  char* token1;
-  int tmp;
-  int j = 0;
-  token1 = strtok(szbuff, SEP);
-  while (token1 && token1[0] != EOF && token1[0] != 10 && j < M){
-    test_token_lfmm(token1[0], j + 1, i + 1, input_file);
-    tmp = 0;
-    if (token1[0] == '0'){
-      tmp = 0;
-    } else if (token1[0] == '1'){
-      tmp = 1;
-    } else if (token1[0] == '2'){
-      tmp = 2;
-    } else {
-      tmp = 9;
-    }
-    data[i * M + j] = tmp;
-    token1 = strtok(NULL, SEP);
-    j++;
-  }
-  test_column(input_file, File, j, i + 1, M, token1);
-}
+/******************************************************************************/
 
 void read_ped(char* input_file, int N, int M, int* data){
   FILE *File = NULL;
@@ -250,25 +228,7 @@ void read_ped(char* input_file, int N, int M, int* data){
   delete[] ref;
 }
 
-void read_lfmm(char* input_file, int N, int M, int* data){
-  FILE *File = NULL;
-  int max_char_per_line = 5 * (M) + 20;
-  char *szbuff = new char[max_char_per_line];
-  char *ref = new char[M];
-  for (int i = 0; i < M; i++){
-    ref[i] = '0';
-  }
-  File = fopen(input_file, "r");
-  int i = 0;
-  while (fgets(szbuff, max_char_per_line, File) && i < N){
-    fill_line_lfmm(data, szbuff, M, i, input_file, File, ref);
-    i++;
-  }
-  test_line(input_file, File, i, N);
-  fclose(File);
-  delete[] szbuff;
-  delete[] ref;
-}
+/******************************************************************************/
 
 void ped2geno(char *input_file, char* output_file, int *N, int *M){
   int nb;
@@ -281,17 +241,7 @@ void ped2geno(char *input_file, char* output_file, int *N, int *M){
   delete[] data;
 }
 
-void lfmm2geno(char *input_file, char* output_file, int *N, int *M){
-  int nb;
-  nb = nb_cols_lfmm(input_file);
-  *M = nb;
-  *N = nb_lines(input_file, nb);
-  long int size = (long int) (*N) * (long int)(*M);
-  int *data = new int[size];
-  read_lfmm(input_file, *N, *M, data);
-  write_geno(output_file, *N, *M, data);
-  delete[] data;
-}
+/******************************************************************************/
 
 //' Summary
 //'
@@ -303,8 +253,7 @@ void lfmm2geno(char *input_file, char* output_file, int *N, int *M){
 //' @param N an integer specifying the number of individuals present in the data.
 //' @param pool an integer specifying the type of data. `0` for genotype data, `1` for pooled data.
 //'
-//' @examples
-//' ## see also ?pcadapt for examples
+//' @keywords internal
 //'
 // [[Rcpp::export]]
 void print_convert(std::string input, std::string output, int M, int N, int pool){
@@ -329,6 +278,8 @@ void print_convert(std::string input, std::string output, int M, int N, int pool
   }
 }
 
+/******************************************************************************/
+
 //' Convert ped files
 //'
 //' \code{ped2pcadapt} converts \code{ped} files to the format \code{pcadapt}.
@@ -336,9 +287,6 @@ void print_convert(std::string input, std::string output, int M, int N, int pool
 //' @param input a character string specifying the name of the file to be converted.
 //' @param output a character string specifying the name of the output file.
 //' 
-//' @examples
-//' ## see also ?pcadapt for examples
-//'
 //' @keywords internal
 //'
 // [[Rcpp::export]]
@@ -358,37 +306,4 @@ int ped2pcadapt(std::string input, std::string output){
   return(0);
 }
 
-//' Convert lfmm files
-//'
-//' \code{lfmm2pcadapt} converts \code{lfmm} files to the format \code{pcadapt}.
-//'
-//' @param input a character string specifying the name of the file to be converted.
-//' @param output a character string specifying the name of the output file.
-//' 
-//' @examples
-//' ## see also ?pcadapt for examples
-//'
-//' @keywords internal
-//'
-// [[Rcpp::export]]
-int lfmm2pcadapt(std::string input, std::string output){
-  int M;
-  int N;
-  char *writable_in = new char[input.size() + 1];
-  std::copy(input.begin(), input.end(), writable_in);
-  writable_in[input.size()] = '\0';
-  char *writable_out = new char[output.size() + 1];
-  std::copy(output.begin(), output.end(), writable_out);
-  writable_out[output.size()] = '\0';
-  lfmm2geno(writable_in, writable_out, &N, &M);
-  print_convert(writable_in, writable_out, M, N, 0);
-  delete[] writable_in;
-  delete[] writable_out;
-  return(0);
-}
-
-
-
-
-
-
+/******************************************************************************/

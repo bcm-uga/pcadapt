@@ -8,6 +8,8 @@
 #' @param output a character string indicating the name of the output file.
 #' @param allele.sep a vector of characters indicating what delimiters are used
 #'   to separate alleles.
+#'   
+#' @keywords internal
 #' 
 #' @export
 #'

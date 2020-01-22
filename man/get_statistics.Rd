@@ -22,3 +22,4 @@ associated p-values.
 \description{
 \code{get_statistics} returns chi-squared distributed statistics.
 }
+\keyword{internal}

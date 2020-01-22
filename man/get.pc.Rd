@@ -15,7 +15,3 @@ get.pc(x, list)
 \code{get.pc} returns a data frame such that each row contains the index of
 the genetic marker and the principal component the most correlated with it.
 }
-\examples{
-## see also ?pcadapt for examples
-
-}

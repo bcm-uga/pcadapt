@@ -20,7 +20,4 @@ print_convert(input, output, M, N, pool)
 \description{
 \code{print_convert} prints out a summary of the file conversion.
 }
-\examples{
-## see also ?pcadapt for examples
-
-}
+\keyword{internal}

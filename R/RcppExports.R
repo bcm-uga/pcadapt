@@ -35,8 +35,7 @@ nb_nona <- function(obj, ind_col) {
 #' @param N an integer specifying the number of individuals present in the data.
 #' @param pool an integer specifying the type of data. `0` for genotype data, `1` for pooled data.
 #'
-#' @examples
-#' ## see also ?pcadapt for examples
+#' @keywords internal
 #'
 print_convert <- function(input, output, M, N, pool) {
     invisible(.Call(`_pcadapt_print_convert`, input, output, M, N, pool))
@@ -49,29 +48,10 @@ print_convert <- function(input, output, M, N, pool) {
 #' @param input a character string specifying the name of the file to be converted.
 #' @param output a character string specifying the name of the output file.
 #' 
-#' @examples
-#' ## see also ?pcadapt for examples
-#'
 #' @keywords internal
 #'
 ped2pcadapt <- function(input, output) {
     .Call(`_pcadapt_ped2pcadapt`, input, output)
-}
-
-#' Convert lfmm files
-#'
-#' \code{lfmm2pcadapt} converts \code{lfmm} files to the format \code{pcadapt}.
-#'
-#' @param input a character string specifying the name of the file to be converted.
-#' @param output a character string specifying the name of the output file.
-#' 
-#' @examples
-#' ## see also ?pcadapt for examples
-#'
-#' @keywords internal
-#'
-lfmm2pcadapt <- function(input, output) {
-    .Call(`_pcadapt_lfmm2pcadapt`, input, output)
 }
 
 pMatVec4 <- function(obj, ind_col, af, ploidy, x) {
@@ -91,9 +71,6 @@ cpMatVec4 <- function(obj, ind_col, af, ploidy, x) {
 #' @param output a character string indicating the name of the output file.
 #' @param allele.sep a vector of characters indicating what delimiters are used 
 #' to separate alleles.
-#'
-#' @examples
-#' ## see also ?pcadapt for examples
 #'
 #' @keywords internal
 #'

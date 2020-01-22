@@ -78,17 +78,14 @@ get.pop.names = function(pop){
 #' @param x an object of class `pcadapt`. 
 #' @param list a list of integers corresponding to the indices of the markers of interest.
 #'
-#' @examples
-#' ## see also ?pcadapt for examples
-#'
 #' @export
 #'
-get.pc = function(x, list){
+get.pc <- function(x, list) {
   rem.na <- which(!is.na(x$zscores[list, 1]))
   v <- vector(mode = "numeric", length = length(list))
-  v[rem.na] <- sapply(list[rem.na], FUN = function(h){which(x$zscores[h, ]^2 == max(x$zscores[h, ]^2, na.rm = TRUE))})
-  df <- data.frame(SNP = list, PC = v)
-  return(df)
+  v[rem.na] <- sapply(list[rem.na], FUN = function(h) {
+    which(x$zscores[h, ]^2 == max(x$zscores[h, ]^2, na.rm = TRUE))})
+  data.frame(SNP = list, PC = v)
 }
 
 ################################################################################

@@ -14,8 +14,4 @@ ped2pcadapt(input, output)
 \description{
 \code{ped2pcadapt} converts \code{ped} files to the format \code{pcadapt}.
 }
-\examples{
-## see also ?pcadapt for examples
-
-}
 \keyword{internal}

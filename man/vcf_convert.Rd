@@ -18,8 +18,4 @@ to separate alleles.}
 \code{vcf_convert} converts outputs of \code{extract.gt} to the format 
 \code{pcadapt}.
 }
-\examples{
-## see also ?pcadapt for examples
-
-}
 \keyword{internal}

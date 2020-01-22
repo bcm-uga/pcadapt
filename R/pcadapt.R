@@ -148,9 +148,7 @@ pcadapt.pcadapt_pool <- function(input,
   }
   
   w[pass, ] <- obj.pca$v[, 1:K, drop = FALSE]
-  res <- get_statistics(w, 
-                        method = method, 
-                        pass = pass)
+  res <- get_statistics(w, method = method, pass = pass)
 
   structure(
     list(
@@ -186,8 +184,10 @@ pcadapt.pcadapt_pool <- function(input,
 #' associated p-values.
 #' 
 #' @importFrom stats median na.omit pchisq qchisq
+#' 
+#' @keywords internal
 #'
-get_statistics = function(zscores, method, pass) {
+get_statistics <- function(zscores, method, pass) {
   
   nSNP <- nrow(zscores)
   K <- ncol(zscores)

@@ -63,9 +63,6 @@ int check_line_na(CharacterVector string_geno_row, CharacterVector geno_char){
 //' @param allele.sep a vector of characters indicating what delimiters are used 
 //' to separate alleles.
 //'
-//' @examples
-//' ## see also ?pcadapt for examples
-//'
 //' @keywords internal
 //'
 // [[Rcpp::export]]
