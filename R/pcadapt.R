@@ -77,7 +77,7 @@ pcadapt <- function(input,
     }
     shiny::runApp(appDir, display.mode = "normal")  
   } else {
-    if (grepl("^pcadapt_", class(input))) {
+    if (any(grepl("^pcadapt_", class(input)))) {
       UseMethod("pcadapt")
     } else {
       stop("Remember to always use read.pcadapt() before using pcadapt().")

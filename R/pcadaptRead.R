@@ -37,7 +37,7 @@ read.pcadapt <- function(input,
                          ## only when type == "vcf"
                          allele.sep = c("/", "|"), 
                          ## deprecated arguments
-                         pop.sizes, ploidy, local.env, blocksize){
+                         pop.sizes, ploidy, local.env, blocksize) {
   
   # In version 3.1.0, arguments 'local.env' and 'blocksize' have been removed
   if (!missing(local.env)) warning("Argument 'local.env' is deprecated.")
@@ -48,9 +48,9 @@ read.pcadapt <- function(input,
   
   type <- match.arg(type)
   
-  if (class(input) == "character") {
+  if (any(class(input) == "character")) {
     file2other(input, type, match.arg(type.out), match.arg(allele.sep))
-  } else if (class(input) %in% c("matrix", "data.frame", "array")) {
+  } else if (any(class(input) %in% c("matrix", "data.frame", "array"))) {
     matrix2other(input, type)
   } else {
     stop("Input should be a file path or a matrix-like object.")
@@ -64,7 +64,7 @@ check_file_size <- function(file) {
   if (file.size(file) > 2e9) {
     stop(paste0("It seems that the input file is quite large.\n",
                 "For large 'vcf' or 'ped' files, ", 
-                "please use PLINK (> 1.9) to convert them in 'bed'."))
+                "please use PLINK (>= 1.9) to convert them to 'bed' format."))
   }
 }
 
