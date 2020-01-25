@@ -11,7 +11,9 @@ getInverseCode <- function() {
   r
 }
 
-CODE_0123 <- mmapcharr:::CODE_012; CODE_0123[is.na(CODE_0123)] <- 3L
+CODE_012 <- rep(NA_integer_, 256); CODE_012[49:51] <- 0:2
+
+CODE_0123 <- replace(CODE_012, is.na(CODE_012), 3L)
 
 ################################################################################
 

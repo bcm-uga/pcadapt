@@ -26,7 +26,5 @@ bed2matrix <- function(bedfile, n = NULL, p = NULL) {
   } 
   
   xptr <- bedXPtr(bedfile, n, p)
-  mat <- bed2mat(xptr)
-  mat[mat == 3] <- NA
-  mat
+  bed2mat(xptr)
 }

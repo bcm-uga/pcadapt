@@ -31,3 +31,10 @@ expect_equal(attr(bedfile2, "n"), P)
 expect_equal(attr(bedfile2, "p"), N)
 
 ################################################################################
+
+# Access the bedfile as a matrix
+matNA <- ifelse(mat == 9, NA, mat)
+expect_equal(bed2matrix(bedfile2), t(matNA))
+expect_equal(bed2matrix(bedfile), matNA)
+
+################################################################################

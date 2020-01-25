@@ -101,11 +101,12 @@ file2other <- function(input, type.in, type.out, allele.sep) {
   }
   
   if (type.out == "matrix") {
-    #mmap <- mmapcharr::mmapchar(input, code = mmapcharr:::CODE_012)
     mmap <- mmapcharr::mmapchar(input, code = CODE_012)
     structure(`if`(is.pcadapt, t(mmap[]), mmap[]), class = "pcadapt_matrix")
-  } else { # bed
+  } else if (type.out == "bed") {
     writeBed(input, is.pcadapt)
+  } else {
+    stop("This 'type.out' is not supported.")
   }
 }
 

@@ -50,14 +50,15 @@ private:
 class bedAcc {
 public:
   bedAcc(const bed * bedPtr,
-         const IntegerVector& col_ind) {
+         const IntegerVector& col_ind,
+         int NA_VAL = 3) {
     
     n = bedPtr->nrow();
     p = col_ind.size();
     n_byte = bedPtr->nbyte(); 
     _pMat = bedPtr->matrix();
     
-    _lookup_byte = bedPtr->get_code();
+    _lookup_byte = bedPtr->get_code(NA_VAL);
     
     std::vector<size_t> col_ind2(p);
     for (size_t j = 0; j < p; j++) {

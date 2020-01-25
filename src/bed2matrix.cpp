@@ -12,7 +12,7 @@ IntegerMatrix bed2mat(SEXP xptr) {
   size_t n = xpMat->nrow();
   size_t m = xpMat->ncol();
   
-  bedAcc macc(xpMat, seq_len(m));
+  bedAcc macc(xpMat, seq_len(m), NA_INTEGER);
   
   IntegerMatrix res(n, m);
   
