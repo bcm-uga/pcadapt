@@ -15,7 +15,7 @@ getCode <- function(NA.VAL = 3L) {
 
 dim.xptr_bed <- function(x) c(attr(x, "n"), attr(x, "p"))
 
-iram_and_reg <- function(input, K, min.maf, ploidy, LD.clumping) {
+iram_and_reg <- function(input, K, min.maf, ploidy, LD.clumping, tol) {
   
   # Get dimensions
   n <- dim(input)[1]  ## can't use nrow()
@@ -64,7 +64,7 @@ iram_and_reg <- function(input, K, min.maf, ploidy, LD.clumping) {
       },
       k = K, 
       dim = c(n, p2),
-      opts = list(tol = 1e-4, maxitr = 100)
+      opts = list(tol = tol)
     ),
     error = function(e) {
       stop(call. = FALSE, paste(

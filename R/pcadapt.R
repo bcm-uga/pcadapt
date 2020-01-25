@@ -37,13 +37,13 @@ NULL
 #' distance for each SNP.
 #'
 #' @param input a genotype matrix or a character string specifying the name of 
-#' the file to be processed with \code{pcadapt}.
+#'   the file to be processed with \code{pcadapt}.
 #' @param K an integer specifying the number of principal components to retain.
 #' @param method a character string specifying the method to be used to compute
-#' the p-values. Two statistics are currently available, \code{"mahalanobis"},
-#' and \code{"componentwise"}.
+#'   the p-values. Two statistics are currently available, \code{"mahalanobis"},
+#'   and \code{"componentwise"}.
 #' @param min.maf a value between \code{0} and \code{0.45} specifying the 
-#' threshold of minor allele frequencies above which p-values are computed.
+#'   threshold of minor allele frequencies above which p-values are computed.
 #' @param LD.clumping Default is \code{NULL} and doesn't use any SNP thinning.
 #'   If you want to use SNP thinning, provide a named list with parameters 
 #'   \code{size} and \code{thr} which corresponds respectively to the window 
@@ -53,6 +53,8 @@ NULL
 #'   returned (before computing any statistic).
 #' @param ploidy Number of trials, parameter of the binomial distribution. 
 #'   Default is 2, which corresponds to diploidy, such as for the human genome.
+#' @param tol Convergence criterion of \code{RSpectra::svds()}. 
+#'   Default is \code{1e-4}.
 #' 
 #' @return The returned value \code{x} is an object of class \code{pcadapt}.
 #' 
@@ -68,7 +70,8 @@ pcadapt <- function(input,
                     min.maf = 0.05, 
                     ploidy = 2,
                     LD.clumping = NULL,
-                    pca.only = FALSE) {
+                    pca.only = FALSE,
+                    tol = 1e-4) {
   
   if (missing(input)) {
     appDir <- system.file("shiny-examples/app-pcadapt", package = "pcadapt")
@@ -93,9 +96,10 @@ pcadapt.pcadapt_matrix <- function(input,
                                    min.maf = 0.05, 
                                    ploidy = 2,
                                    LD.clumping = NULL,
-                                   pca.only = FALSE) {
+                                   pca.only = FALSE,
+                                   tol = 1e-4) {
   
-  pcadapt0(input, K, match.arg(method), min.maf, ploidy, LD.clumping, pca.only)
+  pcadapt0(input, K, match.arg(method), min.maf, ploidy, LD.clumping, pca.only, tol)
 }
 
 #' @rdname pcadapt
@@ -106,14 +110,15 @@ pcadapt.pcadapt_bed <- function(input,
                                 min.maf = 0.05, 
                                 ploidy = 2,
                                 LD.clumping = NULL,
-                                pca.only = FALSE) {
+                                pca.only = FALSE, 
+                                tol = 1e-4) {
   
   # File mapping
   n <- attr(input, "n")
   p <- attr(input, "p")
   xptr <- structure(bedXPtr(input, n, p), n = n, p = p, class = "xptr_bed")
   
-  pcadapt0(xptr, K, match.arg(method), min.maf, ploidy, LD.clumping, pca.only)
+  pcadapt0(xptr, K, match.arg(method), min.maf, ploidy, LD.clumping, pca.only, tol)
 }
 
 #' @rdname pcadapt
@@ -124,7 +129,8 @@ pcadapt.pcadapt_pool <- function(input,
                                  min.maf = 0.05,
                                  ploidy = NULL,
                                  LD.clumping = NULL,
-                                 pca.only = FALSE) {
+                                 pca.only = FALSE,
+                                 tol) {
   
   w <- matrix(NA_real_, nrow = ncol(input), ncol = K)
   
@@ -225,7 +231,7 @@ get_statistics <- function(zscores, method, pass) {
 
 ################################################################################
 
-pcadapt0 <- function(input, K, method, min.maf, ploidy, LD.clumping, pca.only) {
+pcadapt0 <- function(input, K, method, min.maf, ploidy, LD.clumping, pca.only, tol) {
   
   # Test arguments and init
   if (!(class(K) %in% c("numeric", "integer")) || K <= 0)
@@ -238,7 +244,8 @@ pcadapt0 <- function(input, K, method, min.maf, ploidy, LD.clumping, pca.only) {
   obj.pca <- iram_and_reg(input, K = K, 
                           min.maf = min.maf, 
                           ploidy = ploidy,
-                          LD.clumping = LD.clumping)
+                          LD.clumping = LD.clumping, 
+                          tol = tol)
   if (pca.only) return(obj.pca)
   
   res <- get_statistics(obj.pca$zscores, 

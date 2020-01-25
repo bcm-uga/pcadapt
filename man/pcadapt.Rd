@@ -14,7 +14,8 @@ pcadapt(
   min.maf = 0.05,
   ploidy = 2,
   LD.clumping = NULL,
-  pca.only = FALSE
+  pca.only = FALSE,
+  tol = 1e-04
 )
 
 \method{pcadapt}{pcadapt_matrix}(
@@ -24,7 +25,8 @@ pcadapt(
   min.maf = 0.05,
   ploidy = 2,
   LD.clumping = NULL,
-  pca.only = FALSE
+  pca.only = FALSE,
+  tol = 1e-04
 )
 
 \method{pcadapt}{pcadapt_bed}(
@@ -34,7 +36,8 @@ pcadapt(
   min.maf = 0.05,
   ploidy = 2,
   LD.clumping = NULL,
-  pca.only = FALSE
+  pca.only = FALSE,
+  tol = 1e-04
 )
 
 \method{pcadapt}{pcadapt_pool}(
@@ -44,7 +47,8 @@ pcadapt(
   min.maf = 0.05,
   ploidy = NULL,
   LD.clumping = NULL,
-  pca.only = FALSE
+  pca.only = FALSE,
+  tol
 )
 }
 \arguments{
@@ -71,6 +75,9 @@ be \code{list(size = 200, thr = 0.1)}.}
 
 \item{pca.only}{a logical value indicating whether PCA results should be 
 returned (before computing any statistic).}
+
+\item{tol}{Convergence criterion of \code{RSpectra::svds()}. 
+Default is \code{1e-4}.}
 }
 \value{
 The returned value \code{x} is an object of class \code{pcadapt}.
