@@ -202,9 +202,7 @@ get_statistics <- function(zscores, method, pass) {
     if (K == 1) {
       res[pass] <- (zscores[pass] - median(zscores[pass]))^2 
     } else if (K > 1) {
-      # covRob_cpp(zscores[pass, ])
-      res[pass] <- robust::covRob(zscores, na.action = na.omit, 
-                                  estim = "pairwiseGK")$dist
+      res[pass] <- bigutilsr::dist_ogk(zscores[pass, ])
     }
     gif <- median(res, na.rm = TRUE) / qchisq(0.5, df = K)
     res.gif <- res / gif

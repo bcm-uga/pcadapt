@@ -1,8 +1,8 @@
 Package: pcadapt
 Type: Package
 Title: Fast Principal Component Analysis for Outlier Detection
-Version: 4.2.1
-Date: 2020-01-25
+Version: 4.3.0
+Date: 2020-01-28
 Authors@R: c(
     person("Keurcien", "Luu", role = c("aut")), 
     person("Michael", "Blum", role = c("aut")),
@@ -16,12 +16,12 @@ Description: Methods to detect genetic markers involved in biological
     <DOI:10.1111/1755-0998.12592>.
 License: GPL (>= 2)
 Imports:
+    bigutilsr (>= 0.3),
     data.table,
-    ggplot2, 
+    ggplot2,
     magrittr,
     mmapcharr (>= 0.3),
-    Rcpp (>= 0.12.8),  
-    robust,
+    Rcpp (>= 0.12.8),
     RSpectra
 LinkingTo: Rcpp, rmio, mmapcharr
 LazyData: TRUE
