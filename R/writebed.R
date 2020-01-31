@@ -46,10 +46,8 @@ CODE_0123 <- replace(CODE_012, is.na(CODE_012), 3L)
 #' Write PLINK files
 #'
 #' Function to write bed/bim/fam files from a pcadapt or an lfmm file.
-#' Files shouldn't already exists.
 #'
-#' @param file A [mmapchar][mmapchar-class] object associated 
-#'   with a pcadapt or lfmm file.
+#' @param file A pcadapt or lfmm file.
 #' @param is.pcadapt a boolean value.
 #'
 #' @return The input `bedfile` path.

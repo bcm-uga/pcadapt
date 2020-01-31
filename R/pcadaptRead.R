@@ -3,15 +3,16 @@
 #' File Converter
 #'
 #' \code{read.pcadapt} converts genotype matrices or files to an appropriate
-#'   format readable by \code{pcadapt}. For a file as input, you can return 
-#'   either a matrix or convert it in bed/bim/fam files. For a matrix as input,
-#'   this return a matrix. 
+#'   format readable by \code{pcadapt}. For a file as input, you can choose to
+#'   return either a matrix or convert it in bed/bim/fam files. 
+#'   For a matrix as input, this returns a matrix. 
 #'
-#' @param input a genotype matrix or a character string specifying the name of 
-#'   the file to be converted.
-#' @param type a character string specifying the type of data to be converted 
+#' @param input A genotype matrix or a character string specifying the name of 
+#'   the file to be converted. Matrices should use NAs to encode missing values. 
+#'   To encode missing values in 'pcadapt' and 'lfmm' files, 9s should be used.
+#' @param type A character string specifying the type of data to be converted 
 #'   from. Converters from 'vcf' and 'ped' formats are not maintained anymore;
-#'   if you have any issue with those, please use PLINK 1.9 to convert them
+#'   if you have any issue with those, please use PLINK >= 1.9 to convert them
 #'   to the 'bed' format.
 #' @param type.out Either a bed file or a standard R matrix. 
 #'   If the input is a matrix, then the output is automatically a matrix 
@@ -126,6 +127,12 @@ matrix2other <- function(input, type.in) {
     return(structure(as.matrix(input), class = "pcadapt_pool"))
   } else {
     stop("Incorrect type.in for matrices.")
+  }
+  
+  if (nrow(res) > ncol(res)) {
+    warning(sprintf("%s\n  %s",
+                    "You have more individuals than SNPs.",
+                    "Are you sure of the type of your matrix? (pcadapt/lfmm)"))
   }
   
   storage.mode(res) <- "integer"

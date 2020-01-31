@@ -7,8 +7,7 @@
 writeBed(file, is.pcadapt)
 }
 \arguments{
-\item{file}{A [mmapchar][mmapchar-class] object associated 
-with a pcadapt or lfmm file.}
+\item{file}{A pcadapt or lfmm file.}
 
 \item{is.pcadapt}{a boolean value.}
 }
@@ -17,5 +16,4 @@ The input `bedfile` path.
 }
 \description{
 Function to write bed/bim/fam files from a pcadapt or an lfmm file.
-Files shouldn't already exists.
 }
