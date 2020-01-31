@@ -90,7 +90,7 @@ Overall, while these changes are seamless to the numerous users of pcadapt, they
 
 \vspace*{4em}
 \noindent[ABSTRACT WORD COUNT: 100] \\
-\noindent[MAIN TEXT WORD COUNT: 734]
+\noindent[MAIN TEXT WORD COUNT: 745]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -139,7 +139,8 @@ This enables the analysis of large genotype datasets using a personal laptop.
 Moreover, using the PLINK `bed' format instead of format `pcadapt' makes pcadapt easier to use along with other software, e.g.\ using PLINK for conversion and quality control.
 Therefore pcadapt v4 supports all formats that can be converted to the `bed' format, such as `vcf' and `ped'. 
 For existing `pcadapt' files, a seamless conversion to format `bed' is performed when using function \texttt{read.pcadapt}, which makes it backward compatible.
-In fact it is likely that many users analysing small datasets will not even notice the changes in version 4.  
+In fact it is likely that many users analysing small datasets will not even notice the changes in version 4.
+Moreover, results are expected to be very similar (see Suplementary Note).
 However, as sample sizes continue to grow, the importance of computational efficiency and robust methods also grows, and this is exactly what we address in version 4 of pcadapt.
 
 
