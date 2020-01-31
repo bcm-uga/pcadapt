@@ -1,3 +1,5 @@
+################################################################################
+
 # Install pcadapt v3.0.4 -- *old* version
 install.packages("https://cran.r-project.org/src/contrib/Archive/pcadapt/pcadapt_3.0.4.tar.gz",
                  repos = NULL, type = "source")
@@ -77,3 +79,5 @@ ggplot(data.frame(K = c(5, 10, 20), t = c(35, 60, 102) / 60), aes(K, t)) +
                      minor_breaks = seq(0, 60, by = 2))
 
 ggsave("timings.pdf", width = 6, height = 5)
+
+################################################################################

@@ -51,6 +51,7 @@ read.pcadapt <- function(input,
   if (any(class(input) == "character")) {
     file2other(input, type, match.arg(type.out), match.arg(allele.sep))
   } else if (any(class(input) %in% c("matrix", "data.frame", "array"))) {
+    if (!missing(type.out)) warning("Argument 'type.out' is not used with matrices.")
     matrix2other(input, type)
   } else {
     stop("Input should be a file path or a matrix-like object.")
