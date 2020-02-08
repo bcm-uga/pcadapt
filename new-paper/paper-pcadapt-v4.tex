@@ -82,10 +82,10 @@
 \vspace*{5em}
 
 \abstract{
-R package pcadapt is an user-friendly R package for performing genome scans for local adaptation. 
-Here we present version 4 of pcadapt that includes a substantial improvement in computational efficiency. 
-This is made possible by using a different format for storing genotypes and a different algorithm for computing principal components of the genotype matrix, which is the most computationally demanding step in method pcadapt.
-Overall, while these changes are seamless to the numerous users of pcadapt, they will experience a large reduction of computation time (by a factor of 20 to 60 in our analyses) as compared to previous versions.
+R package pcadapt is a user-friendly R package for performing genome scans for local adaptation. 
+Here we present version 4 of pcadapt which substantially improves computational efficiency. 
+This improvement is made possible by using a different format for storing genotypes and a different algorithm for computing principal components of the genotype matrix, which is the most computationally demanding step in method pcadapt.
+These changes are seamlessly integrated into the existing pcadapt package, and users will experience a large reduction in computation time (by a factor of 20 to 60 in our analyses) as compared to previous versions.
 }
 
 \vspace*{4em}
@@ -97,50 +97,50 @@ Overall, while these changes are seamless to the numerous users of pcadapt, they
 \clearpage
 
 We developed the R package pcadapt as a method to detect signs of local adaptation in genetic data \cite[]{luu2017pcadapt}.
-There are two main functions in the package: \texttt{read.pcadapt} that makes sure the data is in the right format and \texttt{pcadapt} that performs computations.
-The pcadapt method first relies on computing the Principal Component Analysis (PCA) of a scaled genotype matrix.
+There are two main functions in the package: \texttt{read.pcadapt} which makes sure the data is in the right format and \texttt{pcadapt} which performs computations.
+The pcadapt method first computes the Principal Component Analysis (PCA) of a scaled genotype matrix.
 It then regresses all variants onto the resulting PCs to get a matrix of Z-scores (i.e.\ one Z-score for each variant and each PC).
 Then, it computes robust Mahalanobis distances of these Z-scores to integrate all PCA dimensions in one multivariate distance for each variant \cite[]{luu2017pcadapt}.
-These distances approximately follow a Chi-squared distribution, which enables to derive one p-value for each genetic variant.
-Method pcadapt basically tests how much each variant is associated with population structure, assuming that outlier variants are indicative of local adaptation.
+These distances approximately follow a Chi-squared distribution, which enables derivation of one p-value for each genetic variant.
+In essence, the pcadapt method tests how much each variant is associated with population structure, assuming that outlier variants are indicative of local adaptation.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Previous versions of package pcadapt used format `pcadapt', which is a text file of characters separated by spaces where each line is storing all individuals' genotypes for one variant (0, 1, 2, and 9 for missing values).
+Previous versions of package pcadapt used format `pcadapt', which is a text file of characters separated by spaces where each line stores all individuals' genotypes for one variant (0, 1, 2, and 9 for missing values).
 It was also possible to convert from `ped' and `vcf' files to format `pcadapt'.
 In pcadapt v4, the preferred format is now the PLINK `bed' format \cite[]{purcell2007plink}. 
 Format `bed' is very compact; it stores each genotype using only 2 bits, making it 8 times smaller than the corresponding `pcadapt' file.
 Moreover, format `bed' can be memory-mapped to be used in both R and C++ almost as a standard R(cpp) matrix; see e.g.\ R package BEDMatrix that provides matrix-like accessors to `bed' files \cite[]{grueneberg2019bgdata}.
-Format `bed' is also advantageous because the widely-used piece of software PLINK can be used for converting from `ped' and `vcf' files to `bed' files, as well as performing quality control \cite[]{chang2015second}.
-For an existing `pcadapt' file, function \texttt{read.pcadapt} now creates a new file with extension `pcadapt.bed' to be used by main function \texttt{pcadapt}. 
-Updating to version 4 is seamless to the user.
+Format `bed' is also advantageous because the widely-used software PLINK can be used to convert `ped' and `vcf' files to `bed' files, and to perform quality control \cite[]{chang2015second}.
+For an existing `pcadapt' file, function \texttt{read.pcadapt} now creates a new file with extension `pcadapt.bed' to be used by the main function \texttt{pcadapt}. 
+Updating to version 4 is seamless for the user.
 
-Previous versions of pcadapt computed the eigen decomposition of the Genetic Relationship Matrix (GRM), a time-consuming step.
-In pcadapt v4, we use the implicitly restarted Arnoldi method (IRAM), which is both very fast and accurate for computing first PCs \cite[]{Lehoucq1996,abraham2017flashpca2,prive2017efficient}.
-To compare performance of newest version of R package pcadapt (v4.1.0 here) with previously published versions (v3.0.4 here), we use publicly available data of 4342 domestic dogs genotyped at 144,474 variants after quality control \cite[]{hayward2016complex}. 
-Function \texttt{pcadapt} v3.0.4 takes 2111 seconds (35 minutes) to complete for this data, which is mainly driven by the computation of the GRM ($O(N^2 P)$, where $N$ is the number of individuals and $P$ the number of variants).
-With pcadapt v4.1.0, it takes only 35, 60 and 102 seconds for K=5, 10 and 20 PCs respectively (Figure \ref{fig:timings}, $\sim\!O(N P K)$).
+Previous versions of pcadapt computed the eigen decomposition of the Genetic Relationship Matrix (GRM) -- a time-consuming step.
+In pcadapt v4, we use the implicitly restarted Arnoldi method (IRAM), which is both fast and accurate for computing first PCs \cite[]{Lehoucq1996,abraham2017flashpca2,prive2017efficient}.
+To compare the performance of the newest version of R package pcadapt (v4.1.0 here) with previously published versions (v3.0.4 here), we use publicly available data on 4342 domestic dogs genotyped at 144,474 variants after quality control \cite[]{hayward2016complex}. 
+Function \texttt{pcadapt} v3.0.4 takes 2111 seconds (35 minutes) to complete for this data. The bulk of this time is spent computing the GRM ($O(N^2 P)$, where $N$ is the number of individuals and $P$ the number of variants).
+With pcadapt v4.1.0, it takes only 35, 60 and 102 seconds to run for K=5, 10 and 20 PCs respectively (Figure \ref{fig:timings}, $\sim\!O(N P K)$).
 This represents a 60, 35 and 20 folds improvement in computation time.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Linkage disequilibrium (LD) can confound genome scans in admixed populations \cite[]{price2008long,abdellaoui2013population,galinsky2016fast}.
-In previous versions of pcadapt, there was only one way to deal with this problem. Previous method consisted of reducing K, the number of principal components (PCs) used by pcadapt, to include PCs capturing population structure only.
+In previous versions of pcadapt, the only way to deal with this problem was to reduce K, the number of principal components (PCs) used by pcadapt, to include PCs capturing population structure only.
 In version 4, we have added an option for performing LD clumping that removes variants in LD.
 This ensures that more PCs capture population structure instead of LD structure \cite[]{prive2017efficient}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Overall, version 4 of R package pcadapt is much more efficient in terms of disk space, memory and time requirements as compared to its previous versions.
+Overall, version 4 of R package pcadapt is much more efficient in terms of disk space, memory and time requirements compared to its previous versions.
 This enables the analysis of large genotype datasets using a personal laptop.
-Moreover, using the PLINK `bed' format instead of format `pcadapt' makes pcadapt easier to use along with other software, e.g.\ using PLINK for conversion and quality control.
+Moreover, using the PLINK `bed' format instead of format `pcadapt' makes pcadapt easier to use along with PLINK, which can be used for file conversion and quality control.
 Therefore pcadapt v4 supports all formats that can be converted to the `bed' format, such as `vcf' and `ped'. 
-For existing `pcadapt' files, a seamless conversion to format `bed' is performed when using function \texttt{read.pcadapt}, which makes it backward compatible.
-In fact it is likely that many users analysing small datasets will not even notice the changes in version 4.
-Moreover, results are expected to be very similar (see Suplementary Note).
+As for existing `pcadapt' files, they are seamlessly converted to format `bed' when using function \texttt{read.pcadapt}, which makes the new version backward compatible.
+Most users analysing small datasets will likely not even notice the changes in version 4.
+Moreover, results are expected to be very similar (see Supplementary Note).
 However, as sample sizes continue to grow, the importance of computational efficiency and robust methods also grows, and this is exactly what we address in version 4 of pcadapt.
 
 
@@ -163,6 +163,7 @@ The code used in this paper is available at \url{https://github.com/bcm-uga/pcad
 \section*{Acknowledgements}
 
 F.P.\ and B.V.\ are supported by the Danish National Research Foundation (Niels Bohr Professorship to John McGrath).
+The authors thank Katherine Musliner for her feedback on text.
 
 \section*{Declaration of Interests}
 
