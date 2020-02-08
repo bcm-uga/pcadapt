@@ -85,10 +85,10 @@ Second, pcadapt now uses a different method for computing the top Principal Comp
 While computed PCs should be similar when there is no missing value, we changed how the package handles missing values in version 4 of pcadapt.
 Computing PCs in previous versions relied on computing the Genetic Relationship Matrix (GRM). When there were missing values, only pairwise complete observations were used to compute the GRM, i.e.\
 \begin{equation}
-\text{GRM}_{ij} = \frac{1}{\sum_{k=1}^p \delta_{ik}\delta_{jk}} \sum_{k = 1}^p \widetilde{G}_{ik} ~ \widetilde{G}_{jk} ~ \delta_{ik} ~ \delta_{jk}~,
+\text{GRM}_{ij} = \frac{p}{\sum_{k=1}^p \delta_{ik}\delta_{jk}} \sum_{k = 1}^p \widetilde{G}_{ik} ~ \widetilde{G}_{jk} ~ \delta_{ik} ~ \delta_{jk}~,
 \end{equation}
-where $\widetilde{G}$ is the scaled genotype matrix and $\delta_{ik}$ is an indicator if the genotype of individual $i$ and variant $k$ is available ($\delta_{ik} = 1$) or missing ($\delta_{ik} = 0$).
-To compute PCs in pcadapt v4, we now use a fast truncated Singular Value Decomposition algorithm that does not require computing the GRM. 
+where $\widetilde{G}$ is the scaled genotype matrix of $n$ samples and $p$ variants, and $\delta_{ik}$ is an indicator if the genotype of sample $i$ and variant $k$ is available ($\delta_{ik} = 1$) or missing ($\delta_{ik} = 0$).
+To compute PCs in pcadapt v4, we now use a fast truncated singular value decomposition algorithm that does not require computing the GRM. 
 This algorithm only needs a function which computes the product and cross-product of the (scaled) genotype matrix with a given vector.
 To allow for missing values, we compute
 \begin{equation}

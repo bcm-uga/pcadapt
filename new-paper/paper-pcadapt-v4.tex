@@ -83,7 +83,7 @@
 
 \abstract{
 R package pcadapt is a user-friendly R package for performing genome scans for local adaptation. 
-Here we present version 4 of pcadapt which substantially improves computational efficiency. 
+Here we present version 4 of pcadapt which substantially improves computational efficiency while providing similar results. 
 This improvement is made possible by using a different format for storing genotypes and a different algorithm for computing principal components of the genotype matrix, which is the most computationally demanding step in method pcadapt.
 These changes are seamlessly integrated into the existing pcadapt package, and users will experience a large reduction in computation time (by a factor of 20 to 60 in our analyses) as compared to previous versions.
 }
@@ -107,19 +107,19 @@ In essence, the pcadapt method tests how much each variant is associated with po
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Previous versions of package pcadapt used format `pcadapt', which is a text file of characters separated by spaces where each line stores all individuals' genotypes for one variant (0, 1, 2, and 9 for missing values).
+Previous versions of package pcadapt used format `pcadapt', which is a text file of characters separated by spaces where each line stores all samples' genotypes for one variant (0, 1, 2, and 9 for missing values).
 It was also possible to convert from `ped' and `vcf' files to format `pcadapt'.
 In pcadapt v4, the preferred format is now the PLINK `bed' format \cite[]{purcell2007plink}. 
 Format `bed' is very compact; it stores each genotype using only 2 bits, making it 8 times smaller than the corresponding `pcadapt' file.
 Moreover, format `bed' can be memory-mapped to be used in both R and C++ almost as a standard R(cpp) matrix; see e.g.\ R package BEDMatrix that provides matrix-like accessors to `bed' files \cite[]{grueneberg2019bgdata}.
 Format `bed' is also advantageous because the widely-used software PLINK can be used to convert `ped' and `vcf' files to `bed' files, and to perform quality control \cite[]{chang2015second}.
-For an existing `pcadapt' file, function \texttt{read.pcadapt} now creates a new file with extension `pcadapt.bed' to be used by the main function \texttt{pcadapt}. 
+For an existing `pcadapt' file, function \texttt{read.pcadapt} now creates a new file with extension `.pcadapt.bed' to be used by the main function \texttt{pcadapt}. 
 Updating to version 4 is seamless for the user.
 
-Previous versions of pcadapt computed the eigen decomposition of the Genetic Relationship Matrix (GRM) -- a time-consuming step.
+Previous versions of pcadapt computed the eigen decomposition of the Genetic Relationship Matrix (GRM).
 In pcadapt v4, we use the implicitly restarted Arnoldi method (IRAM), which is both fast and accurate for computing first PCs \cite[]{Lehoucq1996,abraham2017flashpca2,prive2017efficient}.
 To compare the performance of the newest version of R package pcadapt (v4.1.0 here) with previously published versions (v3.0.4 here), we use publicly available data on 4342 domestic dogs genotyped at 144,474 variants after quality control \cite[]{hayward2016complex}. 
-Function \texttt{pcadapt} v3.0.4 takes 2111 seconds (35 minutes) to complete for this data. The bulk of this time is spent computing the GRM ($O(N^2 P)$, where $N$ is the number of individuals and $P$ the number of variants).
+Function \texttt{pcadapt} v3.0.4 takes 2111 seconds (35 minutes) to complete for this data. The bulk of this time is spent computing the GRM ($O(N^2 P)$, where $N$ is the number of samples and $P$ the number of variants).
 With pcadapt v4.1.0, it takes only 35, 60 and 102 seconds to run for K=5, 10 and 20 PCs respectively (Figure \ref{fig:timings}, $\sim\!O(N P K)$).
 This represents a 60, 35 and 20 folds improvement in computation time.
 
