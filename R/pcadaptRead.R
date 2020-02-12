@@ -82,11 +82,13 @@ file2other <- function(input, type.in, type.out, allele.sep) {
   is.pcadapt <- TRUE
   if (type.in == "ped") {
     check_file_size(input)
+    warning("Converter ped to pcadapt is deprecated. Please use PLINK for conversion to bed (and QC).")
     tmp <- tempfile(fileext = ".pcadapt")
     ped2pcadapt(input = input, output = tmp)
     input <- tmp
   } else if (type.in == "vcf") {
     check_file_size(input)
+    warning("Converter vcf to pcadapt is deprecated. Please use PLINK for conversion to bed (and QC).")
     tmp <- tempfile(fileext = ".pcadapt")
     vcf2pcadapt(input = input, output = tmp, allele.sep = allele.sep)
     input <- tmp
