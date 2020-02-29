@@ -13,3 +13,4 @@
 ^tests$
 ^new-paper$
 ^vignettes$
+^\.github/workflows/R-CMD-check\.yaml$
