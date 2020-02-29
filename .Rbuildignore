@@ -12,3 +12,4 @@
 ^appveyor\.yml$
 ^tests$
 ^new-paper$
+^vignettes$

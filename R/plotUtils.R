@@ -2,7 +2,7 @@
 
 #' Principal Components Analysis Scree Plot
 #'
-#' \code{scree_plot} plots the scee plot associated with the principal components 
+#' \code{scree_plot} plots the scree plot associated with the principal components 
 #' analysis performed on the dataset. NB : \code{pcadapt} has to be run on the
 #' dataset in order to get an output readable by \code{plot.screePlot}
 #'
@@ -320,7 +320,7 @@ qq_plot = function(x, K = 1) {
 #' pcadapt visualization tool
 #'
 #' \code{plot.pcadapt} is a method designed for objects of class \code{pcadapt}.
-#' It provides a plotting utile for quick visualization of \code{pcadapt} 
+#' It provides plotting options for quick visualization of \code{pcadapt} 
 #' objects. Different options are currently available : \code{"screeplot"}, 
 #' \code{"scores"}, \code{"stat.distribution"}, \code{"manhattan"} and 
 #' \code{"qqplot"}. \code{"screeplot"} shows the decay of the genotype matrix 

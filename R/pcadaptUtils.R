@@ -3,7 +3,7 @@
 #' Population colorization
 #'
 #' \code{get.score.color} allows the user to display individuals of the same
-#' pre-defined population with the same color when using the option
+#' predefined population with the same color when using the option
 #' \code{"scores"} in \code{pcadapt}.
 #'
 #' @param pop a list of integers or strings specifying which population the

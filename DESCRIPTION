@@ -25,14 +25,15 @@ Imports:
     RSpectra
 LinkingTo: Rcpp, rmio, mmapcharr
 LazyData: TRUE
-Suggests: 
+Suggests:
     covr,
-    knitr,
     plotly,
-    rmarkdown,
     shiny,
+    spelling,
     testthat,
     vcfR
 RoxygenNote: 7.0.2
-VignetteBuilder: knitr
 Encoding: UTF-8
+Language: en-US
+URL: https://github.com/bcm-uga/pcadapt
+BugReports: https://github.com/bcm-uga/pcadapt/issues

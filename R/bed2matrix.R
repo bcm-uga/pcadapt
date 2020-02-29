@@ -1,8 +1,8 @@
 #' Convert a bed to a matrix
 #'
 #' @param bedfile Path to a bed file. 
-#' @param n Number of samples. Default reads it from coresponding fam file.
-#' @param p Number of SNPs. Default reads it from coresponding bim file.
+#' @param n Number of samples. Default reads it from corresponding fam file.
+#' @param p Number of SNPs. Default reads it from corresponding bim file.
 #'
 #' @return An integer matrix.
 #' @export

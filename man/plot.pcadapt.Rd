@@ -53,7 +53,7 @@ has to be specified only when using the \code{"componentwise"} method.}
 }
 \description{
 \code{plot.pcadapt} is a method designed for objects of class \code{pcadapt}.
-It provides a plotting utile for quick visualization of \code{pcadapt} 
+It provides plotting options for quick visualization of \code{pcadapt} 
 objects. Different options are currently available : \code{"screeplot"}, 
 \code{"scores"}, \code{"stat.distribution"}, \code{"manhattan"} and 
 \code{"qqplot"}. \code{"screeplot"} shows the decay of the genotype matrix 

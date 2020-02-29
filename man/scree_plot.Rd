@@ -12,7 +12,7 @@ scree_plot(x, K = NULL)
 \item{K}{an integer specifying the number of components to plot.}
 }
 \description{
-\code{scree_plot} plots the scee plot associated with the principal components 
+\code{scree_plot} plots the scree plot associated with the principal components 
 analysis performed on the dataset. NB : \code{pcadapt} has to be run on the
 dataset in order to get an output readable by \code{plot.screePlot}
 }

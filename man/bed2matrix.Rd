@@ -9,9 +9,9 @@ bed2matrix(bedfile, n = NULL, p = NULL)
 \arguments{
 \item{bedfile}{Path to a bed file.}
 
-\item{n}{Number of samples. Default reads it from coresponding fam file.}
+\item{n}{Number of samples. Default reads it from corresponding fam file.}
 
-\item{p}{Number of SNPs. Default reads it from coresponding bim file.}
+\item{p}{Number of SNPs. Default reads it from corresponding bim file.}
 }
 \value{
 An integer matrix.
