@@ -391,4 +391,4 @@ plot(x_cw, option = "stat.distribution", K = 2)
 
 # Main reference
 
-Luu, K., Bazin, E., & Blum, M. G. B. (2017). [pcadapt: an R package to perform genome scans for selection based on principal component analysis. Molecular Ecology Resources 17:67-77](http://biorxiv.org/content/early/2016/07/25/056135).
+Luu, K., Bazin, E., & Blum, M. G.B. (2017). [pcadapt: an R package to perform genome scans for selection based on principal component analysis.](http://onlinelibrary.wiley.com/doi/10.1111/1755-0998.12592/full) Molecular Ecology Resources, 17(1), 67-77.

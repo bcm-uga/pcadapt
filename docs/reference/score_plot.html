@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>pcadapt visualization tool — plot.pcadapt • pcadapt</title>
+<title>Principal Components Analysis Scores Plot — score_plot • pcadapt</title>
 
 
 <!-- jquery -->
@@ -35,19 +35,9 @@
 
 
 
-<meta property="og:title" content="pcadapt visualization tool — plot.pcadapt" />
-<meta property="og:description" content="plot.pcadapt is a method designed for objects of class pcadapt.
-It provides plotting options for quick visualization of pcadapt 
-objects. Different options are currently available : &quot;screeplot&quot;, 
-&quot;scores&quot;, &quot;stat.distribution&quot;, &quot;manhattan&quot; and 
-&quot;qqplot&quot;. &quot;screeplot&quot; shows the decay of the genotype matrix 
-singular values and provides a figure to help with the choice of K.
-&quot;scores&quot; plots the projection of the individuals onto the first two 
-principal components. &quot;stat.distribution&quot; displays the histogram of 
-the selected test statistics, as well as the estimated distribution for the 
-neutral SNPs. &quot;manhattan&quot; draws the Manhattan plot of the p-values 
-associated with the statistic of interest. &quot;qqplot&quot; draws a Q-Q plot 
-of the p-values associated with the statistic of interest." />
+<meta property="og:title" content="Principal Components Analysis Scores Plot — score_plot" />
+<meta property="og:description" content="&quot;score_plot&quot; plots the projection of the individuals onto the 
+first two principal components." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -122,61 +112,29 @@ of the p-values associated with the statistic of interest." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>pcadapt visualization tool</h1>
+    <h1>Principal Components Analysis Scores Plot</h1>
     <small class="dont-index">Source: <a href='https://github.com/bcm-uga/pcadapt/blob/master/R/plotUtils.R'><code>R/plotUtils.R</code></a></small>
-    <div class="hidden name"><code>plot.pcadapt.Rd</code></div>
+    <div class="hidden name"><code>score_plot.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p><code>plot.pcadapt</code> is a method designed for objects of class <code>pcadapt</code>.
-It provides plotting options for quick visualization of <code>pcadapt</code> 
-objects. Different options are currently available : <code>"screeplot"</code>, 
-<code>"scores"</code>, <code>"stat.distribution"</code>, <code>"manhattan"</code> and 
-<code>"qqplot"</code>. <code>"screeplot"</code> shows the decay of the genotype matrix 
-singular values and provides a figure to help with the choice of <code>K</code>.
-<code>"scores"</code> plots the projection of the individuals onto the first two 
-principal components. <code>"stat.distribution"</code> displays the histogram of 
-the selected test statistics, as well as the estimated distribution for the 
-neutral SNPs. <code>"manhattan"</code> draws the Manhattan plot of the p-values 
-associated with the statistic of interest. <code>"qqplot"</code> draws a Q-Q plot 
-of the p-values associated with the statistic of interest.</p>
+    <p><code>"score_plot"</code> plots the projection of the individuals onto the 
+first two principal components.</p>
     </div>
 
-    <pre class="usage"><span class='co'># S3 method for pcadapt</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(
-  <span class='no'>x</span>,
-  <span class='no'>...</span>,
-  <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"manhattan"</span>,
-  <span class='kw'>i</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>j</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-  <span class='no'>pop</span>,
-  <span class='no'>col</span>,
-  <span class='kw'>chr.info</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>snp.info</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>plt.pkg</span> <span class='kw'>=</span> <span class='st'>"ggplot"</span>,
-  <span class='kw'>K</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
-)</pre>
+    <pre class="usage"><span class='fu'>score_plot</span>(<span class='no'>x</span>, <span class='kw'>i</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>j</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='no'>pop</span>, <span class='no'>col</span>, <span class='kw'>plt.pkg</span> <span class='kw'>=</span> <span class='st'>"ggplot"</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>an object of class "pcadapt" generated with <code>pcadapt</code>.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>...</p></td>
-    </tr>
-    <tr>
-      <th>option</th>
-      <td><p>a character string specifying the figures to be displayed. If 
-<code>NULL</code> (the default), all three plots are printed.</p></td>
+      <td><p>an output from <code>pcadapt</code> containing the scores.</p></td>
     </tr>
     <tr>
       <th>i</th>
       <td><p>an integer indicating onto which principal component the individuals
-are projected when the "scores" option is chosen.
+ are projected when the "scores" option is chosen.
 Default value is set to <code>1</code>.</p></td>
     </tr>
     <tr>
@@ -191,42 +149,19 @@ Default value is set to <code>2</code>.</p></td>
 individuals belong to.</p></td>
     </tr>
     <tr>
-      <th>col</th>
-      <td><p>a list of colors to be used in the score plot.</p></td>
-    </tr>
-    <tr>
-      <th>chr.info</th>
-      <td><p>a list containing the chromosome information for each marker.</p></td>
-    </tr>
-    <tr>
-      <th>snp.info</th>
-      <td><p>a list containing the names of all genetic markers present in
-the input.</p></td>
-    </tr>
-    <tr>
       <th>plt.pkg</th>
       <td><p>a character string specifying the package to be used to 
 display the graphical outputs. Use <code>"plotly"</code> for interactive plots, or 
 <code>"ggplot"</code> for static plots.</p></td>
     </tr>
-    <tr>
-      <th>K</th>
-      <td><p>an integer specifying the principal component of interest. <code>K</code> 
-has to be specified only when using the <code>"componentwise"</code> method.</p></td>
-    </tr>
     </table>
 
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>## see ?pcadapt for examples
-
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>

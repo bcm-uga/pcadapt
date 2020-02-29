@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>File Converter — read.pcadapt • pcadapt</title>
+<title>Write PLINK files — writeBed • pcadapt</title>
 
 
 <!-- jquery -->
@@ -35,11 +35,8 @@
 
 
 
-<meta property="og:title" content="File Converter — read.pcadapt" />
-<meta property="og:description" content="read.pcadapt converts genotype matrices or files to an appropriate
-  format readable by pcadapt. For a file as input, you can choose to
-  return either a matrix or convert it in bed/bim/fam files. 
-  For a matrix as input, this returns a matrix." />
+<meta property="og:title" content="Write PLINK files — writeBed" />
+<meta property="og:description" content="Function to write bed/bim/fam files from a pcadapt or an lfmm file." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -114,82 +111,40 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>File Converter</h1>
-    <small class="dont-index">Source: <a href='https://github.com/bcm-uga/pcadapt/blob/master/R/pcadaptRead.R'><code>R/pcadaptRead.R</code></a></small>
-    <div class="hidden name"><code>read.pcadapt.Rd</code></div>
+    <h1>Write PLINK files</h1>
+    <small class="dont-index">Source: <a href='https://github.com/bcm-uga/pcadapt/blob/master/R/writebed.R'><code>R/writebed.R</code></a></small>
+    <div class="hidden name"><code>writeBed.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p><code>read.pcadapt</code> converts genotype matrices or files to an appropriate
-  format readable by <code>pcadapt</code>. For a file as input, you can choose to
-  return either a matrix or convert it in bed/bim/fam files. 
-  For a matrix as input, this returns a matrix.</p>
+    <p>Function to write bed/bim/fam files from a pcadapt or an lfmm file.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>read.pcadapt</span>(
-  <span class='no'>input</span>,
-  <span class='kw'>type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"pcadapt"</span>, <span class='st'>"lfmm"</span>, <span class='st'>"vcf"</span>, <span class='st'>"bed"</span>, <span class='st'>"ped"</span>, <span class='st'>"pool"</span>, <span class='st'>"example"</span>),
-  <span class='kw'>type.out</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"bed"</span>, <span class='st'>"matrix"</span>),
-  <span class='kw'>allele.sep</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"/"</span>, <span class='st'>"|"</span>),
-  <span class='no'>pop.sizes</span>,
-  <span class='no'>ploidy</span>,
-  <span class='no'>local.env</span>,
-  <span class='no'>blocksize</span>
-)</pre>
+    <pre class="usage"><span class='fu'>writeBed</span>(<span class='no'>file</span>, <span class='no'>is.pcadapt</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>input</th>
-      <td><p>A genotype matrix or a character string specifying the name of 
-the file to be converted. Matrices should use NAs to encode missing values. 
-To encode missing values in 'pcadapt' and 'lfmm' files, 9s should be used.</p></td>
+      <th>file</th>
+      <td><p>A pcadapt or lfmm file.</p></td>
     </tr>
     <tr>
-      <th>type</th>
-      <td><p>A character string specifying the type of data to be converted 
-from. Converters from 'vcf' and 'ped' formats are not maintained anymore;
-if you have any issue with those, please use PLINK &gt;= 1.9 to convert them
-to the 'bed' format.</p></td>
-    </tr>
-    <tr>
-      <th>type.out</th>
-      <td><p>Either a bed file or a standard R matrix. 
-If the input is a matrix, then the output is automatically a matrix 
-(so that you don't need to specify this parameter). 
-If the input is a bed file, then the output is also a bed file.</p></td>
-    </tr>
-    <tr>
-      <th>allele.sep</th>
-      <td><p>a vector of characters indicating what delimiters are used 
-in VCF files. By default, only "|" and "/" are recognized. 
-So, this argument is only useful for <code>type = "vcf"</code>.</p></td>
-    </tr>
-    <tr>
-      <th>pop.sizes</th>
-      <td><p>deprecated argument.</p></td>
-    </tr>
-    <tr>
-      <th>ploidy</th>
-      <td><p>deprecated argument.</p></td>
-    </tr>
-    <tr>
-      <th>local.env</th>
-      <td><p>deprecated argument.</p></td>
-    </tr>
-    <tr>
-      <th>blocksize</th>
-      <td><p>deprecated argument.</p></td>
+      <th>is.pcadapt</th>
+      <td><p>a boolean value.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>The input `bedfile` path.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
+      <li><a href="#value">Value</a></li>
     </ul>
 
   </div>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>File Converter — read.pcadapt • pcadapt</title>
+<title>Convert a bed to a matrix — bed2matrix • pcadapt</title>
 
 
 <!-- jquery -->
@@ -35,11 +35,8 @@
 
 
 
-<meta property="og:title" content="File Converter — read.pcadapt" />
-<meta property="og:description" content="read.pcadapt converts genotype matrices or files to an appropriate
-  format readable by pcadapt. For a file as input, you can choose to
-  return either a matrix or convert it in bed/bim/fam files. 
-  For a matrix as input, this returns a matrix." />
+<meta property="og:title" content="Convert a bed to a matrix — bed2matrix" />
+<meta property="og:description" content="Convert a bed to a matrix" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -114,82 +111,51 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>File Converter</h1>
-    <small class="dont-index">Source: <a href='https://github.com/bcm-uga/pcadapt/blob/master/R/pcadaptRead.R'><code>R/pcadaptRead.R</code></a></small>
-    <div class="hidden name"><code>read.pcadapt.Rd</code></div>
+    <h1>Convert a bed to a matrix</h1>
+    <small class="dont-index">Source: <a href='https://github.com/bcm-uga/pcadapt/blob/master/R/bed2matrix.R'><code>R/bed2matrix.R</code></a></small>
+    <div class="hidden name"><code>bed2matrix.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p><code>read.pcadapt</code> converts genotype matrices or files to an appropriate
-  format readable by <code>pcadapt</code>. For a file as input, you can choose to
-  return either a matrix or convert it in bed/bim/fam files. 
-  For a matrix as input, this returns a matrix.</p>
+    <p>Convert a bed to a matrix</p>
     </div>
 
-    <pre class="usage"><span class='fu'>read.pcadapt</span>(
-  <span class='no'>input</span>,
-  <span class='kw'>type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"pcadapt"</span>, <span class='st'>"lfmm"</span>, <span class='st'>"vcf"</span>, <span class='st'>"bed"</span>, <span class='st'>"ped"</span>, <span class='st'>"pool"</span>, <span class='st'>"example"</span>),
-  <span class='kw'>type.out</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"bed"</span>, <span class='st'>"matrix"</span>),
-  <span class='kw'>allele.sep</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"/"</span>, <span class='st'>"|"</span>),
-  <span class='no'>pop.sizes</span>,
-  <span class='no'>ploidy</span>,
-  <span class='no'>local.env</span>,
-  <span class='no'>blocksize</span>
-)</pre>
+    <pre class="usage"><span class='fu'>bed2matrix</span>(<span class='no'>bedfile</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>p</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>input</th>
-      <td><p>A genotype matrix or a character string specifying the name of 
-the file to be converted. Matrices should use NAs to encode missing values. 
-To encode missing values in 'pcadapt' and 'lfmm' files, 9s should be used.</p></td>
+      <th>bedfile</th>
+      <td><p>Path to a bed file.</p></td>
     </tr>
     <tr>
-      <th>type</th>
-      <td><p>A character string specifying the type of data to be converted 
-from. Converters from 'vcf' and 'ped' formats are not maintained anymore;
-if you have any issue with those, please use PLINK &gt;= 1.9 to convert them
-to the 'bed' format.</p></td>
+      <th>n</th>
+      <td><p>Number of samples. Default reads it from corresponding fam file.</p></td>
     </tr>
     <tr>
-      <th>type.out</th>
-      <td><p>Either a bed file or a standard R matrix. 
-If the input is a matrix, then the output is automatically a matrix 
-(so that you don't need to specify this parameter). 
-If the input is a bed file, then the output is also a bed file.</p></td>
-    </tr>
-    <tr>
-      <th>allele.sep</th>
-      <td><p>a vector of characters indicating what delimiters are used 
-in VCF files. By default, only "|" and "/" are recognized. 
-So, this argument is only useful for <code>type = "vcf"</code>.</p></td>
-    </tr>
-    <tr>
-      <th>pop.sizes</th>
-      <td><p>deprecated argument.</p></td>
-    </tr>
-    <tr>
-      <th>ploidy</th>
-      <td><p>deprecated argument.</p></td>
-    </tr>
-    <tr>
-      <th>local.env</th>
-      <td><p>deprecated argument.</p></td>
-    </tr>
-    <tr>
-      <th>blocksize</th>
-      <td><p>deprecated argument.</p></td>
+      <th>p</th>
+      <td><p>Number of SNPs. Default reads it from corresponding bim file.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
+    <p>An integer matrix.</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>bedfile</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"geno3pops.bed"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"pcadapt"</span>)
+<span class='no'>mat</span> <span class='kw'>&lt;-</span> <span class='fu'>bed2matrix</span>(<span class='no'>bedfile</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span>(<span class='no'>mat</span>)</div><div class='output co'>#&gt; [1]  150 1500</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/table.html'>table</a></span>(<span class='no'>mat</span>)</div><div class='output co'>#&gt; mat
+#&gt;      0      1      2 
+#&gt;  55488 106547  62965 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
+      <li><a href="#value">Value</a></li>
+      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
