@@ -6,7 +6,7 @@
 R package {pcadapt} has been developed to detect genetic markers involved in biological adaptation. 
 This package uses statistical tools for outlier detection based on Principal Component Analysis (PCA).
 
-A tutorial for {pcadapt} is available on [pcadapt's website](https://github.com/bcm-uga/pcadapt/articles/pcadapt.html).
+A tutorial for {pcadapt} is available on [pcadapt's website](https://bcm-uga.github.io/pcadapt/articles/pcadapt.html).
 
 
 ## Installation
