@@ -137,21 +137,39 @@ pcadapt.pcadapt_pool <- function(input,
   mean_freq <- attr(tmat, "scaled:center")
   mean_freq <- pmin(mean_freq, 1 - mean_freq)
 
-  pass <- mean_freq > min.maf
+  ind.pass.af <- which(mean_freq > min.maf)
+  
+  if (!is.null(LD.clumping)) {
+    size <- LD.clumping$size
+    thr  <- LD.clumping$thr
+    if (is.null(size) || is.null(thr))
+      stop("Incorrect parameter 'LD.clumping'.")
+    
+    # Create a logical vector to locate SNPs that have been clumped
+    # Take also number of NAs into account?
+    ord <- order(mean_freq[ind.pass.af], decreasing = TRUE)
+    pass <- pcadapt:::clumping(input, ind.pass.af, 
+                               ord, rep(TRUE, length(ord)), 
+                               size, thr)
+    ind.pass <- ind.pass.af[pass]
+  } else {
+    ind.pass <- ind.pass.af
+  }
+  
   
   if (nrow(input) == 2) {
     obj.pca <- list(
       u = matrix(NA_real_, nrow = 2, ncol = 1),
-      v = t(tmat[1, pass, drop = FALSE]),
+      v = t(tmat[1, ind.pass, drop = FALSE]),
       d = 1
     )
   } else {
-    obj.pca <- svd(tmat[, pass, drop = FALSE])
-    #obj.pca <- RSpectra::svds(tmat[, pass, drop = FALSE], k = K)
+    obj.pca <- svd(tmat[, ind.pass, drop = FALSE])
+    #obj.pca <- RSpectra::svds(tmat[, ind.pass, drop = FALSE], k = K)
   }
   
-  w[pass, ] <- obj.pca$v[, 1:K, drop = FALSE]
-  res <- get_statistics(w, method = method, pass = pass)
+  w[ind.pass, ] <- obj.pca$v[, 1:K, drop = FALSE]
+  res <- get_statistics(w, method = method, pass = ind.pass)
 
   structure(
     list(
@@ -165,7 +183,7 @@ pcadapt.pcadapt_pool <- function(input,
       stat = res$stat,
       gif = res$gif,
       pvalues = res$pvalues,
-      pass = which(pass)
+      pass = ind.pass
     ),
     K = K, method = method, min.maf = min.maf, class = "pcadapt"
   )
@@ -256,7 +274,7 @@ pcadapt0 <- function(input, K, method, min.maf, ploidy, LD.clumping, pca.only, t
       af = obj.pca$af,
       maf = pmin(obj.pca$af, 1 - obj.pca$af),
       chi2.stat = res$chi2.stat,
-      stat=res$stat,
+      stat = res$stat,
       gif = res$gif,
       pvalues = res$pvalues,
       pass = obj.pca$pass
