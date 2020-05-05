@@ -1,0 +1,12 @@
+citHeader("To cite pcadapt in publications, please use:")
+
+citEntry(
+  entry = "Article",
+  title="Performing highly efficient genome scans for local adaptation with {R} package pcadapt version 4.",
+  author=c("Florian Priv{\\'e}", "Keurcien Luu", " Bjarni J. Vilhj{\\'a}lmsson", "Michael G.B. Blum"),
+  journal="Molecular Biology and Evolution",
+  year="2020",
+  doi = "10.1093/molbev/msaa053",
+  url = "https://doi.org/10.1093/molbev/msaa053",
+  textVersion='Privé, Florian, et al. "Performing highly efficient genome scans for local adaptation with R package pcadapt version 4." Molecular Biology and Evolution (2020).'
+)

@@ -389,6 +389,8 @@ To display the neutral distribution for the component-wise case, the value of `K
 plot(x_cw, option = "stat.distribution", K = 2)
 ```
 
-# Main reference
+# Main references
 
-Luu, K., Bazin, E., & Blum, M. G.B. (2017). [pcadapt: an R package to perform genome scans for selection based on principal component analysis.](http://onlinelibrary.wiley.com/doi/10.1111/1755-0998.12592/full) Molecular Ecology Resources, 17(1), 67-77.
+- Privé, F., Luu, K., Vilhjálmsson, B. J., & Blum, M. G.B. (2020). [Performing highly efficient genome scans for local adaptation with R package pcadapt version 4.](https://doi.org/10.1093/molbev/msaa053) Molecular Biology and Evolution.
+
+- Luu, K., Bazin, E., & Blum, M. G.B. (2017). [pcadapt: an R package to perform genome scans for selection based on principal component analysis.](http://onlinelibrary.wiley.com/doi/10.1111/1755-0998.12592/full) Molecular Ecology Resources, 17(1), 67-77.
