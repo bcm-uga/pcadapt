@@ -120,6 +120,7 @@ score_plot = function(x, i = 1, j = 2, pop, col, plt.pkg = "ggplot") {
                             x = ~PC_i, 
                             y = ~PC_j, 
                             color = pop, 
+                            colors = col,
                             text = ~paste('Ind: ', 1:nrow(x$scores)),
                             mode = "markers", 
                             type = "scatter", 
