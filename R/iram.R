@@ -21,6 +21,9 @@ iram_and_reg <- function(input, K, min.maf, ploidy, LD.clumping, tol) {
   n <- dim(input)[1]  ## can't use nrow()
   p <- dim(input)[2]  ## can't use ncol()
   
+  if (K > min(n, p))
+    stop(call. = FALSE, "You cannot have K larger than any of the dimensions.")
+  
   # Get allele frequencies
   # Uses a non-scaled lookup table
   af <- get_af(input) / ploidy
