@@ -22,6 +22,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -34,18 +36,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">pcadapt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">4.3.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.3.5</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="articles/pcadapt.html">Get started</a>
 </li>
@@ -58,8 +54,8 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/bcm-uga/pcadapt/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+  <a href="https://github.com/bcm-uga/pcadapt/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -75,28 +71,30 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="pcadapt" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#pcadapt" class="anchor"></a>pcadapt</h1></div>
+<div class="section level1">
+<div class="page-header"><h1 id="pcadapt">pcadapt<a class="anchor" aria-label="anchor" href="#pcadapt"></a>
+</h1></div>
+<!-- badges: start -->
 
 <p>R package {pcadapt} has been developed to detect genetic markers involved in biological adaptation. This package uses statistical tools for outlier detection based on Principal Component Analysis (PCA).</p>
-<p>A tutorial for {pcadapt} is available on <a href="https://bcm-uga.github.io/pcadapt/articles/pcadapt.html">pcadapt’s website</a>.</p>
+<p>A tutorial for {pcadapt} is available on <a href="https://bcm-uga.github.io/pcadapt/articles/pcadapt.html" class="external-link">pcadapt’s website</a>.</p>
 <p><strong>News:</strong> A new paper is finally out describing version 4 of pcadapt (which has been available for quite some time now). Please cite the new paper.</p>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
-<div class="sourceCode" id="cb1"><pre class="r"><span class="co"># From CRAN</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"pcadapt"</span>)
-
-<span class="co"># From GitHub</span>
-<span class="kw pkg">remotes</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/remotes/man/install_github.html">install_github</a></span>(<span class="st">"bcm-uga/pcadapt"</span>)</pre></div>
-<div id="references" class="section level3">
-<h3 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h3>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># From CRAN</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"pcadapt"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># From GitHub</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"bcm-uga/pcadapt"</span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h3>
 <ul>
-<li><p>Privé, F., Luu, K., Vilhjálmsson, B. J., &amp; Blum, M. G.B. (2020). <a href="https://doi.org/10.1093/molbev/msaa053">Performing highly efficient genome scans for local adaptation with R package pcadapt version 4.</a> Molecular Biology and Evolution.</p></li>
-<li><p>Luu, K., Bazin, E., &amp; Blum, M. G.B. (2017). <a href="http://onlinelibrary.wiley.com/doi/10.1111/1755-0998.12592/full">pcadapt: an R package to perform genome scans for selection based on principal component analysis.</a> Molecular Ecology Resources, 17(1), 67-77.</p></li>
-<li><p>Duforet-Frebourg, N., Luu, K., Laval, G., Bazin, E., &amp; Blum, M. G.B. (2015). <a href="http://mbe.oxfordjournals.org/content/33/4/1082">Detecting genomic signatures of natural selection with principal component analysis: application to the 1000 Genomes data.</a> Molecular biology and evolution, 33(4), 1082-1093.</p></li>
+<li><p>Privé, F., Luu, K., Vilhjálmsson, B. J., &amp; Blum, M. G.B. (2020). <a href="https://doi.org/10.1093/molbev/msaa053" class="external-link">Performing highly efficient genome scans for local adaptation with R package pcadapt version 4.</a> <em>Molecular Biology and Evolution</em> 37.7 (2020): 2153–2154.</p></li>
+<li><p>Luu, K., Bazin, E., &amp; Blum, M. G.B. (2017). <a href="https://doi.org/10.1111/1755-0998.12592" class="external-link">pcadapt: an R package to perform genome scans for selection based on principal component analysis.</a> <em>Molecular Ecology Resources</em>, 17(1), 67–77.</p></li>
+<li><p>Duforet-Frebourg, N., Luu, K., Laval, G., Bazin, E., &amp; Blum, M. G.B. (2015). <a href="https://doi.org/10.1093/molbev/msv334" class="external-link">Detecting genomic signatures of natural selection with principal component analysis: application to the 1000 Genomes data.</a> <em>Molecular biology and evolution</em>, 33(4), 1082–1093.</p></li>
 </ul>
 </div>
 </div>
@@ -105,56 +103,60 @@
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=pcadapt">https://​cloud.r-project.org/​package=pcadapt</a>
-</li>
-<li>Browse source code at <br><a href="https://github.com/bcm-uga/pcadapt/">https://​github.com/​bcm-uga/​pcadapt/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/bcm-uga/pcadapt/issues">https://​github.com/​bcm-uga/​pcadapt/​issues</a>
-</li>
+<li><a href="https://cloud.r-project.org/package=pcadapt" class="external-link">View on CRAN</a></li>
+<li><a href="https://github.com/bcm-uga/pcadapt/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/bcm-uga/pcadapt/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>GPL (&gt;= 2)</li>
 </ul>
 </div>
+
+
 <div class="citation">
-<h2>Citation</h2>
+<h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li><a href="authors.html">Citing pcadapt</a></li>
+<li><a href="authors.html#citation">Citing pcadapt</a></li>
 </ul>
 </div>
+
 <div class="developers">
-<h2>Developers</h2>
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Keurcien Luu <br><small class="roles"> Author </small>  </li>
 <li>Michael Blum <br><small class="roles"> Author </small>  </li>
 <li>Florian Privé <br><small class="roles"> Author, maintainer </small>  </li>
-<li><a href="authors.html">All authors...</a></li>
+<li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://doi.org/10.1093/molbev/msaa053"><img src="https://zenodo.org/badge/doi/10.1093/molbev/msaa053.svg" alt="DOI"></a></li>
-<li><a href="https://cran.r-project.org/package=pcadapt"><img src="http://www.r-pkg.org/badges/version/pcadapt" alt="CRAN_Status_Badge"></a></li>
-<li><a href="https://github.com/bcm-uga/pcadapt"><img src="https://github.com/bcm-uga/pcadapt/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+<li><a href="https://doi.org/10.1093/molbev/msaa053" class="external-link"><img src="https://zenodo.org/badge/doi/10.1093/molbev/msaa053.svg" alt="DOI"></a></li>
+<li><a href="https://cran.r-project.org/package=pcadapt" class="external-link"><img src="http://www.r-pkg.org/badges/version/pcadapt" alt="CRAN_Status_Badge"></a></li>
+<li><a href="https://github.com/bcm-uga/pcadapt/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/bcm-uga/pcadapt/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
 </div>
-</div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Keurcien Luu, Michael Blum, Florian Privé.</p>
+  <p></p>
+<p>Developed by Keurcien Luu, Michael Blum, Florian Privé.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
@@ -162,6 +164,8 @@
 
   
 
+
+  
 
   </body>
 </html>

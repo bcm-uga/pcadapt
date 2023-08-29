@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,18 +33,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pcadapt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">4.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.3.5</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../articles/pcadapt.html">Get started</a>
 </li>
@@ -55,8 +51,8 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/bcm-uga/pcadapt/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+  <a href="https://github.com/bcm-uga/pcadapt/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -74,326 +70,566 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Using pcadapt to detect local adaptation</h1>
-                        <h4 class="author">Keurcien Luu, Florian Privé, Michael G.B. Blum</h4>
+                        <h4 data-toc-skip class="author">Keurcien Luu,
+Florian Privé, Michael G.B. Blum</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/bcm-uga/pcadapt/blob/master/vignettes/pcadapt.Rmd"><code>vignettes/pcadapt.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/bcm-uga/pcadapt/blob/HEAD/vignettes/pcadapt.Rmd" class="external-link"><code>vignettes/pcadapt.Rmd</code></a></small>
       <div class="hidden name"><code>pcadapt.Rmd</code></div>
 
     </div>
 
     
     
-<p><strong>pcadapt</strong> has been developed to detect genetic markers involved in biological adaptation. <strong>pcadapt</strong> provides statistical tools for outlier detection based on Principal Component Analysis (PCA).</p>
-<p>In the following, we show how the <strong>pcadapt</strong> package can perform genome scans for selection based on individual genotype data. We show how to run the package using the example <strong>geno3pops</strong> that contains genotype data. A total of 150 individuals coming from three different populations were genotyped at 1,500 diploid markers. Simulations were performed with <a href="http://simupop.sourceforge.net/">simuPOP</a> using a divergence model assuming that 150 SNPs confer a selective advantage. To run the package on the provided example, just copy and paste shaded <code>R</code> chunks.</p>
-<p>To run the package, you need to install the package and load it using the following command lines:</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"pcadapt"</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">pcadapt</span>)</pre></body></html></div>
-<div id="a--reading-genotype-data" class="section level1">
-<h1 class="hasAnchor">
-<a href="#a--reading-genotype-data" class="anchor"></a>A. Reading genotype data</h1>
-<p>You should use the <code>read.pcadapt</code> function to convert your genotype file to the <code>bed</code> format, which is <a href="https://www.cog-genomics.org/plink2/formats#bed">PLINK binary biallelic genotype table</a>. <code>read.pcadapt</code> converts different types of files to the <code>bed</code> format and returns a character string containing the name of the converted file, which should be used as input for the <code>pcadapt</code> function. Supported formats are the following: “pcadapt”, “lfmm”, “vcf”, “bed”, “ped”, “pool”. <code>pcadapt</code> files should have individuals in columns, SNPs in lines, and missing values should be encoded by a single character (e.g. 9) different from 0, 1 or 2.</p>
-<p>For example, assume your genotype file is called “foo.lfmm” and is located in the directory “path_to_directory”, use the following command lines:</p>
-<pre><code>path_to_file &lt;- "path_to_directory/foo.lfmm"
-filename &lt;- read.pcadapt(path_to_file, type = "lfmm")</code></pre>
-<p>To run the provided example, we retrieve the file location of the example and we use <code>read.pcadapt</code> to convert the <code>bed</code> example to the <code>pcadapt</code> format.</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">path_to_file</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"geno3pops.bed"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"pcadapt"</span>)
-<span class="no">filename</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/read.pcadapt.html">read.pcadapt</a></span>(<span class="no">path_to_file</span>, <span class="kw">type</span> <span class="kw">=</span> <span class="st">"bed"</span>)</pre></body></html></div>
-<p>When working with genotype matrices already loaded in the <code>R</code> session, users have to run the <code>read.pcadapt</code> function and to specify the <code>type</code>argument, which can be <code>pcadapt</code> (individuals in columns, SNPs in lines) or <code>lfmm</code> (individuals in lines, SNPs in columns).</p>
+<p><strong>pcadapt</strong> has been developed to detect genetic markers
+involved in biological adaptation. <strong>pcadapt</strong> provides
+statistical tools for outlier detection based on Principal Component
+Analysis (PCA).</p>
+<p>In the following, we show how the <strong>pcadapt</strong> package
+can perform genome scans for selection based on individual genotype
+data. We show how to run the package using the example
+<strong>geno3pops</strong> that contains genotype data. A total of 150
+individuals coming from three different populations were genotyped at
+1,500 diploid markers. Simulations were performed with <a href="http://simupop.sourceforge.net/" class="external-link">simuPOP</a> using a divergence
+model assuming that 150 SNPs confer a selective advantage. To run the
+package on the provided example, just copy and paste shaded
+<code>R</code> chunks.</p>
+<p>To run the package, you need to install the package and load it using
+the following command lines:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"pcadapt"</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bcm-uga/pcadapt" class="external-link">pcadapt</a></span><span class="op">)</span></span></code></pre></div>
+<div class="section level2">
+<h2 id="a--reading-genotype-data">A. Reading genotype data<a class="anchor" aria-label="anchor" href="#a--reading-genotype-data"></a>
+</h2>
+<p>You should use the <code>read.pcadapt</code> function to convert your
+genotype file to the <code>bed</code> format, which is <a href="https://www.cog-genomics.org/plink2/formats#bed" class="external-link">PLINK binary
+biallelic genotype table</a>. <code>read.pcadapt</code> converts
+different types of files to the <code>bed</code> format and returns a
+character string containing the name of the converted file, which should
+be used as input for the <code>pcadapt</code> function. Supported
+formats are the following: “pcadapt”, “lfmm”, “vcf”, “bed”, “ped”,
+“pool”. <code>pcadapt</code> files should have individuals in columns,
+SNPs in lines, and missing values should be encoded by a single
+character (e.g. 9) different from 0, 1 or 2.</p>
+<p>For example, assume your genotype file is called “foo.lfmm” and is
+located in the directory “path_to_directory”, use the following command
+lines:</p>
+<pre><code><span><span class="va">path_to_file</span> <span class="op">&lt;-</span> <span class="st">"path_to_directory/foo.lfmm"</span></span>
+<span><span class="va">filename</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read.pcadapt.html">read.pcadapt</a></span><span class="op">(</span><span class="va">path_to_file</span>, type <span class="op">=</span> <span class="st">"lfmm"</span><span class="op">)</span></span></code></pre>
+<p>To run the provided example, we retrieve the file location of the
+example and we use <code>read.pcadapt</code> to convert the
+<code>bed</code> example to the <code>pcadapt</code> format.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">path_to_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"geno3pops.bed"</span>, package <span class="op">=</span> <span class="st">"pcadapt"</span><span class="op">)</span></span>
+<span><span class="va">filename</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read.pcadapt.html">read.pcadapt</a></span><span class="op">(</span><span class="va">path_to_file</span>, type <span class="op">=</span> <span class="st">"bed"</span><span class="op">)</span></span></code></pre></div>
+<p>When working with genotype matrices already loaded in the
+<code>R</code> session, users have to run the <code>read.pcadapt</code>
+function and to specify the <code>type</code>argument, which can be
+<code>pcadapt</code> (individuals in columns, SNPs in lines) or
+<code>lfmm</code> (individuals in lines, SNPs in columns).</p>
 </div>
-<div id="b--choosing-the-number-k-of-principal-components" class="section level1">
-<h1 class="hasAnchor">
-<a href="#b--choosing-the-number-k-of-principal-components" class="anchor"></a>B. Choosing the number <code>K</code> of Principal Components</h1>
-<p>The <code>pcadapt</code> function performs two successive tasks. First, PCA is performed on the centered and scaled genotype matrix. The second stage consists in computing test statistics and p-values based on the correlations between SNPs and the first <code>K</code> principal components (PCs). To run the function <code>pcadapt</code>, the user should specify the output returned by the function <code>read.pcadapt</code> and the number <code>K</code> of principal components to compute.</p>
-<p>To choose <code>K</code>, principal component analysis should first be performed with a large enough number of principal components (e.g. <code>K=20</code>).</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">x</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pcadapt.html">pcadapt</a></span>(<span class="kw">input</span> <span class="kw">=</span> <span class="no">filename</span>, <span class="kw">K</span> <span class="kw">=</span> <span class="fl">20</span>)</pre></body></html></div>
-<p><strong>NB</strong>: by default, data are assumed to be diploid. To specify the ploidy, use the argument <code>ploidy</code> (<code>ploidy=2</code> for diploid species and <code>ploidy = 1</code> for haploid species) in the <code>pcadapt</code> function.</p>
-<div id="b-1--scree-plot" class="section level3">
-<h3 class="hasAnchor">
-<a href="#b-1--scree-plot" class="anchor"></a>B.1. Scree plot</h3>
-<p>The ‘scree plot’ displays in decreasing order the percentage of variance explained by each PC. Up to a constant, it corresponds to the eigenvalues in decreasing order. The ideal pattern in a scree plot is a steep curve followed by a bend and a straight line. The eigenvalues that correspond to random variation lie on a straight line whereas the ones that correspond to population structure lie on a steep curve. We recommend to keep PCs that correspond to eigenvalues to the left of the straight line (Cattell’s rule). In the provided example, <code>K = 2</code> is the optimal choice for <code>K</code>. The plot function displays a scree plot:</p>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="no">x</span>, <span class="kw">option</span> <span class="kw">=</span> <span class="st">"screeplot"</span>)</pre></body></html></div>
+<div class="section level2">
+<h2 id="b--choosing-the-number-k-of-principal-components">B. Choosing the number <code>K</code> of Principal Components<a class="anchor" aria-label="anchor" href="#b--choosing-the-number-k-of-principal-components"></a>
+</h2>
+<p>The <code>pcadapt</code> function performs two successive tasks.
+First, PCA is performed on the centered and scaled genotype matrix. The
+second stage consists in computing test statistics and p-values based on
+the correlations between SNPs and the first <code>K</code> principal
+components (PCs). To run the function <code>pcadapt</code>, the user
+should specify the output returned by the function
+<code>read.pcadapt</code> and the number <code>K</code> of principal
+components to compute.</p>
+<p>To choose <code>K</code>, principal component analysis should first
+be performed with a large enough number of principal components
+(e.g. <code>K=20</code>).</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pcadapt.html">pcadapt</a></span><span class="op">(</span>input <span class="op">=</span> <span class="va">filename</span>, K <span class="op">=</span> <span class="fl">20</span><span class="op">)</span> </span></code></pre></div>
+<p><strong>NB</strong>: by default, data are assumed to be diploid. To
+specify the ploidy, use the argument <code>ploidy</code>
+(<code>ploidy=2</code> for diploid species and <code>ploidy = 1</code>
+for haploid species) in the <code>pcadapt</code> function.</p>
+<div class="section level4">
+<h4 id="b-1--scree-plot">B.1. Scree plot<a class="anchor" aria-label="anchor" href="#b-1--scree-plot"></a>
+</h4>
+<p>The ‘scree plot’ displays in decreasing order the percentage of
+variance explained by each PC. Up to a constant, it corresponds to the
+eigenvalues in decreasing order. The ideal pattern in a scree plot is a
+steep curve followed by a bend and a straight line. The eigenvalues that
+correspond to random variation lie on a straight line whereas the ones
+that correspond to population structure lie on a steep curve. We
+recommend to keep PCs that correspond to eigenvalues to the left of the
+straight line (Cattell’s rule). In the provided example,
+<code>K = 2</code> is the optimal choice for <code>K</code>. The plot
+function displays a scree plot:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, option <span class="op">=</span> <span class="st">"screeplot"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Warning: The `&lt;scale&gt;` argument of `guides()` cannot be `FALSE`. Use "none" instead as</span></span>
+<span><span class="co">## of ggplot2 3.3.4.</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">pcadapt</span> package.</span></span>
+<span><span class="co">##   Please report the issue at <span style="color: #0000BB; font-style: italic;">&lt;</span></span></span>
+<span><span class="co"><span style="color: #0000BB; font-style: italic;">## </span><span style="color: #555555; font-style: italic;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co"><span style="font-style: italic;">## </span><span style="color: #555555; font-style: italic;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
+<span><span class="co"><span style="font-style: italic;">## </span><span style="color: #555555; font-style: italic;">generated.</span></span></span></code></pre>
 <p><img src="pcadapt_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;"></p>
-<p>By default, the number of principal components shown in the scree plot is <code>K</code>, but it can be reduced via the argument <code>K</code>.</p>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="no">x</span>, <span class="kw">option</span> <span class="kw">=</span> <span class="st">"screeplot"</span>, <span class="kw">K</span> <span class="kw">=</span> <span class="fl">10</span>)</pre></body></html></div>
+<p>By default, the number of principal components shown in the scree
+plot is <code>K</code>, but it can be reduced via the argument
+<code>K</code>.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, option <span class="op">=</span> <span class="st">"screeplot"</span>, K <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <p><img src="pcadapt_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;"></p>
 </div>
-<div id="b-2--score-plot" class="section level3">
-<h3 class="hasAnchor">
-<a href="#b-2--score-plot" class="anchor"></a>B.2. Score plot</h3>
-<p>Another option to choose the number of PCs is based on the ‘score plot’ that displays population structure. The score plot displays the projections of the individuals onto the specified principal components. Using the score plot, the choice of <code>K</code> can be limited to the values of <code>K</code> that correspond to a relevant level of population structure.</p>
-<p>When population labels are known, individuals of the same populations can be displayed with the same color using the <code>pop</code> argument, which should contain the list of indices of the populations of origin. In the <strong>geno3pops</strong> example, the first population is composed of the first 50 individuals, the second population of the next 50 individuals, and so on. Thus, a vector of indices or characters (population names) that can be provided to the argument <code>pop</code> should look like this:</p>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="co"># With integers</span>
-<span class="no">poplist.int</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">1</span>, <span class="fl">50</span>), <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">2</span>, <span class="fl">50</span>), <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">3</span>, <span class="fl">50</span>))
-<span class="co"># With names</span>
-<span class="no">poplist.names</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="st">"POP1"</span>, <span class="fl">50</span>),<span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="st">"POP2"</span>, <span class="fl">50</span>),<span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="st">"POP3"</span>, <span class="fl">50</span>))
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">poplist.int</span>)</pre></body></html></div>
-<pre><code>##   [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [38] 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
-##  [75] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 3 3 3 3 3 3 3 3 3 3
-## [112] 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
-## [149] 3 3</code></pre>
-<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">poplist.names</span>)</pre></body></html></div>
-<pre><code>##   [1] "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1"
-##  [11] "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1"
-##  [21] "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1"
-##  [31] "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1"
-##  [41] "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1"
-##  [51] "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2"
-##  [61] "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2"
-##  [71] "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2"
-##  [81] "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2"
-##  [91] "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2"
-## [101] "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3"
-## [111] "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3"
-## [121] "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3"
-## [131] "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3"
-## [141] "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3"</code></pre>
-<p>If this field is left empty, the points will be displayed in black. By default, if the values of <code>i</code> and <code>j</code> are not specified, the projection is done onto the first two principal components.</p>
-<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="no">x</span>, <span class="kw">option</span> <span class="kw">=</span> <span class="st">"scores"</span>, <span class="kw">pop</span> <span class="kw">=</span> <span class="no">poplist.int</span>)</pre></body></html></div>
-<pre><code>## Warning: Use of `df$Pop` is discouraged. Use `Pop` instead.</code></pre>
+<div class="section level4">
+<h4 id="b-2--score-plot">B.2. Score plot<a class="anchor" aria-label="anchor" href="#b-2--score-plot"></a>
+</h4>
+<p>Another option to choose the number of PCs is based on the ‘score
+plot’ that displays population structure. The score plot displays the
+projections of the individuals onto the specified principal components.
+Using the score plot, the choice of <code>K</code> can be limited to the
+values of <code>K</code> that correspond to a relevant level of
+population structure.</p>
+<p>When population labels are known, individuals of the same populations
+can be displayed with the same color using the <code>pop</code>
+argument, which should contain the list of indices of the populations of
+origin. In the <strong>geno3pops</strong> example, the first population
+is composed of the first 50 individuals, the second population of the
+next 50 individuals, and so on. Thus, a vector of indices or characters
+(population names) that can be provided to the argument <code>pop</code>
+should look like this:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># With integers</span></span>
+<span><span class="va">poplist.int</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">50</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">50</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">50</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># With names</span></span>
+<span><span class="va">poplist.names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"POP1"</span>, <span class="fl">50</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"POP2"</span>, <span class="fl">50</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"POP3"</span>, <span class="fl">50</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">poplist.int</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##   [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</span></span>
+<span><span class="co">##  [38] 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2</span></span>
+<span><span class="co">##  [75] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 3 3 3 3 3 3 3 3 3 3</span></span>
+<span><span class="co">## [112] 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3</span></span>
+<span><span class="co">## [149] 3 3</span></span></code></pre>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">poplist.names</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##   [1] "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1"</span></span>
+<span><span class="co">##  [11] "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1"</span></span>
+<span><span class="co">##  [21] "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1"</span></span>
+<span><span class="co">##  [31] "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1"</span></span>
+<span><span class="co">##  [41] "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1" "POP1"</span></span>
+<span><span class="co">##  [51] "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2"</span></span>
+<span><span class="co">##  [61] "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2"</span></span>
+<span><span class="co">##  [71] "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2"</span></span>
+<span><span class="co">##  [81] "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2"</span></span>
+<span><span class="co">##  [91] "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2" "POP2"</span></span>
+<span><span class="co">## [101] "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3"</span></span>
+<span><span class="co">## [111] "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3"</span></span>
+<span><span class="co">## [121] "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3"</span></span>
+<span><span class="co">## [131] "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3"</span></span>
+<span><span class="co">## [141] "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3" "POP3"</span></span></code></pre>
+<p>If this field is left empty, the points will be displayed in black.
+By default, if the values of <code>i</code> and <code>j</code> are not
+specified, the projection is done onto the first two principal
+components.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, option <span class="op">=</span> <span class="st">"scores"</span>, pop <span class="op">=</span> <span class="va">poplist.int</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Warning: Use of `df$Pop` is discouraged.</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Use `Pop` instead.</span></span></code></pre>
 <p><img src="pcadapt_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="no">x</span>, <span class="kw">option</span> <span class="kw">=</span> <span class="st">"scores"</span>, <span class="kw">pop</span> <span class="kw">=</span> <span class="no">poplist.names</span>)</pre></body></html></div>
-<pre><code>## Warning: Use of `df$Pop` is discouraged. Use `Pop` instead.</code></pre>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, option <span class="op">=</span> <span class="st">"scores"</span>, pop <span class="op">=</span> <span class="va">poplist.names</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Warning: Use of `df$Pop` is discouraged.</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Use `Pop` instead.</span></span></code></pre>
 <p><img src="pcadapt_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;"></p>
-<p>Looking at population structure beyond <code>K = 2</code> confirms the results of the scree plot. The third and the fourth principal components do not ascertain population structure anymore.</p>
-<div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="no">x</span>, <span class="kw">option</span> <span class="kw">=</span> <span class="st">"scores"</span>, <span class="kw">i</span> <span class="kw">=</span> <span class="fl">3</span>, <span class="kw">j</span> <span class="kw">=</span> <span class="fl">4</span>, <span class="kw">pop</span> <span class="kw">=</span> <span class="no">poplist.names</span>)</pre></body></html></div>
-<pre><code>## Warning: Use of `df$Pop` is discouraged. Use `Pop` instead.</code></pre>
+<p>Looking at population structure beyond <code>K = 2</code> confirms
+the results of the scree plot. The third and the fourth principal
+components do not ascertain population structure anymore.</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, option <span class="op">=</span> <span class="st">"scores"</span>, i <span class="op">=</span> <span class="fl">3</span>, j <span class="op">=</span> <span class="fl">4</span>, pop <span class="op">=</span> <span class="va">poplist.names</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Warning: Use of `df$Pop` is discouraged.</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Use `Pop` instead.</span></span></code></pre>
 <p><img src="pcadapt_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;"></p>
 </div>
 </div>
-<div id="c--computing-the-test-statistic-based-on-pca" class="section level1">
-<h1 class="hasAnchor">
-<a href="#c--computing-the-test-statistic-based-on-pca" class="anchor"></a>C. Computing the test statistic based on PCA</h1>
-<p>For a given SNP, the test statistic is based on the <span class="math inline">\(z\)</span>-scores obtained when regressing SNPs with the <code>K</code> principal components. The test statistic for detecting outlier SNPs is the Mahalanobis distance, which is a multi-dimensional approach that measures how distant is a point from the mean. Denoting by <span class="math inline">\(z^j = (z_1^j, \dots, z_K^j)\)</span> the vector of <code>K</code> <span class="math inline">\(z\)</span>-scores between SNP <span class="math inline">\(j\)</span> and the first <code>K</code> PCs, the squared Mahalanobis distance is defined as</p>
-<p><span class="math display">\[D_j^2 = (z^j - \bar{z})\Sigma^{-1}(z^j - \bar{z})\]</span></p>
-<p>where <span class="math inline">\(\bar{z}\)</span> and <span class="math inline">\(\Sigma\)</span> are robust estimates of the mean and of the covariance matrix. Once divided by a constant <span class="math inline">\(\lambda\)</span> called the genomic inflation factor, the scaled squared distances <span class="math inline">\(D_j^2/\lambda\)</span> should have a chi-square distribution with <code>K</code> degrees of freedom under the assumption that there are no outlier.</p>
-<p>For the <strong>geno3pops</strong> data, it was found in section B that <code>K=2</code> corresponds to the optimal choice of the number of PCs.</p>
-<div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="no">x</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pcadapt.html">pcadapt</a></span>(<span class="no">filename</span>, <span class="kw">K</span> <span class="kw">=</span> <span class="fl">2</span>)</pre></body></html></div>
-<p>In addition to the number <code>K</code> of principal components to work with, the user can also set the parameter <code>min.maf</code> that corresponds to a threshold of minor allele frequency. By default, the parameter <code>min.maf</code> is set to <code>5%</code>. P-values of SNPs with a minor allele frequency smaller than the threshold are not computed (<code>NA</code> is returned).</p>
-<p>The object <code>x</code> returned by the function <code>pcadapt</code> contains numerical quantities obtained after performing a PCA on the genotype matrix.</p>
-<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">x</span>)</pre></body></html></div>
-<p>We assume in the following that there are <code>n</code> individuals and <code>L</code> markers.</p>
+<div class="section level2">
+<h2 id="c--computing-the-test-statistic-based-on-pca">C. Computing the test statistic based on PCA<a class="anchor" aria-label="anchor" href="#c--computing-the-test-statistic-based-on-pca"></a>
+</h2>
+<p>For a given SNP, the test statistic is based on the <span class="math inline">\(z\)</span>-scores obtained when regressing SNPs
+with the <code>K</code> principal components. The test statistic for
+detecting outlier SNPs is the Mahalanobis distance, which is a
+multi-dimensional approach that measures how distant is a point from the
+mean. Denoting by <span class="math inline">\(z^j = (z_1^j, \dots,
+z_K^j)\)</span> the vector of <code>K</code> <span class="math inline">\(z\)</span>-scores between SNP <span class="math inline">\(j\)</span> and the first <code>K</code> PCs, the
+squared Mahalanobis distance is defined as</p>
+<p><span class="math display">\[D_j^2 = (z^j - \bar{z})\Sigma^{-1}(z^j -
+\bar{z})\]</span></p>
+<p>where <span class="math inline">\(\bar{z}\)</span> and <span class="math inline">\(\Sigma\)</span> are robust estimates of the mean
+and of the covariance matrix. Once divided by a constant <span class="math inline">\(\lambda\)</span> called the genomic inflation
+factor, the scaled squared distances <span class="math inline">\(D_j^2/\lambda\)</span> should have a chi-square
+distribution with <code>K</code> degrees of freedom under the assumption
+that there are no outlier.</p>
+<p>For the <strong>geno3pops</strong> data, it was found in section B
+that <code>K=2</code> corresponds to the optimal choice of the number of
+PCs.</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pcadapt.html">pcadapt</a></span><span class="op">(</span><span class="va">filename</span>, K <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<p>In addition to the number <code>K</code> of principal components to
+work with, the user can also set the parameter <code>min.maf</code> that
+corresponds to a threshold of minor allele frequency. By default, the
+parameter <code>min.maf</code> is set to <code>5%</code>. P-values of
+SNPs with a minor allele frequency smaller than the threshold are not
+computed (<code>NA</code> is returned).</p>
+<p>The object <code>x</code> returned by the function
+<code>pcadapt</code> contains numerical quantities obtained after
+performing a PCA on the genotype matrix.</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
+<p>We assume in the following that there are <code>n</code> individuals
+and <code>L</code> markers.</p>
 <ul>
-<li><p><code>scores</code> is a <code>(n,K)</code> matrix corresponding to the projections of the individuals onto each PC.</p></li>
-<li><p><code>singular.values</code> is a vector containing the <code>K</code> ordered square root of the proportion of variance explained by each PC.</p></li>
-<li><p><code>loadings</code> is a <code>(L,K)</code> matrix containing the correlations between each genetic marker and each PC.</p></li>
-<li><p><code>zscores</code> is a <code>(L,K)</code> matrix containing the <span class="math inline">\(z\)</span>-scores.</p></li>
-<li><p><code>af</code> is a vector of size <code>L</code> containing allele frequencies of derived alleles where genotypes of <code>0</code> are supposed to code for homozygous for the reference allele.</p></li>
-<li><p><code>maf</code> is a vector of size <code>L</code> containing minor allele frequencies.</p></li>
-<li><p><code>chi2.stat</code> is a vector of size <code>L</code> containing the rescaled statistics <code>stat/gif</code> that follow a chi-squared distribution with <code>K</code> degrees of freedom.</p></li>
-<li><p><code>gif</code> is a numerical value corresponding to the genomic inflation factor estimated from <code>stat</code>.</p></li>
-<li><p><code>pvalues</code> is a vector containing <code>L</code> p-values.</p></li>
-<li><p><code>pass</code> A list of SNPs indices that are kept after exclusion based on the minor allele frequency threshold.</p></li>
-<li><p><code>stat</code> is a vector of size <code>L</code> containing squared Mahalanobis distances by default.</p></li>
+<li><p><code>scores</code> is a <code>(n,K)</code> matrix corresponding
+to the projections of the individuals onto each PC.</p></li>
+<li><p><code>singular.values</code> is a vector containing the
+<code>K</code> ordered square root of the proportion of variance
+explained by each PC.</p></li>
+<li><p><code>loadings</code> is a <code>(L,K)</code> matrix containing
+the correlations between each genetic marker and each PC.</p></li>
+<li><p><code>zscores</code> is a <code>(L,K)</code> matrix containing
+the <span class="math inline">\(z\)</span>-scores.</p></li>
+<li><p><code>af</code> is a vector of size <code>L</code> containing
+allele frequencies of derived alleles where genotypes of <code>0</code>
+are supposed to code for homozygous for the reference allele.</p></li>
+<li><p><code>maf</code> is a vector of size <code>L</code> containing
+minor allele frequencies.</p></li>
+<li><p><code>chi2.stat</code> is a vector of size <code>L</code>
+containing the rescaled statistics <code>stat/gif</code> that follow a
+chi-squared distribution with <code>K</code> degrees of
+freedom.</p></li>
+<li><p><code>gif</code> is a numerical value corresponding to the
+genomic inflation factor estimated from <code>stat</code>.</p></li>
+<li><p><code>pvalues</code> is a vector containing <code>L</code>
+p-values.</p></li>
+<li><p><code>pass</code> A list of SNPs indices that are kept after
+exclusion based on the minor allele frequency threshold.</p></li>
+<li><p><code>stat</code> is a vector of size <code>L</code> containing
+squared Mahalanobis distances by default.</p></li>
 </ul>
-<p>All of these elements are accessible using the <code><a href="https://rdrr.io/r/base/Extract.html">$</a></code> symbol. For example, the p-values are contained in <code>x$pvalues</code>.</p>
+<p>All of these elements are accessible using the <code>$</code> symbol.
+For example, the p-values are contained in <code>x$pvalues</code>.</p>
 </div>
-<div id="d--graphical-tools" class="section level1">
-<h1 class="hasAnchor">
-<a href="#d--graphical-tools" class="anchor"></a>D. Graphical tools</h1>
-<div id="d-1--manhattan-plot" class="section level3">
-<h3 class="hasAnchor">
-<a href="#d-1--manhattan-plot" class="anchor"></a>D.1. Manhattan Plot</h3>
+<div class="section level2">
+<h2 id="d--graphical-tools">D. Graphical tools<a class="anchor" aria-label="anchor" href="#d--graphical-tools"></a>
+</h2>
+<div class="section level4">
+<h4 id="d-1--manhattan-plot">D.1. Manhattan Plot<a class="anchor" aria-label="anchor" href="#d-1--manhattan-plot"></a>
+</h4>
 <p>A Manhattan plot displays <span class="math inline">\(-\text{log}_{10}\)</span> of the p-values.</p>
-<div class="sourceCode" id="cb19"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="no">x</span> , <span class="kw">option</span> <span class="kw">=</span> <span class="st">"manhattan"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span> , option <span class="op">=</span> <span class="st">"manhattan"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="pcadapt_files/figure-html/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;"></p>
 </div>
-<div id="d-2--q-q-plot" class="section level3">
-<h3 class="hasAnchor">
-<a href="#d-2--q-q-plot" class="anchor"></a>D.2. Q-Q Plot</h3>
-<p>The user can also check the expected uniform distribution of the p-values using a Q-Q plot</p>
-<div class="sourceCode" id="cb20"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="no">x</span>, <span class="kw">option</span> <span class="kw">=</span> <span class="st">"qqplot"</span>)</pre></body></html></div>
+<div class="section level4">
+<h4 id="d-2--q-q-plot">D.2. Q-Q Plot<a class="anchor" aria-label="anchor" href="#d-2--q-q-plot"></a>
+</h4>
+<p>The user can also check the expected uniform distribution of the
+p-values using a Q-Q plot</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, option <span class="op">=</span> <span class="st">"qqplot"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="pcadapt_files/figure-html/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;"></p>
-<p>This plot confirms that most of the p-values follow the expected uniform distribution. However, the smallest p-values are smaller than expected confirming the presence of outliers.</p>
+<p>This plot confirms that most of the p-values follow the expected
+uniform distribution. However, the smallest p-values are smaller than
+expected confirming the presence of outliers.</p>
 </div>
-<div id="d-3--histograms-of-the-test-statistic-and-of-the-p-values" class="section level3">
-<h3 class="hasAnchor">
-<a href="#d-3--histograms-of-the-test-statistic-and-of-the-p-values" class="anchor"></a>D.3. Histograms of the test statistic and of the p-values</h3>
-<p>An histogram of p-values confirms that most of the p-values follow an uniform distribution. The excess of small p-values indicates the presence of outliers.</p>
-<div class="sourceCode" id="cb21"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span>(<span class="no">x</span>$<span class="no">pvalues</span>, <span class="kw">xlab</span> <span class="kw">=</span> <span class="st">"p-values"</span>, <span class="kw">main</span> <span class="kw">=</span> <span class="kw">NULL</span>, <span class="kw">breaks</span> <span class="kw">=</span> <span class="fl">50</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="st">"orange"</span>)</pre></body></html></div>
+<div class="section level4">
+<h4 id="d-3--histograms-of-the-test-statistic-and-of-the-p-values">D.3. Histograms of the test statistic and of the p-values<a class="anchor" aria-label="anchor" href="#d-3--histograms-of-the-test-statistic-and-of-the-p-values"></a>
+</h4>
+<p>An histogram of p-values confirms that most of the p-values follow an
+uniform distribution. The excess of small p-values indicates the
+presence of outliers.</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">pvalues</span>, xlab <span class="op">=</span> <span class="st">"p-values"</span>, main <span class="op">=</span> <span class="cn">NULL</span>, breaks <span class="op">=</span> <span class="fl">50</span>, col <span class="op">=</span> <span class="st">"orange"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="pcadapt_files/figure-html/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;"></p>
-<p>The presence of outliers is also visible when plotting a histogram of the test statistic <span class="math inline">\(D_j\)</span>.</p>
-<div class="sourceCode" id="cb22"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="no">x</span>, <span class="kw">option</span> <span class="kw">=</span> <span class="st">"stat.distribution"</span>)</pre></body></html></div>
+<p>The presence of outliers is also visible when plotting a histogram of
+the test statistic <span class="math inline">\(D_j\)</span>.</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, option <span class="op">=</span> <span class="st">"stat.distribution"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Warning: The dot-dot notation (`..density..`) was deprecated in ggplot2 3.4.0.</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Please use `after_stat(density)` instead.</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">pcadapt</span> package.</span></span>
+<span><span class="co">##   Please report the issue at <span style="color: #0000BB; font-style: italic;">&lt;</span></span></span>
+<span><span class="co"><span style="color: #0000BB; font-style: italic;">## </span><span style="color: #555555; font-style: italic;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co"><span style="font-style: italic;">## </span><span style="color: #555555; font-style: italic;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
+<span><span class="co"><span style="font-style: italic;">## </span><span style="color: #555555; font-style: italic;">generated.</span></span></span></code></pre>
 <p><img src="pcadapt_files/figure-html/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;"></p>
 </div>
 </div>
-<div id="e--choosing-a-cutoff-for-outlier-detection" class="section level1">
-<h1 class="hasAnchor">
-<a href="#e--choosing-a-cutoff-for-outlier-detection" class="anchor"></a>E. Choosing a cutoff for outlier detection</h1>
-<p>To provide a list of outliers and choose a cutoff for outlier detection, there are several methods that are listed below from the less conservative one to the more conservative one.</p>
-<div id="e-1--q-values" class="section level2">
-<h2 class="hasAnchor">
-<a href="#e-1--q-values" class="anchor"></a>E.1. q-values</h2>
-<p>The <code>R</code> package <a href="http://www.bioconductor.org/packages/release/bioc/html/qvalue.html">qvalue</a>, transforms p-values into q-values. To install and load the package, type the following command lines:</p>
-<pre><code>## try http if https is not available
-source("https://bioconductor.org/biocLite.R")
-biocLite("qvalue")
-library(qvalue)</code></pre>
-<p>For a given <span class="math inline">\(\alpha\)</span> (real valued number between <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>), SNPs with q-values less than <span class="math inline">\(\alpha\)</span> will be considered as outliers with an expected false discovery rate bounded by <span class="math inline">\(\alpha\)</span>. The false discovery rate is defined as the percentage of false discoveries among the list of candidate SNPs. Here is an example of how to provide a list of candidate SNPs for the <strong>geno3pops</strong> data, for an expected false discovery rate lower than <code>10%</code>:</p>
-<pre><code>library(qvalue)
-qval &lt;- qvalue(x$pvalues)$qvalues
-alpha &lt;- 0.1
-outliers &lt;- which(qval &lt; alpha)
-length(outliers)</code></pre>
+<div class="section level2">
+<h2 id="e--choosing-a-cutoff-for-outlier-detection">E. Choosing a cutoff for outlier detection<a class="anchor" aria-label="anchor" href="#e--choosing-a-cutoff-for-outlier-detection"></a>
+</h2>
+<p>To provide a list of outliers and choose a cutoff for outlier
+detection, there are several methods that are listed below from the less
+conservative one to the more conservative one.</p>
+<div class="section level3">
+<h3 id="e-1--q-values">E.1. q-values<a class="anchor" aria-label="anchor" href="#e-1--q-values"></a>
+</h3>
+<p>The <code>R</code> package <a href="http://www.bioconductor.org/packages/release/bioc/html/qvalue.html" class="external-link">qvalue</a>,
+transforms p-values into q-values. To install and load the package, type
+the following command lines:</p>
+<pre><code><span><span class="co">## try http if https is not available</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="st">"https://bioconductor.org/biocLite.R"</span><span class="op">)</span></span>
+<span><span class="fu">biocLite</span><span class="op">(</span><span class="st">"qvalue"</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">qvalue</span><span class="op">)</span></span></code></pre>
+<p>For a given <span class="math inline">\(\alpha\)</span> (real valued
+number between <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>), SNPs with q-values less than <span class="math inline">\(\alpha\)</span> will be considered as outliers
+with an expected false discovery rate bounded by <span class="math inline">\(\alpha\)</span>. The false discovery rate is
+defined as the percentage of false discoveries among the list of
+candidate SNPs. Here is an example of how to provide a list of candidate
+SNPs for the <strong>geno3pops</strong> data, for an expected false
+discovery rate lower than <code>10%</code>:</p>
+<pre><code><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">qvalue</span><span class="op">)</span></span>
+<span><span class="va">qval</span> <span class="op">&lt;-</span> <span class="fu">qvalue</span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">pvalues</span><span class="op">)</span><span class="op">$</span><span class="va">qvalues</span></span>
+<span><span class="va">alpha</span> <span class="op">&lt;-</span> <span class="fl">0.1</span></span>
+<span><span class="va">outliers</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">qval</span> <span class="op">&lt;</span> <span class="va">alpha</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">outliers</span><span class="op">)</span></span></code></pre>
 </div>
-<div id="e-2--benjamini-hochberg-procedure" class="section level2">
-<h2 class="hasAnchor">
-<a href="#e-2--benjamini-hochberg-procedure" class="anchor"></a>E.2. Benjamini-Hochberg Procedure</h2>
-<pre><code>padj &lt;- p.adjust(x$pvalues,method="BH")
-alpha &lt;- 0.1
-outliers &lt;- which(padj &lt; alpha)
-length(outliers)</code></pre>
+<div class="section level3">
+<h3 id="e-2--benjamini-hochberg-procedure">E.2. Benjamini-Hochberg Procedure<a class="anchor" aria-label="anchor" href="#e-2--benjamini-hochberg-procedure"></a>
+</h3>
+<pre><code><span><span class="va">padj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/p.adjust.html" class="external-link">p.adjust</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">pvalues</span>,method<span class="op">=</span><span class="st">"BH"</span><span class="op">)</span></span>
+<span><span class="va">alpha</span> <span class="op">&lt;-</span> <span class="fl">0.1</span></span>
+<span><span class="va">outliers</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">padj</span> <span class="op">&lt;</span> <span class="va">alpha</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">outliers</span><span class="op">)</span></span></code></pre>
 </div>
-<div id="e-3--bonferroni-correction" class="section level2">
-<h2 class="hasAnchor">
-<a href="#e-3--bonferroni-correction" class="anchor"></a>E.3. Bonferroni correction</h2>
-<pre><code>padj &lt;- p.adjust(x$pvalues,method="bonferroni")
-alpha &lt;- 0.1
-outliers &lt;- which(padj &lt; alpha)
-length(outliers)</code></pre>
+<div class="section level3">
+<h3 id="e-3--bonferroni-correction">E.3. Bonferroni correction<a class="anchor" aria-label="anchor" href="#e-3--bonferroni-correction"></a>
+</h3>
+<pre><code><span><span class="va">padj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/p.adjust.html" class="external-link">p.adjust</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">pvalues</span>,method<span class="op">=</span><span class="st">"bonferroni"</span><span class="op">)</span></span>
+<span><span class="va">alpha</span> <span class="op">&lt;-</span> <span class="fl">0.1</span></span>
+<span><span class="va">outliers</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">padj</span> <span class="op">&lt;</span> <span class="va">alpha</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">outliers</span><span class="op">)</span></span></code></pre>
 </div>
 </div>
-<div id="f--linkage-disequilibrium-ld-thinning" class="section level1">
-<h1 class="hasAnchor">
-<a href="#f--linkage-disequilibrium-ld-thinning" class="anchor"></a>F. Linkage Disequilibrium (LD) thinning</h1>
-<p>Linkage Disequilibrium can affect ascertainment of population structure (<a href="https://www.nature.com/articles/ejhg201348">Abdellaoui et al. 2013</a>). When working with RAD-seq data, it should not be an issue. However, users analyzing dense data such as whole genome sequence data or dense SNP data should account for LD in their genome scans.</p>
-<p>In pcadapt, there is an option to compute PCs after SNP thinning. SNP thinning make use of two parameters: window size (default 200 SNPs) and <span class="math inline">\(r^2\)</span> threshold (default 0.1). The genome scan is then performed by looking at associations between all SNPs and PCs ascertained after SNP thinning.</p>
-<p>We provide below an example of data analysis using simulated data where there is a LD. Genotype data are stored in a matrix (individuals in columns and SNPs in lines). An analysis without SNP thinning can be performed as follows</p>
-<div class="sourceCode" id="cb27"><html><body><pre class="r"><span class="no">path_to_file</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"SSMPG2017.rds"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"pcadapt"</span>)
-<span class="no">genotypes</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span>(<span class="no">path_to_file</span>)
-<span class="no">matrix</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/read.pcadapt.html">read.pcadapt</a></span>(<span class="no">genotypes</span>, <span class="kw">type</span> <span class="kw">=</span> <span class="st">"pcadapt"</span>)
-<span class="no">res</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pcadapt.html">pcadapt</a></span>(<span class="no">matrix</span>, <span class="kw">K</span> <span class="kw">=</span> <span class="fl">20</span>)
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="no">res</span>, <span class="kw">option</span> <span class="kw">=</span> <span class="st">"screeplot"</span>)</pre></body></html></div>
+<div class="section level2">
+<h2 id="f--linkage-disequilibrium-ld-thinning">F. Linkage Disequilibrium (LD) thinning<a class="anchor" aria-label="anchor" href="#f--linkage-disequilibrium-ld-thinning"></a>
+</h2>
+<p>Linkage Disequilibrium can affect ascertainment of population
+structure (<a href="https://www.nature.com/articles/ejhg201348" class="external-link">Abdellaoui et
+al. 2013</a>). When working with RAD-seq data, it should not be an
+issue. However, users analyzing dense data such as whole genome sequence
+data or dense SNP data should account for LD in their genome scans.</p>
+<p>In pcadapt, there is an option to compute PCs after SNP thinning. SNP
+thinning make use of two parameters: window size (default 200 SNPs) and
+<span class="math inline">\(r^2\)</span> threshold (default 0.1). The
+genome scan is then performed by looking at associations between all
+SNPs and PCs ascertained after SNP thinning.</p>
+<p>We provide below an example of data analysis using simulated data
+where there is a LD. Genotype data are stored in a matrix (individuals
+in columns and SNPs in lines). An analysis without SNP thinning can be
+performed as follows</p>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">path_to_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"SSMPG2017.rds"</span>, package <span class="op">=</span> <span class="st">"pcadapt"</span><span class="op">)</span></span>
+<span><span class="va">genotypes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="va">path_to_file</span><span class="op">)</span></span>
+<span><span class="va">matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read.pcadapt.html">read.pcadapt</a></span><span class="op">(</span><span class="va">genotypes</span>, type <span class="op">=</span> <span class="st">"pcadapt"</span><span class="op">)</span></span>
+<span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pcadapt.html">pcadapt</a></span><span class="op">(</span><span class="va">matrix</span>, K <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">res</span>, option <span class="op">=</span> <span class="st">"screeplot"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="pcadapt_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
 <p>Cattell’s rule indicates <span class="math inline">\(K=4\)</span>.</p>
-<div class="sourceCode" id="cb28"><html><body><pre class="r"><span class="no">res</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pcadapt.html">pcadapt</a></span>(<span class="no">matrix</span>, <span class="kw">K</span> <span class="kw">=</span> <span class="fl">4</span>)
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="no">res</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pcadapt.html">pcadapt</a></span><span class="op">(</span><span class="va">matrix</span>, K <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></code></pre></div>
 <p><img src="pcadapt_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
-<p>Because the data have been simulated, we know that outliers do not correspond to regions involved in adaptation but rather correspond to regions of low recombination (high LD).</p>
-<p>To evaluate if LD might be an issue for your dataset, we recommend to display the loadings (contributions of each SNP to the PC) and to evaluate if the loadings are clustered in a single or several genomic regions.</p>
-<div class="sourceCode" id="cb29"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span>(<span class="kw">mfrow</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2</span>, <span class="fl">2</span>))
-<span class="kw">for</span> (<span class="no">i</span> <span class="kw">in</span> <span class="fl">1</span>:<span class="fl">4</span>)
-  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="no">res</span>$<span class="no">loadings</span>[, <span class="no">i</span>], <span class="kw">pch</span> <span class="kw">=</span> <span class="fl">19</span>, <span class="kw">cex</span> <span class="kw">=</span> <span class="fl">.3</span>, <span class="kw">ylab</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"Loadings PC"</span>, <span class="no">i</span>))</pre></body></html></div>
+<p>Because the data have been simulated, we know that outliers do not
+correspond to regions involved in adaptation but rather correspond to
+regions of low recombination (high LD).</p>
+<p>To evaluate if LD might be an issue for your dataset, we recommend to
+display the loadings (contributions of each SNP to the PC) and to
+evaluate if the loadings are clustered in a single or several genomic
+regions.</p>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">loadings</span><span class="op">[</span>, <span class="va">i</span><span class="op">]</span>, pch <span class="op">=</span> <span class="fl">19</span>, cex <span class="op">=</span> <span class="fl">.3</span>, ylab <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Loadings PC"</span>, <span class="va">i</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="pcadapt_files/figure-html/unnamed-chunk-19-1.png" width="700"></p>
-<p>Here, the top-left figure shows that PC1 is determined by a single genomic region, which is likely to be a region of strong LD.</p>
+<p>Here, the top-left figure shows that PC1 is determined by a single
+genomic region, which is likely to be a region of strong LD.</p>
 <p>We should therefore thin SNPs in order to compute the PCS.</p>
-<div class="sourceCode" id="cb30"><html><body><pre class="r"><span class="no">res</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pcadapt.html">pcadapt</a></span>(<span class="no">matrix</span>, <span class="kw">K</span> <span class="kw">=</span> <span class="fl">20</span>, <span class="kw">LD.clumping</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">size</span> <span class="kw">=</span> <span class="fl">200</span>, <span class="kw">thr</span> <span class="kw">=</span> <span class="fl">0.1</span>))
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="no">res</span>, <span class="kw">option</span> <span class="kw">=</span> <span class="st">"screeplot"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pcadapt.html">pcadapt</a></span><span class="op">(</span><span class="va">matrix</span>, K <span class="op">=</span> <span class="fl">20</span>, LD.clumping <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">200</span>, thr <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">res</span>, option <span class="op">=</span> <span class="st">"screeplot"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="pcadapt_files/figure-html/unnamed-chunk-20-1.png" width="700"></p>
 <p>After SNP thinning, we choose <span class="math inline">\(K=2\)</span>.</p>
-<div class="sourceCode" id="cb31"><html><body><pre class="r"><span class="no">res</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pcadapt.html">pcadapt</a></span>(<span class="no">matrix</span>, <span class="kw">K</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">LD.clumping</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">size</span> <span class="kw">=</span> <span class="fl">200</span>, <span class="kw">thr</span> <span class="kw">=</span> <span class="fl">0.1</span>))
-<span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span>(<span class="kw">mfrow</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>, <span class="fl">2</span>))
-<span class="kw">for</span> (<span class="no">i</span> <span class="kw">in</span> <span class="fl">1</span>:<span class="fl">2</span>)
-  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="no">res</span>$<span class="no">loadings</span>[, <span class="no">i</span>], <span class="kw">pch</span> <span class="kw">=</span> <span class="fl">19</span>, <span class="kw">cex</span> <span class="kw">=</span> <span class="fl">.3</span>, <span class="kw">ylab</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"Loadings PC"</span>, <span class="no">i</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pcadapt.html">pcadapt</a></span><span class="op">(</span><span class="va">matrix</span>, K <span class="op">=</span> <span class="fl">2</span>, LD.clumping <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">200</span>, thr <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">loadings</span><span class="op">[</span>, <span class="va">i</span><span class="op">]</span>, pch <span class="op">=</span> <span class="fl">19</span>, cex <span class="op">=</span> <span class="fl">.3</span>, ylab <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Loadings PC"</span>, <span class="va">i</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="pcadapt_files/figure-html/unnamed-chunk-21-1.png" width="700"></p>
-<p>The distribution of the loadings is now evenly distributed, so we can have a look at the genome scan, which correctly identifies regions involved in adaptation.</p>
-<div class="sourceCode" id="cb32"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="no">res</span>)</pre></body></html></div>
+<p>The distribution of the loadings is now evenly distributed, so we can
+have a look at the genome scan, which correctly identifies regions
+involved in adaptation.</p>
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></code></pre></div>
 <p><img src="pcadapt_files/figure-html/unnamed-chunk-22-1.png" width="700"></p>
 </div>
-<div id="g--detecting-local-adaptation-with-pooled-sequencing-data" class="section level1">
-<h1 class="hasAnchor">
-<a href="#g--detecting-local-adaptation-with-pooled-sequencing-data" class="anchor"></a>G. Detecting local adaptation with pooled sequencing data</h1>
-<p>For Pool-seq samples, the package also uses the <code>read.pcadapt</code> function.</p>
-<p>We assume that the user provides a matrix of relative frequencies with <code>n</code> rows and <code>L</code> columns (where <code>n</code> is the number of populations and <code>L</code> is the number of genetic markers). Assume your frequency file is called “foo” and is located in the directory “path_to_directory”, use the following command lines:</p>
-<pre><code>pool.data &lt;- read.table("path_to_directory/foo")
-filename &lt;- read.pcadapt(pool.data, type = "pool")</code></pre>
-<p>A Pool-seq example is provided in the package, and can be loaded as follows:</p>
-<div class="sourceCode" id="cb34"><html><body><pre class="r"><span class="no">pool.data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"pool3pops"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"pcadapt"</span>)
-<span class="no">filename</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/read.pcadapt.html">read.pcadapt</a></span>(<span class="no">pool.data</span>, <span class="kw">type</span> <span class="kw">=</span> <span class="st">"pool"</span>)</pre></body></html></div>
-<p>With Pool-Seq data, the package computes again a Mahalanobis distance based on PCA loadings.</p>
-<p>By default, <code>pcadapt</code> function assumes that <span class="math inline">\(K=n-1\)</span>. Smaller values of <code>K</code> can be provided by using argument <code>K</code>. Computation of Mahalanobis distances is performed as follows</p>
-<div class="sourceCode" id="cb35"><html><body><pre class="r"><span class="no">res</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pcadapt.html">pcadapt</a></span>(<span class="no">filename</span>)
-<span class="co">#The same as res &lt;- pcadapt(filename,K=2)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">res</span>)</pre></body></html></div>
-<pre><code>##                 Length Class  Mode   
-## scores             6   -none- numeric
-## singular.values    2   -none- numeric
-## loadings        3000   -none- numeric
-## zscores         3000   -none- numeric
-## af              1500   -none- numeric
-## maf             1500   -none- numeric
-## chi2.stat       1500   -none- numeric
-## stat            1500   -none- numeric
-## gif                1   -none- numeric
-## pvalues         1500   -none- numeric
-## pass            1500   -none- numeric</code></pre>
-<p>`res’ is a list containing the same elements than when using individual genotype data.</p>
-<p>A scree plot can be obtained and be possibly used to reduce <code>K</code>. If the number of populations <code>n</code> is too small, it is impossible to use the scree plot to choose <code>K</code> and the default value of <span class="math inline">\(K=n-1\)</span> should be used.</p>
-<div class="sourceCode" id="cb37"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="no">res</span>,<span class="kw">option</span><span class="kw">=</span><span class="st">"screeplot"</span>)</pre></body></html></div>
+<div class="section level2">
+<h2 id="g--detecting-local-adaptation-with-pooled-sequencing-data">G. Detecting local adaptation with pooled sequencing data<a class="anchor" aria-label="anchor" href="#g--detecting-local-adaptation-with-pooled-sequencing-data"></a>
+</h2>
+<p>For Pool-seq samples, the package also uses the
+<code>read.pcadapt</code> function.</p>
+<p>We assume that the user provides a matrix of relative frequencies
+with <code>n</code> rows and <code>L</code> columns (where
+<code>n</code> is the number of populations and <code>L</code> is the
+number of genetic markers). Assume your frequency file is called “foo”
+and is located in the directory “path_to_directory”, use the following
+command lines:</p>
+<pre><code><span><span class="va">pool.data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span><span class="st">"path_to_directory/foo"</span><span class="op">)</span></span>
+<span><span class="va">filename</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read.pcadapt.html">read.pcadapt</a></span><span class="op">(</span><span class="va">pool.data</span>, type <span class="op">=</span> <span class="st">"pool"</span><span class="op">)</span></span></code></pre>
+<p>A Pool-seq example is provided in the package, and can be loaded as
+follows:</p>
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pool.data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"pool3pops"</span>, package <span class="op">=</span> <span class="st">"pcadapt"</span><span class="op">)</span></span>
+<span><span class="va">filename</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read.pcadapt.html">read.pcadapt</a></span><span class="op">(</span><span class="va">pool.data</span>, type <span class="op">=</span> <span class="st">"pool"</span><span class="op">)</span></span></code></pre></div>
+<p>With Pool-Seq data, the package computes again a Mahalanobis distance
+based on PCA loadings.</p>
+<p>By default, <code>pcadapt</code> function assumes that <span class="math inline">\(K=n-1\)</span>. Smaller values of <code>K</code>
+can be provided by using argument <code>K</code>. Computation of
+Mahalanobis distances is performed as follows</p>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pcadapt.html">pcadapt</a></span><span class="op">(</span><span class="va">filename</span><span class="op">)</span></span>
+<span><span class="co">#The same as res &lt;- pcadapt(filename,K=2)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##                 Length Class  Mode   </span></span>
+<span><span class="co">## scores             6   -none- numeric</span></span>
+<span><span class="co">## singular.values    2   -none- numeric</span></span>
+<span><span class="co">## loadings        3000   -none- numeric</span></span>
+<span><span class="co">## zscores         3000   -none- numeric</span></span>
+<span><span class="co">## af              1500   -none- numeric</span></span>
+<span><span class="co">## maf             1500   -none- numeric</span></span>
+<span><span class="co">## chi2.stat       1500   -none- numeric</span></span>
+<span><span class="co">## stat            1500   -none- numeric</span></span>
+<span><span class="co">## gif                1   -none- numeric</span></span>
+<span><span class="co">## pvalues         1500   -none- numeric</span></span>
+<span><span class="co">## pass            1500   -none- numeric</span></span></code></pre>
+<p>`res’ is a list containing the same elements than when using
+individual genotype data.</p>
+<p>A scree plot can be obtained and be possibly used to reduce
+<code>K</code>. If the number of populations <code>n</code> is too
+small, it is impossible to use the scree plot to choose <code>K</code>
+and the default value of <span class="math inline">\(K=n-1\)</span>
+should be used.</p>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">res</span>,option<span class="op">=</span><span class="st">"screeplot"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="pcadapt_files/figure-html/unnamed-chunk-25-1.png" width="700"></p>
 <p>A Manhattan plot can be displayed.</p>
-<div class="sourceCode" id="cb38"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="no">res</span>, <span class="kw">option</span> <span class="kw">=</span> <span class="st">"manhattan"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">res</span>, option <span class="op">=</span> <span class="st">"manhattan"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="pcadapt_files/figure-html/unnamed-chunk-26-1.png" width="700"></p>
-<p>A list of outliers can be obtained as for individual genotype data</p>
-<div class="sourceCode" id="cb39"><html><body><pre class="r"><span class="no">padj</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/p.adjust.html">p.adjust</a></span>(<span class="no">res</span>$<span class="no">pvalues</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">"BH"</span>)
-<span class="no">alpha</span> <span class="kw">&lt;-</span> <span class="fl">0.1</span>
-<span class="no">outliers</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span>(<span class="no">padj</span> <span class="kw">&lt;</span> <span class="no">alpha</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">outliers</span>)</pre></body></html></div>
-<pre><code>## [1] 126</code></pre>
-<p>The function <code>get.pc</code>is also available for pooled-seq data (see H.3).</p>
-<div class="sourceCode" id="cb41"><html><body><pre class="r"><span class="fu"><a href="../reference/get.pc.html">get.pc</a></span>(<span class="no">res</span>,<span class="fl">1</span>:<span class="fl">150</span>)<span class="kw">-&gt;</span><span class="no">aux</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">aux</span>[,<span class="fl">2</span>])</pre></body></html></div>
-<pre><code>##   [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [38] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [75] 1 2 2 2 2 2 2 2 2 2 2 2 1 1 2 1 2 1 2 2 2 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2
-## [112] 2 2 2 1 2 2 2 2 2 2 2 1 2 2 2 2 1 2 1 2 2 2 2 2 2 2 2 2 1 2 2 2 2 2 2 2 1
-## [149] 2 1</code></pre>
-<p>Most of the 75 first SNPs are more related to the differentiation corresponding to the first PC whereas the following 75 SNPs are mostly related to the differentiation corresponding to the second PC (in the simulations, these 2 sets of SNPs have been involved in adaptation occurring in different parts of the population divergence tree).</p>
+<p>A list of outliers can be obtained as for individual genotype
+data</p>
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">padj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/p.adjust.html" class="external-link">p.adjust</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">pvalues</span>, method <span class="op">=</span> <span class="st">"BH"</span><span class="op">)</span></span>
+<span><span class="va">alpha</span> <span class="op">&lt;-</span> <span class="fl">0.1</span></span>
+<span><span class="va">outliers</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">padj</span> <span class="op">&lt;</span> <span class="va">alpha</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">outliers</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] 126</span></span></code></pre>
+<p>The function <code>get.pc</code>is also available for pooled-seq data
+(see H.3).</p>
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/get.pc.html">get.pc</a></span><span class="op">(</span><span class="va">res</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">150</span><span class="op">)</span><span class="op">-&gt;</span><span class="va">aux</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">aux</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##   [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</span></span>
+<span><span class="co">##  [38] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</span></span>
+<span><span class="co">##  [75] 1 2 2 2 2 2 2 2 2 2 2 2 1 1 2 1 2 1 2 2 2 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2</span></span>
+<span><span class="co">## [112] 2 2 2 1 2 2 2 2 2 2 2 1 2 2 2 2 1 2 1 2 2 2 2 2 2 2 2 2 1 2 2 2 2 2 2 2 1</span></span>
+<span><span class="co">## [149] 2 1</span></span></code></pre>
+<p>Most of the 75 first SNPs are more related to the differentiation
+corresponding to the first PC whereas the following 75 SNPs are mostly
+related to the differentiation corresponding to the second PC (in the
+simulations, these 2 sets of SNPs have been involved in adaptation
+occurring in different parts of the population divergence tree).</p>
 </div>
-<div id="h--miscellaneous" class="section level1">
-<h1 class="hasAnchor">
-<a href="#h--miscellaneous" class="anchor"></a>H. Miscellaneous</h1>
-<div id="h-1--missing-values" class="section level3">
-<h3 class="hasAnchor">
-<a href="#h-1--missing-values" class="anchor"></a>H.1. Missing values</h3>
-<p>The package accepts missing values. Computation of PCs and of P-values accounts for missing values. Missing values should be encoded by a single character (e.g. 9) different from 0, 1 or 2.</p>
+<div class="section level2">
+<h2 id="h--miscellaneous">H. Miscellaneous<a class="anchor" aria-label="anchor" href="#h--miscellaneous"></a>
+</h2>
+<div class="section level4">
+<h4 id="h-1--missing-values">H.1. Missing values<a class="anchor" aria-label="anchor" href="#h-1--missing-values"></a>
+</h4>
+<p>The package accepts missing values. Computation of PCs and of
+P-values accounts for missing values. Missing values should be encoded
+by a single character (e.g. 9) different from 0, 1 or 2.</p>
 </div>
-<div id="h-2--run-pcadapt-on-matrices-loaded-in-memory" class="section level3">
-<h3 class="hasAnchor">
-<a href="#h-2--run-pcadapt-on-matrices-loaded-in-memory" class="anchor"></a>H.2. Run <code>pcadapt</code> on matrices loaded in memory</h3>
-<p><code>pcadapt</code> can be called on matrices loaded in memory instead of using a file. When calling the function <code>read.pcadapt</code>, users should specify if individuals are in columns, and SNPs in lines (type = “pcadapt”) or if individuals are in lines, and SNPs in columns (type = <code>lfmm</code>).</p>
-<div class="sourceCode" id="cb43"><html><body><pre class="r"><span class="no">path_to_file</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"SSMPG2017.rds"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"pcadapt"</span>)
-<span class="no">genotypes</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span>(<span class="no">path_to_file</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="no">genotypes</span>))
-<span class="no">matrix</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/read.pcadapt.html">read.pcadapt</a></span>(<span class="no">genotypes</span>, <span class="kw">type</span> <span class="kw">=</span> <span class="st">"pcadapt"</span>)
-<span class="no">res</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pcadapt.html">pcadapt</a></span>(<span class="no">matrix</span>, <span class="kw">K</span> <span class="kw">=</span> <span class="fl">20</span>)
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="no">res</span>, <span class="kw">option</span> <span class="kw">=</span> <span class="st">"screeplot"</span>)</pre></body></html></div>
+<div class="section level4">
+<h4 id="h-2--run-pcadapt-on-matrices-loaded-in-memory">H.2. Run <code>pcadapt</code> on matrices loaded in memory<a class="anchor" aria-label="anchor" href="#h-2--run-pcadapt-on-matrices-loaded-in-memory"></a>
+</h4>
+<p><code>pcadapt</code> can be called on matrices loaded in memory
+instead of using a file. When calling the function
+<code>read.pcadapt</code>, users should specify if individuals are in
+columns, and SNPs in lines (type = “pcadapt”) or if individuals are in
+lines, and SNPs in columns (type = <code>lfmm</code>).</p>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">path_to_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"SSMPG2017.rds"</span>, package <span class="op">=</span> <span class="st">"pcadapt"</span><span class="op">)</span></span>
+<span><span class="va">genotypes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="va">path_to_file</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">genotypes</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read.pcadapt.html">read.pcadapt</a></span><span class="op">(</span><span class="va">genotypes</span>, type <span class="op">=</span> <span class="st">"pcadapt"</span><span class="op">)</span></span>
+<span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pcadapt.html">pcadapt</a></span><span class="op">(</span><span class="va">matrix</span>, K <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">res</span>, option <span class="op">=</span> <span class="st">"screeplot"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="h-3--association-between-pcs-and-outliers" class="section level3">
-<h3 class="hasAnchor">
-<a href="#h-3--association-between-pcs-and-outliers" class="anchor"></a>H.3. Association between PCs and outliers</h3>
-<p>It may be interesting to associate outliers with one of the <code>K</code> principal component to have indication about evolutionary pressure. The function <code>get.pc</code> allows to achieve that:</p>
-<pre><code>snp_pc &lt;- get.pc(x, outliers)</code></pre>
+<div class="section level4">
+<h4 id="h-3--association-between-pcs-and-outliers">H.3. Association between PCs and outliers<a class="anchor" aria-label="anchor" href="#h-3--association-between-pcs-and-outliers"></a>
+</h4>
+<p>It may be interesting to associate outliers with one of the
+<code>K</code> principal component to have indication about evolutionary
+pressure. The function <code>get.pc</code> allows to achieve that:</p>
+<pre><code><span><span class="va">snp_pc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get.pc.html">get.pc</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">outliers</span><span class="op">)</span></span></code></pre>
 </div>
-<div id="h-4-component-wise-genome-scans" class="section level3">
-<h3 class="hasAnchor">
-<a href="#h-4-component-wise-genome-scans" class="anchor"></a>H.4 Component-wise genome scans</h3>
-<p>Another possibility is to perform one genome scan for each principal component (component-wise p-values). The test statistics are the loadings, which correspond to the correlations between each PC and each SNP. P-values are computed by making a Gaussian approximation for each PC and by estimating the standard deviation of the null distribution.</p>
-<div class="sourceCode" id="cb45"><html><body><pre class="r"><span class="no">path_to_file</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"geno3pops.bed"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"pcadapt"</span>)
-<span class="no">filename</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/read.pcadapt.html">read.pcadapt</a></span>(<span class="no">path_to_file</span>, <span class="kw">type</span> <span class="kw">=</span> <span class="st">"bed"</span>)
-<span class="no">x_cw</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pcadapt.html">pcadapt</a></span>(<span class="no">filename</span>, <span class="kw">K</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">"componentwise"</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">x_cw</span>$<span class="no">pvalues</span>)</pre></body></html></div>
-<pre><code>##        V1               V2        
-##  Min.   :0.0000   Min.   :0.0000  
-##  1st Qu.:0.1434   1st Qu.:0.3259  
-##  Median :0.4229   Median :0.5724  
-##  Mean   :0.4322   Mean   :0.5514  
-##  3rd Qu.:0.6882   3rd Qu.:0.7971  
-##  Max.   :0.9999   Max.   :0.9995</code></pre>
-<p><code>pcadapt</code> returns <code>K</code> vectors of p-values (one for each principal component), all of them being accessible, using the <code><a href="https://rdrr.io/r/base/Extract.html">$</a></code> symbol or the <code>[]</code> symbol. For example, typing <code>x_cw$pvalues$p2</code> or <code>x_cw$pvalues[,2]</code> in the <code>R</code> console returns the list of p-values associated with the second principal component (provided that <code>K</code> is larger than or equal to <code>2</code>).</p>
-<p>The p-values are computed based on the matrix of loadings. The loadings of the neutral markers are assumed to follow a centered Gaussian distribution. The standard deviation of the Gaussian distribution is estimated using the median absolute deviation.</p>
-<p>To display the neutral distribution for the component-wise case, the value of <code>K</code> has to be specified.</p>
-<div class="sourceCode" id="cb47"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="no">x_cw</span>, <span class="kw">option</span> <span class="kw">=</span> <span class="st">"stat.distribution"</span>, <span class="kw">K</span> <span class="kw">=</span> <span class="fl">2</span>)</pre></body></html></div>
+<div class="section level4">
+<h4 id="h-4-component-wise-genome-scans">H.4 Component-wise genome scans<a class="anchor" aria-label="anchor" href="#h-4-component-wise-genome-scans"></a>
+</h4>
+<p>Another possibility is to perform one genome scan for each principal
+component (component-wise p-values). The test statistics are the
+loadings, which correspond to the correlations between each PC and each
+SNP. P-values are computed by making a Gaussian approximation for each
+PC and by estimating the standard deviation of the null
+distribution.</p>
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">path_to_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"geno3pops.bed"</span>, package <span class="op">=</span> <span class="st">"pcadapt"</span><span class="op">)</span></span>
+<span><span class="va">filename</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read.pcadapt.html">read.pcadapt</a></span><span class="op">(</span><span class="va">path_to_file</span>, type <span class="op">=</span> <span class="st">"bed"</span><span class="op">)</span></span>
+<span><span class="va">x_cw</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pcadapt.html">pcadapt</a></span><span class="op">(</span><span class="va">filename</span>, K <span class="op">=</span> <span class="fl">2</span>, method <span class="op">=</span> <span class="st">"componentwise"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">x_cw</span><span class="op">$</span><span class="va">pvalues</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##        V1               V2        </span></span>
+<span><span class="co">##  Min.   :0.0000   Min.   :0.0000  </span></span>
+<span><span class="co">##  1st Qu.:0.1434   1st Qu.:0.3259  </span></span>
+<span><span class="co">##  Median :0.4229   Median :0.5724  </span></span>
+<span><span class="co">##  Mean   :0.4322   Mean   :0.5514  </span></span>
+<span><span class="co">##  3rd Qu.:0.6882   3rd Qu.:0.7971  </span></span>
+<span><span class="co">##  Max.   :0.9999   Max.   :0.9995</span></span></code></pre>
+<p><code>pcadapt</code> returns <code>K</code> vectors of p-values (one
+for each principal component), all of them being accessible, using the
+<code>$</code> symbol or the <code>[]</code> symbol. For example, typing
+<code>x_cw$pvalues$p2</code> or <code>x_cw$pvalues[,2]</code> in the
+<code>R</code> console returns the list of p-values associated with the
+second principal component (provided that <code>K</code> is larger than
+or equal to <code>2</code>).</p>
+<p>The p-values are computed based on the matrix of loadings. The
+loadings of the neutral markers are assumed to follow a centered
+Gaussian distribution. The standard deviation of the Gaussian
+distribution is estimated using the median absolute deviation.</p>
+<p>To display the neutral distribution for the component-wise case, the
+value of <code>K</code> has to be specified.</p>
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x_cw</span>, option <span class="op">=</span> <span class="st">"stat.distribution"</span>, K <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="pcadapt_files/figure-html/unnamed-chunk-31-1.png" width="672" style="display: block; margin: auto;"></p>
 </div>
 </div>
-<div id="main-references" class="section level1">
-<h1 class="hasAnchor">
-<a href="#main-references" class="anchor"></a>Main references</h1>
+<div class="section level2">
+<h2 id="main-references">Main references<a class="anchor" aria-label="anchor" href="#main-references"></a>
+</h2>
 <ul>
-<li><p>Privé, F., Luu, K., Vilhjálmsson, B. J., &amp; Blum, M. G.B. (2020). <a href="https://doi.org/10.1093/molbev/msaa053">Performing highly efficient genome scans for local adaptation with R package pcadapt version 4.</a> Molecular Biology and Evolution.</p></li>
-<li><p>Luu, K., Bazin, E., &amp; Blum, M. G.B. (2017). <a href="http://onlinelibrary.wiley.com/doi/10.1111/1755-0998.12592/full">pcadapt: an R package to perform genome scans for selection based on principal component analysis.</a> Molecular Ecology Resources, 17(1), 67-77.</p></li>
+<li><p>Privé, F., Luu, K., Vilhjálmsson, B. J., &amp; Blum, M. G.B.
+(2020). <a href="https://doi.org/10.1093/molbev/msaa053" class="external-link">Performing
+highly efficient genome scans for local adaptation with R package
+pcadapt version 4.</a> Molecular Biology and Evolution.</p></li>
+<li><p>Luu, K., Bazin, E., &amp; Blum, M. G.B. (2017). <a href="http://onlinelibrary.wiley.com/doi/10.1111/1755-0998.12592/full" class="external-link">pcadapt:
+an R package to perform genome scans for selection based on principal
+component analysis.</a> Molecular Ecology Resources, 17(1),
+67-77.</p></li>
 </ul>
 </div>
   </div>
@@ -409,11 +645,13 @@ filename &lt;- read.pcadapt(pool.data, type = "pool")</code></pre>
 
 
       <footer><div class="copyright">
-  <p>Developed by Keurcien Luu, Michael Blum, Florian Privé.</p>
+  <p></p>
+<p>Developed by Keurcien Luu, Michael Blum, Florian Privé.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
@@ -421,6 +659,8 @@ filename &lt;- read.pcadapt(pool.data, type = "pool")</code></pre>
 
   
 
+
+  
 
   </body>
 </html>
