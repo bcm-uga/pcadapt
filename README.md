@@ -1,8 +1,10 @@
 # pcadapt
 
+<!-- badges: start -->
 [![DOI](https://zenodo.org/badge/doi/10.1093/molbev/msaa053.svg)](https://doi.org/10.1093/molbev/msaa053)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/pcadapt)](https://cran.r-project.org/package=pcadapt)
-[![R build status](https://github.com/bcm-uga/pcadapt/workflows/R-CMD-check/badge.svg)](https://github.com/bcm-uga/pcadapt)
+[![R-CMD-check](https://github.com/bcm-uga/pcadapt/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/bcm-uga/pcadapt/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
 
 R package {pcadapt} has been developed to detect genetic markers involved in biological adaptation. 
 This package uses statistical tools for outlier detection based on Principal Component Analysis (PCA).
