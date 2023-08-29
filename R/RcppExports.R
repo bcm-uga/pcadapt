@@ -69,7 +69,7 @@ cpMatVec4 <- function(obj, ind_col, af, ploidy, x) {
 #'
 #' @param string_geno a genotype matrix extracted from a VCF file with `vcfR`. 
 #' @param output a character string indicating the name of the output file.
-#' @param allele.sep a vector of characters indicating what delimiters are used 
+#' @param allele_sep a vector of characters indicating what delimiters are used 
 #' to separate alleles.
 #'
 #' @keywords internal

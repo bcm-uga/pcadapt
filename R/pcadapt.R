@@ -232,7 +232,7 @@ pcadapt0 <- function(input, K, method, min.maf, ploidy, LD.clumping, pca.only, t
   if (!(class(K) %in% c("numeric", "integer")) || K <= 0)
     stop("K has to be a positive integer.")
   
-  if (class(min.maf) != "numeric" || min.maf < 0 || min.maf > 0.45) 
+  if (!is.numeric(min.maf) || min.maf < 0 || min.maf > 0.45) 
     stop("min.maf has to be a real number between 0 and 0.45.")
   
   # Compute PCs and z-scores    

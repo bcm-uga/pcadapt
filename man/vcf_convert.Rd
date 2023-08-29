@@ -11,7 +11,7 @@ vcf_convert(string_geno, output, allele_sep)
 
 \item{output}{a character string indicating the name of the output file.}
 
-\item{allele.sep}{a vector of characters indicating what delimiters are used 
+\item{allele_sep}{a vector of characters indicating what delimiters are used 
 to separate alleles.}
 }
 \description{

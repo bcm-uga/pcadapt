@@ -13,7 +13,7 @@ size <- 200
 thr <- 0.2
 K <- 5
 
-if (class(input) == "character") {
+if (is.character(input)) {
   path_to_bed <- normalizePath(input)
   p <- nrow(data.table::fread(sub("\\.bed$", ".bim", path_to_bed)))
   n <- nrow(data.table::fread(sub("\\.bed$", ".fam", path_to_bed)))
@@ -21,7 +21,7 @@ if (class(input) == "character") {
   # File mapping
   xptr <- pcadapt:::bedXPtr(path_to_bed, n, p)
   
-} else if (class(input) == "matrix") {
+} else if (is.matrix(input)) {
   # an input matrix has nIND rows and nSNP columns
   xptr <- input
   n <- nrow(xptr)

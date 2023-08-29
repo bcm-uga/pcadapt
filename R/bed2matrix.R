@@ -14,7 +14,7 @@
 #' table(mat)
 bed2matrix <- function(bedfile, n = NULL, p = NULL) {
   
-  if (class(bedfile) == "pcadapt_bed") {
+  if (inherits(bedfile, "pcadapt_bed")) {
     n <- attr(bedfile, "n")
     p <- attr(bedfile, "p")
   }
