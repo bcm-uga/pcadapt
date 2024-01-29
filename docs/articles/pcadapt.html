@@ -479,27 +479,25 @@ with <code>n</code> rows and <code>L</code> columns (where
 number of genetic markers). Assume your frequency file is called “foo”
 and is located in the directory “path_to_directory”, use the following
 command lines:</p>
-<pre><code><span><span class="va">pool.data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span><span class="st">"path_to_directory/foo"</span><span class="op">)</span></span>
-<span><span class="va">filename</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read.pcadapt.html">read.pcadapt</a></span><span class="op">(</span><span class="va">pool.data</span>, type <span class="op">=</span> <span class="st">"pool"</span><span class="op">)</span></span></code></pre>
+<pre><code><span><span class="va">pool.data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read.pcadapt.html">read.pcadapt</a></span><span class="op">(</span><span class="st">"path_to_directory/foo"</span>, type <span class="op">=</span> <span class="st">"pool"</span><span class="op">)</span></span></code></pre>
+<p>You can also directly input an R matrix to
+<code><a href="../reference/read.pcadapt.html">read.pcadapt()</a></code> if you want.</p>
 <p>A Pool-seq example is provided in the package, and can be loaded as
 follows:</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pool.data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"pool3pops"</span>, package <span class="op">=</span> <span class="st">"pcadapt"</span><span class="op">)</span></span>
-<span><span class="va">filename</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read.pcadapt.html">read.pcadapt</a></span><span class="op">(</span><span class="va">pool.data</span>, type <span class="op">=</span> <span class="st">"pool"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">path_to_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"pool3pops"</span>, package <span class="op">=</span> <span class="st">"pcadapt"</span><span class="op">)</span></span>
+<span><span class="va">pool.data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read.pcadapt.html">read.pcadapt</a></span><span class="op">(</span><span class="va">path_to_file</span>, type <span class="op">=</span> <span class="st">"pool"</span><span class="op">)</span></span></code></pre></div>
 <p>With Pool-Seq data, the package computes again a Mahalanobis distance
 based on PCA loadings.</p>
-<p>By default, <code>pcadapt</code> function assumes that <span class="math inline">\(K=n-1\)</span>. Smaller values of <code>K</code>
-can be provided by using argument <code>K</code>. Computation of
-Mahalanobis distances is performed as follows</p>
+<p>Computation of Mahalanobis distances is performed as follows</p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pcadapt.html">pcadapt</a></span><span class="op">(</span><span class="va">filename</span><span class="op">)</span></span>
-<span><span class="co">#The same as res &lt;- pcadapt(filename,K=2)</span></span>
+<code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pcadapt.html">pcadapt</a></span><span class="op">(</span><span class="va">pool.data</span>, K <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                 Length Class  Mode   </span></span>
-<span><span class="co">## scores             6   -none- numeric</span></span>
-<span><span class="co">## singular.values    2   -none- numeric</span></span>
-<span><span class="co">## loadings        3000   -none- numeric</span></span>
-<span><span class="co">## zscores         3000   -none- numeric</span></span>
+<span><span class="co">## scores             9   -none- numeric</span></span>
+<span><span class="co">## singular.values    3   -none- numeric</span></span>
+<span><span class="co">## loadings        4500   -none- numeric</span></span>
+<span><span class="co">## zscores         4500   -none- numeric</span></span>
 <span><span class="co">## af              1500   -none- numeric</span></span>
 <span><span class="co">## maf             1500   -none- numeric</span></span>
 <span><span class="co">## chi2.stat       1500   -none- numeric</span></span>
@@ -515,7 +513,7 @@ small, it is impossible to use the scree plot to choose <code>K</code>
 and the default value of <span class="math inline">\(K=n-1\)</span>
 should be used.</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">res</span>,option<span class="op">=</span><span class="st">"screeplot"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">res</span>, option <span class="op">=</span> <span class="st">"screeplot"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="pcadapt_files/figure-html/unnamed-chunk-25-1.png" width="700"></p>
 <p>A Manhattan plot can be displayed.</p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
@@ -528,13 +526,13 @@ data</p>
 <span><span class="va">alpha</span> <span class="op">&lt;-</span> <span class="fl">0.1</span></span>
 <span><span class="va">outliers</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">padj</span> <span class="op">&lt;</span> <span class="va">alpha</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">outliers</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 126</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 119</span></span></code></pre>
 <p>The function <code>get.pc</code>is also available for pooled-seq data
 (see H.3).</p>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get.pc.html">get.pc</a></span><span class="op">(</span><span class="va">res</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">150</span><span class="op">)</span><span class="op">-&gt;</span><span class="va">aux</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">aux</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##   [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</span></span>
+<pre><code><span><span class="co">##   [1] 3 3 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</span></span>
 <span><span class="co">##  [38] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</span></span>
 <span><span class="co">##  [75] 1 2 2 2 2 2 2 2 2 2 2 2 1 1 2 1 2 1 2 2 2 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2</span></span>
 <span><span class="co">## [112] 2 2 2 1 2 2 2 2 2 2 2 1 2 2 2 2 1 2 1 2 2 2 2 2 2 2 2 2 1 2 2 2 2 2 2 2 1</span></span>

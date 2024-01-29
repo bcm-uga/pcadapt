@@ -293,24 +293,24 @@ For Pool-seq samples, the package also uses the `read.pcadapt` function.
 We assume that the user provides a matrix of relative frequencies with `n` rows and `L` columns (where `n` is the number of populations and `L` is the number of genetic markers). Assume your frequency file is called "foo" and is located in the directory "path_to_directory", use the following command lines:
 
 ```
-pool.data <- read.table("path_to_directory/foo")
-filename <- read.pcadapt(pool.data, type = "pool")
+pool.data <- read.pcadapt("path_to_directory/foo", type = "pool")
 ```
+
+You can also directly input an R matrix to `read.pcadapt()` if you want.
 
 A Pool-seq example is provided in the package, and can be loaded as follows:
 
 ```{r,  eval = TRUE}
-pool.data <- system.file("extdata", "pool3pops", package = "pcadapt")
-filename <- read.pcadapt(pool.data, type = "pool")
+path_to_file <- system.file("extdata", "pool3pops", package = "pcadapt")
+pool.data <- read.pcadapt(path_to_file, type = "pool")
 ```
 
 With Pool-Seq data, the package computes again a Mahalanobis distance based on PCA loadings. 
 
-By default, `pcadapt` function assumes that $K=n-1$. Smaller values of `K` can be provided by using argument `K`. Computation of Mahalanobis distances is performed as follows
+Computation of Mahalanobis distances is performed as follows
 
 ```{r,  eval = TRUE}
-res <- pcadapt(filename)
-#The same as res <- pcadapt(filename,K=2)
+res <- pcadapt(pool.data, K = 3)
 summary(res)
 ```
 `res' is a list containing the same elements than when using individual genotype data.
@@ -318,7 +318,7 @@ summary(res)
 A scree plot can be obtained and be possibly used to reduce `K`. If the number of populations `n` is too small, it is impossible to use the scree plot to choose `K` and the default value of $K=n-1$ should be used.
 
 ```{r, eval = TRUE}
-plot(res,option="screeplot")
+plot(res, option = "screeplot")
 ```
 
 A Manhattan plot can be displayed.
