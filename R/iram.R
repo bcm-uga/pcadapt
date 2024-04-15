@@ -93,13 +93,11 @@ iram_and_reg <- function(input, K, min.maf, ploidy, LD.clumping, tol) {
   V[ind.pass, ] <- obj.svd$v
   obj.svd$v <- V
   
-  obj.svd$snps.included <- ind.pass
-  # obj.svd$d <- obj.svd$d^2 / length(ind.pass)
   obj.svd$af <- af
-  # obj.svd$nona1 <- nb_nona$p
-  # obj.svd$nona2 <- nb_nona$n
-  
+  obj.svd$snps.included <- ind.pass
   obj.svd$pass <- ind.pass.af
+  
+  obj.svd$total_var <- total_var_scaled(input, ind.pass.af, af, ploidy)
   
   obj.svd
 }

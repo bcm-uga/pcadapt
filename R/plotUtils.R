@@ -22,7 +22,7 @@ scree_plot = function(x, K = NULL) {
   if (K < 2) {
     warning("The scree plot is not available for K=1.")
   } else {
-    p0 <- qplot(x = 1:K, y = (x$singular.values[1:K]) ^ 2, col = "red", 
+    p0 <- qplot(x = 1:K, y = (x$singular.values[1:K])^2, col = "red", 
                 xlab = "PC", ylab = "Proportion of explained variance") + 
       geom_line() + guides(colour = FALSE) +
       ggtitle(paste("Scree Plot - K =", K))

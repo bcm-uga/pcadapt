@@ -144,6 +144,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// total_var_scaled
+double total_var_scaled(SEXP obj, const IntegerVector& ind_col, const NumericVector& af, double ploidy);
+RcppExport SEXP _pcadapt_total_var_scaled(SEXP objSEXP, SEXP ind_colSEXP, SEXP afSEXP, SEXP ploidySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type obj(objSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type af(afSEXP);
+    Rcpp::traits::input_parameter< double >::type ploidy(ploidySEXP);
+    rcpp_result_gen = Rcpp::wrap(total_var_scaled(obj, ind_col, af, ploidy));
+    return rcpp_result_gen;
+END_RCPP
+}
 // vcf_convert
 IntegerVector vcf_convert(CharacterMatrix string_geno, std::string output, CharacterVector allele_sep);
 RcppExport SEXP _pcadapt_vcf_convert(SEXP string_genoSEXP, SEXP outputSEXP, SEXP allele_sepSEXP) {
@@ -182,6 +196,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_pcadapt_ped2pcadapt", (DL_FUNC) &_pcadapt_ped2pcadapt, 2},
     {"_pcadapt_pMatVec4", (DL_FUNC) &_pcadapt_pMatVec4, 5},
     {"_pcadapt_cpMatVec4", (DL_FUNC) &_pcadapt_cpMatVec4, 5},
+    {"_pcadapt_total_var_scaled", (DL_FUNC) &_pcadapt_total_var_scaled, 4},
     {"_pcadapt_vcf_convert", (DL_FUNC) &_pcadapt_vcf_convert, 3},
     {"_pcadapt_writebed", (DL_FUNC) &_pcadapt_writebed, 4},
     {NULL, NULL, 0}

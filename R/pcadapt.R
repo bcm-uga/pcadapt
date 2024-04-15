@@ -250,13 +250,13 @@ pcadapt0 <- function(input, K, method, min.maf, ploidy, LD.clumping, pca.only, t
   structure(
     list(
       scores = obj.pca$u,
-      singular.values = obj.pca$d / sqrt((nrow(obj.pca$u) - 1) * length(obj.pca$pass)),
+      singular.values = obj.pca$d / sqrt(obj.pca$total_var),
       loadings = obj.pca$v,
       zscores = obj.pca$zscores,
       af = obj.pca$af,
       maf = pmin(obj.pca$af, 1 - obj.pca$af),
       chi2.stat = res$chi2.stat,
-      stat=res$stat,
+      stat = res$stat,
       gif = res$gif,
       pvalues = res$pvalues,
       pass = obj.pca$pass

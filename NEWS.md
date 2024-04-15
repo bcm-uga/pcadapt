@@ -1,3 +1,7 @@
+## pcadapt 4.4
+
+- Now derive a better estimate of the total variance, to get better estimates of the variance explained by each PC, especially when using clumping.
+
 ## pcadapt 4.0
 
 - `read.pcadapt()` generates `bed` files instead of `pcadapt` files.

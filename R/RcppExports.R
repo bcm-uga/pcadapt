@@ -62,6 +62,10 @@ cpMatVec4 <- function(obj, ind_col, af, ploidy, x) {
     .Call(`_pcadapt_cpMatVec4`, obj, ind_col, af, ploidy, x)
 }
 
+total_var_scaled <- function(obj, ind_col, af, ploidy) {
+    .Call(`_pcadapt_total_var_scaled`, obj, ind_col, af, ploidy)
+}
+
 #' Convert vcfR genotype matrices
 #'
 #' \code{vcf_convert} converts outputs of \code{extract.gt} to the format 
