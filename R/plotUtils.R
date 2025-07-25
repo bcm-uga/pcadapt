@@ -1,5 +1,9 @@
 ################################################################################
 
+utils::globalVariables(c("chi2", "density", "ord", "x", "y", "PC_i", "PC_j", "Pop"))
+
+################################################################################
+
 #' Principal Components Analysis Scree Plot
 #'
 #' \code{scree_plot} plots the scree plot associated with the principal components 
@@ -19,15 +23,16 @@ scree_plot = function(x, K = NULL) {
   
   if (is.null(K)) K <- attr(x, "K")
   
-  if (K < 2) {
-    warning("The scree plot is not available for K=1.")
-  } else {
-    p0 <- qplot(x = 1:K, y = (x$singular.values[1:K])^2, col = "red", 
-                xlab = "PC", ylab = "Proportion of explained variance") + 
-      geom_line() + guides(colour = FALSE) +
-      ggtitle(paste("Scree Plot - K =", K))
-    print(p0)
-  }
+  if (K < 2) stop("The scree plot is not available for K < 2.")
+  
+  ggplot(data.frame(x = 1:K, y = x$singular.values[1:K]^2),
+         aes(x, y)) +
+    theme_bw(13) +
+    geom_point() + 
+    geom_line() + 
+    labs(x = "PC", y = "Proportion of explained variance",
+         title = paste("Scree Plot - K =", K)) +
+    scale_y_log10()
 }
 
 ################################################################################
@@ -59,31 +64,29 @@ scree_plot = function(x, K = NULL) {
 #'
 score_plot = function(x, i = 1, j = 2, pop, col, plt.pkg = "ggplot") {
   
-  if (attr(x, "K") == 1) {
-    j <- 1
-  }
+  if (attr(x, "K") == 1) j <- 1
   
-  if (i > attr(x, "K")) {
+  if (i > attr(x, "K"))
     stop(paste0("i can't exceed ", attr(x, "K"), "."))
-  }
   
-  if (j > attr(x, "K")) {
+  if (j > attr(x, "K"))
     stop(paste0("j can't exceed ", attr(x, "K"), "."))
-  }
   
   df <- data.frame(PC_i = x$scores[, i], PC_j = x$scores[, j])    
   
   if (!missing(pop)) df$Pop <- pop
   
   if (plt.pkg == "ggplot") {
-    res.plot <- ggplot(df, aes_string("PC_i", "PC_j")) + 
+    
+    res.plot <- ggplot(df, aes(PC_i, PC_j)) + 
+      theme_bw(13) +
       geom_point() + 
-      ggtitle(paste0("Projection onto PC", i, " and PC", j)) +
-      labs(x = paste0("PC", i), y = paste0("PC", j))
+      labs(x = paste0("PC", i), y = paste0("PC", j),
+           title = paste0("Projection onto PC", i, " and PC", j))
     
     if (!missing(pop)) {
       res.plot <- res.plot + 
-        geom_point(aes(colour = factor(df$Pop)))
+        geom_point(aes(color = factor(Pop)))
       if (missing(col)) {
         res.plot <- res.plot + scale_color_hue(name = "")
       } else {
@@ -98,38 +101,42 @@ score_plot = function(x, i = 1, j = 2, pop, col, plt.pkg = "ggplot") {
           scale_color_manual(name = "", values = pers.col)
       }
     }
-    print(res.plot)
+    
+    res.plot
+    
   } else if (plt.pkg == "plotly") {
     
     if (!requireNamespace("plotly", quietly = TRUE))
       stop("Please install package 'plotly'.")
     
     if (missing(pop)) {
-      p0 <- plotly::plot_ly(df, 
-                            x = ~PC_i, 
-                            y = ~PC_j, 
-                            text = ~paste('Ind: ', 1:nrow(x$scores)),
-                            mode = "markers", 
-                            type = "scatter", 
-                            hoverinfo = "text") %>%
+      plotly::plot_ly(df, 
+                      x = ~PC_i, 
+                      y = ~PC_j, 
+                      text = ~paste('Ind:', 1:nrow(x$scores)),
+                      mode = "markers", 
+                      type = "scatter", 
+                      hoverinfo = "text") %>%
         plotly::layout(title = paste0("Projection onto PC", i, " and PC", j), 
                        xaxis = list(title = paste0("PC", i), showgrid = FALSE),      
                        yaxis = list(title = paste0("PC", j)))
-    } else if (!missing(pop)) {
-      p0 <- plotly::plot_ly(df, 
-                            x = ~PC_i, 
-                            y = ~PC_j, 
-                            color = pop, 
-                            colors = col,
-                            text = ~paste('Ind: ', 1:nrow(x$scores)),
-                            mode = "markers", 
-                            type = "scatter", 
-                            hoverinfo = "text") %>%
+    } else {
+      plotly::plot_ly(df, 
+                      x = ~PC_i, 
+                      y = ~PC_j, 
+                      color = factor(pop), 
+                      colors = col,
+                      text = ~paste('Ind:', 1:nrow(x$scores)),
+                      mode = "markers", 
+                      type = "scatter", 
+                      hoverinfo = "text") %>%
         plotly::layout(title = paste0("Projection onto PC", i, " and PC", j), 
                        xaxis = list(title = paste0("PC", i), showgrid = FALSE),      
                        yaxis = list(title = paste0("PC", j)))  
     }
-    print(p0)
+    
+  } else {
+    stop('`plt.pkg` should be either "ggplot" or "plotly"')
   }
 }
 
@@ -147,6 +154,7 @@ score_plot = function(x, i = 1, j = 2, pop, col, plt.pkg = "ggplot") {
 #' @keywords internal
 #'
 #' @import ggplot2
+#' @importFrom stats density
 #'
 #' @export
 #' 
@@ -157,7 +165,7 @@ hist_plot = function(x, K) {
   if (attr(x, "method") == "componentwise") {
     k <- K
     z <- x$chi2.stat[maf.idx, k]
-  } else if (attr(x, "method") != "componentwise") {
+  } else {
     k <- attr(x, "K")
     z <- x$chi2.stat[maf.idx]
   }
@@ -171,9 +179,10 @@ hist_plot = function(x, K) {
   t <- seq(min.z, max.z, length = length(z))
   
   ggplot(data.frame(abs = t, ord = stats::dchisq(t, df = k), chi2 = z)) + 
-    geom_histogram(aes_string(x = "chi2", y = "..density.."), binwidth = 0.5, 
+    theme_bw(13) +
+    geom_histogram(aes(chi2, after_stat(density)), binwidth = 0.5, 
                    fill = "#B0E2FF", alpha = 0.6, colour = "black") + 
-    geom_line(aes_string(x = "abs", y = "ord"), col = "#4F94CD", size = 1) + 
+    geom_line(aes(abs, ord), col = "#4F94CD", linewidth = 1) + 
     ggtitle("Statistics distribution")
 }
 
@@ -212,51 +221,37 @@ manhattan_plot = function(x, chr.info, snp.info, plt.pkg = "ggplot", K = 1) {
     notNA.idx <- !is.na(x$pvalues)
   }
   
+  df <- data.frame(x = which(notNA.idx), 
+                   y = -pchisq(x$chi2.stat[notNA.idx], df = attr(x, "K"),
+                               lower.tail = FALSE, log.p = TRUE) / log(10))
+  
   if (plt.pkg == "ggplot") {
+    
     if (!is.null(chr.info)) {
       chr.int <- chr.info %% 2
-      df <- data.frame(x = which(notNA.idx), 
-                       y = -as.numeric(pchisq(x$chi2.stat[notNA.idx], 
-                                              df = attr(x, "K"), 
-                                              lower.tail = FALSE, 
-                                              log.p = TRUE) / log(10)),
-                       chr = chr.int[notNA.idx])
-      res.plot <- ggplot(df, aes_string("x", "y")) + 
-        geom_point(aes(colour = factor(df$chr))) + 
-        guides(colour = FALSE) +
-        scale_color_manual(values = c("black", "grey"))
+      df$chr = chr.int[notNA.idx]
+      res.plot <- ggplot(df, aes(x, y)) + 
+        geom_point(aes(color = factor(chr))) + 
+        guides(color = "none") +
+        scale_color_manual(values = c("grey10", "grey60"))
     } else {
-      df <- data.frame(x = which(notNA.idx), 
-                       y = -as.numeric(pchisq(x$chi2.stat[notNA.idx], 
-                                              df = attr(x, "K"), 
-                                              lower.tail = FALSE, 
-                                              log.p = TRUE) / log(10)))
-      res.plot <- ggplot(df, aes_string("x", "y")) + geom_point()
+      res.plot <- ggplot(df, aes(x, y)) + geom_point()
     }
-    res.plot <- res.plot + ggtitle("Manhattan Plot") +
-      labs(x = paste0("SNP (with mAF>", attr(x, "min.maf"), ")"), 
-           y = "-log10(p-values)")
-    print(res.plot)
+    res.plot + theme_bw(13) +
+      labs(x = paste0("SNP (with MAF>", attr(x, "min.maf"), ")"), 
+           y = "-log10(p-values)", title = "Manhattan Plot")
+    
   } else if (plt.pkg == "plotly") {
     
     if (!requireNamespace("plotly", quietly = TRUE))
       stop("Please install package 'plotly'.")
     
-    df <- data.frame(xx = seq_along(x$pvalues)[notNA.idx], 
-                     yy = -as.numeric(pchisq(x$chi2.stat[notNA.idx], 
-                                             df = attr(x, "K"), 
-                                             lower.tail = FALSE, 
-                                             log.p = TRUE) / log(10))[notNA.idx])
-    if (is.null(snp.info)) {
-      txt <- seq_along(x$pvalues)[notNA.idx]
-    } else {
-      txt <- snp.info[notNA.idx]
-    }
+    txt <- if (is.null(snp.info)) df$x else snp.info[notNA.idx]
     
     if (is.null(chr.info)) {
       p0 <- plotly::plot_ly(df, 
-                            x = ~xx, y = ~yy,
-                            text = ~paste('SNP: ', txt),
+                            x = ~x, y = ~y,
+                            text = ~paste('SNP:', txt),
                             marker = list(color = "#132B43"),
                             mode = "markers", 
                             type = "scatter", 
@@ -267,7 +262,7 @@ manhattan_plot = function(x, chr.info, snp.info, plt.pkg = "ggplot", K = 1) {
                            showlegend = FALSE)
     } else {
       chr <- chr.info[notNA.idx] %% 2
-      p0 <- plotly::plot_ly(df, x = ~xx, y = ~yy,
+      p0 <- plotly::plot_ly(df, x = ~x, y = ~y,
                             text = ~paste(paste0("Chr: ", chr.info[notNA.idx]), 
                                           sep = "<br>", 
                                           paste0("SNP: ", txt)),
@@ -281,7 +276,7 @@ manhattan_plot = function(x, chr.info, snp.info, plt.pkg = "ggplot", K = 1) {
                            yaxis = list(title = "-log10(p-values)"),
                            showlegend = FALSE)
     }
-    print(p1)
+    p1
   }
 }
 
@@ -303,17 +298,25 @@ manhattan_plot = function(x, chr.info, snp.info, plt.pkg = "ggplot", K = 1) {
 qq_plot = function(x, K = 1) {
   
   if (attr(x, "method") == "componentwise") {
-    sorted.pval <- sort(x$pvalues[x$maf >= attr(x, "min.maf"), K])
+    if (K > attr(x, "K")) {
+      stop(paste0("K can't exceed ", attr(x, "K")), ".")
+    }
+    notNA.idx <- !is.na(x$pvalues[, K])
   } else {
-    sorted.pval <- sort(x$pvalues[x$maf >= attr(x, "min.maf")])
+    notNA.idx <- !is.na(x$pvalues)
   }
-  expected.p <- stats::ppoints(length(sorted.pval))
-  qplot(-log10(expected.p), -log10(sorted.pval), col = "red", 
-        xlab = "Expected -log10(p-values)", 
-        ylab = "Observed -log10(p-values)") + 
-    geom_abline() +
-    ggtitle("Q-Q plot") + 
-    guides(colour = FALSE)
+  
+  lpval <- -pchisq(x$chi2.stat[notNA.idx], df = attr(x, "K"),
+                   lower.tail = FALSE, log.p = TRUE) / log(10)
+  sorted.lpval <- sort(lpval, decreasing = TRUE)
+  expected.p <- stats::ppoints(length(lpval))
+  
+  ggplot(data.frame(x = -log10(expected.p), y = sorted.lpval)) +
+    theme_bw(13) +
+    geom_point(aes(x, y)) +
+    geom_abline(color = "red") +
+    labs(x = "Expected -log10(p-values)",
+         y = "Observed -log10(p-values)", title = "Q-Q plot")
 }
 
 ################################################################################
@@ -363,7 +366,8 @@ qq_plot = function(x, K = 1) {
 #' @export
 plot.pcadapt = function(x, 
                         ..., 
-                        option = "manhattan", 
+                        option = c("manhattan", "screeplot", "scores", 
+                                   "qqplot", "stat.distribution"), 
                         i = 1, 
                         j = 2, 
                         pop, 
@@ -373,66 +377,59 @@ plot.pcadapt = function(x,
                         plt.pkg = "ggplot",
                         K = NULL) {
   
-  if (!(option %in% c("screeplot", 
-                      "scores", 
-                      "manhattan", 
-                      "qqplot", 
-                      "stat.distribution"))){
-    warning(paste("Plotting option", 
-                  option, 
-                  "not valid, options currently available are: 'screeplot', 'scores', 'manhattan', 'qqplot', 'stat.distribution'."))
-  } else {
-    if (option == "screeplot"){
-      scree_plot(x, K)
-    } else if (option == "scores"){
-      
-      if (missing(pop)){
-        score_plot(x, i, j, plt.pkg = plt.pkg)
+  option <- match.arg(option)
+  
+  if (option == "screeplot") {
+    scree_plot(x, K)
+  } else if (option == "scores") {
+    if (missing(pop)) {
+      score_plot(x, i, j, plt.pkg = plt.pkg)
+    } else {
+      if (missing(col)) {
+        score_plot(x, i, j, pop, plt.pkg = plt.pkg)
       } else {
-        if (missing(col)){
-          score_plot(x, i, j, pop, plt.pkg = plt.pkg)
-        } else {
-          score_plot(x, i, j, pop, col, plt.pkg = plt.pkg)
-        }
+        score_plot(x, i, j, pop, col, plt.pkg = plt.pkg)
       }
-      
-    } else if (option == "stat.distribution"){
-      if ((attr(x, "method") %in% c("mahalanobis", "communality")) == FALSE){
-        if (is.null(K)){
-          warning("K has to be specified.")
-        } else {
-          hist_plot(x, K)
-        }
+    }
+    
+  } else if (option == "stat.distribution") {
+    if (attr(x, "method") == "componentwise") {
+      if (is.null(K)) {
+        stop("K has to be specified.")
       } else {
-        hist_plot(x, 1)
+        hist_plot(x, K)
       }
-    } else if (option == "manhattan"){
-      if ((attr(x,"method") %in% c("mahalanobis", "communality")) == FALSE){
-        if (is.null(K)){
-          warning("K has to be specified.")
-        } else {
-          manhattan_plot(x,
-                         chr.info = chr.info, 
-                         snp.info = snp.info,
-                         plt.pkg = plt.pkg, 
-                         K = K)
-        }
+    } else {
+      hist_plot(x)
+    }
+  } else if (option == "manhattan") {
+    if (attr(x, "method") == "componentwise") {
+      if (is.null(K)) {
+        stop("K has to be specified.")
       } else {
-        manhattan_plot(x, 
-                       chr.info = chr.info, 
-                       snp.info = snp.info,
-                       plt.pkg = plt.pkg)
+        manhattan_plot(
+          x,
+          chr.info = chr.info,
+          snp.info = snp.info,
+          plt.pkg = plt.pkg,
+          K = K
+        )
       }
-    } else if (option == "qqplot"){
-      if ((attr(x, "method") %in% c("mahalanobis", "communality")) == FALSE){
-        if (is.null(K)){
-          warning("K has to be specified")
-        } else{
-          qq_plot(x, K)
-        }
-      } else {
-        qq_plot(x, K = 1)
+    } else {
+      manhattan_plot(x,
+                     chr.info = chr.info,
+                     snp.info = snp.info,
+                     plt.pkg = plt.pkg)
+    }
+  } else if (option == "qqplot") {
+    if (attr(x, "method") == "componentwise") {
+      if (is.null(K)) {
+        stop("K has to be specified")
+      } else{
+        qq_plot(x, K)
       }
+    } else {
+      qq_plot(x)
     }
   }
 }

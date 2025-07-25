@@ -13,6 +13,7 @@ getCode <- function(NA.VAL = 3L) {
 
 ################################################################################
 
+#' @exportS3Method base::dim
 dim.xptr_bed <- function(x) c(attr(x, "n"), attr(x, "p"))
 
 iram_and_reg <- function(input, K, min.maf, ploidy, LD.clumping, tol) {

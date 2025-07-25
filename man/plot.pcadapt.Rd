@@ -7,7 +7,7 @@
 \method{plot}{pcadapt}(
   x,
   ...,
-  option = "manhattan",
+  option = c("manhattan", "screeplot", "scores", "qqplot", "stat.distribution"),
   i = 1,
   j = 2,
   pop,

@@ -1,8 +1,8 @@
 Package: pcadapt
 Type: Package
 Title: Fast Principal Component Analysis for Outlier Detection
-Version: 4.4.0
-Date: 2024-09-24
+Version: 4.4.1
+Date: 2025-07-25
 Authors@R: c(
     person("Keurcien", "Luu", role = "aut"), 
     person("Michael", "Blum", role = "aut"),
@@ -19,7 +19,7 @@ License: GPL (>= 2)
 Imports:
     bigutilsr (>= 0.3),
     data.table,
-    ggplot2,
+    ggplot2 (>= 3.4),
     magrittr,
     mmapcharr (>= 0.3),
     Rcpp (>= 0.12.8),
@@ -34,7 +34,7 @@ Suggests:
     spelling,
     testthat,
     vcfR
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 Encoding: UTF-8
 Language: en-US
 URL: https://github.com/bcm-uga/pcadapt
