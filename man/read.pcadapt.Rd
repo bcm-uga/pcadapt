@@ -17,8 +17,10 @@ read.pcadapt(
 }
 \arguments{
 \item{input}{A genotype matrix or a character string specifying the name of 
-the file to be converted. Matrices should use NAs to encode missing values. 
-To encode missing values in 'pcadapt' and 'lfmm' files, 9s should be used.}
+the file to be converted. Genotype matrices must contain hard calls coded
+as 0, 1, or 2, with \code{NA} for missing values. Pool-seq matrices must
+contain allele frequencies. To encode missing values in 'pcadapt' and
+'lfmm' files, 9s should be used.}
 
 \item{type}{A character string specifying the type of data to be converted 
 from. Converters from 'vcf' and 'ped' formats are not maintained anymore;

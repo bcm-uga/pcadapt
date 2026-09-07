@@ -8,8 +8,10 @@
 #'   For a matrix as input, this returns a matrix. 
 #'
 #' @param input A genotype matrix or a character string specifying the name of 
-#'   the file to be converted. Matrices should use NAs to encode missing values. 
-#'   To encode missing values in 'pcadapt' and 'lfmm' files, 9s should be used.
+#'   the file to be converted. Genotype matrices must contain hard calls coded
+#'   as 0, 1, or 2, with \code{NA} for missing values. Pool-seq matrices must
+#'   contain allele frequencies. To encode missing values in 'pcadapt' and
+#'   'lfmm' files, 9s should be used.
 #' @param type A character string specifying the type of data to be converted 
 #'   from. Converters from 'vcf' and 'ped' formats are not maintained anymore;
 #'   if you have any issue with those, please use PLINK >= 1.9 to convert them
@@ -129,6 +131,27 @@ matrix2other <- function(input, type.in) {
     return(structure(as.matrix(input), class = "pcadapt_pool"))
   } else {
     stop("Incorrect type.in for matrices.")
+  }
+
+  if (!is.numeric(res) && !is.logical(res)) {
+    stop(paste(
+      "Genotype matrices must contain numeric hard calls coded as",
+      "0, 1, or 2, with NA for missing values."
+    ))
+  }
+
+  if (any(is.nan(res))) {
+    stop("NaN is not a valid missing genotype; use NA instead.")
+  }
+
+  observed <- res[!is.na(res)]
+  if (any(!is.finite(observed)) ||
+      any(observed != floor(observed)) ||
+      any(!observed %in% 0:2)) {
+    stop(paste(
+      "Genotype matrices must contain hard calls coded as",
+      "0, 1, or 2, with NA for missing values."
+    ))
   }
   
   if (nrow(res) > ncol(res)) {
