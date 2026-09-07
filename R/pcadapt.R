@@ -139,16 +139,8 @@ pcadapt.pcadapt_pool <- function(input,
 
   pass <- mean_freq > min.maf
   
-  if (nrow(input) == 2) {
-    obj.pca <- list(
-      u = matrix(NA_real_, nrow = 2, ncol = 1),
-      v = t(tmat[1, pass, drop = FALSE]),
-      d = 1
-    )
-  } else {
-    obj.pca <- svd(tmat[, pass, drop = FALSE])
-    #obj.pca <- RSpectra::svds(tmat[, pass, drop = FALSE], k = K)
-  }
+  obj.pca <- svd(tmat[, pass, drop = FALSE])
+  #obj.pca <- RSpectra::svds(tmat[, pass, drop = FALSE], k = K)
   
   w[pass, ] <- obj.pca$v[, 1:K, drop = FALSE]
   res <- get_statistics(w, method = method, pass = pass)
