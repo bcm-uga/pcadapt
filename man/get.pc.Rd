@@ -14,4 +14,7 @@ get.pc(x, list)
 \description{
 \code{get.pc} returns a data frame such that each row contains the index of
 the genetic marker and the principal component the most correlated with it.
+If several components have the same maximum squared z-score, the first one
+is returned. A missing value is returned only when all component z-scores
+are missing for a marker.
 }

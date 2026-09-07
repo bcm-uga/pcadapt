@@ -72,6 +72,9 @@ get.pop.names = function(pop){
 #'
 #' \code{get.pc} returns a data frame such that each row contains the index of
 #' the genetic marker and the principal component the most correlated with it.
+#' If several components have the same maximum squared z-score, the first one
+#' is returned. A missing value is returned only when all component z-scores
+#' are missing for a marker.
 #'
 #' @param x an object of class `pcadapt`. 
 #' @param list a list of integers corresponding to the indices of the markers of interest.
@@ -79,11 +82,19 @@ get.pop.names = function(pop){
 #' @export
 #'
 get.pc <- function(x, list) {
-  rem.na <- which(!is.na(x$zscores[list, 1]))
-  v <- vector(mode = "numeric", length = length(list))
-  v[rem.na] <- sapply(list[rem.na], FUN = function(h) {
-    which(x$zscores[h, ]^2 == max(x$zscores[h, ]^2, na.rm = TRUE))})
-  data.frame(SNP = list, PC = v)
+  if (length(list) == 0L) {
+    return(data.frame(SNP = list, PC = integer()))
+  }
+
+  squared.zscores <- x$zscores[list, , drop = FALSE]^2
+  pc <- apply(squared.zscores, MARGIN = 1, FUN = function(zscores) {
+    if (all(is.na(zscores))) {
+      return(NA_integer_)
+    }
+    which.max(zscores)
+  })
+
+  data.frame(SNP = list, PC = as.integer(pc))
 }
 
 ################################################################################
