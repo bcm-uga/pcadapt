@@ -216,13 +216,16 @@ manhattan_plot = function(x, chr.info, snp.info, plt.pkg = "ggplot", K = 1) {
     if (K > attr(x, "K")) {
       stop(paste0("K can't exceed ", attr(x, "K")), ".")
     }
-    notNA.idx <- !is.na(x$pvalues[, K])
+    chi2.stat <- x$chi2.stat[, K]
+    degrees.freedom <- 1
   } else {
-    notNA.idx <- !is.na(x$pvalues)
+    chi2.stat <- x$chi2.stat
+    degrees.freedom <- attr(x, "K")
   }
+  notNA.idx <- !is.na(chi2.stat)
   
   df <- data.frame(x = which(notNA.idx), 
-                   y = -pchisq(x$chi2.stat[notNA.idx], df = attr(x, "K"),
+                   y = -pchisq(chi2.stat[notNA.idx], df = degrees.freedom,
                                lower.tail = FALSE, log.p = TRUE) / log(10))
   
   if (plt.pkg == "ggplot") {
@@ -301,12 +304,15 @@ qq_plot = function(x, K = 1) {
     if (K > attr(x, "K")) {
       stop(paste0("K can't exceed ", attr(x, "K")), ".")
     }
-    notNA.idx <- !is.na(x$pvalues[, K])
+    chi2.stat <- x$chi2.stat[, K]
+    degrees.freedom <- 1
   } else {
-    notNA.idx <- !is.na(x$pvalues)
+    chi2.stat <- x$chi2.stat
+    degrees.freedom <- attr(x, "K")
   }
+  notNA.idx <- !is.na(chi2.stat)
   
-  lpval <- -pchisq(x$chi2.stat[notNA.idx], df = attr(x, "K"),
+  lpval <- -pchisq(chi2.stat[notNA.idx], df = degrees.freedom,
                    lower.tail = FALSE, log.p = TRUE) / log(10)
   sorted.lpval <- sort(lpval, decreasing = TRUE)
   expected.p <- stats::ppoints(length(lpval))

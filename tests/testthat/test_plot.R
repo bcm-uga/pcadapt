@@ -32,3 +32,43 @@ expect_s3_class(plot(x, option = "stat.distribution"), "ggplot")
 expect_s3_class(plot(x, option = "qqplot"), "ggplot")
 
 ################################################################################
+
+# Componentwise plots use the selected component and one degree of freedom.
+componentwise <- structure(
+  list(
+    chi2.stat = cbind(
+      c(1, NA, 4, 9),
+      c(16, 25, NA, 36)
+    ),
+    pvalues = cbind(
+      stats::pchisq(c(1, NA, 4, 9), df = 1, lower.tail = FALSE),
+      stats::pchisq(c(16, 25, NA, 36), df = 1, lower.tail = FALSE)
+    ),
+    maf = rep(0.25, 4)
+  ),
+  K = 2,
+  method = "componentwise",
+  min.maf = 0.05,
+  class = "pcadapt"
+)
+
+expected <- -stats::pchisq(
+  c(16, 25, 36),
+  df = 1,
+  lower.tail = FALSE,
+  log.p = TRUE
+) / log(10)
+
+manhattan <- pcadapt:::manhattan_plot(
+  componentwise,
+  chr.info = NULL,
+  snp.info = NULL,
+  K = 2
+)
+expect_equal(manhattan$data$x, c(1L, 2L, 4L))
+expect_equal(manhattan$data$y, expected)
+
+qq <- pcadapt:::qq_plot(componentwise, K = 2)
+expect_equal(sort(qq$data$y), sort(expected))
+
+################################################################################
