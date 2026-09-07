@@ -34,6 +34,10 @@ NULL
 #' Pool-seq data, \code{pcadapt} provides p-values based on the Mahalanobis 
 #' distance for each SNP.
 #'
+#' The analysis stops if the genomic inflation factor is non-finite or not
+#' strictly positive. In that situation, calibrated chi-squared statistics and
+#' p-values cannot be defined reliably.
+#'
 #' @param input The output of function \code{read.pcadapt}.
 #' @param K an integer specifying the number of principal components to retain.
 #' @param method a character string specifying the method to be used to compute
@@ -190,6 +194,27 @@ pcadapt.pcadapt_pool <- function(input,
 #' 
 #' @keywords internal
 #'
+estimate_gif <- function(statistics, df, label) {
+  finite.statistics <- statistics[is.finite(statistics)]
+  if (length(finite.statistics) == 0L) {
+    stop(
+      "Cannot estimate the genomic inflation factor for ", label,
+      ": no finite test statistics are available.",
+      call. = FALSE
+    )
+  }
+
+  gif <- median(finite.statistics) / qchisq(0.5, df = df)
+  if (!is.finite(gif) || gif <= 0) {
+    stop(
+      "Cannot estimate the genomic inflation factor for ", label,
+      ": the median test statistic must be strictly positive.",
+      call. = FALSE
+    )
+  }
+  gif
+}
+
 get_statistics <- function(zscores, method, pass) {
   
   nSNP <- nrow(zscores)
@@ -201,7 +226,7 @@ get_statistics <- function(zscores, method, pass) {
     } else if (K > 1) {
       res[pass] <- bigutilsr::dist_ogk(zscores[pass, ])
     }
-    gif <- median(res, na.rm = TRUE) / qchisq(0.5, df = K)
+    gif <- estimate_gif(res, df = K, label = "Mahalanobis statistics")
     res.gif <- res / gif
     pval <- as.numeric(pchisq(res.gif, df = K, lower.tail = FALSE))
   } else if (method == "communality") {
@@ -213,7 +238,11 @@ get_statistics <- function(zscores, method, pass) {
   } else if (method == "componentwise") {
     res <- apply(zscores, MARGIN = 2, FUN = function(h) {h^2})
     gif <- sapply(1:K, FUN = function(h) {
-      median(zscores[, h]^2, na.rm = TRUE) / qchisq(0.5, df = 1)
+      estimate_gif(
+        zscores[, h]^2,
+        df = 1,
+        label = paste0("component ", h)
+      )
     })
     res.gif = res / gif
     pval <- NULL

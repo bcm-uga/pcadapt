@@ -110,4 +110,8 @@ degrees of freedom. When using \code{method="componentwise"}, the z-scores
 should follow a chi-squared distribution with \code{1} degree of freedom. For 
 Pool-seq data, \code{pcadapt} provides p-values based on the Mahalanobis 
 distance for each SNP.
+
+The analysis stops if the genomic inflation factor is non-finite or not
+strictly positive. In that situation, calibrated chi-squared statistics and
+p-values cannot be defined reliably.
 }
