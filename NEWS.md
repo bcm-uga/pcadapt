@@ -2,6 +2,9 @@
 
 - Now derive a better estimate of the total variance, to get better estimates of the variance explained by each PC, especially when using clumping.
 
+- Validate Pool-seq frequency matrices and analysis parameters, and report
+  unsupported options instead of silently ignoring them.
+
 ## pcadapt 4.0
 
 - `read.pcadapt()` generates `bed` files instead of `pcadapt` files.

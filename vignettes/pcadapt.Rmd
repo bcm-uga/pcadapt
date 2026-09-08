@@ -310,10 +310,16 @@ With Pool-Seq data, the package computes again a Mahalanobis distance based on P
 Computation of Mahalanobis distances is performed as follows
 
 ```{r,  eval = TRUE}
-res <- pcadapt(pool.data, K = 3)
+res <- pcadapt(pool.data, K = 2)
 summary(res)
 ```
-`res' is a list containing the same elements than when using individual genotype data.
+Because centring limits the rank of data from three pools to at most two,
+`K` cannot exceed 2 in this example. More generally, `K` cannot exceed the
+smaller of the number of pools minus one and the number of markers retained
+after MAF filtering.
+
+`res` is a list containing the same elements as an analysis of individual
+genotype data.
 
 A scree plot can be obtained and be possibly used to reduce `K`. If the number of populations `n` is too small, it is impossible to use the scree plot to choose `K` and the default value of $K=n-1$ should be used.
 

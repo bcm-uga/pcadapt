@@ -34,8 +34,12 @@ NULL
 #' Pool-seq data, \code{pcadapt} provides p-values based on the Mahalanobis 
 #' distance for each SNP.
 #'
-#' @param input The output of function \code{read.pcadapt}.
-#' @param K an integer specifying the number of principal components to retain.
+#' @param input The output of function \code{read.pcadapt}. Pool-seq input must
+#'   be a numeric matrix with pools in rows, markers in columns, allele
+#'   frequencies between zero and one, and \code{NA} for missing frequencies.
+#' @param K A positive integer specifying the number of principal components to
+#'   retain. For Pool-seq data, it cannot exceed the smaller of the number of
+#'   pools minus one and the number of markers retained after MAF filtering.
 #' @param method a character string specifying the method to be used to compute
 #'   the p-values. Two statistics are currently available, \code{"mahalanobis"},
 #'   and \code{"componentwise"}.
@@ -45,13 +49,17 @@ NULL
 #'   If you want to use SNP thinning, provide a named list with parameters 
 #'   \code{$size} and \code{$thr} which corresponds respectively to the window 
 #'   radius and the squared correlation threshold. A good default value would 
-#'   be \code{list(size = 500, thr = 0.1)}.
-#' @param pca.only a logical value indicating whether PCA results should be 
-#'   returned (before computing any statistic).
+#'   be \code{list(size = 500, thr = 0.1)}. LD clumping is not implemented for
+#'   Pool-seq input.
+#' @param pca.only a logical value indicating whether PCA results should be
+#'   returned before computing any statistic. This option is not implemented
+#'   for Pool-seq input and must then be \code{FALSE}.
 #' @param ploidy Number of trials, parameter of the binomial distribution. 
 #'   Default is 2, which corresponds to diploidy, such as for the human genome.
-#' @param tol Convergence criterion of \code{RSpectra::svds()}. 
-#'   Default is \code{1e-4}.
+#'   This argument is not used for Pool-seq input and must then be \code{NULL}.
+#' @param tol Convergence criterion of \code{RSpectra::svds()} for genotype
+#'   input. Pool-seq analysis currently uses \code{base::svd()}, so this
+#'   argument must not be supplied for Pool-seq input. Default is \code{1e-4}.
 #' 
 #' @return The returned value is an object of class \code{pcadapt}.
 #' 
@@ -128,8 +136,79 @@ pcadapt.pcadapt_pool <- function(input,
                                  LD.clumping = NULL,
                                  pca.only = FALSE,
                                  tol) {
-  
-  w <- matrix(NA_real_, nrow = ncol(input), ncol = K)
+
+  if (!is.matrix(input) || !is.numeric(input)) {
+    stop("Pool-seq input must be a numeric matrix.", call. = FALSE)
+  }
+
+  if (nrow(input) < 2L || ncol(input) < 1L) {
+    stop(
+      "Pool-seq input must contain at least two pools and one marker.",
+      call. = FALSE
+    )
+  }
+
+  if (any(is.nan(input))) {
+    stop("NaN is not a valid missing frequency; use NA instead.", call. = FALSE)
+  }
+
+  observed <- input[!is.na(input)]
+  if (any(!is.finite(observed)) || any(observed < 0 | observed > 1)) {
+    stop(
+      "Pool-seq allele frequencies must be finite values between 0 and 1.",
+      call. = FALSE
+    )
+  }
+
+  if (any(colSums(!is.na(input)) == 0L)) {
+    stop("Each Pool-seq marker must have at least one observed frequency.",
+         call. = FALSE)
+  }
+
+  if (any(rowSums(!is.na(input)) == 0L)) {
+    stop("Each pool must have at least one observed marker frequency.",
+         call. = FALSE)
+  }
+
+  if (!is.numeric(K) || length(K) != 1L || is.na(K) ||
+      !is.finite(K) || K <= 0 || K != floor(K)) {
+    stop("K must be one positive integer.", call. = FALSE)
+  }
+
+  if (!is.character(method) || length(method) != 1L || is.na(method) ||
+      !method %in% c("mahalanobis", "componentwise")) {
+    stop("method must be 'mahalanobis' or 'componentwise'.", call. = FALSE)
+  }
+
+  if (!is.numeric(min.maf) || length(min.maf) != 1L || is.na(min.maf) ||
+      !is.finite(min.maf) || min.maf < 0 || min.maf > 0.45) {
+    stop("min.maf must be one finite number between 0 and 0.45.",
+         call. = FALSE)
+  }
+
+  if (!is.null(ploidy)) {
+    stop("ploidy is not used for Pool-seq input and must be NULL.",
+         call. = FALSE)
+  }
+
+  if (!is.null(LD.clumping)) {
+    stop("LD.clumping is not implemented for Pool-seq input.", call. = FALSE)
+  }
+
+  if (!is.logical(pca.only) || length(pca.only) != 1L || is.na(pca.only)) {
+    stop("pca.only must be TRUE or FALSE.", call. = FALSE)
+  }
+
+  if (pca.only) {
+    stop("pca.only is not implemented for Pool-seq input.", call. = FALSE)
+  }
+
+  if (!missing(tol)) {
+    stop(
+      "tol is not used for Pool-seq input, which uses base::svd().",
+      call. = FALSE
+    )
+  }
   
   tmat <- scale(input, center = TRUE, scale = FALSE) 
   tmat[is.na(tmat)] <- 0 # mean imputation
@@ -137,7 +216,26 @@ pcadapt.pcadapt_pool <- function(input,
   mean_freq <- attr(tmat, "scaled:center")
   mean_freq <- pmin(mean_freq, 1 - mean_freq)
 
-  pass <- mean_freq > min.maf
+  pass <- mean_freq >= min.maf
+
+  n.retained <- sum(pass)
+  if (n.retained == 0L) {
+    stop("No Pool-seq markers remain after MAF filtering.", call. = FALSE)
+  }
+
+  max.rank <- min(nrow(input) - 1L, n.retained)
+  if (K > max.rank) {
+    stop(
+      paste0(
+        "For Pool-seq input, K cannot exceed ", max.rank,
+        " with ", nrow(input), " pools and ", n.retained,
+        " retained markers."
+      ),
+      call. = FALSE
+    )
+  }
+
+  w <- matrix(NA_real_, nrow = ncol(input), ncol = K)
   
   if (nrow(input) == 2) {
     obj.pca <- list(
