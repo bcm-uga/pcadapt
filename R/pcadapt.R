@@ -215,7 +215,7 @@ get_statistics <- function(zscores, method, pass) {
     gif <- sapply(1:K, FUN = function(h) {
       median(zscores[, h]^2, na.rm = TRUE) / qchisq(0.5, df = 1)
     })
-    res.gif = res / gif
+    res.gif <- sweep(res, 2, gif, FUN = "/")
     pval <- NULL
     for (k in 1:K) {
       pval <- cbind(pval, pchisq(res.gif[, k], df = 1, lower.tail = FALSE))

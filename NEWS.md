@@ -1,3 +1,7 @@
+## pcadapt 4.4.2
+
+- Fix GIF correction for `method = "componentwise"` (#100).
+
 ## pcadapt 4.4
 
 - Now derive a better estimate of the total variance, to get better estimates of the variance explained by each PC, especially when using clumping.
