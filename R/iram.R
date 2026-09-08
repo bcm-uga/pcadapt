@@ -22,9 +22,6 @@ iram_and_reg <- function(input, K, min.maf, ploidy, LD.clumping, tol) {
   n <- dim(input)[1]  ## can't use nrow()
   p <- dim(input)[2]  ## can't use ncol()
   
-  if (K > min(n, p))
-    stop(call. = FALSE, "You cannot have K larger than any of the dimensions.")
-  
   # Get allele frequencies
   # Uses a non-scaled lookup table
   af <- get_af(input) / ploidy
@@ -50,9 +47,34 @@ iram_and_reg <- function(input, K, min.maf, ploidy, LD.clumping, tol) {
     ind.pass <- ind.pass.af
   }
   p2 <- length(ind.pass)
+
+  if (p2 == 0L) {
+    stop(
+      "No markers remain after minor-allele-frequency filtering and LD clumping.",
+      call. = FALSE
+    )
+  }
+
+  if (K >= min(n, p2)) {
+    stop(
+      paste0(
+        "K must be smaller than both the number of individuals and the number ",
+        "of retained markers (", n, " individuals; ", p2,
+        " retained markers)."
+      ),
+      call. = FALSE
+    )
+  }
   
   # Get number of non-missing values per row and per column
   nb_nona <- nb_nona(input, ind.pass)
+
+  if (any(nb_nona$p == 0)) {
+    stop(
+      "At least one individual has no called genotypes among the retained markers.",
+      call. = FALSE
+    )
+  }
   
   ### SVD using RSpectra
   tryCatch(

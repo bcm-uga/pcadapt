@@ -35,7 +35,9 @@ NULL
 #' distance for each SNP.
 #'
 #' @param input The output of function \code{read.pcadapt}.
-#' @param K an integer specifying the number of principal components to retain.
+#' @param K A positive integer specifying the number of principal components to
+#'   retain. It must be smaller than both the number of individuals and the
+#'   number of markers retained after filtering and LD clumping.
 #' @param method a character string specifying the method to be used to compute
 #'   the p-values. Two statistics are currently available, \code{"mahalanobis"},
 #'   and \code{"componentwise"}.
@@ -48,8 +50,9 @@ NULL
 #'   be \code{list(size = 500, thr = 0.1)}.
 #' @param pca.only a logical value indicating whether PCA results should be 
 #'   returned (before computing any statistic).
-#' @param ploidy Number of trials, parameter of the binomial distribution. 
-#'   Default is 2, which corresponds to diploidy, such as for the human genome.
+#' @param ploidy For genotype input, either code{1} for haploid dosage data or
+#'   code{2} for diploid dosage data. Default is code{2}. Polyploid genotype
+#'   dosages are not supported. This argument is not used for Pool-seq input.
 #' @param tol Convergence criterion of \code{RSpectra::svds()}. 
 #'   Default is \code{1e-4}.
 #' 
@@ -229,11 +232,51 @@ get_statistics <- function(zscores, method, pass) {
 pcadapt0 <- function(input, K, method, min.maf, ploidy, LD.clumping, pca.only, tol) {
   
   # Test arguments and init
-  if (!(class(K) %in% c("numeric", "integer")) || K <= 0)
-    stop("K has to be a positive integer.")
+  if (!is.numeric(K) || length(K) != 1L || is.na(K) ||
+      !is.finite(K) || K <= 0 || K != floor(K)) {
+    stop("K must be one positive integer.", call. = FALSE)
+  }
   
-  if (!is.numeric(min.maf) || min.maf < 0 || min.maf > 0.45) 
-    stop("min.maf has to be a real number between 0 and 0.45.")
+  if (!is.numeric(min.maf) || length(min.maf) != 1L || is.na(min.maf) ||
+      !is.finite(min.maf) || min.maf < 0 || min.maf > 0.45) {
+    stop("min.maf must be one finite number between 0 and 0.45.",
+         call. = FALSE)
+  }
+
+  if (!is.numeric(ploidy) || length(ploidy) != 1L || is.na(ploidy) ||
+      !is.finite(ploidy) || !(ploidy %in% c(1, 2))) {
+    stop("ploidy must be either 1 (haploid) or 2 (diploid).", call. = FALSE)
+  }
+
+  if (!is.logical(pca.only) || length(pca.only) != 1L || is.na(pca.only)) {
+    stop("pca.only must be TRUE or FALSE.", call. = FALSE)
+  }
+
+  if (!is.numeric(tol) || length(tol) != 1L || is.na(tol) ||
+      !is.finite(tol) || tol <= 0) {
+    stop("tol must be one positive finite number.", call. = FALSE)
+  }
+
+  if (!is.null(LD.clumping)) {
+    if (!is.list(LD.clumping) || is.null(LD.clumping$size) ||
+        is.null(LD.clumping$thr)) {
+      stop("LD.clumping must be NULL or a list containing size and thr.",
+           call. = FALSE)
+    }
+
+    size <- LD.clumping$size
+    if (!is.numeric(size) || length(size) != 1L || is.na(size) ||
+        !is.finite(size) || size <= 0 || size != floor(size)) {
+      stop("LD.clumping$size must be one positive integer.", call. = FALSE)
+    }
+
+    thr <- LD.clumping$thr
+    if (!is.numeric(thr) || length(thr) != 1L || is.na(thr) ||
+        !is.finite(thr) || thr < 0 || thr > 1) {
+      stop("LD.clumping$thr must be one finite number between 0 and 1.",
+           call. = FALSE)
+    }
+  }
   
   # Compute PCs and z-scores    
   obj.pca <- iram_and_reg(input, K = K, 

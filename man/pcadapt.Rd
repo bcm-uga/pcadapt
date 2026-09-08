@@ -54,7 +54,9 @@ pcadapt(
 \arguments{
 \item{input}{The output of function \code{read.pcadapt}.}
 
-\item{K}{an integer specifying the number of principal components to retain.}
+\item{K}{A positive integer specifying the number of principal components to
+retain. It must be smaller than both the number of individuals and the
+number of markers retained after filtering and LD clumping.}
 
 \item{method}{a character string specifying the method to be used to compute
 the p-values. Two statistics are currently available, \code{"mahalanobis"},
@@ -63,8 +65,9 @@ and \code{"componentwise"}.}
 \item{min.maf}{Threshold of minor allele frequencies above which p-values are 
 computed. Default is \code{0.05}.}
 
-\item{ploidy}{Number of trials, parameter of the binomial distribution. 
-Default is 2, which corresponds to diploidy, such as for the human genome.}
+\item{ploidy}{For genotype input, either \code{1} for haploid dosage data or
+\code{2} for diploid dosage data. Default is \code{2}. Polyploid genotype
+dosages are not supported. This argument is not used for Pool-seq input.}
 
 \item{LD.clumping}{Default is \code{NULL} and doesn't use any SNP thinning.
 If you want to use SNP thinning, provide a named list with parameters 
