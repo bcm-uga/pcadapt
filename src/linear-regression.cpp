@@ -27,7 +27,7 @@ NumericMatrix multLinReg(C macc,
     NumericVector z(K);              // all 0s
     for (size_t i = 0; i < n; i++) {
       x[i] = macc(i, j);
-      not_missing[i] = (x[i] != 3);
+      not_missing[i] = !NumericVector::is_na(x[i]);
       if (not_missing[i]) {
         for (k = 0; k < K; k++) {
           z[k] += u(i, k) * x[i]; 
@@ -71,11 +71,11 @@ NumericMatrix multLinReg(SEXP obj,        // af should be ALL allele frequencies
                          const NumericMatrix& u) {
   
   if (Rf_isMatrix(obj)) {
-    matAccScaled macc(obj, ind_col, af, ploidy, 3);
+    matAccScaled macc(obj, ind_col, af, ploidy, NA_REAL);
     return multLinReg(macc, u);
   } else {
     XPtr<bed> xpMat(obj);
-    bedAccScaled macc(xpMat, ind_col, af, ploidy, 3);
+    bedAccScaled macc(xpMat, ind_col, af, ploidy, NA_REAL);
     return multLinReg(macc, u);
   }
 }
